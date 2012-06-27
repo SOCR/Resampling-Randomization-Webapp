@@ -334,16 +334,17 @@ function graph(canvas, x0, x1, y0, y1){
 
 function DistributionGraph(canvas, dist, label){
 	//Properties
-	this.dist = dist; this.label = label;
+	this.dist = dist; //Distribution object eg. binomialDistribution
+	this.label = label;
 	this.distColor = "blue"; this.dataColor = "rgba(255, 0, 0, 0.7)";
 	this.xFormat = 0; this.xAxisFormat = 0; this.momentFormat = 3;
 	this.yFormat = 3; this.yAxisFormat = 3;
 	var leftMargin = 30, rightMargin = 20, topMargin = 20, bottomMargin = 30;
-	var yMax = dist.maxDensity()
+	var yMax = dist.maxDensity()		//what does maxDensity Do?
 	//Local variables
 	var moments = true, showDist = true;
-	var data = this.dist.data;
-	var ctx = canvas.getContext("2d");
+	var data = this.dist.data;		//data accumulated in the simulations ***** YOU WILL USING THIS OBJECT FOR MAKING THE NEW VISUALIZATION
+	var ctx = canvas.getContext("2d");	
 	var width = canvas.width, height = canvas.height;
 	var minValue = this.dist.minValue, maxValue = this.dist.maxValue, step = this.dist.step;
 	var xMin = minValue - step / 2, xMax = maxValue + step / 2;
@@ -361,11 +362,12 @@ function DistributionGraph(canvas, dist, label){
 	
 	this.draw = function(){
 		var xc, yc, x, y, xc1, y1, yc1, w, h, n;
-		ctx.clearRect(0, 0, width, height);
+		ctx.clearRect(0, 0, width, height);	//clearing the canvas div
 		//Axes
 		ctx.strokeStyle = "gray";
 		ctx.fillStyle = "gray";
 		//Horizontal axis
+		
 		ctx.beginPath();
 		yc = yCanvas(0);
 		ctx.moveTo(xCanvas(xMin), yc);
@@ -380,6 +382,7 @@ function DistributionGraph(canvas, dist, label){
 		ctx.fillText(minValue.toFixed(n), xCanvas(minValue) - 3 * (n + 1), yc + 15);
 		ctx.fillText(maxValue.toFixed(n), xCanvas(maxValue) - 3 * (n + 1), yc + 15);
 		//Vertical axis
+		
 		n = this.yAxisFormat;
 		ctx.beginPath();
 		xc = xCanvas(xMin);
@@ -392,6 +395,7 @@ function DistributionGraph(canvas, dist, label){
 		ctx.fillText(0, xc - 10, yCanvas(0) + 5);
 		ctx.fillText(yMax.toFixed(n), xc - 5 * (n + 3), yc + 5);
 		//Distribution graph
+		
 		w = xCanvas(xMin + step) - xCanvas(xMin);		
 		if (showDist){
 			ctx.strokeStyle = this.distColor;
@@ -424,6 +428,7 @@ function DistributionGraph(canvas, dist, label){
 			}
 		}
 		//Data graph
+		
 		ctx.fillStyle = this.dataColor;
 		if (data.getSize() > 0){
 			for (x = minValue; x < maxValue + step / 2; x = x + step){
@@ -435,7 +440,7 @@ function DistributionGraph(canvas, dist, label){
 				ctx.fillRect(xc, yc, w, h);
 			}
 		}
-			
+		
 		//Moments
 		if (moments){
 			yc = height - 15;
@@ -462,6 +467,7 @@ function DistributionGraph(canvas, dist, label){
 				ctx.stroke();
 			}
 		}
+		
 		//Text
 		this.text = label;
 		if (showDist) this.text = this.text + "\tDist";
@@ -1031,8 +1037,9 @@ function Data(a, b, s){
 
 //Generic probability distribution
 function Distribution(){
+	
 	this.minValue = 1;
-	this.maxValue = 6;
+	this.maxValue = 6; //these values are arbitrary as the the distribution which 'implements' this object will have its own values!
 	this.step = 1;
 	this.type = 0;
 	this.data = new Data(this.minValue, this.maxValue, this.step);
@@ -1148,7 +1155,7 @@ function BinomialDistribution(trials, prob){
 		return successes;
 	}
 }
-BinomialDistribution.prototype = new Distribution;
+BinomialDistribution.prototype = new Distribution; //Prototype chaining
 	
 //The location scale distribution associated with a given distribution, location parameter a, scale parameter b
 
@@ -2015,3 +2022,36 @@ function UniformDistribution(a, b){
 }	
 
 UniformDistribution.prototype = new Distribution;
+
+//The hypergeometric distribution
+function HypergeometricDistribution(m, r, n){
+	//Properties
+	this.type = 0;
+	this.minValue = Math.max(0, n - (m - r));
+	this.maxValue = Math.min(n, r);
+	this.step = 1;
+	this.data = new Data(this.minValue, this.maxValue, this.step);
+	
+	//Methods
+	this.density = function(x){
+		var k = Math.round(x);
+		return binomial(r, k) * binomial(m - r, n - k) / binomial(m, n);
+	}
+	
+	this.mode = function(){
+		return Math.floor((r + 1) * (n + 1) / (m + 2));
+	}
+	
+	this.maxDensity = function(){
+		return this.density(this.mode());
+	}
+		
+	this.mean = function(){
+		return n * (r / m);
+	}
+	
+	this.variance = function(){
+		return n * (r / m) * (1 - r / m) * (m - n) / (m - 1);
+	}		
+}
+HypergeometricDistribution.prototype = new Distribution;
