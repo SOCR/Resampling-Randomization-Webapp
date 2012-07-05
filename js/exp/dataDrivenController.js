@@ -1,59 +1,99 @@
-var dataDrivenController=(function(){
+var dataDrivenController=function(dataDrivenModel,view){
 //private properties
-    //for accessing public methods in private methods
-    self=this;
-    //intial state
-    stopSelect.attr('value',"10");
-    dataDrivenView.disableButtons();
-	this.reset();
+	model=dataDrivenModel;
+	//alert(model);
+	view=view || new dataDrivenView();
+	//view.disableButtons();
+	
 return{
+	initialize:function(){
+	//add event listeners
+    runButton.on('click',function(){
+	//alert('run');
+	controller.run();
+	});
+	
+    stepButton.on('click',function(){
+	//alert('step');
+	controller.step();
+	});
+	
+	stopButton.on('click',function(){
+	//alert('stop');
+	controller.stop();
+	});
+	
+	resetButton.on('click',function(){
+	//alert('reset');
+	controller.reset();
+	});
+	
+	dotPlot.on('change',function(){
+	controller.dotplot();
+	});
+	
+	doneButton.on('click',function(){
+	if(controller.setInput()==false)
+		alert('Input some correct data!');
+	});
+	
+	},
     setInput:function(array){
-	if(isempty(array))
+	if(array.length === 0)
 	    return false;
 	else
 	    {
 	    dataSet=array;
 	    //enable the buttons
-	    dataDrivenView.enableButtons();
+	    view.enableButtons();
 	    return true;
 	    }
 	},
     step: function(){
-        //disabling buttons
-	dataDrivenView.disableButtons();   //stepButton.attr('disabled',"true"); runButton.attr('disabled',"true");
+    //alert('1');
+    //disabling buttons
+	view.disableButtons();   
         //generate one sample
-	var data=dataDrivenModel.generateSample();
+	var sample=model.generateSample();
+		alert('generated sample:'+sample['data']);
+		//saving the sample
+	model.setSample(sample['data'],sample['count']);
 	//render the visualization
-	dataDrivenView.createPlot(data,speed);	
+	view.create(sample['data'],sample['count']);	
 	//enabling buttons
-	dataDrivenView.enableButtons();
+	view.enableButtons();
     },
     run:function(){
+	
         //disabling buttons
-	dataDrivenView.disableButtons();   //stepButton.attr('disabled',"true"); runButton.attr('disabled',"true");
-        //generate one sample
-	var data=dataDrivenModel.generateSamples();
-	//render the visualization
-	dataDrivenView.createPlot(data,speed);	
-	//enabling buttons
-	dataDrivenView.enableButtons();
-    
-    },
+		view.disableButtons();   
+        //generate samples
+		for(var i=0;i<model.stopCount;i++)
+			{
+			var sample=model.generateSample();
+			//saving the sample
+			model.setSample(sample['data'],sample['count']);
+			//render the visualization
+			view.create(sample['data'],sample['count']);	
+			}
+		//enabling buttons
+		view.enableButtons();
+	},
     
     stop:function(){
 	//enable buttons
-	dataDrivenView.enableButtons();
+	view.enableButtons();
         //raise the stop flag    
-	dataDrivenModel.setStop();
+	model.stopCount=0;
 	
     },
     
     reset: function(){
-        runCount = 0; stopCount = 0;
-        dataDrivenModel.setSamples=[];	//empty the bootstrap samples
-	dataDrivenView.clearAll();		//clearing all canvas
-	dataDrivenView.clearSamples();
-    },
+        count = 0; 
+		stopCount = 0;
+        model.setSamples=[];	//empty the bootstrap samples
+		view.clearAll();		//clearing all canvas
+	},
         
     
     setDotPlot:function(){
@@ -63,14 +103,22 @@ return{
     
     getDotPlot:function(){
 	
-    },
-    
-    changeSpeed:function(){
-	speed=$('speed').val();
     }
     
+        
     }//return
     
 
-}());
+}
 
+/*
+Sample Controller
+Created on 3rd jul 2012
+*/
+var sampleController=function(){
+return{
+enlarge:sampleView.enlarge(number),
+toggleView:sampleView.toggleView(number)
+}
+
+};
