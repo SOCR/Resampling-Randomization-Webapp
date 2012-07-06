@@ -2023,8 +2023,7 @@
     'minHeight': 0,
     'minWidth': 0,
     'multiSelect': true,
-    'fillHandle': true,
-    'undo': true
+    'fillHandle': true
   };
 
 

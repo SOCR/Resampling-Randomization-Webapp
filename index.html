@@ -1,14 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <!-- Meta data -- For SEO -->
     <meta charset="utf-8">
     <title>SOCR Web-App</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="">
-    <meta name="author" content="selvam,ashwini">
-
+    <meta name="description" content="Simulation App,Randomization and Resampling App">
+    <meta name="author" content="selvam,ashwini,ivo">
+  
+    <!-- head.js ... its a javascript loader tool -->
+    <script src="js/head.min.js"></script>
+    
     <!-- Le styles -->
     <link href="css/bootstrap.css" rel="stylesheet">
+    <link rel="stylesheet" media="screen" href="input/css/table.css">
     <style type="text/css">
       body {
         padding-top: 60px;
@@ -17,22 +22,9 @@
       .sidebar-nav {
         padding: 9px 0;
       }
-	  
-	  .row-fluid{padding-top:10px;}
-	  #slider{ margin: 10px;}
-	  #slider2{margin:10px;}
-	  #myModal{display: none;}
-	  
-	  #resizable { 
-	  border:solid 1px #EEE; 
-	  background-color: #CDF;
-	  width:800px;
-	  padding:0.5em;
-	  }
-	
-	#resizable h3 { text-align: center; margin: 0; }
-	
-	.tab-content{overflow:visible;}
+      .row-fluid{padding-top:10px;}
+      #myModal{display: none;}
+      .tab-content{overflow:visible;}
     </style>
     <link href="css/bootstrap-responsive.css" rel="stylesheet">
 
@@ -46,6 +38,7 @@
     <link rel="apple-touch-icon-precomposed" sizes="114x114" href="ico/apple-touch-icon-114-precomposed.png">
     <link rel="apple-touch-icon-precomposed" sizes="72x72" href="ico/apple-touch-icon-72-precomposed.png">
     <link rel="apple-touch-icon-precomposed" href="ico/apple-touch-icon-57-precomposed.png">
+    
   </head>
 
   <body>
@@ -83,9 +76,10 @@
 			</ul>
 			<div id="myTabContent" class="tab-content">
 			      <div class="tab-pane fade" id="home">
-				<p>Drag and Drop the data file here.</p>
-				<p> OR</p>
-			        <p><a class="btn" href="#">More Info &raquo;</a></p>
+				<div id="input-table" class="dataTable">
+                                </div>
+				<!--<p> OR</p>
+			        <p><a class="btn" href="#">More Info &raquo;</a></p> -->
 			      </div>
 			      <div class="tab-pane fade active in" id="profile">
 				<p>There are many experiments available which generate samples and dont require the user to enter the sample set/data.</p>
@@ -94,9 +88,9 @@
 				<button class="btn btn-success">Choose</button>
 				<button class="btn btn-success dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
 				<ul class="dropdown-menu">
-				  <li><a href="#">Binomial Coin Toss</a></li>
-				  <li><a href="#">Ball And Urn</a></li>
-				  <li><a href="#">CoinToss</a></li>
+				  <li><a href="#" id='binomialCoin'>Binomial Coin Toss</a></li>
+				  <li><a href="#" id='ballAndUrn'>Ball And Urn</a></li>
+				  <li><a href="#" id='dice'>Dice</a></li>
 				</ul>
 			      </div>
 			      </p>
@@ -258,74 +252,97 @@
       </footer>
 
     </div><!--/.fluid-container-->
-
+</body>
     <!-- Le javascript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-    <script src="js/jquery.js"></script>
-    <script src="js/bootstrap-transition.js"></script>
-    <script src="js/bootstrap-alert.js"></script>
-    <script src="js/bootstrap-modal.js"></script>
-    <script src="js/bootstrap-dropdown.js"></script>
-    <script src="js/bootstrap-scrollspy.js"></script>
-    <script src="js/bootstrap-tab.js"></script>
-    <script src="js/bootstrap-tooltip.js"></script>
-    <script src="js/bootstrap-popover.js"></script>
-    <script src="js/bootstrap-button.js"></script>
-    <script src="js/bootstrap-collapse.js"></script>
-    <script src="js/bootstrap-carousel.js"></script>
-    <script src="js/bootstrap-typeahead.js"></script>
-   <!-- <script src="http://twitter.github.com/bootstrap/assets/js/bootstrap-modal.js"></script>
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
-    <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
-    <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
-    -->
-    <script src="js/exp/binomialCoinExperiment(modular).js"></script>
-    <script src="js/exp/core.js"></script>
+    <!--<script type='text/javascript' src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>-->
     <script type='text/javascript'>
     
-    //define the experiment object
-    //x=$('experimentName').val();
-    //Experiment= new x+'Experiment'();
-    $(document).ready(function() {
-      //Binomial Coin Experiment
+    head.js("http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js",
+            "js/bootstrap-transition.js",
+            "js/bootstrap-alert.js",
+            "js/bootstrap-tab.js",
+            "js/bootstrap-button.js",
+            "js/bootstrap-modal.js",
+            "js/bootstrap-dropdown.js",
+            {coreFunctions:"js/exp/core.js"},
+            {BCTexp:"js/exp/binomialCoin.js"},
+            "js/bootstrap-scrollspy.js",
+            "js/bootstrap-tooltip.js",
+            "js/bootstrap-popover.js",
+            "js/bootstrap-collapse.js",
+            "js/bootstrap-carousel.js",
+            "js/bootstrap-typeahead.js",
+            {inputTile:"input/js/inputtable.js"},
+            {InputTile:"input/js/script.js"});
+    
+    head.ready(function () {
 
+   $(document).ready(function(){
+        
    //super object 'Experiment'
-      Experiment=BinomialCoinExperiment;
-        //Initializing
-      Experiment.initializeExperiment();
+   //Default Experiment is BinomialCoin Toss Experiment
+      Experiment=binomialCoin;
+      //Initializing
+      Experiment.initialize();
+      //array containing all the experiment.js already loaded
+      var expLoaded=['binomialCoin'];
 	
-    //bind all the buttons
+          //bind all the buttons
     $("#stepButton").click(function(){
-	Experiment.stepExperiment();
+      Experiment.step();
 	});
     $("#stopButton").click(function(){
-	Experiment.stopExperiment();
+	Experiment.stop();
 	});
     $("#resetButton").click(function(){
-	Experiment.resetExperiment();
+	Experiment.reset();
 	});
     $("#runButton").click(function(){
-	Experiment.runExperiment();
+	Experiment.run();
 	});
     $("#pInput").change(function(){
-	Experiment.resetExperiment();
+	Experiment.reset();
 	});
     $("#nInput").change(function(){
-	Experiment.resetExperiment();
+	Experiment.reset();
 	});
 	
     $("#rvSelect").change(function(){
 	Experiment.setDist();
 	});
-    //Adding interactivity to the App 
+        
+    //Binomial Coin Experiment
+      $('#binomialCoin').click(function(){
+	Experiment=binomialCoin;    
+        //Initializing
+        Experiment.initialize();
+      });
     
+    //Ball and Urn Experiment  
+      $('#ballAndUrn').click(function(){
+        alert('1');
+        if($.inArray(ballAndUrn, expLoaded)==-1)      //check whether the experiment script is already loaded
+          {
+            $.getScript("js/exp/ballAndUrn.js",function(){
+              Experiment=ballAndUrn;
+              //Initializing
+              alert(Experiment);
+              Experiment.initialize();});
+            //head.js("js/exp/ballAndUrn.js");          //loading the Ball and Urn Script
+            expLoaded.push('ballAndUrn');   //Making a entry in the array of loaded experiment scripts
+          }
+        
+	});
+         
 
     $('.tabs').button('toggle');
 	
     
     });
+    });
     </script>
 
-  </body>
+  
 </html>
