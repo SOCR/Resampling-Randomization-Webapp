@@ -1,5 +1,6 @@
 var dataDrivenView=function(dataDrivenModel){
 //private properties
+    var model=dataDrivenModel;
     runButton = $("#runButton"),
     stepButton =$("#stepButton"),
     stopButton =$("#stopButton"),
@@ -7,7 +8,9 @@ var dataDrivenView=function(dataDrivenModel){
     stopSelect =$("#stopSelect"),
     animationSpeed=$("#animationSpeed"),
     datasetCanvas = $("#distCanvas"),
-    dotPlot=$("#dotPlot");
+    dotPlot=$("#dotPlot"),
+    countSize=$("#countSize"),
+    nSize=$('#nSize');
 	//input tile
 	doneButton=$("#doneButton");
 	
@@ -19,16 +22,37 @@ return{
 	stepButton.attr('disabled',"true"); 
 	runButton.attr('disabled',"true");
 	},
+	
+	
+	
 	enableButtons:function(){
 	stepButton.removeAttr('disabled'); 
 	runButton.removeAttr('disabled');
 	},
 	clearAll:function(){
-	$('sampleList').text='';
+		alert('1');
+		$('#sampleList').empty();
 	} ,
-	create:function(){
-	//alert('created');
-	}	
+	update:function(sample,count){
+		//count value changed on top
+		$('#displayCount').text(count+1);
+		//alert(model.count);
+		//new sample to the list added
+		$('.accordion').append('<dt><a href="">Sample '+count+'</a></dt><dd style="display: block; "><pre>'+sample+'</pre></dd>');
+		this.accordion();
+		return true;
+	},
+	accordion:function(){
+		var allPanels = $('.accordion > dd').hide();
+		//first remove the previous click binding
+		$('.accordion > dt > a').off('click');
+		$('.accordion > dt > a').on('click',function() {
+		allPanels.slideUp();
+		$(this).parent().next().slideDown();
+		return false;
+		});
+	}
+	
     }//return
 };
 

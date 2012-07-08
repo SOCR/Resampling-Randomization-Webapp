@@ -40,13 +40,8 @@ $(document).ready(function(){
 				]
 			});
 			
-<<<<<<< HEAD
-			$('#input-table').after("<input class='btn' type='button' value='Done'><input calss='btn' type='button' value='Reset'>");
-			$("input[value='Done!']").on('click',function(){
-=======
-			$('#input-table').after("<br/><br/><input class='btn' type='button' value='Done'><input class='btn' type='button' value='Reset'><input class='btn' type='button' value='Show/Hide'>");
+			$('#input-table').after("<br/><br/><input class='btn' type='button' value='Done'><input class='btn' type='button' value='Reset'><input class='btn' type='button' value='Show'>");
 			$("input[value='Done']").on('click',function(){
->>>>>>> refactoring code
 			console.log($("#input-table").inputtable('getData'));
 				$('#input-table').after('Please check your console for the array');
 				return false;
@@ -55,14 +50,11 @@ $(document).ready(function(){
 				$("#input-table").inputtable('clear');
 				return false;
 			});
-<<<<<<< HEAD
-=======
-			$("input[value='Show/Hide']").on('click',function(){
-				alert('working on it');
+			$("input[value='Show']").on('click',function(){
+				alert('ads');
 				
 				return false;
 			});
->>>>>>> refactoring code
 			
 		
 		
