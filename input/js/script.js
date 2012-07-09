@@ -40,7 +40,12 @@ $(document).ready(function(){
 				]
 			});
 			
+
 			$('#input-table').after("<br/><br/><input class='btn' type='button' value='Done'><input class='btn' type='button' value='Reset'><input class='btn' type='button' value='Show/Hide'>");
+			$("input[value='Done']").on('click',function(){
+
+
+			$('#input-table').after("<br/><br/><input class='btn' type='button' value='Done'><input class='btn' type='button' value='Reset'><input class='btn' type='button' value='Show'>");
 			$("input[value='Done']").on('click',function(){
 
 			console.log($("#input-table").inputtable('getData'));
@@ -51,6 +56,19 @@ $(document).ready(function(){
 				$("#input-table").inputtable('clear');
 				return false;
 			});
+
+			$("input[value='Show/Hide']").on('click',function(){
+				alert('working on it');
+				
+				return false;
+			});
+
+			$("input[value='Show']").on('click',function(){
+				alert('ads');
+				
+				return false;
+			});
+
 			
 		
 		
