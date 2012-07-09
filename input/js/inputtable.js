@@ -2023,12 +2023,7 @@
     'minHeight': 0,
     'minWidth': 0,
     'multiSelect': true,
-<<<<<<< HEAD
     'fillHandle': true
-=======
-    'fillHandle': true,
-    'undo': true
->>>>>>> c9bd3080ea2f39877e0e663e51eaaaa1433ad5d8
   };
 
 
