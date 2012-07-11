@@ -14,6 +14,7 @@
     <!-- Le styles -->
     <link href="css/bootstrap.css" rel="stylesheet">
     <link rel="stylesheet" media="screen" href="input/css/table.css">
+        <link href="css/bootstrap-responsive.css" rel="stylesheet">
     <style type="text/css">
       body {
         padding-top: 60px;
@@ -26,9 +27,12 @@
       #myModal{display: none;}
       .tab-content{overflow:visible;}
 	  
-	  
+/*
+    SampleList style starts here
+ 	  
+*/
 		
-		.accordion dt, dd {
+      .entry{
 		padding: 10px;
 		border: 1px solid black;
 		border-bottom: 0; 
@@ -37,23 +41,13 @@
 		}
      
 	}
-	dt a{
-		
-        display: block;
-        color: black;
-        font-weight: bold;
-      }
-	.accordion dt{
+	.header{
 	background-color:#cdf;
 	}
-	dd .accordion{
-     border-top: 0; 
-     font-size: 12px;
-     &:last-of-type {
-       border-top: 1px solid white;
-       position: relative;
-       top: -1px;
-		}
+	
+	.values{
+	  color:brown;
+	  font-weight:800;
 	}
 	
 	.span5{
@@ -64,12 +58,14 @@
 	height:500px;
 	overflow: scroll;
       }
-	
+      .entry a:hover {
+	color:blue;
+	.sample{display:'';
+	}
+      }
 
-
-    </style>
-    <link href="css/bootstrap-responsive.css" rel="stylesheet">
-	 
+  </style>
+ 
     <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
@@ -101,7 +97,6 @@
               <li><a href="#contact">Simulations</a></li>
 			  
             </ul>
-            <p class="navbar-text pull-right">Logged in as <a href="#">username</a></p>
           </div><!--/.nav-collapse -->
         </div>
       </div>
@@ -123,6 +118,7 @@
 			      <div class="tab-pane fade" id="home">
 				<div id="input-table" class="dataTable">
                                 </div>
+				<div id='status'></div>
 				<!--<p> OR</p>
 			        <p><a class="btn" href="#">More Info &raquo;</a></p> -->
 			      </div>
@@ -155,16 +151,16 @@
               <h3>Controller</h3>
 		<p class="toolbar">
 		  <button class='btn' type="button" id="stepButton" tabindex="1" title="Step">
-		  <img src="images/step.png" alt="Step" title="Step" />
+		  <img src="img/step.png" alt="Step" title="Step" />
 		  </button>
 		  <button class='btn btn-success' type="button" id="runButton" tabindex="2" title="Run" >
-		  <img id="runImage" src="images/run.png" alt="Run" title="Run" />
+		  <img id="runImage" src="img/run.png" alt="Run" title="Run" />
 		  </button>
 		  <button class='btn btn-danger' type="button" id="stopButton" tabindex="3" title="Stop" >
-		  <img id="stopImage" src="images/stop.png" alt="Stop" title="Stop" />
+		  <img id="stopImage" src="img/stop.png" alt="Stop" title="Stop" />
 		  </button>
 		  <button class='btn' type="button" id="resetButton" tabindex="4" title="Reset" >
-		  <img src="images/reset.png" alt="Reset" title="Reset" />
+		  <img src="img/reset.png" alt="Reset" title="Reset" />
 		  </button>
 		</p>
 		<p>
@@ -177,10 +173,10 @@
 		
 		<p class="toolbar">
 		  <p class="tool">
-		  <input type="text" id='nSize' class="input-medium" placeholder="No. of datapoints ">
+		  <span>Datapoint size: </span><input type="text" id='nSize' class="input-medium" value='50'>
 		  </p>
 		  <p class="tool">
-		    <input type="text" id='countSize' class="input-medium" placeholder="No. of Samples (default 5)">
+		  <span>No. of Samples: </span><input type="text" id='countSize' class="input-medium" value='1000'>
 		  </p>
 		  
 		</p>
@@ -195,23 +191,20 @@
           </div><!--/row-->
 	  
       </div><!--/row-->
-	</div><!--row-->
-	<div class='row-fluid'>
+      </div><!--row-->
+      <div class='row-fluid'>
 	<div class="span4">
 		<h3>Sample List</h3>
 		<div>
 			<span class="badge badge-warning">Count: <span id='displayCount'>0</span></span>
 		</div><br>
 		<div id='sampleList'>
-		<dl class="accordion">
-
 		
-		</dl>
 		</div><!--sampleList-->
           
-    </div><!--span-->
-	</div><!--row-->
-	</div><!--row-->
+	</div><!--span4-->
+      </div><!--row-->
+      </div><!--row-->
       <hr>
 	  <a class="btn" data-toggle="modal" href="#myModal" >?</a>
 	<div id="myModal" class="modal hide fade">  
@@ -240,7 +233,7 @@
 		  </div>
 	</div>
       <footer>
-        <p>&copy; Company 2012</p>
+        <p>&copy; UCLA 2012</p>
       </footer>
 
     </div><!--/.fluid-container-->
@@ -280,7 +273,7 @@
       //alert(model.getDataset());
 	
       view=new dataDrivenView(model);
-      view.accordion();
+      //view.accordion();
       controller=new dataDrivenController(model,view);
       controller.initialize();
 	//controller.run();
