@@ -2,7 +2,7 @@ var dataDrivenModel=function(){
 //::::::: PRIVATE PROPERTIES :::::::::::::::
 
 //var runCount = 0;		//Keeps track of number of runs elapsed 
-var stopCount = 10;		//Number of steps in a Run
+var stopCount = 1000;		//Number of runs to be elapsed 
 var count=0;				//keeps count of number of samples generated from start
 var dataSet=['1','2','3','4','5','6','7','8','9','10'];			// All the input datapoints from wich bootstrap sample is generated
 var n=50;			//Number of datapoints in a bootstrap sample or Sample Size
@@ -30,6 +30,7 @@ return{
 	},
         
 	generateSample:function(){
+		sample=[];
 		for(var i=0;i<n;i++)
 		    sample[i]=this.generateTrail();
 		  
@@ -62,12 +63,30 @@ return{
 	},
 	setDataset:function(data){
 		if(data)
-		{
-			dataSet=data;
-			return true;
+		{//alert(data);
+		//emptying the array
+			dataSet=[];
+		//sorting out the first column
+			for(i=0;i<data.length-1;i++)
+				{
+					dataSet[i]=data[i+1][0];
+					//alert(dataSet[i]);
+				}
+		//splicing the empty cells	
+			for (var i = 0; i < dataSet.length; i++) {
+				if (dataSet[i] == '') {         
+					dataSet.splice(i, 1);
+					i--;
+					}
+			}	
+			if(dataSet.length==0)
+				return true;
+			else
+				return false;
 		}
 		else
 			return error('inputMissing');
+			//alert('bad');
 	},
         
 	getSample:function(index){
@@ -82,12 +101,15 @@ return{
 	//addObserver:subject.addObserver(),
 	//removeObserver:subject.removeObserver()
 	setStopCount:function(y){
-		alert(y);
+		//alert(y);
 		this.stopCount=y;
 	},
 	setN:function(z){
 		n=z;
 		
+	},
+	getN:function(){
+		return n;
 	}
 	
 }//return

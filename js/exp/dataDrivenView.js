@@ -17,31 +17,39 @@ var dataDrivenView=function(dataDrivenModel){
 	//self=this;
 		
 return{
-    ////stepButton.attr('disabled',"true"); runButton.attr('disabled',"true");
-	disableButtons:function(){
+    	disableButtons:function(){
 	stepButton.attr('disabled',"true"); 
 	runButton.attr('disabled',"true");
 	},
-	
-	
 	
 	enableButtons:function(){
 	stepButton.removeAttr('disabled'); 
 	runButton.removeAttr('disabled');
 	},
+	
 	clearAll:function(){
-		alert('1');
-		$('#sampleList').empty();
-	} ,
-	update:function(sample,count){
+		$('#displayCount').html('0');
+		$('#sampleList').html('');
+		//also clear the canvas
+	},
+	
+	update:function(sample,count,datapoints){
 		//count value changed on top
 		$('#displayCount').text(count+1);
 		//alert(model.count);
 		//new sample to the list added
-		$('.accordion').append('<dt><a href="">Sample '+count+'</a></dt><dd style="display: block; "><pre>'+sample+'</pre></dd>');
-		this.accordion();
+		var temp=['<div class="entry"><div class="header">Sample<span class="values"> '];
+		temp.push(count);temp.push('</span> &nbsp;&nbsp;  Datapoints:<span class="values">');
+		temp.push(datapoints);
+		temp.push('</span>&nbsp;&nbsp;<i class="icon-search"></i></span><pre>');
+		temp.push(sample);
+		temp.push('</pre></div>');
+		//$('.accordion').append(' '+count+'</a></dt><dd style="display: block; "><pre>'+sample+'</pre></dd>');
+		$('#sampleList').append(temp.join(''));
+		//this.accordion();
 		return true;
-	},
+	}
+	/*
 	accordion:function(){
 		var allPanels = $('.accordion > dd').hide();
 		//first remove the previous click binding
@@ -50,8 +58,10 @@ return{
 		allPanels.slideUp();
 		$(this).parent().next().slideDown();
 		return false;
+	
 		});
-	}
+		
+	}*/
 	
     }//return
 };

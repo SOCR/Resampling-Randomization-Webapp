@@ -4,16 +4,47 @@ var dataDrivenController=function(dataDrivenModel,view){
 	//alert(model);
 	view=view || new dataDrivenView();
 	//view.disableButtons();
+	var _id=0;
+	var _runsElasped=0;
+	var _this;
+	var _noOfSteps=0;
+	var _datapoints=model.getN();
+	var _stopCount=model.stopCount;
+	
+function _generate1000(){
+	if(_runsElasped!=_noOfSteps)
+		{
+			for(var i=0;i<1000;i++)
+				{			
+				sample=model.generateSample();
+				//alert('generated sample:'+sample['data']'+'count:'+sample['count']);
+			
+				//saving the sample
+				model.setSample(sample['data'],sample['count']);
+				//alert(model.bootstrapSamples[sample['count']].getData());
+			
+				//render the visualization
+				view.update(sample['data'],sample['count'],_datapoints);	
+				}
+		_runsElasped++;
+		}
+	else
+		{
+		_this.stop();
+		
+		}
+	}
 	
 return{
 	initialize:function(){
+	
+		_this=this;
 	//add event listeners
-    runButton.on('click',function(){
-	//alert('run');
+	runButton.on('click',function(){
 	controller.run();
 	});
 	
-    stepButton.on('click',function(){
+stepButton.on('click',function(){
 	//alert('step');
 	controller.step();
 	});
@@ -24,7 +55,6 @@ return{
 	});
 	
 	resetButton.on('click',function(){
-	alert('reset');
 	controller.reset();
 	});
 	
@@ -39,7 +69,8 @@ return{
 	
 	
 	},
-    setInput:function(array){
+	
+setInput:function(array){
 	if(array.length === 0)
 	    return false;
 	else
@@ -50,29 +81,35 @@ return{
 	    return true;
 	    }
 	},
-    step: function(){
-        //disabling buttons
-	view.disableButtons();   
+step: function(){
+	//disabling buttons
+		view.disableButtons();
+	//get datapoint size
+		var x=nSize.val();
+		if(x=='')
+			model.setN(50);
+		else
+			model.setN(x);
+		var datapoints=model.getN();		
         //generate one sample
-	var sample=model.generateSample();
-		alert('Sample:'+sample['data']+'........Count:'+sample['count']);
-		//alert();
+		var sample=model.generateSample();
+		//alert('Sample:'+sample['data']+'........Count:'+sample['count']);
+		
 	//saving the sample
-	model.setSample(sample['data'],sample['count']);
+		model.setSample(sample['data'],sample['count']);
 	//render the visualization
-	view.update(sample['data'],sample['count']);	
+		view.update(sample['data'],sample['count'],datapoints);	
 	//enabling buttons
-	view.enableButtons();
-    },
-    run:function(){
+		view.enableButtons();
+	},
+
+run:function(){
 	
         //disabling buttons
 		view.disableButtons();
-		if(countSize.val()!='')
+	//get the stopcount and datapoints size
 		model.setStopCount(countSize.val());
-		
-		if(!nSize.val())
-			model.setN(nSize.val());
+		model.setN(nSize.val());
 			
 	//generate samples
 		/*
@@ -84,47 +121,38 @@ return{
 		i++;
 		}
 		*/
+		var temp=model.stopCount/1000;
+		//alert(temp);
 		
-		for(var i=0;i<model.stopCount;i++)
-			{
-			sample=model.generateSample();
-			//alert('generated sample:'+sample['data']);
-			//alert('count:'+sample['count']);
-			//saving the sample
-			//console.log(sample['data']+'---'+sample['count']);
-			model.setSample(sample['data'],sample['count']);
-			alert(model.bootstrapSamples[sample['count']].getData());
-			//render the visualization
-			view.update(sample['data'],sample['count']);	
-			}
+			_noOfSteps=Math.ceil(temp);
+			//alert(noOfSteps);
+			_id=setInterval(_generate1000,10);
+		
 		
 		//for(i=0;i<5;i++)
 		//console.log(model.bootstrapSamples[i].getNumber());
 		//enabling buttons
-		view.enableButtons();
+		//var end=d.getTime();
+		//alert('1');
+		//alert('time elapsed:'+(end-start));
+		
 	},
-    
+	    
     stop:function(){
+	clearInterval(_id);
+	_runsElasped=0;
 	//enable buttons
 	view.enableButtons();
-        //raise the stop flag    
-	model.stopCount=0;
-	model.stopCount=5;
-	/*
-		for(var i=0;i<10;i++)
-		//alert(model.getSample(i).getData());
-		{alert(model.bootstrapSamples[i].getData());
-		alert(model.bootstrapSamples[i].getNumber());}
-	*/
+        
+	
     },
     
-    reset: function(){
-	alert('1');
-        count = 0; 
-	stopCount = 0;
-        //model.setSamples=[];	//empty the bootstrap samples
-	//view.clearAll();		//clearing all canvas
-	},
+	reset: function(){
+		this.stop();
+		model.count=0;		//reset the total count
+		model.setSamples=[];	//empty the bootstrap samples
+		view.clearAll();		//clearing all the canvas
+		},
         
     
     setDotPlot:function(){
@@ -135,21 +163,6 @@ return{
     getDotPlot:function(){
 	
     }
-    
-        
+ 
     }//return
-    
-
 }
-
-/*
-Sample Controller
-Created on 3rd jul 2012
-*/
-var sampleController=function(){
-return{
-enlarge:sampleView.enlarge(number),
-toggleView:sampleView.toggleView(number)
-}
-
-};
