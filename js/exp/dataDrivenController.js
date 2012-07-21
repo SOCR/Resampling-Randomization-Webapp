@@ -1,155 +1,132 @@
 var dataDrivenController=function(dataDrivenModel,view){
-//private properties
+/* PRIVATE PROPERTIES   */
 	model=dataDrivenModel;
-	//alert(model);
 	view=view || new dataDrivenView();
-	//view.disableButtons();
-	
+	var _id=0;
+	var _runsElasped=0;
+	var _this;
+	var _noOfSteps=0;
+	var _datapoints=model.getN();		//this can create problems...if the n value is changed after the intialization of the app
+	var _stopCount=model.stopCount;
+	var _count=model.getCount();
+
+/* PRIVATE METHODS   */
+function _generate(){
+	if(_runsElasped!=_noOfSteps)
+		{
+		var i=1000;
+		while(i--)
+			{			
+			model.generateSample();
+			//console.log(model.bootstrapSamples[i]);
+			}
+		//alert(model);
+		//console.log(model.bootstrapSamples[4]);
+		view.updateCounter();	
+		_runsElasped++;
+		}
+	else
+		{
+		_this.stop();
+		
+		}
+	}
+
+/* PUBLIC METHODS   */	
 return{
 	initialize:function(){
-	//add event listeners
-    runButton.on('click',function(){
-	//alert('run');
-	controller.run();
-	});
 	
-    stepButton.on('click',function(){
-	//alert('step');
-	controller.step();
-	});
-	
-	stopButton.on('click',function(){
-	//alert('stop');
-	controller.stop();
-	});
-	
-	resetButton.on('click',function(){
-	alert('reset');
-	controller.reset();
-	});
-	
-	dotPlot.on('change',function(){
-	controller.dotplot();
-	});
-	
-	doneButton.on('click',function(){
-	if(controller.setInput()==false)
-		alert('Input some correct data!');
-	});
-	
-	
+		_this=this;
+		//add event listeners
+		runButton.on('click',function(){
+		controller.run();
+		});
+		stepButton.on('click',function(){
+		controller.step();
+		});
+		stopButton.on('click',function(){
+		controller.stop();
+		});
+		resetButton.on('click',function(){
+		controller.reset();
+		});
+		dotPlot.on('change',function(){
+		controller.dotplot();
+		});
+		doneButton.on('click',function(){
+		if(controller.setInput()==false)
+			alert('Input some correct data!');
+		});
+		showButton.on('click',function(){
+			view.createList($('#showCount').text());
+		});
+		//create a slider
+		view.createSlider();
 	},
-    setInput:function(array){
+	
+	setInput:function(array){
 	if(array.length === 0)
-	    return false;
+		return false;
 	else
-	    {
-	    model.setDataset(array);
-	    //enable the buttons
-	    view.enableButtons();
-	    return true;
-	    }
+		{
+		model.setDataset(array);
+		//enable the buttons
+		view.enableButtons();
+		return true;
+		}
 	},
-    step: function(){
-        //disabling buttons
-	view.disableButtons();   
-        //generate one sample
-	var sample=model.generateSample();
-		alert('Sample:'+sample['data']+'........Count:'+sample['count']);
-		//alert();
-	//saving the sample
-	model.setSample(sample['data'],sample['count']);
-	//render the visualization
-	view.update(sample['data'],sample['count']);	
-	//enabling buttons
-	view.enableButtons();
-    },
-    run:function(){
-	
-        //disabling buttons
-		view.disableButtons();
-		if(countSize.val()!='')
-		model.setStopCount(countSize.val());
-		
-		if(!nSize.val())
-			model.setN(nSize.val());
+	step: function(){
+		view.disableButtons();					//disabling buttons
+		model.setN(nSize.val());				// save the datapoints size
+	        model.generateSample();					//generate one sample
+		view.updateCounter();						//render the visualization
+		view.enableButtons();					//enabling buttons
+		view.updateSlider();
+	},
+
+	run:function(){
+        	view.disableButtons();			//disabling buttons
+		model.setStopCount(countSize.val());	//save the stopcount provided by user
+		model.setN(nSize.val());		// save the datapoints size
 			
 	//generate samples
-		/*
-		var i=0;
-		while(i<model.stopCount){
-		var sample=model.generateSample();
-		model.setSample(sample['data'],sample['count']);
-		view.update(sample['data'],sample['count']);
-		i++;
-		}
-		*/
-		
-		for(var i=0;i<model.stopCount;i++)
-			{
-			sample=model.generateSample();
-			//alert('generated sample:'+sample['data']);
-			//alert('count:'+sample['count']);
-			//saving the sample
-			//console.log(sample['data']+'---'+sample['count']);
-			model.setSample(sample['data'],sample['count']);
-			alert(model.bootstrapSamples[sample['count']].getData());
-			//render the visualization
-			view.update(sample['data'],sample['count']);	
-			}
-		
-		//for(i=0;i<5;i++)
-		//console.log(model.bootstrapSamples[i].getNumber());
-		//enabling buttons
-		view.enableButtons();
+		var _temp=model.getStopCount()/1000;
+		_noOfSteps=Math.ceil(_temp);
+		//alert(_noOfSteps);
+		var d=Date();
+		console.log('start'+_runsElasped+d);
+		_generate();
+		_id=setInterval(_generate,0);
+		//this.stop();
 	},
+	
+	stop:function(){
+		//for(var i=0;i<model.bootstrapSamples.length;i++)
+		//console.log(model.bootstrapSamples[i]);
+		var d=Date();
+		console.log('end'+_runsElasped+d);
+		view.updateSlider();
+		clearInterval(_id);		//stop the setinterval function
+		_runsElasped=0;			//reset the runelapsed count
+		view.enableButtons();		//enable buttons
+        },
     
-    stop:function(){
-	//enable buttons
-	view.enableButtons();
-        //raise the stop flag    
-	model.stopCount=0;
-	model.stopCount=5;
-	/*
-		for(var i=0;i<10;i++)
-		//alert(model.getSample(i).getData());
-		{alert(model.bootstrapSamples[i].getData());
-		alert(model.bootstrapSamples[i].getNumber());}
-	*/
-    },
-    
-    reset: function(){
-	alert('1');
-        count = 0; 
-	stopCount = 0;
-        //model.setSamples=[];	//empty the bootstrap samples
-	//view.clearAll();		//clearing all canvas
-	},
+	reset: function(){
+		this.stop();
+		model.setCount(0);		//reset the total count
+		model.setSamples=[];	//empty the bootstrap samples
+		view.clearAll();		//clearing all the canvas
+		
+		},
         
     
-    setDotPlot:function(){
+	setDotPlot:function(){
 	//alert that the app will be reset first
 	
-    },
-    
-    getDotPlot:function(){
+	},
+	getDotPlot:function(){
 	
-    }
-    
-        
+	}
+ 
     }//return
-    
-
 }
-
-/*
-Sample Controller
-Created on 3rd jul 2012
-*/
-var sampleController=function(){
-return{
-enlarge:sampleView.enlarge(number),
-toggleView:sampleView.toggleView(number)
-}
-
-};

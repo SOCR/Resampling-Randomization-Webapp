@@ -1,46 +1,3 @@
-<!DOCTYPE html>
-<meta charset="utf-8">
-<style>
-
-body {
-  font: 10px sans-serif;
-}
-
-.bar rect {
-  fill: steelblue;
-  shape-rendering: crispEdges;
-}
-
-.bar text {
-  fill: #fff;
-}
-
-.axis path, .axis line {
-  fill: none;
-  stroke: #000;
-  shape-rendering: crispEdges;
-}
-
-<<<<<<< HEAD
-circle.node{
-  cursor:pointer;
-}
-=======
->>>>>>> e92a6aa271d1a879a6ce72ce6477d325288b1a3c
-</style>
-<body>
-  <div class="chart"></div> 
-<script src="d3.v2.min.js"></script>
-<script>
-
-
-function randomIrwinHall(m) {
-  return function() {
-    for (var s = 0, j = 0; j < m; j++) s += Math.random();
-    return s / m;
-  };
-}
-
 function vis(config){
   //Some default variables
 
@@ -48,6 +5,11 @@ function vis(config){
       height = 400;
 
   function chart(){
+    
+      //generate chart here
+      //d- data
+      //i -`this`
+      console.log(config);
 
     // A formatter for counts.
     var formatCount = d3.format(",.0f");
@@ -82,16 +44,12 @@ function vis(config){
     var bar = svg.selectAll(".bar")
         .data(data)
       .enter().append("g")
-
-        .attr("class", "bar");
+        .attr("class", "bar")
+        .attr("transform", function(d) { return "translate(" + x(d.x) + "," + y(d.y) + ")"; });
 
     bar.append("rect")
-        .attr("x", function(d,i){ return x(d.x); })
+        .attr("x", 1)
         .attr("width", x(data[0].dx) - 1)
-        .attr('y',height)    
-      .transition()
-      .delay( function(d,i){ return i*50; } )
-        .attr('y',function(d){  return y(d.y) })
         .attr("height", function(d) { return height - y(d.y); });
 
     bar.append("text")
@@ -123,16 +81,3 @@ function vis(config){
 
   return chart;
 }  
-
-    // chart an Irwin–Hall distribution of 10 random variables.
-    var values = d3.range(1000).map(randomIrwinHall(10));
-
-    var histogram = vis({
-                      height: 400, 
-                      width: 400,
-                      parent : '.chart',
-                      data : values
-                      });
-    histogram();
-
-</script>
