@@ -1,0 +1,224 @@
+<!Doctype HTML>
+<meta charset="utf-8">
+<head>
+<link rel="stylesheet" href="layout-default-latest.css"></link>
+<link href="../../../css/bootstrap.css" rel="stylesheet">
+<style>
+	header{
+		height:200px;
+	}
+	div.fluid{
+		width:100%;
+		border: 1px solid #E2e2e2;
+		border-radius: 5px;
+		margin-bottom:5px;
+		min-height:200px;
+	}
+	*{
+		font:normal 13px "Open Sans",Arial;
+		color:#666;
+	}
+	.dotplot{
+		line-height:200px;
+		text-align:center;
+		font-size:18px ;
+		height:200px;
+		background-image: linear-gradient(bottom, rgb(247,247,247) 6%, rgb(255,255,255) 64%);
+		background-image: -o-linear-gradient(bottom, rgb(247,247,247) 6%, rgb(255,255,255) 64%);
+		background-image: -moz-linear-gradient(bottom, rgb(247,247,247) 6%, rgb(255,255,255) 64%);
+		background-image: -webkit-linear-gradient(bottom, rgb(247,247,247) 6%, rgb(255,255,255) 64%);
+		background-image: -ms-linear-gradient(bottom, rgb(247,247,247) 6%, rgb(255,255,255) 64%);
+
+		background-image: -webkit-gradient(
+			linear,
+			left bottom,
+			left top,
+			color-stop(0.06, rgb(247,247,247)),
+			color-stop(0.64, rgb(255,255,255))
+		);
+	}
+	.vis{
+		height: 300px;
+	}
+	.vis h3{
+		text-align:center;
+		margin: 5px;
+	}
+	div.left1,div.controller{
+		border:0px #fff;
+		text-align:center;
+	}
+	div.controller h3{
+		font:300 24px "Open Sans",Arial;
+		line-height: 36px;
+	}
+	ul.dropdown-menu{
+		margin:0px auto;
+	}
+
+	/* Some basic styles for svg visualizations */
+		.bar rect {
+		  fill: steelblue;
+		  shape-rendering: crispEdges;
+		}
+
+		.bar text {
+		  fill: #fff;
+		}
+
+		.axis path, .axis line {
+		  fill: none;
+		  stroke: #000;
+		  shape-rendering: crispEdges;
+		}
+		svg{
+			margin: 0 auto;
+		}
+</style>
+<title>Demo</title>
+</head>
+<body>
+
+		<div class="ui-layout-center"> 
+			<div class="fluid vis">
+				<h3>Visualizations - Demo</h3>
+				<div class="chart">
+
+			</div>
+			</div>
+			
+			<div class="fluid dotplot">Dot Plot</div>
+		</div>
+		<div class="ui-layout-west"> 
+			<div class="fluid left1">
+
+				<ul class="nav nav-tabs">
+			    <li><a href="#home" data-toggle="tab">Data Driven</a></li>
+			    <li><a href="#profile" data-toggle="tab">Simulation Driven</a></li>
+			</ul>
+			<div id="myTabContent" class="tab-content">
+			      <div class="tab-pane fade" id="home">
+				<div id="input-table" class="dataTable">
+                                </div>
+				<!--<p> OR</p>
+			        <p><a class="btn" href="#">More Info &raquo;</a></p> -->
+			      </div>
+			      <div class="tab-pane fade active in" id="profile">
+				<p>There are many experiments available which generate samples and dont require the user to enter the sample set/data.</p>
+				<p>
+			      <div class="btn-group" >
+			      	<button class="btn btn-success dropdown-toggle" data-toggle="dropdown" style="float:right"><span class="caret"></span></button>
+				<button class="btn btn-success" style="float:right">Choose</button>
+				
+				<ul class="dropdown-menu">
+				  <li><a href="#" id='binomialCoin'>Binomial Coin Toss</a></li>
+				  <li><a href="#" id='ballAndUrn'>Ball And Urn</a></li>
+				  <li><a href="#" id='dice'>Dice</a></li>
+				</ul>
+			      </div>
+			      </p>
+			    </div>
+				</div>
+
+			</div>
+			<div class="fluid controller">
+				<!-- Start Controller -->
+					<h3>Controller</h3>
+		<p class="toolbar">
+		  <button class='btn' type="button" id="stepButton" tabindex="1" title="Step">
+		  <img src="images/step.png" alt="Step" title="Step" />
+		  </button>
+		  <button class='btn btn-success' type="button" id="runButton" tabindex="2" title="Run" >
+		  <img id="runImage" src="images/run.png" alt="Run" title="Run" />
+		  </button>
+		  <button class='btn btn-danger' type="button" id="stopButton" tabindex="3" title="Stop" >
+		  <img id="stopImage" src="images/stop.png" alt="Stop" title="Stop" />
+		  </button>
+		  <button class='btn' type="button" id="resetButton" tabindex="4" title="Reset" >
+		  <img src="images/reset.png" alt="Reset" title="Reset" />
+		  </button>
+		</p>
+		<p>
+		  <span>Speed:  </span><select id="speed" style='width:100px;background-color:#ccc' tabindex="3" title="Animation Speed">
+		    <option value="slow">slow</option>
+		    <option value="medium">medium</option>
+		    <option value="fast">fast</option>
+		   </select>
+		</p>
+		
+		<p class="toolbar">
+		  <p class="tool">
+		  <input type="text" id='nSize' class="input-medium" placeholder="No. of datapoints ">
+		  </p>
+		  <p class="tool">
+		    <input type="text" id='countSize' class="input-medium" placeholder="No. of Samples (default 5)">
+		  </p>
+		  
+		</p>
+				<!--End Controller-->
+
+			</div>
+
+		 </div>
+		
+		<div class="ui-layout-east"> Generated Samples </div>
+
+
+		<div class="ui-layout-north"> 
+			Header
+		</div>
+		<div class="ui-layout-south">
+			Footer
+		</div>
+	
+</body>
+<script src="../../js/lib/jquery.min.js"></script>
+<script src="./ui.js"></script>
+<script src="./jquery.layout-latest.js"> </script>
+<script src="./vis/d3.v2.min.js"></script>
+<script src="./vis/histogram.js"></script>
+<script>
+$(function(){
+	$('body').layout({ 
+		closable: false,
+		north: {
+			resizable: false
+		},
+		south: {
+			resizable: false
+		},
+		west: {
+			minSize: 250,
+			maxSize: 550	
+		},
+		east: {
+			minSize: 350,
+			maxSize: 550
+		},
+		center: {
+			minSize: 600
+		}
+
+	});
+
+	// Generation of randomIrvinHall
+	function randomIrwinHall(m) {
+		  return function() {
+		    for (var s = 0, j = 0; j < m; j++) s += Math.random();
+		    return s / m;
+		  };
+		}
+
+	var values = d3.range(1000).map(randomIrwinHall(10));
+
+    var histogram = vis({
+                      height: 200, 
+                      width: 700,
+                      parent : '.chart',
+                      data : values
+                      });
+    histogram();
+
+
+});
+</script>

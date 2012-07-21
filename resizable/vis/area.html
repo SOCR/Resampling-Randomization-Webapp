@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+body {
+  font: 10px arial;
+}
+
+.y-axis,.x-axis{
+	fill : none;
+	stroke : #000000;
+	font-size:12px;
+	shape-rendering: crispEdges;
+}
+.tick{
+	fill : none;
+}
+text{
+	shape-rendering : crispEdges;
+}
+div.chart{
+	width:600px;
+	margin:0 auto;
+}
+circle.point{
+	fill : steelblue;
+	stroke : white;
+}
+path.plot{
+	stroke : steelblue;
+	fill: #fff;
+}
+</style>
+<body>
+  <div class="chart"></div> 
+<script src="d3.v2.js"></script>
+<script>
+
+//Intialising the SVG
+//Trying with a random array
+var data = [3,7,9,1,4,6,8];
+
+var links = [1,6,7,2,6,2,7]
+
+var margin = 30,
+	w = 640 - margin,
+	h = 480 - margin;
+
+//w,h is the viewport
+
+var svg = d3.select('.chart')
+				.append('svg')
+				.attr('height',h + margin)
+				.attr('width',w + margin);
+
+var line = d3.svg.line()
+			.x(function(d,i){ return xScale(i); })
+			.y(function(d){ return yScale(d); })
+
+var xScale = d3.scale.linear()
+			.range( [margin,w-margin] )
+			.domain( [0,data.length-1] );
+
+var yScale = d3.scale.linear()		
+			.range( [h-margin,margin] )
+			.domain( d3.extent(data))
+
+svg.append('path')
+	.attr('d',line(data))
+	.attr('class','plot');
+
+
+var circle = svg.selectAll('circle')
+				.data(data)
+				.enter()
+				.append('svg:circle')
+				.attr('class','point');
+
+circle.attr('cx',function(d,i){ return xScale(i); })
+		.attr('cy',function(d){ return yScale(d); })
+		.attr('r',0)
+		.transition()
+		.delay(function(d,i) {return i*175;} )
+		.attr('r',5)
+		.each('end',function(){ d3.select(this).text( function(d){
+			console.log(d)
+			return d;} ) });
+
+var xAxis = d3.svg.axis().scale(xScale);
+	
+var x = svg.append('g')
+	.attr('class','x-axis')
+	.attr('transform','translate(0,'+(h-margin)+')')
+	.call(xAxis);
+
+	x.append('text')
+		.text('Scatter Plot')
+		.attr('x',(w/2) - margin)
+		.attr('y',margin/1)
+
+var yAxis = d3.svg.axis().scale(yScale).orient('left');
+
+var y = svg.append('g')
+	.attr('class','y-axis')
+	.attr('transform','translate('+margin+',0)')
+	.call(yAxis);
+
+	y.append('text')
+		.text('Plots')
+		.attr('transform','rotate(-90,-43,0) translate(280)');
+
+var plotMouseover = function(d){
+	d3.select(this)
+		.transition()
+		.attr('r',9)
+		.text(function(d){ return d; });
+}
+
+var plotMouseout = function(d){
+	d3.select(this)
+		.text('')
+		.transition()
+		.delay(250)
+		.attr('r',5);
+}
+
+circle.on('mouseover',plotMouseover)
+		.on('mouseout',plotMouseout);
+
+
+
+/*
+var min = d3.min(data),
+	max= d3.max(data);
+	size = data.length;
+
+var x = d3.scale.linear().domain([0,size]).range([0, w]),
+    y = d3.scale.linear().domain([min,max]).range([h, 0]);
+
+canvas.selectAll('path')
+	.data([data]).enter()
+	.append('svg:path')
+	.attr('class','line')
+	.attr("d", 	d3.svg.line()
+			.x(function(d,i){ return x(i); })
+			.y(y));
+
+canvas.selectAll('.point')
+	.data(data)
+	.enter().append('svg:circle')
+		.attr('class',function(d,i){ return d==max?'point max':'point';})
+		.attr('cx',function(d,i){ return x(i); })
+		.attr('cy',function (d){ return d; })
+		.attr('r',function(d,i){ return d==max? 6 : 4 });
+		.on('mouseover',)
+
+var line = d3.svg.line()
+			.x(x)
+			.y(y);
+
+var yAxis = d3.svg.axis()
+			.scale(y)
+			.orient('left');
+
+
+canvas.append('g')
+		.attr('class','yaxis')
+		.call(yAxis);
+
+/*var area = d3.svg.area()
+    .x(function(d) { return x(d.x); })
+    .y0(h)
+    .y1(function(d) { return y(d.y); });
+
+var sample = [
+	{x:1,y:10},
+	{x:2,y:3},
+	{x:3,y:6},
+	{x:4,y:5}
+];
+
+var line = d3.svg.line()
+    .x(function(d) { return d.x; })
+    .y(function(d) { return d.y; })
+    .interpolate("basis");
+
+ canvas.append('svg:path')
+ 		.data(sample)
+ 
+ 		.attr('d',line);
+
+ 		*/
+
+</script>

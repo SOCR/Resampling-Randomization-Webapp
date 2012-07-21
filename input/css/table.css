@@ -78,8 +78,8 @@
   height: 1px;
 }
 
-/* textarea border color */
-textarea.inputtableInput {
+/* input border color */
+input.inputtableInput {
   border: 2px solid #5292F7;
   outline-width: 0;
   margin: 0;
@@ -91,7 +91,7 @@ textarea.inputtableInput {
   resize: none;
 }
 
-.inputtableInputHolder.htHidden textarea.inputtableInput {
+.inputtableInputHolder.htHidden input.inputtableInput {
   border-color: #5292F7;
   background: #5292F7;
   color: #5292F7;

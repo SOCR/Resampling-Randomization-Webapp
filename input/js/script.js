@@ -17,11 +17,11 @@ $(document).ready(function(){
 				{
 				  match: function (row, col, data) {
 					return (row === 0); //if it is first row
-				  },
+				 },
 				  style: {
 					color: 'green', //make the text green and bold
 					fontWeight: 'bold'
-				  },
+				 },
 				  title: 'Heading', //make some tooltip
 				  readOnly: true //make it read-only
 				},
@@ -39,38 +39,22 @@ $(document).ready(function(){
 				}
 				]
 			});
-			
-
-			$('#input-table').after("<br/><br/><input class='btn' type='button' value='Done'><input class='btn' type='button' value='Reset'><input class='btn' type='button' value='Show/Hide'>");
-			$("input[value='Done']").on('click',function(){
-
 
 			$('#input-table').after("<br/><br/><input class='btn' type='button' value='Done'><input class='btn' type='button' value='Reset'><input class='btn' type='button' value='Show'>");
-			$("input[value='Done']").on('click',function(){
+			$("input[value='Done']").on('click',function(e){
 
-			console.log($("#input-table").inputtable('getData'));
+				e.preventDefault();
+				//Saves the submission of the form
+
+				console.log($("#input-table").inputtable('getData'));
 				$('#input-table').after('Please check your console for the array');
-				return false;
+				
 			});
+			
 			$("input[value='Reset']").on('click',function(){
 				$("#input-table").inputtable('clear');
 				return false;
 			});
-
-			$("input[value='Show/Hide']").on('click',function(){
-				alert('working on it');
-				
-				return false;
-			});
-
-			$("input[value='Show']").on('click',function(){
-				alert('ads');
-				
-				return false;
-			});
-
-			
-		
 		
 	})(jQuery);
 })

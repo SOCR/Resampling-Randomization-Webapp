@@ -54,8 +54,8 @@ function vis(config){
     var formatCount = d3.format(",.0f");
 
     var margin = {top: 10, right: 30, bottom: 30, left: 30},
-        width = config.height - margin.left - margin.right,
-        height = config.width - margin.top - margin.bottom;
+        width = config.width - margin.left - margin.right,
+        height = config.height - margin.top - margin.bottom;
 
     var x = d3.scale.linear()
         .domain([0, 1])
@@ -128,8 +128,8 @@ function vis(config){
     var values = d3.range(1000).map(randomIrwinHall(10));
 
     var histogram = vis({
-                      height: 400, 
-                      width: 400,
+                      height: 200, 
+                      width: 800,
                       parent : '.chart',
                       data : values
                       });
