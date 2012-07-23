@@ -21,12 +21,10 @@ body {
   shape-rendering: crispEdges;
 }
 
-<<<<<<< HEAD
 circle.node{
   cursor:pointer;
 }
-=======
->>>>>>> e92a6aa271d1a879a6ce72ce6477d325288b1a3c
+
 </style>
 <body>
   <div class="chart"></div> 
@@ -57,12 +55,13 @@ function vis(config){
         height = config.width - margin.top - margin.bottom;
 
     var x = d3.scale.linear()
-        .domain([0, 1])
+        .domain( config.range )
         .range([0, width]);
 
     // chart a histogram using twenty uniformly-spaced bins.
     var data = d3.layout.histogram()
         .bins(x.ticks(20))
+        .range([0,10])
         (config.data);
 
     var y = d3.scale.linear()
@@ -72,6 +71,10 @@ function vis(config){
     var xAxis = d3.svg.axis()
         .scale(x)
         .orient("bottom");
+
+    var yAxis = d3.svg.axis()
+        .scale(y)
+        .orient("left");
 
     var svg = d3.select(config.parent).append("svg")
         .attr("width", width + margin.left + margin.right)
@@ -105,6 +108,10 @@ function vis(config){
         .attr("class", "x axis")
         .attr("transform", "translate(0," + height + ")")
         .call(xAxis); 
+
+    svg.append("g")
+        .attr("class","y axis")
+        .call(yAxis);
    
   }
 
@@ -131,7 +138,8 @@ function vis(config){
                       height: 400, 
                       width: 400,
                       parent : '.chart',
-                      data : values
+                      data : values,
+                      range: [0,3]
                       });
     histogram();
 
