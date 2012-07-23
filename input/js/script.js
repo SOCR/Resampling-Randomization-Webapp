@@ -40,37 +40,26 @@ $(document).ready(function(){
 				]
 			});
 			
-
-			$('#input-table').after("<br/><br/><input class='btn' type='button' value='Done'><input class='btn' type='button' value='Reset'><input class='btn' type='button' value='Show/Hide'>");
+			$('#input-table').after("<br/><br/><input class='btn' type='button' value='Done'><input class='btn' type='button' value='Reset'>");
 			$("input[value='Done']").on('click',function(){
+			//console.log($("#input-table").inputtable('getData'));
+			//$('#input-table').after('Please check your console for the array');
+			var isEmpty=model.setDataset($("#input-table").inputtable('getData'));
+			if(isEmpty==true)
+				$('#status').html('<br>No input given <i class="icon-info-sign"></i>');
+			else
+				{
+					$('#status').html('<br>Data loaded successfully! <i class="icon-ok"></i>');
+					view.createDatasetPlot();
+				}
 
-
-			$('#input-table').after("<br/><br/><input class='btn' type='button' value='Done'><input class='btn' type='button' value='Reset'><input class='btn' type='button' value='Show'>");
-			$("input[value='Done']").on('click',function(){
-
-			console.log($("#input-table").inputtable('getData'));
-				$('#input-table').after('Please check your console for the array');
 				return false;
 			});
 			$("input[value='Reset']").on('click',function(){
 				$("#input-table").inputtable('clear');
+				$('#status').html('');
 				return false;
 			});
-
-			$("input[value='Show/Hide']").on('click',function(){
-				alert('working on it');
-				
-				return false;
-			});
-
-			$("input[value='Show']").on('click',function(){
-				alert('ads');
-				
-				return false;
-			});
-
-			
-		
 		
 	})(jQuery);
 })

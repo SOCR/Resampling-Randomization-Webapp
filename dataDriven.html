@@ -13,6 +13,8 @@
     
     <!-- Le styles -->
     <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="http://code.jquery.com/ui/1.8.21/themes/base/jquery-ui.css" rel="stylesheet">
+    <link href="css/stylePagination.css" rel="stylesheet">
     <link rel="stylesheet" media="screen" href="input/css/table.css">
         <link href="css/bootstrap-responsive.css" rel="stylesheet">
     <style type="text/css">
@@ -55,8 +57,10 @@
 	padding:10px;
 	}
       #sampleList{
-	height:500px;
-	overflow: auto;
+
+		height:500px;
+		overflow: auto;
+	
       }
       .entry a:hover {
 	color:blue;
@@ -140,7 +144,7 @@
             </div><!--/span-->
             <div class="span3" >
 		<h3> DataSet Plot</h3>
-		<canvas id="distCanvas" title="Distribution graph" width="300" height="162">Distribution graph</canvas>		
+		<div id="dataPlot"></div>		
             </div><!--/span-->
                         
         </div><!--/row-->
@@ -178,11 +182,12 @@
 		  </p>
 		  
 		</p>
+		
             </div><!--/span-->
 			
-			<div class="span3">
+	    <div class="span3">
 	      <h3> DotPlot</h3>
-              <p class="device"></p>
+              <div id='dotPlot'></div>
 	      
             </div><!--/span-->
                         
@@ -193,30 +198,33 @@
       <div class='row-fluid'>
 	<div class="span4">
 		<h3>Sample List</h3>
-		<div>
-			<span class="badge badge-warning">Count: <span id='displayCount'>0</span></span>
-		</div><br>
+		<div style='padding-bottom:20px;'>
+		  <span class="badge badge-warning">Samples Generated: <span id='displayCount'>0</span></span>
+		  <span class="badge badge-success">Showing <span id='showCount'>0</span> samples</span>
+		</div>  
+		<div id='slider'>
+		  <div id="range" style='width:50%;float:left;margin-right:10px;margin-top:7px'></div>
+		  <div><button class='btn' type="button" id="showButton" tabindex="2" title="Show!" >Show!</button></div>
+		</div>
+		
+		<br>
 		<div id='sampleList'>
 		
 		</div><!--sampleList-->
-          
+		<div id='pagination'></div>
 	</div><!--span4-->
       </div><!--row-->
       </div><!--row-->
       <hr>
-	  <a class="btn" data-toggle="modal" href="#myModal" >?</a>
-	<div id="myModal" class="modal hide fade">  
+	<div id="plot" class="modal hide fade">  
 		  <div class="modal-header">
 			<a class="close" data-dismiss="modal">X</a>
-			<h3>Modal header</h3>
+			<h3>Sample Plot</h3>
 		  </div>
 		  <div class="modal-body">
-			<p>One fine body…</p>
+			<div class='device'></div>
 		  </div>
-		  <div class="modal-footer">
-			<a href="#" class="btn">Close</a>
-			<a href="#" class="btn btn-primary">Save changes</a>
-		  </div>
+		  
 	</div>
 	<div id="aboutDesc" class="modal hide fade">  
 		  <div class="modal-header">
@@ -258,25 +266,25 @@
             "js/bootstrap/bootstrap-typeahead.js",
             {inputTile:"input/js/inputtable.js"},
             {InputTile:"input/js/script.js"},
-			"js/exp/eventDispatcher.js","js/exp/dataDrivenModel.js","js/exp/dataDrivenView.js","js/exp/dataDrivenController.js",
-			"http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"
-			);
+	    "js/exp/eventDispatcher.js","js/exp/dataDrivenModel.js","js/exp/dataDrivenView.js","js/exp/dataDrivenController.js",
+	    "https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.21/jquery-ui.min.js",
+	    "vis/d3.v2.min.js",
+	    "vis/script.js",
+	    "js/exp/jquery.paginate.js"
+	    	);
     
     head.ready(function () {
 
    $(document).ready(function(){
-    //var allPanels = $('.accordion > dd').hide();
+    
     model=new dataDrivenModel();
 	
-      //alert(model.getDataset());
-	
-      view=new dataDrivenView(model);
-      //view.accordion();
-      controller=new dataDrivenController(model,view);
-      controller.initialize();
-	//controller.run();
-   //initialize
-   //view.disableButtons();
+    view=new dataDrivenView(model);
+      
+    controller=new dataDrivenController(model,view);
+      
+    controller.initialize();
+      
     $('.tabs').button('toggle');
 	
     
