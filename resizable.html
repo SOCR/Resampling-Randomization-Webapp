@@ -1,8 +1,11 @@
 <!Doctype HTML>
 <meta charset="utf-8">
 <head>
-<link rel="stylesheet" href="layout-default-latest.css"></link>
-<link href="../css/bootstrap.css" rel="stylesheet">
+<link rel="stylesheet" href="css/layout-default-latest.css"></link>
+<link href="css/bootstrap.css" rel="stylesheet">
+<link href="http://code.jquery.com/ui/1.8.21/themes/base/jquery-ui.css" rel="stylesheet">
+<link href="css/stylePagination.css" rel="stylesheet">
+ <link rel="stylesheet" media="screen" href="input/css/table.css">
 <style>
 	header{
 		height:200px;
@@ -76,6 +79,7 @@
 		}
 </style>
 <title>Demo</title>
+<script src="js/lib/head.min.js"></script>
 </head>
 <body>
 
@@ -161,23 +165,132 @@
 
 		 </div>
 		
-		<div class="ui-layout-east"> Generated Samples </div>
+		<div class="ui-layout-east">
+
+		 <!-- Begin Sample Display -->
+		 <div class="span4">
+		<h3>Sample List</h3>
+		<div style='padding-bottom:20px;'>
+		  <span class="badge badge-warning">Samples Generated: <span id='displayCount'>0</span></span>
+		  <span class="badge badge-success">Showing <span id='showCount'>0</span> samples</span>
+		</div>  
+		<div id='slider'>
+		  <div id="range" style='width:50%;float:left;margin-right:10px;margin-top:7px'></div>
+		  <div><button class='btn' type="button" id="showButton" tabindex="2" title="Show!" >Show!</button></div>
+		</div>
+		
+		<br>
+		<div id='sampleList'>
+		
+		</div><!--sampleList-->
+		<div id='pagination'></div>
+			</div>
+		 <!-- End Sample Display -->
+		</div>
 
 
 		<div class="ui-layout-north"> 
-			Header
+			<h3> SOCR </h3>
 		</div>
 		<div class="ui-layout-south">
 			Footer
 		</div>
 	
 </body>
-<script src="../js/lib/jquery.min.js"></script>
-<script src="./ui.js"></script>
-<script src="./jquery.layout-latest.js"> </script>
-<script src="./vis/d3.v2.min.js"></script>
-<script src="./vis/histogram.js"></script>
+<script src="js/lib/jquery.min.js"></script>
+<script src="js/resizable/ui.js"></script>
+<script src="js/resizable/jquery.layout-latest.min.js"> </script>
+<script src="js/vis/d3.v2.min.js"></script>
+<script src="js/vis/histogram.js"></script>
 <script>
+
+    
+head.js("js/lib/jquery.min.js",
+        "js/bootstrap/bootstrap-transition.js",
+        "js/bootstrap/bootstrap-alert.js",
+        "js/bootstrap/bootstrap-tab.js",
+        "js/bootstrap/bootstrap-button.js",
+        "js/bootstrap/bootstrap-modal.js",
+        "js/bootstrap/bootstrap-dropdown.js",
+        {coreFunctions:"js/exp/core.js"},
+        "js/bootstrap/bootstrap-scrollspy.js",
+        "js/bootstrap/bootstrap-tooltip.js",
+        "js/bootstrap/bootstrap-popover.js",
+        "js/bootstrap/bootstrap-collapse.js",
+        "js/bootstrap/bootstrap-carousel.js",
+        "js/bootstrap/bootstrap-typeahead.js",
+        {inputTile:"input/js/inputtable.js"},
+        {InputTile:"input/js/script.js"},
+    	"js/exp/eventDispatcher.js","js/exp/dataDrivenModel.js","js/exp/dataDrivenView.js","js/exp/dataDrivenController.js",
+    //"js/resizable/ui.js",
+    "js/vis/d3.v2.min.js",
+    "js/exp/jquery.paginate.js",
+    "js/vis/histogram.js",
+    "js/resizable/jquery.layout-latest.min.js",
+    "https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.21/jquery-ui.min.js",
+     "js/exp/jquery.paginate.js"
+    // "vis/script.js"
+    	);
+    
+head.ready( function () {
+
+	$(function(){
+
+		model  =new dataDrivenModel();
+		view = new dataDrivenView(model);
+		controller= new dataDrivenController(model,view);
+		  
+		controller.initialize();
+	  
+		$('.tabs').button('toggle');
+
+		$('body').layout({ 
+		closable: false,
+		north: {
+			resizable: false
+		},
+		south: {
+			resizable: false
+		},
+		west: {
+			minSize: 250,
+			maxSize: 550	
+		},
+		east: {
+			minSize: 350,
+			maxSize: 550
+		},
+		center: {
+			minSize: 600
+		}
+
+	});
+
+		// Generation of randomIrvinHall
+		function randomIrwinHall(m) {
+			  return function() {
+			    for (var s = 0, j = 0; j < m; j++) s += Math.random();
+			    return s / m;
+			  };
+			}
+
+		var values = d3.range(1000).map(randomIrwinHall(10));
+
+	    var histogram = vis({
+	                      height: 200, 
+	                      width: 700,
+	                      parent : '.chart',
+	                      data : values
+	                      });
+	    histogram();
+
+
+	});
+});
+
+    
+/*  
+
 $(function(){
 	$('body').layout({ 
 		closable: false,
@@ -221,4 +334,6 @@ $(function(){
 
 
 });
+
+*/
 </script>
