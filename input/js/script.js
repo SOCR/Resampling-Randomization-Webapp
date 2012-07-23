@@ -17,11 +17,11 @@ $(document).ready(function(){
 				{
 				  match: function (row, col, data) {
 					return (row === 0); //if it is first row
-				  },
+				 },
 				  style: {
 					color: 'green', //make the text green and bold
 					fontWeight: 'bold'
-				  },
+				 },
 				  title: 'Heading', //make some tooltip
 				  readOnly: true //make it read-only
 				},
@@ -47,14 +47,15 @@ $(document).ready(function(){
 			var isEmpty=model.setDataset($("#input-table").inputtable('getData'));
 			if(isEmpty==true)
 				$('#status').html('<br>No input given <i class="icon-info-sign"></i>');
-			else
-				{
+			else {
 					$('#status').html('<br>Data loaded successfully! <i class="icon-ok"></i>');
 					view.createDatasetPlot();
 				}
-
+				
 				return false;
+
 			});
+			
 			$("input[value='Reset']").on('click',function(){
 				$("#input-table").inputtable('clear');
 				$('#status').html('');
