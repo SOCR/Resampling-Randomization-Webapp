@@ -77,11 +77,27 @@
 		svg{
 			margin: 0 auto;
 		}
+
+	div.container-loading{
+		position: absolute;
+		top: 0;
+		left: 0;
+		z-index: 10;
+		opacity: 0.9;
+		background: #FFF;
+		width: 100%;
+		line-height: 300px;
+		font-size: 32px;
+		text-align:center;
+	}
 </style>
 <title>Demo</title>
 <script src="js/lib/head.min.js"></script>
 </head>
 <body>
+	<div class = "container-loading">
+		Initialising ...
+	</div>
 
 		<div class="ui-layout-center"> 
 			<div class="fluid vis">
@@ -204,6 +220,15 @@
 <script src="js/vis/histogram.js"></script>
 <script>
 
+$('.container-loading').height($(document).height());
+
+document.onreadystatechange = function(){
+	 if (document.readyState == 'complete'){
+	 	$('.container-loading').fadeOut('500');
+	 	
+	 };
+}
+
     
 head.js("js/lib/jquery.min.js",
         "js/bootstrap/bootstrap-transition.js",
@@ -222,8 +247,8 @@ head.js("js/lib/jquery.min.js",
         {inputTile:"input/js/inputtable.js"},
         {InputTile:"input/js/script.js"},
     	"js/exp/eventDispatcher.js","js/exp/dataDrivenModel.js","js/exp/dataDrivenView.js","js/exp/dataDrivenController.js",
-    //"js/resizable/ui.js",
-    "js/vis/d3.v2.min.js",
+    "js/resizable/ui.js",
+    "vis/d3.v2.js",
     "js/exp/jquery.paginate.js",
     "js/vis/histogram.js",
     "js/resizable/jquery.layout-latest.min.js",
@@ -245,23 +270,34 @@ head.ready( function () {
 		$('.tabs').button('toggle');
 
 		$('body').layout({ 
-		closable: false,
+		
 		north: {
-			resizable: false
+			resizable: false,
+			closable: false
 		},
 		south: {
-			resizable: false
+			resizable: false,
+			closable: false
 		},
 		west: {
 			minSize: 250,
-			maxSize: 550	
+			maxSize: 550,
+			closable: true	,
+			fxSettings: { duration: 250 }
 		},
 		east: {
 			minSize: 350,
-			maxSize: 550
+			maxSize: 550,
+			closable: true,
+			fxSettings: { duration: 250 },
+
 		},
 		center: {
-			minSize: 600
+			minSize: 600,
+			closable:true,
+			onresize: function(){
+				console.log($('.vis').outerWidth())
+			}
 		}
 
 	});
@@ -277,8 +313,8 @@ head.ready( function () {
 		var values = d3.range(1000).map(randomIrwinHall(10));
 
 	    var histogram = vis({
-	                      height: 200, 
-	                      width: 700,
+	                      height: 700, 
+	                      width: 400,
 	                      parent : '.chart',
 	                      data : values,
 	                      range: [0,3]
