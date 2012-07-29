@@ -1,0 +1,122 @@
+.panel {
+			float: left;
+			margin: 2px;
+			position: relative;
+			font-size: .8em;
+			
+			-webkit-perspective: 600px;
+			-moz-perspective: 600px;
+		}
+		/* -- make sure to declare a default for every property that you want animated -- */
+		/* -- general styles, including Y axis rotation -- */
+		.panel .front {
+			float: none;
+			position: absolute;
+			top: 0;
+			left: 0;
+			z-index: 900;
+			width: inherit;
+			height: inherit;
+			border: 1px solid #ccc;
+			background: #6b7077;
+			text-align: center;
+
+			-moz-box-shadow: 0 1px 5px rgba(0,0,0,0.9);
+			-webkit-box-shadow: 0 1px 5px rgba(0,0,0,0.9);
+			box-shadow: 0 1px 5px rgba(0,0,0,0.9);
+
+			-webkit-transform: rotateX(0deg) rotateY(0deg);
+			-webkit-transform-style: preserve-3d;
+			-webkit-backface-visibility: hidden;
+
+			-moz-transform: rotateX(0deg) rotateY(0deg);
+			-moz-transform-style: preserve-3d;
+			-moz-backface-visibility: hidden;
+
+			/* -- transition is the magic sauce for animation -- */
+			-o-transition: all .4s ease-in-out;
+			-ms-transition: all .4s ease-in-out;
+			-moz-transition: all .4s ease-in-out;
+			-webkit-transition: all .4s ease-in-out;
+			transition: all .4s ease-in-out;
+		}
+		
+		
+		.panel .back {
+			float: none;
+			position: absolute;
+			top: 0;
+			left: 0;
+			z-index: 800;
+			width: inherit;
+			height: inherit;
+			border: 1px solid #ccc;
+			background: #eee;
+			text-shadow: 1px  1px 1px rgba(0,0,0,0.6); 
+			
+			-webkit-transform: rotateY(-180deg);
+			-webkit-transform-style: preserve-3d;
+			-webkit-backface-visibility: hidden;
+
+			-moz-transform: rotateY(-180deg);
+			-moz-transform-style: preserve-3d;
+			-moz-backface-visibility: hidden;
+
+			/* -- transition is the magic sauce for animation -- */
+			-o-transition: all .4s ease-in-out;
+			-ms-transition: all .4s ease-in-out;
+			-moz-transition: all .4s ease-in-out;
+			-webkit-transition: all .4s ease-in-out;
+			transition: all .4s ease-in-out;
+		}
+		
+		 
+		
+		/* -- X axis rotation for click panel -- */
+		.click .front {
+			cursor: pointer;
+			-webkit-transform: rotateY(0deg);
+			-moz-transform: rotateX(0deg);
+		}
+		.click.flip .front {
+			-webkit-transform: rotateY(540deg);
+			-moz-transform: rotateX(540deg);
+		}
+		.click .back {
+			cursor: pointer;
+			-webkit-transform: rotateY(-540deg);
+			-moz-transform: rotateX(-540deg);
+		}
+		.click.flip .back {
+			-webkit-transform: rotateY(0deg);
+			-moz-transform: rotateX(0deg);
+		}
+			
+		/* -- cosmetics -- */
+		.panel .pad {padding: 0 15px; }
+		.panel.flip .action {display: none; }
+		.block ol li {text-align: left; margin: 0 0 0 28px; }
+		.block .action {display: block; padding: 3px; background: #333; text-align: right; font-size: .8em; opacity: 0; position: absolute; cursor: pointer; -webkit-transition: opacity .2s linear; }
+		.block:hover .action {opacity: .7; }
+		.circle div {border-radius: 100px; }
+		.circle div h2 {padding-top: 1em; text-align: center; }
+		
+		.moves {
+		/*General*/
+		transform:translate(400px,400px);
+		/*Firefox*/
+		-moz-transform:translate(400px,400px);
+		/*Microsoft Internet Explorer*/
+		-ms-transform:translate(200px,100px);
+		/*Chrome, Safari*/
+		-webkit-transform:translate(400px,200px);
+		/*Opera*/
+		-o-transform:translate(200px,100px);
+		/*general version*/
+		transition: all 5s;
+		/*browser specific versions*/
+		-moz-transition: all 1s;
+		-ms-transition: all 1s;
+		-webkit-transition: all 1s;
+		-o-transition: all 1s;
+		}

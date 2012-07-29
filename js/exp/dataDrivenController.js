@@ -2,15 +2,18 @@ var dataDrivenController=function(dataDrivenModel,view){
 /* PRIVATE PROPERTIES   */
 	model=dataDrivenModel;
 	view=view || new dataDrivenView();
-	var _id=0;
-	var _runsElasped=0;
+	
+	var _id=0;				//stores the id for setInterval in run mode
+	var _runsElasped=0;			//keeps count of number of resamples generated
 	var _this;
 	var _noOfSteps=0;
 	var _datapoints=model.getN();		//this can create problems...if the n value is changed after the intialization of the app
 	var _stopCount=model.stopCount;
-	var _count=model.getCount();
+	var _count=model.getCount();		//number of resamples already generated in the app...can create problems
 
 /* PRIVATE METHODS   */
+
+/*this function generates 1000 resamples by calling the generateSample() of model.*/
 function _generate(){
 	if(_runsElasped!=_noOfSteps)
 		{
@@ -34,36 +37,46 @@ function _generate(){
 
 /* PUBLIC METHODS   */	
 return{
-	initialize:function(){
 	
+/*initializes the app..binds all the buttons...create the show slider*/
+	initialize:function(){
 		_this=this;
+		console.log('initialization started');
 		//add event listeners
-		runButton.on('click',function(){
+		
+		$("#runButton").on('click',function(){
+		console.log('run started');
 		controller.run();
+		
 		});
-		stepButton.on('click',function(){
+		$("#stepButton").on('click',function(){
 		controller.step();
+		alert('step');
 		});
-		stopButton.on('click',function(){
+		$("#stopButton").on('click',function(){
 		controller.stop();
 		});
-		resetButton.on('click',function(){
+		$("#resetButton").on('click',function(){
 		controller.reset();
 		});
-		dotPlot.on('change',function(){
+		$("#dotPlot").on('change',function(){
 		controller.dotplot();
 		});
-		doneButton.on('click',function(){
+		$("#doneButton").on('click',function(){
 		if(controller.setInput()==false)
 			alert('Input some correct data!');
 		});
 		showButton.on('click',function(){
 			view.createList($('#showCount').text());
+			//model.getMean();
 		});
 		//create a slider
 		view.createSlider();
+		$('.dropdown-toggle').dropdown();
+		$('.popups').popover();
+		console.log('initialization done');
 	},
-	
+	/*not used till now....currently the input/js/script.js file calls setDataset function directly when the done button is pressed*/
 	setInput:function(array){
 	if(array.length === 0)
 		return false;
@@ -75,13 +88,15 @@ return{
 		return true;
 		}
 	},
+	
 	step: function(){
 		view.disableButtons();					//disabling buttons
 		model.setN(nSize.val());				// save the datapoints size
-	        model.generateSample();					//generate one sample
-		view.updateCounter();						//render the visualization
+	        var keys=model.generateStep();					//generate one sample
+		view.updateCounter();					//update counter
+		view.animate(keys);						//show sample generation animation
 		view.enableButtons();					//enabling buttons
-		view.updateSlider();
+		view.updateSlider();					//update slider count
 	},
 
 	run:function(){
@@ -92,7 +107,6 @@ return{
 	//generate samples
 		var _temp=model.getStopCount()/1000;
 		_noOfSteps=Math.ceil(_temp);
-		//alert(_noOfSteps);
 		var d=Date();
 		console.log('start'+_runsElasped+d);
 		_generate();
@@ -116,7 +130,7 @@ return{
 		model.setCount(0);		//reset the total count
 		model.setSamples=[];	//empty the bootstrap samples
 		view.clearAll();		//clearing all the canvas
-		
+		$('#showCount').html('');
 		},
         
     
@@ -126,6 +140,38 @@ return{
 	},
 	getDotPlot:function(){
 	
+	},
+	loadController:function(x){
+		if(x=='simulationDriven')
+			{
+				Experiment.createControllerView();
+				Experiment.initialize();
+				
+			}
+		else
+			{
+				view.createControllerView();
+				this.initialize();
+				//check for input
+				if(Experiment)
+					{
+					if(Experiment.getDataset()!='')
+						{	console.log('simulation drive has some data');
+						alert(Experiment.getDataset());
+							model.setDataset(Experiment.getDataset());	
+							console.log(model.getDataset());
+						}	
+						
+					}
+				//set the input
+				
+			}
+	
+	},
+	SDpopulate:function(){
+		
+		view.SDcreate(nParam.getValue());
+		model.SDgenerate();
 	}
  
     }//return

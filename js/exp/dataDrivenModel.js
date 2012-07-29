@@ -1,15 +1,31 @@
 var dataDrivenModel=function(){
 //::::::: PRIVATE PROPERTIES :::::::::::::::
 
+/*
+ *FOR DATA DRIVEN 
+ *
+ */
+
 //var runCount = 0;			//Keeps track of number of runs elapsed 
 var _stopCount = 1000;			//Number of runs to be made when 'run' button is pressed 
 var _count=0;				//keeps count of number of samples generated from start
-var _dataSet=['1','2','3','4','5','6','7','8','9','10'];			// All the input datapoints from wich bootstrap sample is generated
+var _dataset=['1','2','3','4','5','6','7','8','9','10'];			// All the input datapoints from wich bootstrap sample is generated
 var _n=50;				//Number of datapoints in a bootstrap sample or Sample Size
 var bootstrapSamples=new Array();	//Contains all the bootstrap samples generated
 //var variables;				//number of variables
 var _data;
 var sample=[];
+var _temp;
+var _sampleMean=[];
+var coin = new Array(N);
+/*
+ *FOR SIMULATION DRIVEN
+ *
+ */
+var N=100;
+var p = 0.5;	  		//Probability of heads
+var N = 50;			//Maximum number of trials 
+
 /*
  IF EVENT DISPATCH MODEL IS TO BE IMPLEMENTED
  
@@ -18,10 +34,21 @@ subject = new LIB_makeSubject(['generateSamples','generateSample']); //list of a
 */
 
 /* PUBLIC METHODS   */
-function getRandomInt(min, max) {
+
+/* returns a random number in the range [min,max]*/
+function _getRandomInt(min, max) {
 	return Math.floor(Math.random() * (max - min )) + min;
     }
 
+function _generateMean(j){
+		var x=bootstrapSamples[j];
+		var total=0;
+		for(var i in x) { total += parseInt(x[i]); }
+		//alert(total);
+		_sampleMean[j]=total/x.length;
+		
+	
+}
 return{
 	/* PUBLIC PROPERTIES   */
 	//stopCount:stopCount,
@@ -35,9 +62,10 @@ return{
 	removeObserver:subject.removeObserver()
 	*/    
         //i think this should be a private function
+	/*generates*/
 	generateTrail:function(){
-		randomKey=getRandomInt(0, _dataSet.length);	//generating a random number between 0 and dataSet size 
-		return _dataSet[randomKey];			//returning the generated trail into a bootstrap sample array
+		randomKey=_getRandomInt(0, _dataset.length);	//generating a random number between 0 and dataSet size 
+		return {data:_dataset[randomKey],key:randomKey};			//returning the generated trail into a bootstrap sample array
 	},
         
 	generateSample:function(){
@@ -47,7 +75,9 @@ return{
 		while(j--)
 			{
 			//bootstrapSamples[_count][j]=this.generateTrail();
-			sample[j]=this.generateTrail();	//inserting the new sample
+			var temp=this.generateTrail();
+			//alert(temp.data);
+			sample[j]=temp.data;	//inserting the new sample
 			}
 		bootstrapSamples[_count]=sample;
 		//bootstrapSamples[_count]= new Array(sample);
@@ -55,7 +85,32 @@ return{
 		_count++;		//incrementing the total count - number of samples generated from start of simulation
 		
 	},
-	
+	generateStep:function(){
+		var j=_n;
+		var sample=[];
+		while(j--)
+			{
+			//bootstrapSamples[_count][j]=this.generateTrail();
+			var temp=this.generateTrail();
+			sample[j]=temp[data];	//inserting the new sample
+			keys[j]=temp[key];
+			}
+		bootstrapSamples[_count]=sample;
+		//bootstrapSamples[_count]= new Array(sample);
+		//console.log(_count+':'+bootstrapSamples[_count]);
+		_count++;
+		return keys;
+	},
+	getMean:function(){
+		for(var j=0;j<_count;j++)
+			{
+			_generateMean(j);
+			//this.stop();
+			//alert(bootstrapSamples[j]);
+			//console.log(_sampleMean[j]);
+			}
+			
+		},
 	error:function(x){
 		switch (x){
 		case('inputMissing'):
@@ -70,30 +125,32 @@ return{
 	
 	/*  getter and setter for variable 'dataSet'  */
 	getDataset:function(){
-		return _dataSet;
+		return _dataset;
 	},
 	setDataset:function(_data){
 		if(_data)
-		{//alert(data);
+			{
 		//emptying the array
-			_dataSet=[];
+			_dataset=[];
+			_dataset=_data;
+			console.log('input data :'+_data);
+		/*
 		//sorting out the first column
 			for(i=0;i<_data.length-1;i++)
 				{
-					_dataSet[i]=_data[i+1][0];
+					_dataset[i]=_data[i+1][0];
 					//alert(dataSet[i]);
 				}
+		*/
 		//splicing the empty cells	
-			for (var i = 0; i < _dataSet.length; i++) {
-				if (_dataSet[i] == '') {         
-					_dataSet.splice(i, 1);
+			for (var i = 0; i < _dataset.length; i++) {
+				if (_dataset[i] == '') {         
+					alert(i);
+					_dataset.splice(i, 1);
 					i--;
 					}
-			}	
-			if(_dataSet.length==0)
-				return true;
-			else
-				return false;
+			}		
+			console.log('final data :' + _dataset);
 		}
 		else
 			return error('inputMissing');

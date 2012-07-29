@@ -5,11 +5,6 @@ function vis(config){
       height = 400;
 
   function chart(){
-    
-      //generate chart here
-      //d- data
-      //i -`this`
-      console.log(config);
 
     // A formatter for counts.
     var formatCount = d3.format(",.0f");
@@ -19,12 +14,13 @@ function vis(config){
         height = config.width - margin.top - margin.bottom;
 
     var x = d3.scale.linear()
-        .domain([0, 1])
+        .domain( config.range )
         .range([0, width]);
 
     // chart a histogram using twenty uniformly-spaced bins.
     var data = d3.layout.histogram()
         .bins(x.ticks(20))
+        .range([0,10])
         (config.data);
 
     var y = d3.scale.linear()
@@ -35,6 +31,10 @@ function vis(config){
         .scale(x)
         .orient("bottom");
 
+    var yAxis = d3.svg.axis()
+        .scale(y)
+        .orient("left");
+
     var svg = d3.select(config.parent).append("svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
@@ -44,12 +44,16 @@ function vis(config){
     var bar = svg.selectAll(".bar")
         .data(data)
       .enter().append("g")
-        .attr("class", "bar")
-        .attr("transform", function(d) { return "translate(" + x(d.x) + "," + y(d.y) + ")"; });
+
+        .attr("class", "bar");
 
     bar.append("rect")
-        .attr("x", 1)
+        .attr("x", function(d,i){ return x(d.x); })
         .attr("width", x(data[0].dx) - 1)
+        .attr('y',height)    
+      .transition()
+      .delay( function(d,i){ return i*50; } )
+        .attr('y',function(d){  return y(d.y) })
         .attr("height", function(d) { return height - y(d.y); });
 
     bar.append("text")
@@ -63,6 +67,10 @@ function vis(config){
         .attr("class", "x axis")
         .attr("transform", "translate(0," + height + ")")
         .call(xAxis); 
+
+    svg.append("g")
+        .attr("class","y axis")
+        .call(yAxis);
    
   }
 

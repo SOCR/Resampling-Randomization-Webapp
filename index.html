@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -9,11 +10,14 @@
     <meta name="author" content="selvam,ashwini,ivo">
   
     <!-- head.js ... its a javascript loader tool -->
-    <script src="js/head.min.js"></script>
+    <script src="js/lib/head.min.js"></script>
     
     <!-- Le styles -->
     <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="http://code.jquery.com/ui/1.8.21/themes/base/jquery-ui.css" rel="stylesheet">
+    <link href="css/stylePagination.css" rel="stylesheet">
     <link rel="stylesheet" media="screen" href="input/css/table.css">
+        <link href="css/bootstrap-responsive.css" rel="stylesheet">
     <style type="text/css">
       body {
         padding-top: 60px;
@@ -25,9 +29,65 @@
       .row-fluid{padding-top:10px;}
       #myModal{display: none;}
       .tab-content{overflow:visible;}
-    </style>
-    <link href="css/bootstrap-responsive.css" rel="stylesheet">
+	  
+/*
+    SampleList style starts here
+ 	  
+*/
+		
+      .entry{
+	      padding: 10px;
+	      
+	      border-bottom: 0; 
+	      &:last-of-type {
+        border-bottom: 1px solid black; 
+	}
+     
+      }
+      .header{
+      background-color:#cdf;
+      }
+	
+      .values{
+	color:brown;
+	font-weight:800;
+      }
+	
+      .span5,.span4{
+	border:1px solid;
+	padding:10px;
+      }
+      #sampleList{
+	height:400px;
+	overflow-y: scroll;
+      }
+      
+      #range{
+	width:50%;
+	float:left;
+	margin-right:10px;
+	margin-top:7px;
+	}
+	
+  /*
+    SampleList style ends here
+ 	  
+*/
+        .slide-out-input,.slide-out-controller {
+	  border:1px solid;
+	  padding:10px;
+          
+          background: #ccc;
+          
+      }      
+       
+      
+      .up{
+	z-index:1;
+      }
 
+  </style>
+ 
     <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
@@ -42,7 +102,7 @@
   </head>
 
   <body>
-
+  <div id='header'>
     <div class="navbar navbar-fixed-top">
       <div class="navbar-inner">
         <div class="container-fluid">
@@ -55,203 +115,181 @@
           <div class="nav-collapse">
             <ul class="nav">
               <li class="active"><a href="#">Home</a></li>
-              <li><a href="#about">About</a></li>
-              <li><a href="#contact">Simulations</a></li>
+              <li><a data-toggle="modal" href="#aboutDesc">About</a></li>
+              <li><a data-toggle="modal" href="#simulationDesc">Simulations</a></li>
 			  
             </ul>
-            <p class="navbar-text pull-right">Logged in as <a href="#">username</a></p>
           </div><!--/.nav-collapse -->
         </div>
       </div>
     </div>
-
+  </div>
+  <div id='main'>
     <div class="container-fluid">
       <div class="row-fluid">
-        <div class="row-fluid">
-            <div class="span4">
-				<!-- Add data-toggle="buttons-radio" for radio style toggling on btn-group -->
-			<ul class="nav nav-tabs">
-			    <li><a href="#home" data-toggle="tab">Data Driven</a></li>
-			    <li><a href="#profile" data-toggle="tab">Simulation Driven</a></li>
+	<div class='span8'>
+	  <div id='accordion'>
+	    <h3><a href="#">DataSet</a></h3>
+	    <div>
+	      <div id="dataPlot">List of all generated samples!</div>
+	      <div id="currentSample">e</div>
+	    </div>		
+	    <h3><a href="#">DotPlot</a></h3>
+	    <div id='dotPlot'>eafsef</div>
+	  </div>
+	<div class="slide-out-input" >
+		<a class="handle" href="#">Content</a>
+		<h3> Input Tile</h3>
+		<!-- Add data-toggle="buttons-radio" for radio style toggling on btn-group -->
+		<ul id='myTab' class="nav nav-tabs">
+		    <li class="active"><a href="#dataDriven-content" id='dataDriven-tab' data-toggle="tab" >Data Driven</a></li>
+		    <li ><a href="#simulationDriven-content" id='simulationDriven-tab' data-toggle="tab" >Simulation Driven</a></li>
+		</ul>
+		<div id="myTabContent" class="tab-content">
+		    <div class="tab-pane fade active in" id="dataDriven-content">
+		      <div id="input-table" class="dataTable" style='width:400px'>
+                      </div>
+		      <div id='status'>
+		      </div>
+		      <!--<p> OR</p>
+		      <p><a class="btn" href="#">More Info &raquo;</a></p> -->
+		    </div>
+		    <div class="tab-pane fade" id="simulationDriven-content">
+		      <p style='width:400px'>There are many experiments available which generate samples and dont require the user to enter the sample set/data.<span><i class="icon-question-sign popups" rel="popover" data-content="Choose a experiment from the list to start generating samples!" data-original-title="Simulation Driven"></i></span></p>
+		      <div class="btn-group">
+			<button class="btn btn-success">Choose</button>
+			<button class="btn btn-success dropdown-toggle"><span class="caret"></span></button>
+			<ul class="dropdown-menu">
+			  <li><a href="#" id='binomialCoin'>Binomial Coin Toss</a></li>
+			  <li><a href="#" id='ballAndUrn'>Ball And Urn</a></li>
+			  <li><a href="#" id='dice'>Dice</a></li>
 			</ul>
-			<div id="myTabContent" class="tab-content">
-			      <div class="tab-pane fade" id="home">
-				<div id="input-table" class="dataTable">
-                                </div>
-				<!--<p> OR</p>
-			        <p><a class="btn" href="#">More Info &raquo;</a></p> -->
-			      </div>
-			      <div class="tab-pane fade active in" id="profile">
-				<p>There are many experiments available which generate samples and dont require the user to enter the sample set/data.</p>
-				<p>
-			      <div class="btn-group">
-				<button class="btn btn-success">Choose</button>
-				<button class="btn btn-success dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
-				<ul class="dropdown-menu">
-				  <li><a href="#" id='binomialCoin'>Binomial Coin Toss</a></li>
-				  <li><a href="#" id='ballAndUrn'>Ball And Urn</a></li>
-				  <li><a href="#" id='dice'>Dice</a></li>
-				</ul>
-			      </div>
-			      </p>
-			    </div>
-			</div>
-             
-             
-            </div><!--/span-->
-            <div class="span3" >
-		<h3> Visualization</h3>
-		<canvas id="distCanvas" title="Distribution graph" width="300" height="162">Distribution graph</canvas>		
-            </div><!--/span-->
-            <div class="span3" >
-		<h3> Distribution Table</h3>
-		<p class="device"><textarea id="distTable" readonly="true" wrap="off" class="table" rows="7"></textarea></p>
-            </div><!--/span-->
-            
-          </div><!--/row-->
-          <div class="row-fluid">
-            <div class="span3" >
+		      </div>
+		    </div>
+		  </div>
+            </div><!--/slide-out-input-->
+	  <div class="slide-out-controller" style='width:400px' >
+	      <a class="handle2" href="#">Content</a>
               <h3>Controller</h3>
+		<div id='controller-content'>
 		<p class="toolbar">
 		  <button class='btn' type="button" id="stepButton" tabindex="1" title="Step">
-		  <img src="images/step.png" alt="Step" title="Step" />
+		  <img src="img/step.png" alt="Step" title="Step" />
 		  </button>
 		  <button class='btn btn-success' type="button" id="runButton" tabindex="2" title="Run" >
-		  <img id="runImage" src="images/run.png" alt="Run" title="Run" />
+		  <img id="runImage" src="img/run.png" alt="Run" title="Run" />
 		  </button>
 		  <button class='btn btn-danger' type="button" id="stopButton" tabindex="3" title="Stop" >
-		  <img id="stopImage" src="images/stop.png" alt="Stop" title="Stop" />
+		  <img id="stopImage" src="img/stop.png" alt="Stop" title="Stop" />
 		  </button>
 		  <button class='btn' type="button" id="resetButton" tabindex="4" title="Reset" >
-		  <img src="images/reset.png" alt="Reset" title="Reset" />
+		  <img src="img/reset.png" alt="Reset" title="Reset" />
 		  </button>
+		  <span>
+		    <i class="icon-question-sign popups" rel="popover" data-content="<ul><li>Step Button : generates 1 sample</li><li>Run Button : generates X sample..X can be set from the option below</li><li>Stop Button :Stops the sample generation</li><li>Reset Button : Resets all values</li></ul>" data-original-title="Controls"></i>
+		  </span>
 		</p>
 		<p>
-		  <select id="stopSelect" tabindex="5" title="Stop frequency" onchange="stopFreq = value;">
-		    <option value="10">Stop: 10</option>
-		    <option value="100">Stop: 100</option>
-		    <option value="1000">Stop: 1000</option>
-		    <option value="10000">Stop: 10000</option>
-		    <option value="0">Stop: never</option>
-		  </select>
+		  <span>Speed:  </span><select id="speed" style='width:100px' tabindex="3" title="Animation Speed">
+		    <option value="slow">slow</option>
+		    <option value="medium">medium</option>
+		    <option value="fast">fast</option>
+		   </select>
 		</p>
-		<p>
-		<span class="tool">Show Distribution:
-		<input type="checkbox" id="showCheck" tabindex="6" onchange="showDist(this.checked)" />
-		</span>
-		</p>
-
 		<p class="toolbar">
 		  <p class="tool">
-		    <span id="nLabel" class="badge badge-warning" for="nInput">N = </span><span id='nvalue'></span>
-		    <input id="nInput" type="range" tabindex="7" class="parameter"/>
+		    <span>Generate</span><input type="text" id='countSize' class="input-small" value='1000'>
+		    <span>Samples with </span><input type="text" id='nSize' class="input-small" value='50'><span>Datapoint per sample.</span>
 		  </p>
-		  <p class="tool">
-		    <span id="pLabel" class="badge badge-warning" for="pInput">P = </span><span id='pvalue'></span>
-		    <input id="pInput" type="range" tabindex="8" class="parameter"/>
-		  </p>
-		  <select id="rvSelect" tabindex="9" title="Random variable" >
-		    <option value="0" selected="true">Y: Number of heads</option>
-		    <option value="1">M: Proportion of heads</option>
-		  </select>
 		</p>
-            </div><!--/span-->
-			
-	    <div class="span4">
-	      <h3> Record Table</h3>
-              <p class="device"><textarea id="recordTable" readonly="true" wrap="off" class="table" rows="7" style='height:200px'></textarea></p>
-	      
-            </div><!--/span-->
-            
-            <div class="span4">
-	      <h3> Samples Generated</h3>
-	    <table class="coinPanel">
-			<tr>
-				<td class="device"><canvas id="coin0" class="coin" title="Coin 1" width="30" height="30">Coin 1</canvas></td>
-				<td class="device"><canvas id="coin1" class="coin" title="Coin 2" width="30" height="30">Coin 2</canvas></td>
-				<td class="device"><canvas id="coin2" class="coin" title="Coin 3" width="30" height="30">Coin 3</canvas></td>
-				<td class="device"><canvas id="coin3" class="coin" title="Coin 4" width="30" height="30">Coin 4</canvas></td>
-				<td class="device"><canvas id="coin4" class="coin" title="Coin 5" width="30" height="30">Coin 5</canvas></td>
-				<td class="device"><canvas id="coin5" class="coin" title="Coin 6" width="30" height="30">Coin 6</canvas></td>
-				<td class="device"><canvas id="coin6" class="coin" title="Coin 7" width="30" height="30">Coin 7</canvas></td>
-				<td class="device"><canvas id="coin7" class="coin" title="Coin 8" width="30" height="30">Coin 8</canvas></td>
-				<td class="device"><canvas id="coin8" class="coin" title="Coin 9" width="30" height="30">Coin 9</canvas></td>
-				<td class="device"><canvas id="coin9" class="coin" title="Coin 10" width="30" height="30">Coin 10</canvas></td>
-			</tr>
-			<tr>
-				<td class="device"><canvas id="coin10" class="coin" title="Coin 11" width="30" height="30">Coin 11</canvas></td>
-				<td class="device"><canvas id="coin11" class="coin" title="Coin 12" width="30" height="30">Coin 12</canvas></td>
-				<td class="device"><canvas id="coin12" class="coin" title="Coin 13" width="30" height="30">Coin 13</canvas></td>
-				<td class="device"><canvas id="coin13" class="coin" title="Coin 14" width="30" height="30">Coin 14</canvas></td>
-				<td class="device"><canvas id="coin14" class="coin" title="Coin 15" width="30" height="30">Coin 15</canvas></td>
-				<td class="device"><canvas id="coin15" class="coin" title="Coin 16" width="30" height="30">Coin 16</canvas></td>
-				<td class="device"><canvas id="coin16" class="coin" title="Coin 17" width="30" height="30">Coin 17</canvas></td>
-				<td class="device"><canvas id="coin17" class="coin" title="Coin 18" width="30" height="30">Coin 18</canvas></td>
-				<td class="device"><canvas id="coin18" class="coin" title="Coin 19" width="30" height="30">Coin 19</canvas></td>
-				<td class="device"><canvas id="coin19" class="coin" title="Coin 20" width="30" height="30">Coin 20</canvas></td>
-			</tr>
-			<tr>
-				<td class="device"><canvas id="coin20" class="coin" title="Coin 21" width="30" height="30">Coin 21</canvas></td>
-				<td class="device"><canvas id="coin21" class="coin" title="Coin 22" width="30" height="30">Coin 22</canvas></td>
-				<td class="device"><canvas id="coin22" class="coin" title="Coin 23" width="30" height="30">Coin 23</canvas></td>
-				<td class="device"><canvas id="coin23" class="coin" title="Coin 24" width="30" height="30">Coin 24</canvas></td>
-				<td class="device"><canvas id="coin24" class="coin" title="Coin 25" width="30" height="30">Coin 25</canvas></td>
-				<td class="device"><canvas id="coin25" class="coin" title="Coin 26" width="30" height="30">Coin 26</canvas></td>
-				<td class="device"><canvas id="coin26" class="coin" title="Coin 27" width="30" height="30">Coin 27</canvas></td>
-				<td class="device"><canvas id="coin27" class="coin" title="Coin 28" width="30" height="30">Coin 28</canvas></td>
-				<td class="device"><canvas id="coin28" class="coin" title="Coin 29" width="30" height="30">Coin 29</canvas></td>
-				<td class="device"><canvas id="coin29" class="coin" title="Coin 30" width="30" height="30">Coin 30</canvas></td>
-			</tr>
-			<tr>
-				<td class="device"><canvas id="coin30" class="coin" title="Coin 31" width="30" height="30">Coin 31</canvas></td>
-				<td class="device"><canvas id="coin31" class="coin" title="Coin 32" width="30" height="30">Coin 32</canvas></td>
-				<td class="device"><canvas id="coin32" class="coin" title="Coin 33" width="30" height="30">Coin 33</canvas></td>
-				<td class="device"><canvas id="coin33" class="coin" title="Coin 34" width="30" height="30">Coin 34</canvas></td>
-				<td class="device"><canvas id="coin34" class="coin" title="Coin 35" width="30" height="30">Coin 35</canvas></td>
-				<td class="device"><canvas id="coin35" class="coin" title="Coin 36" width="30" height="30">Coin 36</canvas></td>
-				<td class="device"><canvas id="coin36" class="coin" title="Coin 37" width="30" height="30">Coin 37</canvas></td>
-				<td class="device"><canvas id="coin37" class="coin" title="Coin 38" width="30" height="30">Coin 38</canvas></td>
-				<td class="device"><canvas id="coin38" class="coin" title="Coin 39" width="30" height="30">Coin 39</canvas></td>
-				<td class="device"><canvas id="coin39" class="coin" title="Coin 40" width="30" height="30">Coin 40</canvas></td>
-			</tr>
-			<tr>
-				<td class="device"><canvas id="coin40" class="coin" title="Coin 41" width="30" height="30">Coin 41</canvas></td>
-				<td class="device"><canvas id="coin41" class="coin" title="Coin 42" width="30" height="30">Coin 42</canvas></td>
-				<td class="device"><canvas id="coin42" class="coin" title="Coin 43" width="30" height="30">Coin 43</canvas></td>
-				<td class="device"><canvas id="coin43" class="coin" title="Coin 44" width="30" height="30">Coin 44</canvas></td>
-				<td class="device"><canvas id="coin44" class="coin" title="Coin 45" width="30" height="30">Coin 45</canvas></td>
-				<td class="device"><canvas id="coin45" class="coin" title="Coin 46" width="30" height="30">Coin 46</canvas></td>
-				<td class="device"><canvas id="coin46" class="coin" title="Coin 47" width="30" height="30">Coin 47</canvas></td>
-				<td class="device"><canvas id="coin47" class="coin" title="Coin 48" width="30" height="30">Coin 48</canvas></td>
-				<td class="device"><canvas id="coin48" class="coin" title="Coin 49" width="30" height="30">Coin 49</canvas></td>
-				<td class="device"><canvas id="coin49" class="coin" title="Coin 50" width="30" height="30">Coin 50</canvas></td>
-			</tr>
-		</table>
-	    </div>
-          </div><!--/row-->
-	  
-      </div><!--/row-->
-
+		<p>
+		  
+		  <select id="variable" style='width:100px;margin-top:10px'>
+		    <option value="slow">Mean</option>
+		    <option value="medium">S.D</option>
+		    <option value="fast">Percentile</option>
+		  </select>
+		  <span>
+		    <a href="#" class="btn btn-danger popups" rel="popover" data-content="This will create a plot of the variable for each generated sample. Click this once you have generated some samples!" data-original-title="Inference">Infer!</a>
+		  </span>
+		</p>
+		</div>
+	</div><!--/slide-out-controller-->
+         
+      
+      </div><!--span8-->
+      
+	<div class="span4">
+		<h3>Sample List <span>
+		    <i class="icon-question-sign popups" rel="popover" data-content="It shows the list of generated samples when the show button is pressed." data-original-title="Sample List"></i>
+		  </span></h3>
+		
+		<div style='padding-bottom:20px;'>
+		  <span class="badge badge-warning">Samples Generated: <span id='displayCount'>0</span></span>
+		  <span class="badge badge-success">Showing <span id='showCount'>0</span> samples</span>
+		</div>  
+		<div id='slider'>
+		  <div id="range"></div>
+		  <div><button class='btn' type="button" id="showButton" tabindex="2" title="Show!" >Show!</button></div>
+		</div>
+		<br>
+		<div id='sampleList'>
+		<!--sampleList-->
+		
+		<div class="pagination">
+		</div>
+		</div>
+		<div class='pagination'>
+		<!--Page Numbers-->
+		</div>
+	</div><!--span4-->
+      
+      </div><!--row-->
       <hr>
-	  <a class="btn" data-toggle="modal" href="#myModal" >Launch Modal</a>
-	<div id="myModal" class="modal hide fade">  
+      <!--
+      Following divs are for the modal windows.
+      -->
+	<div id="plot" class="modal hide fade">  
 		  <div class="modal-header">
 			<a class="close" data-dismiss="modal">X</a>
-			<h3>Modal header</h3>
+			<h3>Sample Plot</h3>
 		  </div>
 		  <div class="modal-body">
-			<p>One fine body…</p>
+			<div class='device'></div>
+		  </div>
+		  
+	</div>
+	<div id="aboutDesc" class="modal hide fade">  
+		  <div class="modal-header">
+			<a class="close" data-dismiss="modal">X</a>
+			<h3>SOCR</h3>
+		  </div>
+		  <div class="modal-body">
+			<p>The goal of this project is to design a modern and portable SOCR web-app that demonstrates the concepts of statistical analysis such as resampling, randomization and probabilistic simulation and runs seamlessly across varied devices. The application will be based on HTML5, CSS3 and JavaScript framework</p>
 		  </div>
 		  <div class="modal-footer">
-			<a href="#" class="btn">Close</a>
-			<a href="#" class="btn btn-primary">Save changes</a>
+			<a href="http://socr.ucla.edu" class="btn btn-primary">HomePage</a>
 		  </div>
 	</div>
+	<div id='simulationDesc' class="modal hide fade">
+	  <div class="modal-header">
+			<a class="close" data-dismiss="modal">X</a>
+			<h3>Simulations</h3>
+		  </div>
+	  <div class="modal-body">
+	    <p>There are a list of simulation experiments you can choose from to create the dataset for further analysis. Currently we have 4 experiments installed into the App. More are soon to come!</p>
+	    <ul>
+	    <li>Coin Toss </li>
+	    <li>Ball and Urn</li>
+	    </ul>
+	  </div>
+	</div>
       <footer>
-        <p>&copy; Company 2012</p>
+        <p>&copy; UCLA 2012</p>
       </footer>
 
     </div><!--/.fluid-container-->
+  </div> <!-- main -->
 </body>
     <!-- Le javascript
     ================================================== -->
@@ -259,90 +297,134 @@
     <!--<script type='text/javascript' src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>-->
     <script type='text/javascript'>
     
-    head.js("http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js",
-            "js/bootstrap-transition.js",
-            "js/bootstrap-alert.js",
-            "js/bootstrap-tab.js",
-            "js/bootstrap-button.js",
-            "js/bootstrap-modal.js",
-            "js/bootstrap-dropdown.js",
+    head.js("js/lib/jquery.min.js",
+            "js/bootstrap/bootstrap-transition.js",
+            "js/bootstrap/bootstrap-alert.js",
+            "js/bootstrap/bootstrap-tab.js",
+            "js/bootstrap/bootstrap-button.js",
+            "js/bootstrap/bootstrap-modal.js",
+            "js/bootstrap/bootstrap-dropdown.js",
             {coreFunctions:"js/exp/core.js"},
-            {BCTexp:"js/exp/binomialCoin.js"},
-            "js/bootstrap-scrollspy.js",
-            "js/bootstrap-tooltip.js",
-            "js/bootstrap-popover.js",
-            "js/bootstrap-collapse.js",
-            "js/bootstrap-carousel.js",
-            "js/bootstrap-typeahead.js",
+	    {binomialCoin:"js/exp/binomialCoin.js"},
+            "js/bootstrap/bootstrap-scrollspy.js",
+            "js/bootstrap/bootstrap-tooltip.js",
+            "js/bootstrap/bootstrap-popover.js",
+            "js/bootstrap/bootstrap-collapse.js",
+            "js/bootstrap/bootstrap-carousel.js",
+            "js/bootstrap/bootstrap-typeahead.js",
             {inputTile:"input/js/inputtable.js"},
-            {InputTile:"input/js/script.js"});
+            {InputTile:"input/js/script.js"},
+	    "js/exp/eventDispatcher.js",
+	    {Model:"js/exp/dataDrivenModel.js"},
+	    {View:"js/exp/dataDrivenView.js"},
+	    {Controller:"js/exp/dataDrivenController.js"},
+	    "https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.21/jquery-ui.min.js",
+	    {D3:"vis/d3.v2.min.js"},
+	    "vis/script.js",
+	    "js/exp/jquery.paginate.js",
+	    "js/exp/socr.js",
+	    "js/exp/jquery.tabSlideOut.v1.3.js",
+		"js/exp/update.js"
+	    	);
     
-    head.ready(function () {
+  head.ready(function () {
 
-   $(document).ready(function(){
-        
-   //super object 'Experiment'
-   //Default Experiment is BinomialCoin Toss Experiment
-      Experiment=binomialCoin;
-      //Initializing
-      Experiment.initialize();
-      //array containing all the experiment.js already loaded
-      var expLoaded=['binomialCoin'];
-	
-          //bind all the buttons
-    $("#stepButton").click(function(){
-      Experiment.step();
-	});
-    $("#stopButton").click(function(){
-	Experiment.stop();
-	});
-    $("#resetButton").click(function(){
-	Experiment.reset();
-	});
-    $("#runButton").click(function(){
-	Experiment.run();
-	});
-    $("#pInput").change(function(){
-	Experiment.reset();
-	});
-    $("#nInput").change(function(){
-	Experiment.reset();
-	});
-	
-    $("#rvSelect").change(function(){
-	Experiment.setDist();
-	});
-        
-    //Binomial Coin Experiment
-      $('#binomialCoin').click(function(){
-	Experiment=binomialCoin;    
-        //Initializing
-        Experiment.initialize();
-      });
+  /* Slide out feature of input and control tiles
+   *uses jquery.tabSlideOut.v1.3.js
+   *
+   */
+  $(document).ready(function(){
+     $('.slide-out-input').tabSlideOut({
+            tabHandle: '.handle',                     //class of the element that will become your tab
+            pathToTabImage: 'img/contact_tab.gif', //path to the image for the tab //Optionally can be set using css
+            imageHeight: '122px',                     //height of tab image           //Optionally can be set using css
+            imageWidth: '40px',                       //width of tab image            //Optionally can be set using css
+            tabLocation: 'left',                      //side of screen where tab lives, top, right, bottom, or left
+            speed: 300,                               //speed of animation
+            action: 'click',                          //options: 'click' or 'hover', action to trigger animation
+            topPos: '200px',                          //position from the top/ use if tabLocation is left or right
+            leftPos: '20px',                          //position from left/ use if tabLocation is bottom or top
+            fixedPosition: false                      //options: true makes it stick(fixed position) on scroll
+        });
     
-    //Ball and Urn Experiment  
-      $('#ballAndUrn').click(function(){
-        alert('1');
-        if($.inArray(ballAndUrn, expLoaded)==-1)      //check whether the experiment script is already loaded
-          {
-            $.getScript("js/exp/ballAndUrn.js",function(){
-              Experiment=ballAndUrn;
-              //Initializing
-              alert(Experiment);
-              Experiment.initialize();});
-            //head.js("js/exp/ballAndUrn.js");          //loading the Ball and Urn Script
-            expLoaded.push('ballAndUrn');   //Making a entry in the array of loaded experiment scripts
-          }
-        
-	});
-         
-
-    $('.tabs').button('toggle');
-	
+    $('.slide-out-controller').tabSlideOut({
+            tabHandle: '.handle2',                     //class of the element that will become your tab
+            pathToTabImage: 'img/contact_tab.gif', //path to the image for the tab //Optionally can be set using css
+            imageHeight: '122px',                     //height of tab image           //Optionally can be set using css
+            imageWidth: '40px',                       //width of tab image            //Optionally can be set using css
+            tabLocation: 'left',                      //side of screen where tab lives, top, right, bottom, or left
+            speed: 300,                               //speed of animation
+            action: 'click',                          //options: 'click' or 'hover', action to trigger animation
+            topPos: '500px',                          //position from the top/ use if tabLocation is left or right
+            leftPos: '20px',                          //position from left/ use if tabLocation is bottom or top
+            fixedPosition: false                      //options: true makes it stick(fixed position) on scroll
+        });
     
+    
+    //For deciding which tile should come over which one!
+    $('.slide-out-input').on('click',function(){
+        $('.slide-out-controller').css('z-index',0);
+	$(this).css('z-index',1);
+	});
+    $('.slide-out-controller').on('click',function(){
+	$('.slide-out-input').css('z-index',0);
+	$(this).css('z-index',1);
+	});
+    /*Slide out feature ends
+     */
+    $('#accordion').accordion();
+    $('.dropdown-toggle').dropdown();
+    $('.popups').popover();
+    /*  Adding tab feature to the input tile   */
+    $('#myTab a').click(function (e) {
+      e.preventDefault();
+      $(this).tab('show');
     });
+    
+    /*Loading Data Driven view 
+     */
+    model=new dataDrivenModel();
+    view=new dataDrivenView(model);
+    controller=new dataDrivenController(model,view);
+    controller.initialize();   
+    
+    
+    
+    
+    $('#dataDriven-tab').on('click',function(){
+      //WARNING PROMPT
+	  
+      $(this).update({to:'dataDriven'});
     });
-    </script>
-
-  
+    
+    $('#simulationDriven-tab').on('click',function(){
+      //WARNING PROMPT
+      $(this).update({to:'simulationDriven'});
+    });
+    
+     
+    /* Array while holds the list of exp.js files already loaded*/    
+    var expLoaded=['binomialCoin'];
+     Experiment=binomialCoin;
+    /* Ball and Urn Experiment   */
+    $('#ballAndUrn').click(function(){
+      //alert('1');
+      if($.inArray('ballAndUrn', expLoaded)==-1)      //check whether the experiment script is already loaded
+	  {
+	    $.getScript("js/exp/ballAndUrn.js",function(){
+		console.log('file has loaded!');
+		Experiment=ballAndUrn;
+		//Initializing
+		alert(Experiment);
+		Experiment.initialize();
+	    });
+	      //head.js("js/exp/ballAndUrn.js");          //loading the Ball and Urn Script
+	    expLoaded.push('ballAndUrn');   //Making a entry in the array of loaded experiment scripts
+	  }
+        
+    });
+    
+  }); //document ready function
+}); //head.js ready function
+</script>
 </html>

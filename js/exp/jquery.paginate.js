@@ -15,9 +15,9 @@
 	if(bVer.indexOf('MSIE 7.0') > 0)
 		var ver = "ie7";
 	$.fn.paginate.defaults = {
-		count 		: 5,
-		start 		: 12,
-		display  	: 5,
+		count 		: 2,
+		start 		: 1,
+		display  	: 1,
 		border					: true,
 		border_color			: '#fff',
 		text_color  			: '#8cc59d',
@@ -31,8 +31,6 @@
 		onChange				: function(){return false;}
 	};
 	$.fn.draw = function(o,obj,selectedpage){
-		if(o.display > o.count)
-			o.display = o.count;
 		$this.empty();
 		if(o.images){
 			var spreviousclass 	= 'jPag-sprevious-img';
@@ -69,7 +67,7 @@
 				_ul.append(_obj);
 			}	
 			else{
-				var _obj = $(document.createElement('li')).html('<a class="page">'+ val +'</a>');
+				var _obj = $(document.createElement('li')).html('<a>'+ val +'</a>');
 				_ul.append(_obj);
 				}				
 		}		

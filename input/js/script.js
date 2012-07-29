@@ -40,7 +40,7 @@ $(document).ready(function(){
 				]
 			});
 			
-			$('#input-table').after("<br/><br/><input class='btn' type='button' value='Done'><input class='btn' type='button' value='Reset'>");
+			$('#input-table').after("<br/><input class='btn' type='button' value='Done'><input class='btn' type='button' value='Reset'>");
 			$("input[value='Done']").on('click',function(){
 			//console.log($("#input-table").inputtable('getData'));
 			//$('#input-table').after('Please check your console for the array');
