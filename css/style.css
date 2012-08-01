@@ -105,4 +105,9 @@ span.jPag-snext-img{
     background:transparent url(../images/snext.png) no-repeat center left;
             }
 
-
+#drop{
+    border: 2px solid #CCC;
+}
+#drop li{
+    list-style: none;
+}

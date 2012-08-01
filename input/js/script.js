@@ -16,21 +16,6 @@ $(document).ready(function(){
 			   */
 				{
 				  match: function (row, col, data) {
-					return (row === 0); //if it is first row
-				 },
-				  style: {
-					color: 'green', //make the text green and bold
-					fontWeight: 'bold'
-				 },
-				  title: 'Heading', //make some tooltip
-				  readOnly: true //make it read-only
-				},
-
-			  /**
-			   * Legend 2
-			   */
-				{
-				  match: function (row, col, data) {
 					return !(data()[row][col]); //if the cell is empty
 				  },
 				  style: {

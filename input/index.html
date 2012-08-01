@@ -39,11 +39,14 @@
 		 <strong>$(selction).inputtable({ options })</strong>
 		 <div>
 		 	<i>Options :</i> 
-		<div>	<strong>[num] rows : </strong> default 5 </div> 
+		<div>	
+			<strong>[num] rows : </strong> default 5 </div> 
 			<div><strong>[num] cols : </strong> default 5 </div>
 			<div><strong>[num] minSpareRows :</strong> Maintains an empty row after the last entered cell in the table.Accounts for the auto expanding nature of the table .default 0 </div>
 			<div><strong>[num] minSpareCols :</strong> Maintains an empty column after the last entered cell in the table.Accounts for the auto expanding nature of the table .default 0</div>
 			<div><strong>[bool] fillHandle :</strong> Inserts a handle at the bottom of each cell, for easy drag. 	default true</div>
+			<div><strong>[array] colHeaders :</strong> Specify various titles for different columns in array format.If nothing is specified it assigns in alphabetical order</div>
+			<div><strong>[bool] rowHeaders :</strong>Adds a count in the the nos of rows. defualt true</div>
 		</div>
 		<div>
 			Sample Code : 
@@ -88,6 +91,16 @@
 								    ["Column 1", 10, 11, 12, 13],
 								    ["Column 2", 20, 11, 14, 13],
 							  ];
+					</div>	
+				</p>
+			</div> 
+			<div>
+				<strong>getSelectedData </strong>
+				<p>
+					Returns the content of the  selected cells in the form of a multi dimensional Array
+
+					<div class="code">
+						 var Array = $(selection).inputtable('getSelectedData');
 					</div>	
 				</p>
 			</div> 

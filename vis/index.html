@@ -24,11 +24,15 @@ body {
 circle.node{
   cursor:pointer;
 }
+.chart{
+  min-height: 600px;
+}
 
 </style>
 <body>
   <div class="chart"></div> 
 <script src="d3.v2.min.js"></script>
+<script src="http://code.jquery.com/jquery.min.js" ></script>
 <script>
 
 
@@ -40,6 +44,7 @@ function randomIrwinHall(m) {
 }
 
 function vis(config){
+
   //Some default variables
 
   var width = 600,
@@ -50,9 +55,17 @@ function vis(config){
     // A formatter for counts.
     var formatCount = d3.format(",.0f");
 
-    var margin = {top: 10, right: 30, bottom: 30, left: 30},
-        width = config.height - margin.left - margin.right,
-        height = config.width - margin.top - margin.bottom;
+    var margin = {top: 10, right: 30, bottom: 30, left: 50},
+         //Takes in the entire dimensions of  the parent as default
+        w = config.width ? config.width : $(config.parent).width(), 
+        h = config.height ? config.height : $(config.parent).height();
+
+        console.log($(config.parent).height());
+
+    var width = w - margin.left - margin.right,
+        height = h - margin.top - margin.bottom;
+
+        console.log(width + ' ' + height)
 
     var x = d3.scale.linear()
         .domain( config.range )
@@ -132,15 +145,13 @@ function vis(config){
 }  
 
     // chart an Irwin–Hall distribution of 10 random variables.
-    var values = d3.range(1000).map(randomIrwinHall(10));
+    var values=[0.1,0.5];
 
     var histogram = vis({
-                      height: 400, 
-                      width: 400,
+                      //height : 300,
                       parent : '.chart',
                       data : values,
-                      range: [0,3]
-                      });
-    histogram();
+                      range: [0,20]
+                     })();
 
 </script>

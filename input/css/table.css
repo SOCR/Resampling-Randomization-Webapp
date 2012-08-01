@@ -9,7 +9,7 @@
 }
 
 .dataTable table {
-  border-collapse: collapse;
+  border-collapse: separate;
   position: relative;
   -webkit-user-select: none;
   -khtml-user-select: none;
@@ -17,17 +17,68 @@
   -o-user-select: none;
   user-select: none;
   border-spacing: 0;
-  border-top: 1px solid #CCC;
-  border-left: 1px solid #CCC;
 }
 
+.dataTable th,
 .dataTable td {
   border-right: 1px solid #CCC;
   border-bottom: 1px solid #CCC;
   min-width: 50px;
-  width: 50px;
   height: 22px;
-  padding: 0 4px 0 4px;
+  line-height: 16px;
+  padding: 0 4px 0 4px; /* top, bottom padding different than 0 is handled poorly by FF with HTML5 doctype */
+}
+
+.dataTable div.minWidthFix {
+  width: 50px;
+}
+
+.dataTable tr:first-child th.htNoFrame,
+.dataTable th:first-child.htNoFrame,
+.dataTable th.htNoFrame {
+  border-left-width: 0;
+  background-color: white;
+  border-color: #FFF;
+}
+
+.dataTable th:first-child,
+.dataTable td:first-child,
+.dataTable .htNoFrame + th,
+.dataTable .htNoFrame + td {
+  border-left: 1px solid #CCC;
+}
+
+.dataTable tr:first-child th,
+.dataTable tr:first-child td {
+  border-top: 1px solid #CCC;
+}
+
+.dataTable thead tr:last-child th {
+  border-bottom-width: 0;
+}
+
+.dataTable thead tr.lastChild th {
+  border-bottom-width: 0;
+}
+
+.dataTable th {
+  background-color: #EEE;
+  color: #222;
+  text-align: center;
+  font-weight: normal;
+  white-space: nowrap;
+}
+
+.dataTable th .small {
+  font-size: 12px;
+}
+
+.dataTable thead th {
+  padding: 2px 4px;
+}
+
+.dataTable th.active {
+  background-color: #CCC;
 }
 
 /* border background */
@@ -78,8 +129,8 @@
   height: 1px;
 }
 
-/* input border color */
-input.inputtableInput {
+/* textarea border color */
+textarea.inputtableInput {
   border: 2px solid #5292F7;
   outline-width: 0;
   margin: 0;
@@ -91,7 +142,7 @@ input.inputtableInput {
   resize: none;
 }
 
-.inputtableInputHolder.htHidden input.inputtableInput {
+.inputtableInputHolder.htHidden textarea.inputtableInput {
   border-color: #5292F7;
   background: #5292F7;
   color: #5292F7;

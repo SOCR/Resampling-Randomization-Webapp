@@ -1,4 +1,5 @@
 function vis(config){
+
   //Some default variables
 
   var width = 600,
@@ -9,9 +10,17 @@ function vis(config){
     // A formatter for counts.
     var formatCount = d3.format(",.0f");
 
-    var margin = {top: 10, right: 30, bottom: 30, left: 30},
-        width = config.height - margin.left - margin.right,
-        height = config.width - margin.top - margin.bottom;
+    var margin = {top: 10, right: 30, bottom: 30, left: 50},
+         //Takes in the entire dimensions of  the parent as default
+        w = config.width ? config.width : $(config.parent).width(), 
+        h = config.height ? config.height : $(config.parent).height();
+
+        console.log($(config.parent).height());
+
+    var width = w - margin.left - margin.right,
+        height = h - margin.top - margin.bottom;
+
+        console.log(width + ' ' + height)
 
     var x = d3.scale.linear()
         .domain( config.range )

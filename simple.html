@@ -89,7 +89,14 @@
 		line-height: 300px;
 		font-size: 32px;
 		text-align:center;
-	}
+		}
+		#drop{
+	    border: 2px solid  dashed #CCC;
+		}
+		#drop li{
+		    list-style: none;
+		}
+
 </style>
 <title>Demo</title>
 <script src="js/lib/head.min.js"></script>
@@ -118,14 +125,22 @@
 			</ul>
 			<div id="myTabContent" class="tab-content">
 			      <div class="tab-pane fade" id="home">
-				<div id="input-table" class="dataTable">
-                                </div>
+					
+					 <div class="URLbox"><input type="text" id="URLbox"></div>
+
+					 <section id="drop">
+						<p class="info">Drop here for info about the dragged item</p>
+					</section>
+										 
+					<div id="input-table" class="dataTable"></div>
+                   
 				<!--<p> OR</p>
 			        <p><a class="btn" href="#">More Info &raquo;</a></p> -->
 			      </div>
 			      <div class="tab-pane fade active in" id="profile">
+
 				<p>There are many experiments available which generate samples and dont require the user to enter the sample set/data.</p>
-				<p>
+				
 			      <div class="btn-group" >
 			      	<button class="btn btn-success dropdown-toggle" data-toggle="dropdown" style="float:right"><span class="caret"></span></button>
 				<button class="btn btn-success" style="float:right">Choose</button>
@@ -250,6 +265,7 @@ head.js("js/lib/jquery.min.js",
     "js/resizable/ui.js",
     "vis/d3.v2.js",
     "js/exp/jquery.paginate.js",
+    "js/dragdrop.js",
     "js/vis/histogram.js",
     "js/resizable/jquery.layout-latest.min.js",
     "https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.21/jquery-ui.min.js",
@@ -313,8 +329,6 @@ head.ready( function () {
 		var values = d3.range(1000).map(randomIrwinHall(10));
 
 	    var histogram = vis({
-	                      height: 700, 
-	                      width: 400,
 	                      parent : '.chart',
 	                      data : values,
 	                      range: [0,3]
