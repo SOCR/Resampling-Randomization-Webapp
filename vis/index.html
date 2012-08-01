@@ -46,9 +46,9 @@ function randomIrwinHall(m) {
 function vis(config){
 
   //Some default variables
-
-  var width = 600,
-      height = 400;
+   //Takes in the entire dimensions of  the parent as default
+  var width = config.width ? config.width : $(config.parent).width(),
+      height = config.height ? config.height :  $(config.parent).height();
 
   function chart(){
 
@@ -56,12 +56,7 @@ function vis(config){
     var formatCount = d3.format(",.0f");
 
     var margin = {top: 10, right: 30, bottom: 30, left: 50},
-         //Takes in the entire dimensions of  the parent as default
-        w = config.width ? config.width : $(config.parent).width(), 
-        h = config.height ? config.height : $(config.parent).height();
-
-        console.log($(config.parent).height());
-
+        
     var width = w - margin.left - margin.right,
         height = h - margin.top - margin.bottom;
 

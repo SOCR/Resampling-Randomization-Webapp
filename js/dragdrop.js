@@ -57,7 +57,16 @@ addEvent(drop, 'drop', function (e) {
   
   var li = document.createElement('li');
   
-  li.innerHTML = e.dataTransfer.getData('Text');
+  $('#URLbox').value = e.dataTransfer.getData('Text') ;
+
+  var fetchHTML = (function (){
+    console.log('Fetching URL started' + e.dataTransfer.getData('Text'));
+    $.get(e.dataTransfer.getData('Text'),function(d){
+      console.log(d );
+    })
+  })();
+
+
 
   /** THIS IS THE MAGIC: we read from getData based on the content type - so it grabs the item matching that format **/
   /*
