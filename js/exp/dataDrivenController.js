@@ -100,8 +100,8 @@ return{
 
 	run:function(){
         	view.disableButtons();			//disabling buttons
-		model.setStopCount(countSize.val());	//save the stopcount provided by user
-		model.setN(nSize.val());		// save the datapoints size
+		model.setStopCount($("#countSize").val());	//save the stopcount provided by user
+		model.setN($("#nSize").val());		// save the datapoints size
 			
 	//generate samples
 		var _temp=model.getStopCount()/1000;
@@ -174,11 +174,6 @@ return{
 				
 			}
 	
-	},
-	SDpopulate:function(){
-		
-		view.SDcreate(nParam.getValue());
-		model.SDgenerate();
 	}
  
     }//return

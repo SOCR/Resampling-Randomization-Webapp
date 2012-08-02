@@ -20,7 +20,7 @@ function _tossCoin(){
 		_count++;
 	}
 	else{
-		
+		view.loadInputExcel();
 		self.reset();
 	}
 }

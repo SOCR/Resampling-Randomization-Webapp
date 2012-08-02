@@ -131,9 +131,10 @@ return{
 		return _dataset;
 	},
 	setDataset:function(input){
-		if(input.processed)
+		if(input.processed && input.data)
 			{//alert(input.data);
 				_dataset=input.data;
+				return false;
 			}
 		else if(input.data)
 			{
@@ -153,7 +154,10 @@ return{
 				
 				}		
 			console.log('final data :' + _dataset);
+			return false;
 		}
+		else
+			return true;
 		
 	},
         

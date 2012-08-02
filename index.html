@@ -12,6 +12,7 @@
     <script src="js/lib/head.min.js"></script>
     
     <!-- Le styles -->
+    <link href='http://fonts.googleapis.com/css?family=Lato:400,900' rel='stylesheet' type='text/css'>
     <link href="css/bootstrap.css" rel="stylesheet">
     <link href="css/stylePagination.css" rel="stylesheet">
     <link href="css/animation.css" rel="stylesheet">
@@ -19,9 +20,23 @@
     <link rel="stylesheet" media="screen" href="input/css/table.css">
     <link href="css/bootstrap-responsive.css" rel="stylesheet">
     <style type="text/css">
+    .bar rect {
+      fill: steelblue;
+      shape-rendering: crispEdges;
+    }
+
+    .bar text {
+     fill: #fff;
+    }
+
+    .axis path, .axis line {
+      fill: none;
+      stroke: #000;
+      shape-rendering: crispEdges;
+    }	
       body {
         padding-top: 60px;
-        padding-bottom: 40px;
+        
       }
       .sidebar-nav {
         padding: 9px 0;
@@ -99,9 +114,18 @@
       }
       .input-handle,.controller-handle{
 	position:absolute;
-	left:0px;
+	left:-20px;
+	-webkit-transform: rotate(90deg);
+	transform:rotate(90deg);
+	-ms-transform:rotate(90deg); /* IE 9 */
+	-moz-transform:rotate(90deg); /* Firefox */
+	-webkit-transform:rotate(90deg); /* Safari and Chrome */
+	-o-transform:rotate(90deg); /* Opera */
       }
       
+      .controller-handle{
+	left:-30px;
+      }
       .controller-handle,#slide-out-controller{
 	top:400px;
       }
@@ -113,6 +137,7 @@
 	background-color:#ccc;
 	border:1px solid ;
 	padding:10px;
+	z-index:100;
       }
        .input-handle,#slide-out-input{
 	top:200px;
@@ -148,6 +173,29 @@
       .ui-accordion-header a{text-decoration:none;}
       .ui-accordion-content{
 	border:1px solid;
+      }
+      
+      #welcome{
+	
+	z-index: 9999;
+	position: absolute;
+	background-color: black;
+	top:0px;
+      }
+      
+      .font{
+	font-size: 20px;
+	color: white;
+	font-family: 'Lato', sans-serif;
+      }
+      
+      .welcome-title{
+	color:#1DC4F9;
+	font-size: 150px;
+      }
+      
+      .welcome-container div{
+	float:left;
       }
   </style>
  
@@ -189,6 +237,14 @@
     </div>
   </div>
   <div id='main'>
+    <div id='welcome'>
+      <div class="welcome-container">
+      <div><span><h2 class="font welcome-title">SOCR</h2></span></div>
+      <div style='margin-top:50px'><span class="font" >Statistical online Computational Resource&nbsp;&nbsp;</span><button id="startApp" class="btn btn-primary btn-large">Start App >>> </button></div>
+      <div></div>
+      
+      </div>
+      </div>
     <div class="container-fluid">
       <div class="row-fluid">
 	<div class='span8'>
@@ -200,12 +256,12 @@
 	      <div id="dataset" style='height: 100px;'></div>
 	      <h6>Generated Resample: <i class="icon-question-sign popups" rel="popover" data-content="This section contains all the datapoints in 1 random sample generated from the dataset. Switch to datadriven mode after the simulation. Then goto controller -> step button" data-original-title="Generated Sample"></i></h6>
 	    </div>		
-	    <h3><a href="#">DotPlot</a></h3>
-	    <div id='dotplot'>eafsef</div>
-	    <h3><a href="#">Simulation Info</a></h3>
+	    <h3><a href="#">Inference Plot <i class="icon-question-sign popups" rel="popover" data-content="It is graphical view of the dataset from where the random samples are generated.Goto input tab to get started!" data-original-title="Inference Plot"></i></a></h3>
+	    <div id='dotplot'></div>
+	    <h3><a href="#">Simulation Info <i class="icon-question-sign popups" rel="popover" data-content="It is graphical view of the dataset from where the random samples are generated.Goto input tab to get started!" data-original-title="Simulation Info"></i></a></h3>
 	    <div id='details'><p>Experiment Name:<span id='experimentName'></span></p><p>DataSet Size:<span id='datasetSize'></span></p><p>Resamples Generated:<span id='resampleGenerated'></span></p><p>Start Time: <span id='startTime'></span></p></div>
 	  </div>
-	  <a class="input-handle" href='#'><img src="img/contact_tab.gif"></img></a>	
+	  <a class="input-handle" href='#'><button class='btn-primary btn-large'>Input</button></a>	
 	  <div id="slide-out-input" >
 		<h3> Input Tile</h3>
 		<!-- Add data-toggle="buttons-radio" for radio style toggling on btn-group -->
@@ -236,7 +292,7 @@
 		    </div>
 		  </div>
             </div><!--/slide-out-input-->
-	  <a class="controller-handle" href="#"><img src="img/contact_tab.gif"></img></a>
+	  <a class="controller-handle" href="#"><button class='btn-primary btn-large '>Controller</button></a>
 	    <div id="slide-out-controller" >
               <h3>Controller</h3>
 		<div id='controller-content'>
@@ -304,7 +360,7 @@
 		<div id='sampleList'>
 		<!--sampleList-->
 		
-		<div class="pagination" id='pagination'>
+		<div id='pagination'>
 		</div>
 		</div>
 		<div class='pagination'>
@@ -317,7 +373,7 @@
       <!--
       Following divs are for the modal windows.
       -->
-      <div id="help" class="modal hide fade">  
+	<div id="help" class="modal hide fade">  
 		  <div class="modal-header">
 			<a class="close" data-dismiss="modal">X</a>
 			<h3>Something bothering You?</h3>
@@ -388,9 +444,9 @@
 	    </ul>
 	  </div>
 	</div>
-      <footer>
-        <p>&copy; UCLA 2012</p>
-      </footer>
+      <div id='footer'>
+	&copy; UCLA 2012
+      </div>
 
     </div><!--/.fluid-container-->
   </div> <!-- main -->
@@ -438,21 +494,39 @@
    *
    */
   $(document).ready(function(){
+    $(window).resize(function(){
+			view.welcomeBootstrap();
+			});
+    $('#startApp').on('click',function(){
+			console.log('Start App button clicked');
+			$('#welcome').animate({
+			left:-2999},2000);
+			//$('.container-fluid').toggleView();
+			});
         
+    /*Loading Data Driven view 
+     */
+    model=new dataDrivenModel();
+    view=new dataDrivenView(model);
+    controller=new dataDrivenController(model,view);
+    controller.initialize();   
+    
+    view.welcomeBootstrap();
+	
      $('.input-handle').on('click',function(){
       $target = $('#slide-out-input');
-      console.log($(this).attr('href'));
+      //console.log($(this).attr('href'));
       if(!$target.hasClass('active'))
 	  {
 	    $target.addClass('active').show().css({left:-425}).animate({left: 0}, 500);
-	    $(this).css({left:0}).animate({left: 425}, 500);
+	    $(this).css({left:-20}).animate({left: 410}, 500);
 	  }
 	else
 	{
 	  $target.removeClass('active').animate({
                     left: -425
                 }, 500);
-	  $(this).css({left:425}).animate({left: 0}, 500);
+	  $(this).css({left:400}).animate({left: -20}, 500);
 	}
       });
     
@@ -462,14 +536,14 @@
       if(!$target.hasClass('active'))
 	  {
 	    $target.addClass('active').show().css({left:-425}).animate({left: 0}, 500);
-	    $(this).css({left:0}).animate({left: 425}, 500);
+	    $(this).css({left:-30}).animate({left: 394}, 500);
 	  }
 	else
 	{
 	  $target.removeClass('active').animate({
                     left: -425
                 }, 500);
-	  $(this).css({left:425}).animate({left: 0}, 500);
+	  $(this).css({left:400}).animate({left: -30}, 500);
 	}
       });
     
@@ -492,17 +566,7 @@
       e.preventDefault();
       $(this).tab('show');
     });
-    
-    /*Loading Data Driven view 
-     */
-    model=new dataDrivenModel();
-    view=new dataDrivenView(model);
-    controller=new dataDrivenController(model,view);
-    controller.initialize();   
-    
-    
-    
-    
+ 
     $('#dataDriven-tab').on('click',function(){
       //WARNING PROMPT
 	  

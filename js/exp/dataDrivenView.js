@@ -17,14 +17,18 @@ var dataDrivenView=function(dataDrivenModel){
 	doneButton=$("#doneButton");
 	showButton=$("#showButton");
 	
-	//self=this;
+	/*
+	 populates the sampleList div with random samples
+	 start: the first sample number to be displayed
+	 size: how many samples to be displayed
+	*/
+	 
 	function _create(start,size){
 		console.log("_create funtion started");
 		console.log(model.bootstrapSamples);
 		y=parseInt(start)+size;
-		//$('#sampleList').html('');		//first empty the sample list
+		$('#sampleList').html('');		//first empty the sample list
 		//change the loop to a inverse while loop
-		
 		for(var i=start;i<y;i++)
 			{
 			var temp=['<div class="entry"><div class="header">Sample<span class="values"> '];
@@ -36,11 +40,10 @@ var dataDrivenView=function(dataDrivenModel){
 			$('#sampleList').append(temp.join(''));
 			}
 		$('.plot').on('click',function(){
-			//$('.modal-body').html('');
-			//alert('1');
+			$('#plot .device').html('');			//empty the modal window 
 			var values=model.bootstrapSamples[$(this).attr('id')];
-			var values=[2,3,5,4,3];
-			
+			//var values=[2,3,5,4,3];
+			console.log('Random sample plot... values:'+values);
 			var histogram = vis({
 			height: 400, 
 			width: 300,
@@ -51,31 +54,8 @@ var dataDrivenView=function(dataDrivenModel){
 			histogram();
 			});
 	}
-	/*	
-	function _create1Pagination(x,y){
-		var count=Math.ceil((y-x)/500);		//number of pages
-		alert('count:'+count)
-		$("#pagination").paginate({
-				count 			:count,
-				start 			:1,
-				display     		:10,
-				border				: true,
-				border_color			: '#BEF8B8',
-				text_color  			: '#68BA64',
-				background_color    	: '#E3F2E1',	
-				border_hover_color		: '#68BA64',
-				text_hover_color  		: 'black',
-				background_hover_color	: '#CAE6C6', 
-				rotate      : false,
-				images		: false,
-				mouse		: 'press'
-			});
-		$('.page').on('click',function(){
-			alert('1');
-			var start=$(this).text()*500-500;
-			_create(start,500);
-			});
-	}
+	/*
+	 creates interactive pagination depending upon the number of samples being shown
 	*/
 	function _createPagination(x,y){
 		var count=Math.ceil((y-x)/500);		//number of pages
@@ -98,34 +78,20 @@ var dataDrivenView=function(dataDrivenModel){
 										  }
 			});
 		$('.pagination li').on('click',function(){
-			alert('1');
+			//alert('1');
 			var start=$(this).text()*500-500;
+			console.log(start);
 			_create(start,500);
 			});
 	}
-	/*
-	function _create21Pagination(x,y){
-		
-		var count=Math.ceil((y-x)/500);		//number of pages
-		var html=['<ul>'];
-		html.push('<li><a href="#"><<</a></li>');
-		for(var i=1;i<count;i++)
-			{
-			var temp='<li><a href="#">'+i+'</a></li> ';
-			html.push(temp);
-			}
-		html.push('<li><a href="#">>></a></li>');
-		html.push('</ul>');
-		$('.pagination').append(html.join(''));
-	}
-	*/
+	
 	function getPos(el) {
-    // yay readability
-    for (var lx=0, ly=0;
-         el != null;
-         lx += el.offsetLeft, ly += el.offsetTop, el = el.offsetParent);
-    return {x: lx,y: ly};
-}
+		// yay readability
+		for (var lx=0, ly=0;
+			el != null;
+			lx += el.offsetLeft, ly += el.offsetTop, el = el.offsetParent);
+		return {x: lx,y: ly};
+	}
 return{
     	disableButtons:function(){
 		stepButton.attr('disabled',"true"); 
@@ -190,7 +156,6 @@ return{
 		//alert($( "#range" ).slider( "value"));
 	},
 	createSlider:function(){
-		
 		$( "#range" ).slider({
 			range: true,
 			min: 0,
@@ -209,23 +174,29 @@ return{
 		var html='<button class="btn" type="button" id="stepButton" tabindex="1" title="Step"><img src="img/step.png" alt="Step" title="Step" /> </button> <button class="btn btn-success" type="button" id="runButton" tabindex="2" title="Run" ><img id="runImage" src="img/run.png" alt="Run" title="Run" /></button><button class="btn btn-danger" type="button" id="stopButton" tabindex="3" title="Stop" ><img id="stopImage" src="img/stop.png" alt="Stop" title="Stop" /></button><button class="btn" type="button" id="resetButton" tabindex="4" title="Reset" ><img src="img/reset.png" alt="Reset" title="Reset" /></button><span><i class="icon-question-sign popups" rel="popover" data-content="<ul><li>Step Button : generates 1 sample</li><li>Run Button : generates X sample..X can be set from the option below</li><li>Stop Button :Stops the sample generation</li><li>Reset Button : Resets all values</li></ul>" data-original-title="Controls"></i></span><p><span>Speed:  </span><select id="speed" style="width:100px" tabindex="3" title="Animation Speed"><option value="slow">slow</option><option value="medium">medium</option><option value="fast">fast</option></select></p><p class="tool"><span>Generate</span><input type="text" id="countSize" class="input-small" value="1000"> <span>Samples with </span><input type="text" id="nSize" class="input-small" value="50"><span>Datapoint per sample.</span></p><p><select id="variable" style="width:100px;margin-top:10px"><option value="slow">Mean</option><option value="medium">S.D</option><option value="fast">Percentile</option></select><span><a href="#" class="btn btn-danger popups" rel="popover" data-content="This will create a plot of the variable for each generated sample. Click this once you have generated some samples!" data-original-title="Inference" id="infer">Infer!</a></span></p>';
 		$('#controller-content').html(html);
 	},
-	/*animates the resample generation process....input is the resample datapoints array indexes*/
+	/*
+	animates the resample generation process....input is the resample datapoints array indexes
+	*/
 	animate:function(x){
 	//clear old
 	//for(var i=0;i<;)
 	console.log('indexes of resample: '+x);
 	var data=Experiment.getDataset();
+	var noOfSamples=$('#q').width()/30;		//number of samples in 1 row
+	var increment=30;
 	for(var i=0;i<x.length;i++)
-		{	alert(model.bootstrapSamples[model.getCount()-1]);
+		{	//alert(model.bootstrapSamples[model.getCount()-1]);
 			var y='#coin'+x[i];
 			var z='#coin-container'+x[i];
-			y=$(y).clone();
-			$(z).append(y).css('z-index','10');
-			$(y).addClass('click');
-			$(y).css('-webkit-transition','all 5s');
-			$(y).css('-webkit-transform','translate(0px,150px)');
+			currentCoin=$(y).clone();
+			$(z).append(currentCoin).css('z-index','10');
+			$(currentCoin).addClass('click');
+			$(currentCoin).css('-webkit-transition','all 5s');
+			
+			$(currentCoin).css('-webkit-transform','translate('+i*increment+'px,150px)');
 			var k = new Coin(document.getElementsByClassName("coin"+x[i])[1]);
 			k.setValue(data[x[i]]);
+			
 			/*
 			$(y).css('-webkit-transition','all 1s');
 			$(y).css('-webkit-transform','translate(400px)');
@@ -254,7 +225,7 @@ return{
 			width: 300,
 			parent : '#dotplot',
 			data : values,
-			range:[0,1]
+			range:[0,100]
 			});
 			histogram();
 		
@@ -263,6 +234,18 @@ return{
 		$('#experimentName').html(Experiment.name);
 		t=new Date();
 		$('#startTime').html(t.getTime());
+	},
+	
+	welcomeBootstrap:function(){
+		$('#welcome').css('height',$(window).height()).css('width',$(window).width());
+		$('.welcome-container').css('padding-top',$(window).height()/3).css('padding-left',$(window).height()/3);
+		
+	},
+	loadInputExcel:function(){
+		//alert('1');
+		var data = [ ["Column 1", 10, 11, 12, 13], ["Column 2", 20, 11, 14, 13], ];
+		$('#input-table').inputtable('loadData',data);
+		
 	}
 	
     }//return
