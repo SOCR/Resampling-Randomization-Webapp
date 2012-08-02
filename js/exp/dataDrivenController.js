@@ -51,7 +51,6 @@ return{
 		});
 		$("#stepButton").on('click',function(){
 		controller.step();
-		alert('step');
 		});
 		$("#stopButton").on('click',function(){
 		controller.stop();
@@ -59,8 +58,8 @@ return{
 		$("#resetButton").on('click',function(){
 		controller.reset();
 		});
-		$("#dotPlot").on('change',function(){
-		controller.dotplot();
+		$("#infer").on('click',function(){
+		controller.setDotplot();
 		});
 		$("#doneButton").on('click',function(){
 		if(controller.setInput()==false)
@@ -134,9 +133,14 @@ return{
 		},
         
     
-	setDotPlot:function(){
-	//alert that the app will be reset first
-	
+	setDotplot:function(){
+	$('#dotplot').html('');
+	//create dotplot
+	console.log("setdotplot started");
+	view.createDotplot({variable:'mean'});
+	//focus on dotplot
+	//$('#dotplot').addclass('ui-state-active');
+	//$('#dotplot').addclass('ui-state-active');
 	},
 	getDotPlot:function(){
 	
@@ -157,8 +161,11 @@ return{
 					{
 					if(Experiment.getDataset()!='')
 						{	console.log('simulation drive has some data');
-						alert(Experiment.getDataset());
-							model.setDataset(Experiment.getDataset());	
+						//alert(Experiment.getDataset());
+							model.setDataset({
+								data:Experiment.getDataset(),
+								processed:true
+								});	
 							console.log(model.getDataset());
 						}	
 						

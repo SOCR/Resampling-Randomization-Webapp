@@ -1,11 +1,11 @@
 //Binomial Coin Experiment
 var binomialCoin=(function(){
 
-this.ExpName='Binomial Coin Toss';
+this.name='Binomial Coin Toss';
 //::::::: PRIVATE PROPERTIES :::::::::::::::
 var _pParam, _nParam; // binomialDist is the distribution object
 var _p = 0.5;	  		//Probability of heads
-var _N = 50;			//Maximum number of trials 
+var _N = 100;			//Maximum number of trials 
 var _count;			//keeps count of number of samples(coin tosses)generated
 var _n = 10; 			//Number of samples generated (coin tosses) for each step OR the number of trails in a step 
 var _coin = new Array(_N);
@@ -44,6 +44,7 @@ return{
 	},
 
 	step: function(){
+		view.updateDetails();
 		//_n=$("#nInput").val();
 		this.setPN();
              	//create the divs
@@ -83,13 +84,19 @@ return{
 		var temp=[];
 		for(var i=0;i<x;i++)
 			{
+				temp.push('<div class="coin-container" id="coin-container');
+				temp.push(i);
+				temp.push('">');
 				temp.push('<canvas id="coin');
 				temp.push(i);
-				temp.push('" class="coin panel click" title="Coin 1" width="30" height="30">Coin');
+				temp.push('" class="coin panel front coin');
 				temp.push(i);
-				temp.push('</canvas>');
+				temp.push('" width="30" height="30">Coin');
+				temp.push(i);
+				temp.push('</canvas>/<div class="panel back"></div>');
+				temp.push('</div>');
 			}
-		$('#dataPlot').html(temp.join(''));
+		$('#dataset').html(temp.join(''));
 	},
 	setPN:function(){
 		_p = pParam.getValue();

@@ -44,7 +44,7 @@ $(document).ready(function(){
 			$("input[value='Done']").on('click',function(){
 			//console.log($("#input-table").inputtable('getData'));
 			//$('#input-table').after('Please check your console for the array');
-			var isEmpty=model.setDataset($("#input-table").inputtable('getData'));
+			var isEmpty=model.setDataset({data:$("#input-table").inputtable('getData'),processed:false});
 			if(isEmpty==true)
 				$('#status').html('<br>No input given <i class="icon-info-sign"></i>');
 			else

@@ -15,6 +15,7 @@ var bootstrapSamples=new Array();	//Contains all the bootstrap samples generated
 //var variables;				//number of variables
 var _data;
 var sample=[];
+var keys=[];
 var _temp;
 var _sampleMean=[];
 var coin = new Array(N);
@@ -49,6 +50,7 @@ function _generateMean(j){
 		
 	
 }
+
 return{
 	/* PUBLIC PROPERTIES   */
 	//stopCount:stopCount,
@@ -92,8 +94,8 @@ return{
 			{
 			//bootstrapSamples[_count][j]=this.generateTrail();
 			var temp=this.generateTrail();
-			sample[j]=temp[data];	//inserting the new sample
-			keys[j]=temp[key];
+			sample[j]=temp.data;	//inserting the new sample
+			keys[j]=temp.key;
 			}
 		bootstrapSamples[_count]=sample;
 		//bootstrapSamples[_count]= new Array(sample);
@@ -109,6 +111,7 @@ return{
 			//alert(bootstrapSamples[j]);
 			//console.log(_sampleMean[j]);
 			}
+			return _sampleMean;
 			
 		},
 	error:function(x){
@@ -127,34 +130,31 @@ return{
 	getDataset:function(){
 		return _dataset;
 	},
-	setDataset:function(_data){
-		if(_data)
+	setDataset:function(input){
+		if(input.processed)
+			{//alert(input.data);
+				_dataset=input.data;
+			}
+		else if(input.data)
 			{
 		//emptying the array
 			_dataset=[];
-			_dataset=_data;
-			console.log('input data :'+_data);
-		/*
-		//sorting out the first column
-			for(i=0;i<_data.length-1;i++)
+			console.log('input data :'+input.data);
+			for (var i = 0; i < input.data.length; i++)
 				{
-					_dataset[i]=_data[i+1][0];
-					//alert(dataSet[i]);
-				}
-		*/
-		//splicing the empty cells	
-			for (var i = 0; i < _dataset.length; i++) {
-				if (_dataset[i] == '') {         
-					alert(i);
-					_dataset.splice(i, 1);
-					i--;
+				for(var j = 0; j < input.data[i].length; j++)
+					{
+						if (input.data[i][j] != '')
+						{         
+							_dataset.push(input.data[i][j]);
+							
+						}
 					}
-			}		
+				
+				}		
 			console.log('final data :' + _dataset);
 		}
-		else
-			return error('inputMissing');
-			//alert('bad');
+		
 	},
         
 	getSample:function(index){
@@ -188,6 +188,11 @@ return{
 	},
 	getCount:function(){
 		return _count;
+	},
+	reset:function(){
+		_dataset=[];
+		//this.bootstrapSamples=[];
+		this.setCount(0);
 	}
 	
 }//return

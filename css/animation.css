@@ -1,6 +1,6 @@
-.panel {
+                        .panel {
 			float: left;
-			margin: 2px;
+			
 			position: relative;
 			font-size: .8em;
 			
@@ -78,7 +78,7 @@
 			-webkit-transform: rotateY(0deg);
 			-moz-transform: rotateX(0deg);
 		}
-		.click.flip .front {
+		.click .flip .front {
 			-webkit-transform: rotateY(540deg);
 			-moz-transform: rotateX(540deg);
 		}
@@ -87,7 +87,7 @@
 			-webkit-transform: rotateY(-540deg);
 			-moz-transform: rotateX(-540deg);
 		}
-		.click.flip .back {
+		.click .flip .back {
 			-webkit-transform: rotateY(0deg);
 			-moz-transform: rotateX(0deg);
 		}
@@ -109,7 +109,7 @@
 		/*Microsoft Internet Explorer*/
 		-ms-transform:translate(200px,100px);
 		/*Chrome, Safari*/
-		-webkit-transform:translate(400px,200px);
+		-webkit-transform:translateX(400px);
 		/*Opera*/
 		-o-transform:translate(200px,100px);
 		/*general version*/

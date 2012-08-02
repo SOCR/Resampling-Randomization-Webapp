@@ -19,8 +19,10 @@ var dataDrivenView=function(dataDrivenModel){
 	
 	//self=this;
 	function _create(start,size){
+		console.log("_create funtion started");
+		console.log(model.bootstrapSamples);
 		y=parseInt(start)+size;
-		$('#sampleList').html('');
+		//$('#sampleList').html('');		//first empty the sample list
 		//change the loop to a inverse while loop
 		
 		for(var i=start;i<y;i++)
@@ -117,6 +119,13 @@ var dataDrivenView=function(dataDrivenModel){
 		$('.pagination').append(html.join(''));
 	}
 	*/
+	function getPos(el) {
+    // yay readability
+    for (var lx=0, ly=0;
+         el != null;
+         lx += el.offsetLeft, ly += el.offsetTop, el = el.offsetParent);
+    return {x: lx,y: ly};
+}
 return{
     	disableButtons:function(){
 		stepButton.attr('disabled',"true"); 
@@ -135,6 +144,8 @@ return{
 		$('#sampleList').html('');	//clear the sample List dive
 		$('#dataPlot').html('');	//clear dataPlot div
 		$('#dotPlot').html('');		//clear dotPlot div
+		$('#pagination').html('');
+		$('#details').html('');
 		//also clear the canvas
 	},
 	
@@ -195,12 +206,63 @@ return{
 		//$("slider").hide();
 	},
 	createControllerView:function(){
-		var html='<button class="btn" type="button" id="stepButton" tabindex="1" title="Step"><img src="img/step.png" alt="Step" title="Step" /> </button> <button class="btn btn-success" type="button" id="runButton" tabindex="2" title="Run" ><img id="runImage" src="img/run.png" alt="Run" title="Run" /></button><button class="btn btn-danger" type="button" id="stopButton" tabindex="3" title="Stop" ><img id="stopImage" src="img/stop.png" alt="Stop" title="Stop" /></button><button class="btn" type="button" id="resetButton" tabindex="4" title="Reset" ><img src="img/reset.png" alt="Reset" title="Reset" /></button><span><i class="icon-question-sign popups" rel="popover" data-content="<ul><li>Step Button : generates 1 sample</li><li>Run Button : generates X sample..X can be set from the option below</li><li>Stop Button :Stops the sample generation</li><li>Reset Button : Resets all values</li></ul>" data-original-title="Controls"></i></span><p><span>Speed:  </span><select id="speed" style="width:100px" tabindex="3" title="Animation Speed"><option value="slow">slow</option><option value="medium">medium</option><option value="fast">fast</option></select></p><p class="tool"><span>Generate</span><input type="text" id="countSize" class="input-small" value="1000"> <span>Samples with </span><input type="text" id="nSize" class="input-small" value="50"><span>Datapoint per sample.</span></p><p><select id="variable" style="width:100px;margin-top:10px"><option value="slow">Mean</option><option value="medium">S.D</option><option value="fast">Percentile</option></select><span><a href="#" class="btn btn-danger popups" rel="popover" data-content="This will create a plot of the variable for each generated sample. Click this once you have generated some samples!" data-original-title="Inference">Infer!</a></span></p>';
+		var html='<button class="btn" type="button" id="stepButton" tabindex="1" title="Step"><img src="img/step.png" alt="Step" title="Step" /> </button> <button class="btn btn-success" type="button" id="runButton" tabindex="2" title="Run" ><img id="runImage" src="img/run.png" alt="Run" title="Run" /></button><button class="btn btn-danger" type="button" id="stopButton" tabindex="3" title="Stop" ><img id="stopImage" src="img/stop.png" alt="Stop" title="Stop" /></button><button class="btn" type="button" id="resetButton" tabindex="4" title="Reset" ><img src="img/reset.png" alt="Reset" title="Reset" /></button><span><i class="icon-question-sign popups" rel="popover" data-content="<ul><li>Step Button : generates 1 sample</li><li>Run Button : generates X sample..X can be set from the option below</li><li>Stop Button :Stops the sample generation</li><li>Reset Button : Resets all values</li></ul>" data-original-title="Controls"></i></span><p><span>Speed:  </span><select id="speed" style="width:100px" tabindex="3" title="Animation Speed"><option value="slow">slow</option><option value="medium">medium</option><option value="fast">fast</option></select></p><p class="tool"><span>Generate</span><input type="text" id="countSize" class="input-small" value="1000"> <span>Samples with </span><input type="text" id="nSize" class="input-small" value="50"><span>Datapoint per sample.</span></p><p><select id="variable" style="width:100px;margin-top:10px"><option value="slow">Mean</option><option value="medium">S.D</option><option value="fast">Percentile</option></select><span><a href="#" class="btn btn-danger popups" rel="popover" data-content="This will create a plot of the variable for each generated sample. Click this once you have generated some samples!" data-original-title="Inference" id="infer">Infer!</a></span></p>';
 		$('#controller-content').html(html);
 	},
 	/*animates the resample generation process....input is the resample datapoints array indexes*/
 	animate:function(x){
-	alert(x);	
+	//clear old
+	//for(var i=0;i<;)
+	console.log('indexes of resample: '+x);
+	var data=Experiment.getDataset();
+	for(var i=0;i<x.length;i++)
+		{	alert(model.bootstrapSamples[model.getCount()-1]);
+			var y='#coin'+x[i];
+			var z='#coin-container'+x[i];
+			y=$(y).clone();
+			$(z).append(y).css('z-index','10');
+			$(y).addClass('click');
+			$(y).css('-webkit-transition','all 5s');
+			$(y).css('-webkit-transform','translate(0px,150px)');
+			var k = new Coin(document.getElementsByClassName("coin"+x[i])[1]);
+			k.setValue(data[x[i]]);
+			/*
+			$(y).css('-webkit-transition','all 1s');
+			$(y).css('-webkit-transform','translate(400px)');
+			
+			$('#dataPlot').append('<canvas id="coin5" class="coin panel click" title="Coin5" width="30" height="30">Coin7</canvas>');
+			
+			var d = $('#coin5');
+			d.style.position = "absolute";
+			x=getPos(document.getElementById('coin5'));
+			d.style.left =x.lx;
+			d.style.top = x.ly;
+			*/
+		
+		}
+	},
+	createDotplot:function(setting){
+		console.log('createDotplot started');
+		//setting.variable;
+		
+		var values=model.getMean();
+		//alert(values);
+		console.log(values);
+		//get the mean array
+		var histogram = vis({
+			height: 400, 
+			width: 300,
+			parent : '#dotplot',
+			data : values,
+			range:[0,1]
+			});
+			histogram();
+		
+	},
+	updateDetails:function(){
+		$('#experimentName').html(Experiment.name);
+		t=new Date();
+		$('#startTime').html(t.getTime());
 	}
 	
     }//return

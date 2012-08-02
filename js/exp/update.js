@@ -19,17 +19,22 @@
      */
 	 
     if(setting.to == 'dataDriven')
-        {
+        {console.log("dataDriven tab has been clicked!");
             //view.clearAll();
 	    //reset the data
 	    //model.reset();
-            controller.loadController('dataDriven');    
+            controller.loadController('dataDriven');
+	    console.log(model.getDataset());
         
 	}
 	if(setting.to == 'simulationDriven')
-        {
+        {	console.log("simulationDriven tab has been clicked!");
 	    view.clearAll();
-	    //model.reset();
+		console.log("view cleared");
+	    model.reset();
+		console.log("model reset");
+		
+		
             controller.loadController('simulationDriven');
 	    
 	}
