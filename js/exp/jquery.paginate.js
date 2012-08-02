@@ -8,27 +8,27 @@
 			$.fn.draw(o,$this,selectedpage);	
 		});
 	};
-	var outsidewidth_tmp = 0;
-	var insidewidth 	 = 0;
+	var outsidewidth_tmp 	= 0;
+	var insidewidth 	= 0;
 	var bName = navigator.appName;
 	var bVer = navigator.appVersion;
 	if(bVer.indexOf('MSIE 7.0') > 0)
 		var ver = "ie7";
 	$.fn.paginate.defaults = {
-		count 		: 2,
-		start 		: 1,
-		display  	: 1,
-		border					: true,
+		count 				: 2,
+		start 				: 1,
+		display  			: 5,
+		border				: true,
 		border_color			: '#fff',
 		text_color  			: '#8cc59d',
-		background_color    	: 'black',	
+		background_color    		: 'black',	
 		border_hover_color		: '#fff',
 		text_hover_color  		: '#fff',
-		background_hover_color	: '#fff', 
+		background_hover_color		: '#fff', 
 		rotate      			: true,
-		images					: true,
-		mouse					: 'slide',
-		onChange				: function(){return false;}
+		images				: true,
+		mouse				: 'slide',
+		onChange			: function(){return false;}
 	};
 	$.fn.draw = function(o,obj,selectedpage){
 		$this.empty();
@@ -44,18 +44,19 @@
 			var snextclass 		= 'jPag-snext';
 			var nextclass 		= 'jPag-next';
 		}
-		var _first		= $(document.createElement('a')).addClass('jPag-first').html('First');
-		
+		var _first= $(document.createElement('a')).addClass('jPag-first').html('First');
 		if(o.rotate){
-			if(o.images) var _rotleft	= $(document.createElement('span')).addClass(spreviousclass);
-			else var _rotleft	= $(document.createElement('span')).addClass(spreviousclass).html('&laquo;');		
+			if(o.images)
+				var _rotleft= $(document.createElement('span')).addClass(spreviousclass);
+			else
+				var _rotleft= $(document.createElement('span')).addClass(spreviousclass).html('&laquo;');		
 		}
 		
-		var _divwrapleft	= $(document.createElement('div')).addClass('jPag-control-back');
+		var _divwrapleft= $(document.createElement('div')).addClass('jPag-control-back');
 		_divwrapleft.append(_first).append(_rotleft);
 		
 		var _ulwrapdiv	= $(document.createElement('div')).css('overflow','hidden');
-		var _ul			= $(document.createElement('ul')).addClass('jPag-pages')
+		var _ul	= $(document.createElement('ul')).addClass('jPag-pages');
 		var c = (o.display - 1) / 2;
 		var first = selectedpage - c;
 		var selobj;
@@ -86,16 +87,24 @@
 		$this.addClass('jPaginate').append(_divwrapleft).append(_ulwrapdiv).append(_divwrapright);
 			
 		if(!o.border){
-			if(o.background_color == 'none') var a_css 				= {'color':o.text_color};
-			else var a_css 											= {'color':o.text_color,'background-color':o.background_color};
-			if(o.background_hover_color == 'none')	var hover_css 	= {'color':o.text_hover_color};
-			else var hover_css 										= {'color':o.text_hover_color,'background-color':o.background_hover_color};	
-		}	
+			if(o.background_color == 'none')
+				var a_css= {'color':o.text_color};
+			else
+				var a_css= {'color':o.text_color,'background-color':o.background_color};
+			if(o.background_hover_color == 'none')
+				var hover_css 	= {'color':o.text_hover_color};
+			else
+			var hover_css = {'color':o.text_hover_color,'background-color':o.background_hover_color};	
+			}	
 		else{
-			if(o.background_color == 'none') var a_css 				= {'color':o.text_color,'border':'1px solid '+o.border_color};
-			else var a_css 											= {'color':o.text_color,'background-color':o.background_color,'border':'1px solid '+o.border_color};
-			if(o.background_hover_color == 'none')	var hover_css 	= {'color':o.text_hover_color,'border':'1px solid '+o.border_hover_color};
-			else var hover_css 										= {'color':o.text_hover_color,'background-color':o.background_hover_color,'border':'1px solid '+o.border_hover_color};
+			if(o.background_color == 'none')
+				var a_css= {'color':o.text_color,'border':'1px solid '+o.border_color};
+			else
+				var a_css = {'color':o.text_color,'background-color':o.background_color,'border':'1px solid '+o.border_color};
+			if(o.background_hover_color == 'none')
+				var hover_css 	= {'color':o.text_hover_color,'border':'1px solid '+o.border_hover_color};
+			else
+				var hover_css = {'color':o.text_hover_color,'background-color':o.background_hover_color,'border':'1px solid '+o.border_hover_color};
 		}
 		
 		$.fn.applystyle(o,$this,a_css,hover_css,_first,_ul,_ulwrapdiv,_divwrapright);
@@ -107,7 +116,7 @@
 		}
 		else{
 			_ulwrapdiv.css('width',outsidewidth+'px');
-			_divwrapright.css('left',outsidewidth_tmp+6+'px');
+			//_divwrapright.css('left',outsidewidth_tmp+140+'px');
 		}
 		
 		if(o.rotate){
@@ -189,6 +198,7 @@
 		//first and last:
 		_first.click(function(e){
 				_ulwrapdiv.animate({scrollLeft: '0px'});
+				
 				_ulwrapdiv.find('li').eq(0).click();
 		});
 		_last.click(function(e){

@@ -24,7 +24,7 @@
 	    //reset the data
 	    //model.reset();
             controller.loadController('dataDriven');
-	    console.log(model.getDataset());
+	    console.log('DataSet: '+model.getDataset());
         
 	}
 	if(setting.to == 'simulationDriven')

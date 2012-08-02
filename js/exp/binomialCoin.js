@@ -1,7 +1,7 @@
 //Binomial Coin Experiment
 var binomialCoin=(function(){
 
-this.name='Binomial Coin Toss';
+
 //::::::: PRIVATE PROPERTIES :::::::::::::::
 var _pParam, _nParam; // binomialDist is the distribution object
 var _p = 0.5;	  		//Probability of heads
@@ -20,13 +20,14 @@ function _tossCoin(){
 		_count++;
 	}
 	else{
-		view.loadInputExcel();
+		//view.loadInputSheet();
 		self.reset();
 	}
 }
 
 //:::::::::::: PUBLIC METHODS :::::::::::::
 return{
+	name:'Binomial Coin Toss',
     	initialize: function(){
 		//if u dont use var while defining a variable it is global!!
 		self=this;
@@ -36,14 +37,14 @@ return{
 		pParam.setProperties(0, 1, 0.01, _p, "<var>p</var>");
 		this.reset();
 		$("#sdbutton").on('click',function(){
-			Experiment.step();
+			Experiment.generate();
 			});
 		$('#nInput,#pInput').on('change',function(){
 			Experiment.setPN();
 			});
 	},
 
-	step: function(){
+	generate: function(){
 		view.updateDetails();
 		//_n=$("#nInput").val();
 		this.setPN();
@@ -89,14 +90,17 @@ return{
 				temp.push('">');
 				temp.push('<canvas id="coin');
 				temp.push(i);
-				temp.push('" class="coin panel front coin');
+				temp.push('" class="coin panel front');
 				temp.push(i);
-				temp.push('" width="30" height="30">Coin');
+				temp.push('" width="30" height="30" title="sample');
 				temp.push(i);
-				temp.push('</canvas>/<div class="panel back"></div>');
+				temp.push('">Coin');
+				temp.push(i);
+				temp.push('</canvas><div class="panel back"></div>');
 				temp.push('</div>');
 			}
 		$('#dataset').html(temp.join(''));
+		$('.coin').tooltip();
 	},
 	setPN:function(){
 		_p = pParam.getValue();
@@ -104,6 +108,9 @@ return{
 	},
 	getDataset:function(){
 		return _dataset;
+	},
+	getDatasetSize:function(){
+		return _n;
 	}
 }//return
 }());

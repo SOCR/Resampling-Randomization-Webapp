@@ -32,10 +32,12 @@ var dataDrivenView=function(dataDrivenModel){
 		for(var i=start;i<y;i++)
 			{
 			var temp=['<div class="entry"><div class="header">Sample<span class="values"> '];
-			temp.push(i);temp.push('</span> &nbsp;&nbsp;  Datapoints:<span class="values">');
+			temp.push(i);
+			temp.push('</span> &nbsp;&nbsp;  Datapoints:<span class="values">');
 			temp.push(_datapoints);
 			temp.push('</span>&nbsp;&nbsp;<a data-toggle="modal" href="#plot"><i class="icon-fullscreen plot" id="'+i+'"></i></a> &nbsp; <a href="#"><i class="icon-filter" id="'+i+'"></i></a></span><pre>');
-			temp.push(model.bootstrapSamples[i+1]);
+			//alert(i+' :'+model.bootstrapSamples[i-1]);
+			temp.push(model.bootstrapSamples[i-1]);
 			temp.push('</pre></div>');
 			$('#sampleList').append(temp.join(''));
 			}
@@ -60,22 +62,22 @@ var dataDrivenView=function(dataDrivenModel){
 	function _createPagination(x,y){
 		var count=Math.ceil((y-x)/500);		//number of pages
 		$(".pagination").paginate({
-				count 		: count,
-				start 		: 1,
-				display     : 7,
-				border					: true,
+				count 				: count,
+				start 				: 1,
+				display     			: 8,
+				border				: true,
 				border_color			: '#fff',
 				text_color  			: '#fff',
-				background_color    	: 'black',	
+				background_color    		: 'black',	
 				border_hover_color		: '#ccc',
 				text_hover_color  		: '#000',
-				background_hover_color	: '#fff', 
-				images					: false,
-				mouse					: 'press',
+				background_hover_color		: '#fff', 
+				images				: false,
+				mouse				: 'press',
 				onChange     			: function(page){
-											$('._current','#paginationdemo').removeClass('_current').hide();
-											$('#p'+page).addClass('_current').show();
-										  }
+									$('._current','#paginationdemo').removeClass('_current').hide();
+									$('#p'+page).addClass('_current').show();
+								  }
 			});
 		$('.pagination li').on('click',function(){
 			//alert('1');
@@ -128,14 +130,16 @@ return{
 		},
 	
 	createList:function(x){
+		console.log('createList invoked (view.js ln 131)');
 		var range=x.split('-');
-		//alert(range[1]);
+		
+		
 		if((range[1]-range[0])<500)
-			{
+			{	
 				_create(range[0],range[1]-range[0]);
 			}
 		else
-			{
+			{	
 				_createPagination(range[0],range[1]);
 				_create(range[0],500);
 			}
@@ -180,23 +184,29 @@ return{
 	animate:function(x){
 	//clear old
 	//for(var i=0;i<;)
-	console.log('indexes of resample: '+x);
+	//console.log('indexes of resample: '+x);
 	var data=Experiment.getDataset();
 	var noOfSamples=$('#q').width()/30;		//number of samples in 1 row
 	var increment=30;
+	alert(data);
 	for(var i=0;i<x.length;i++)
-		{	//alert(model.bootstrapSamples[model.getCount()-1]);
+		{
+			//alert(model.bootstrapSamples[model.getCount()-1]);
 			var y='#coin'+x[i];
 			var z='#coin-container'+x[i];
-			currentCoin=$(y).clone();
-			$(z).append(currentCoin).css('z-index','10');
-			$(currentCoin).addClass('click');
-			$(currentCoin).css('-webkit-transition','all 5s');
+			y=$(y).clone();
+			$(z).append(y).css('z-index','10');
+			$(y).addClass('click');
+			//$(currentCoin).addClass('coin'+i);
+			$(y).css('-webkit-transition','all 5s');
 			
-			$(currentCoin).css('-webkit-transform','translate('+i*increment+'px,150px)');
+			$(y).css('-webkit-transform','translate('+i+'px,150px)');
+			//alert(document.getElementById("coin"+x[i])[1]);
+			//alert($('#coin'+i)[0]);
+			//var k = new Coin($('#coin'+x[i])[0]);
+			//k.setValue(data[x[i]]);
 			var k = new Coin(document.getElementsByClassName("coin"+x[i])[1]);
 			k.setValue(data[x[i]]);
-			
 			/*
 			$(y).css('-webkit-transition','all 1s');
 			$(y).css('-webkit-transform','translate(400px)');
@@ -231,19 +241,26 @@ return{
 		
 	},
 	updateDetails:function(){
-		$('#experimentName').html(Experiment.name);
+		console.log('updateDetails (view.js ln 233) invoked');
+		var array=['<table class="table table-striped">'];
+		array.push('<tr><td>Experiment Name</td><td><strong>'+Experiment.name+'</strong></td></tr>');
 		t=new Date();
-		$('#startTime').html(t.getTime());
+		array.push('<tr><td>Start Time </td><td><strong>'+t.getTime()+'</strong></td></tr>');
+		array.push('<tr><td>DataSet Size </td><td><strong>'+Experiment.getDatasetSize()+'</strong></td></tr>');
+		array.push('</table>');
+		$('#details').html(array.join(''));
 	},
 	
-	welcomeBootstrap:function(){
+	CoverPage:function(){
+		console.log('CoverPage (view.js ln 240) invoked');
 		$('#welcome').css('height',$(window).height()).css('width',$(window).width());
 		$('.welcome-container').css('padding-top',$(window).height()/3).css('padding-left',$(window).height()/3);
 		
 	},
-	loadInputExcel:function(){
+	loadInputSheet:function(data){
+		console.log(data);
 		//alert('1');
-		var data = [ ["Column 1", 10, 11, 12, 13], ["Column 2", 20, 11, 14, 13], ];
+		//var data = [ ["Column 1", 10, 11, 12, 13], ["Column 2", 20, 11, 14, 13], ];
 		$('#input-table').inputtable('loadData',data);
 		
 	}

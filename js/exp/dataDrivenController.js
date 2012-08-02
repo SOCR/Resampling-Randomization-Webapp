@@ -45,30 +45,31 @@ return{
 		//add event listeners
 		
 		$("#runButton").on('click',function(){
-		console.log('run started');
+		console.log('Run Started');
 		controller.run();
 		
 		});
 		$("#stepButton").on('click',function(){
+		console.log('Step pressed ');
 		controller.step();
 		});
 		$("#stopButton").on('click',function(){
+		console.log('Stop Pressed ');
 		controller.stop();
 		});
 		$("#resetButton").on('click',function(){
+		console.log('Reset pressed');
 		controller.reset();
 		});
 		$("#infer").on('click',function(){
 		controller.setDotplot();
 		});
 		$("#doneButton").on('click',function(){
+		console.log('Done Pressed');
 		if(controller.setInput()==false)
 			alert('Input some correct data!');
 		});
-		showButton.on('click',function(){
-			view.createList($('#showCount').text());
-			//model.getMean();
-		});
+		
 		//create a slider
 		view.createSlider();
 		$('.dropdown-toggle').dropdown();
@@ -167,6 +168,7 @@ return{
 								processed:true
 								});	
 							console.log(model.getDataset());
+							//call to loadInputSheet to input the generated simulation data if any
 						}	
 						
 					}

@@ -98,7 +98,7 @@ function Coin(canvas){
 	this.setValue = function(v) {
 		ctx=canvas.getContext("2d");
 		size = canvas.width;
-		r = size / 2
+		r = size / 2;
 		ctx.clearRect(0, 0, size, size);
 		this.value = v;
 		if (this.value == 1){
