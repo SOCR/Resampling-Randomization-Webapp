@@ -1,4 +1,5 @@
-var dataDrivenView=function(dataDrivenModel){
+
+var dataDrivenView = function(dataDrivenModel){
 /* private properties */
 	var model=dataDrivenModel;
 	var _datapoints=$('#nSize').val();
@@ -47,13 +48,11 @@ var dataDrivenView=function(dataDrivenModel){
 			//var values=[2,3,5,4,3];
 			console.log('Random sample plot... values:'+values);
 			var histogram = vis({
-			height: 400, 
-			width: 300,
-			parent : '.device',
-			data : values,
-			range:[1,10]
-			});
-			histogram();
+				parent : '.device',
+				data : values,
+				range:[1,10]
+			})();
+			
 			});
 	}
 	/*
@@ -120,13 +119,10 @@ return{
 	createDatasetPlot:function(){
 		var values=[0.1,0.5];
 		var histogram = vis({
-			height: 400, 
-			width: 300,
 			parent : '#dataPlot',
 			data : values,
 			range: [0,10]
-			});
-			histogram();
+			})();
 		},
 	
 	createList:function(x){
@@ -231,13 +227,10 @@ return{
 		console.log(values);
 		//get the mean array
 		var histogram = vis({
-			height: 400, 
-			width: 300,
 			parent : '#dotplot',
 			data : values,
-			range:[0,100]
-			});
-			histogram();
+			range:[0,10]
+			})();
 		
 	},
 	updateDetails:function(){
