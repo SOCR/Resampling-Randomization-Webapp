@@ -68,6 +68,7 @@ function update(){
 //:::::::::::: PUBLIC METHODS :::::::::::::
 return{
 	initialize: function(){
+		console.log('hello world');
 		runButton = document.getElementById("runButton");
 		stepButton = document.getElementById("stepButton");
 		recordTable = document.getElementById("recordTable");
@@ -75,8 +76,8 @@ return{
 		distTable = document.getElementById("distTable");
 		stopSelect = document.getElementById("stopSelect");
 		stopSelect.value = "10";
-		replaceCheck = document.getElementById("replaceCheck");
-		replaceCheck.checked = false;
+		//replaceCheck = document.getElementById("replaceCheck");
+		//replaceCheck.checked = false;
 		showCheck = document.getElementById("showCheck");
 		showCheck.checked = true;
 		for (var i = 0; i < N; i++) ball[i] = new Ball(document.getElementById("ball" + i));

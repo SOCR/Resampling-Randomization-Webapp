@@ -1,36 +1,37 @@
 function vis(config){
 
-  //Some default variables
+ //Some default variables
 
-  var width = 600,
-      height = 400;
+    var defaults = {
+      'range' : [0,20],
+      'height' : $(config.parent).height(),
+      'width' : $(config.parent).width()
+    };
+
+    var settings = $.extend({}, defaults, config);
 
   function chart(){
 
-    // A formatter for counts.
+   // A formatter for counts.
     var formatCount = d3.format(",.0f");
 
-    var margin = {top: 10, right: 30, bottom: 30, left: 50},
-         //Takes in the entire dimensions of  the parent as default
-        w = config.width ? config.width : $(config.parent).width(), 
-        h = config.height ? config.height : $(config.parent).height();
-
-        console.log($(config.parent).height());
-
-    var width = w - margin.left - margin.right,
-        height = h - margin.top - margin.bottom;
-
-        console.log(width + ' ' + height)
+    var margin = {top: 10, right: 30, bottom: 30, left: 30};
+    /*
+        h = config.height ? config.height :  $(config.parent).height(),
+        w = config.width ? config.width : $(config.parent).width() ;
+    */
+    var width = settings.width - margin.left - margin.right,
+        height = settings.height - margin.top - margin.bottom;
 
     var x = d3.scale.linear()
-        .domain( config.range )
+        .domain( settings.range )
         .range([0, width]);
 
     // chart a histogram using twenty uniformly-spaced bins.
     var data = d3.layout.histogram()
         .bins(x.ticks(20))
-        .range([0,10])
-        (config.data);
+        .range( settings.range )
+        (settings.data);
 
     var y = d3.scale.linear()
         .domain([0, d3.max(data, function(d) { return d.y; })])
@@ -44,7 +45,7 @@ function vis(config){
         .scale(y)
         .orient("left");
 
-    var svg = d3.select(config.parent).append("svg")
+    var svg = d3.select(settings.parent).append("svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
       .append("g")

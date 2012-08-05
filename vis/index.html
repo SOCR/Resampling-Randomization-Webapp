@@ -32,7 +32,7 @@ circle.node{
 <body>
   <div class="chart"></div> 
 <script src="d3.v2.min.js"></script>
-<script src="http://code.jquery.com/jquery.min.js" ></script>
+<script src="../js/lib/jquery.min.js" ></script>
 <script>
 
 
@@ -45,32 +45,38 @@ function randomIrwinHall(m) {
 
 function vis(config){
 
-  //Some default variables
-   //Takes in the entire dimensions of  the parent as default
-  var width = config.width ? config.width : $(config.parent).width(),
-      height = config.height ? config.height :  $(config.parent).height();
+ //Some default variables
+
+    var defaults = {
+      'range' : [0,20],
+      'height' : $(config.parent).height(),
+      'width' : $(config.parent).width()
+    };
+
+    var settings = $.extend({}, defaults, config);
 
   function chart(){
 
-    // A formatter for counts.
+   // A formatter for counts.
     var formatCount = d3.format(",.0f");
 
-    var margin = {top: 10, right: 30, bottom: 30, left: 50},
-        
-    var width = w - margin.left - margin.right,
-        height = h - margin.top - margin.bottom;
-
-        console.log(width + ' ' + height)
+    var margin = {top: 10, right: 30, bottom: 30, left: 30};
+    /*
+        h = config.height ? config.height :  $(config.parent).height(),
+        w = config.width ? config.width : $(config.parent).width() ;
+    */
+    var width = settings.width - margin.left - margin.right,
+        height = settings.height - margin.top - margin.bottom;
 
     var x = d3.scale.linear()
-        .domain( config.range )
+        .domain( settings.range )
         .range([0, width]);
 
     // chart a histogram using twenty uniformly-spaced bins.
     var data = d3.layout.histogram()
         .bins(x.ticks(20))
-        .range([0,10])
-        (config.data);
+        .range( settings.range )
+        (settings.data);
 
     var y = d3.scale.linear()
         .domain([0, d3.max(data, function(d) { return d.y; })])
@@ -84,7 +90,7 @@ function vis(config){
         .scale(y)
         .orient("left");
 
-    var svg = d3.select(config.parent).append("svg")
+    var svg = d3.select(settings.parent).append("svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
       .append("g")
@@ -140,13 +146,15 @@ function vis(config){
 }  
 
     // chart an Irwin–Hall distribution of 10 random variables.
-    var values=[0.1,0.5];
+    var values=[4,5,6,7,7,9,10,15,18];
 
     var histogram = vis({
-                      //height : 300,
+                      height : 300,
                       parent : '.chart',
                       data : values,
                       range: [0,20]
                      })();
-
+$(window).resize(function(){
+          console.log($(this))
+        })
 </script>

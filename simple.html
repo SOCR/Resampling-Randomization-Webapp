@@ -21,6 +21,9 @@
 		font:normal 13px "Open Sans",Arial;
 		color:#666;
 	}
+	div.chart{
+		min-height:400px;
+	}
 	.dotplot{
 		line-height:200px;
 		text-align:center;
@@ -108,18 +111,57 @@
 
 		<div class="ui-layout-center"> 
 			<div class="fluid vis">
+
 				<h3>Visualizations - Demo</h3>
+
 				<div class="chart">
 
-			</div>
+				</div>
 			</div>
 			
 			<div class="fluid dotplot">Dot Plot</div>
+
 		</div>
 		<div class="ui-layout-west"> 
 			<div class="fluid left1">
 
-				<ul class="nav nav-tabs">
+				<!-- Start sliding input copy -->
+					<h3> Input Tile</h3>
+					<!-- Add data-toggle="buttons-radio" for radio style toggling on btn-group -->
+					<ul id='myTab' class="nav nav-tabs">
+					    <li class="active"><a href="#dataDriven-content" id='dataDriven-tab' data-toggle="tab" >Data Driven</a></li>
+					    <li ><a href="#simulationDriven-content" id='simulationDriven-tab' data-toggle="tab" >Simulation Driven</a></li>
+					</ul>
+					<div id="myTabContent" class="tab-content">
+					    <div class="tab-pane fade active in" id="dataDriven-content">
+					      <div style='width:415px'>
+
+							<p><input type='text' class='input-large' value='url...(optional)'/><i class="icon-question-sign popups" rel="popover" data-content="If you have run the simulation once, then the data is already loaded into the app OR Input/Drag and Drop a URL to fetch data from it OR manually enter data by clicking on the Edit/Input button." data-original-title="How to input data?"></i></p>
+
+								<a data-toggle="modal" href="#inputTile"><button class='btn' >Input/Edit Data</button></a>
+			                      
+			                </div>
+					      <!--<p> OR</p>
+					      <p><a class="btn" href="#">More Info &raquo;</a></p> -->
+					    </div>
+					    <div class="tab-pane fade" id="simulationDriven-content">
+
+					      <p style='width:400px'>There are many experiments available which generate samples and dont require the user to enter the sample set/data.<span><i class="icon-question-sign popups" rel="popover" data-content="Choose a experiment from the list to start generating samples!" data-original-title="Simulation Driven"></i></span></p>
+
+					      <div class="btn-group">
+							<button class="btn btn-success">Choose</button>
+							<button class="btn btn-success dropdown-toggle"><span class="caret"></span></button>
+							<ul class="dropdown-menu">
+							  <li><a href="#" id='binomialCoin'>Binomial Coin Toss</a></li>
+							  <li><a href="#" id='ballAndUrn'>Ball And Urn</a></li>
+							  <li><a href="#" id='dice'>Dice</a></li>
+							</ul>
+					      </div>
+					    </div>
+					</div>
+					  <!-- End of Input -->
+
+			<!--	<ul class="nav nav-tabs">
 			    <li><a href="#home" data-toggle="tab">Data Driven</a></li>
 			    <li><a href="#profile" data-toggle="tab">Simulation Driven</a></li>
 			</ul>
@@ -132,10 +174,10 @@
 						<p class="info">Drop here for info about the dragged item</p>
 					</section>
 										 
-					<div id="input-table" class="dataTable"></div>
+
                    
-				<!--<p> OR</p>
-			        <p><a class="btn" href="#">More Info &raquo;</a></p> -->
+				<p> OR</p>
+			        <p><a class="btn" href="#">More Info &raquo;</a></p>
 			      </div>
 			      <div class="tab-pane fade active in" id="profile">
 
@@ -153,12 +195,69 @@
 			      </div>
 			      </p>
 			    </div>
-				</div>
+			</div>-->
 
 			</div>
 			<div class="fluid controller">
 				<!-- Start Controller -->
-					<h3>Controller</h3>
+
+				<h3>Controller</h3>
+				<div id='controller-content'>
+
+				<p class="toolbar">
+				  <button class='btn' type="button" id="stepButton" tabindex="1" title="Step">
+				  <img src="img/step.png" alt="Step" title="Step" />
+				  </button>
+				  <button class='btn btn-success' type="button" id="runButton" tabindex="2" title="Run" >
+				  <img id="runImage" src="img/run.png" alt="Run" title="Run" />
+				  </button>
+				  <button class='btn btn-danger' type="button" id="stopButton" tabindex="3" title="Stop" >
+				  <img id="stopImage" src="img/stop.png" alt="Stop" title="Stop" />
+				  </button>
+				  <button class='btn' type="button" id="resetButton" tabindex="4" title="Reset" >
+				  <img src="img/reset.png" alt="Reset" title="Reset" />
+				  </button>
+				  <span>
+				    <i class="icon-question-sign popups" rel="popover" data-content="<ul><li>Step Button : generates 1 sample</li><li>Run Button : generates X sample..X can be set from the option below</li><li>Stop Button :Stops the sample generation</li><li>Reset Button : Resets all values</li></ul>" data-original-title="Controls"></i>
+				  </span>
+
+				</p>
+				<p>
+
+				  <span>Speed:  </span><select id="speed" style='width:100px' tabindex="3" title="Animation Speed">
+				    <option value="slow">slow</option>
+				    <option value="medium">medium</option>
+				    <option value="fast">fast</option>
+				   </select>
+
+				</p>
+				<p class="toolbar">
+				  <p class="tool">
+
+				    <span>Generate</span><input type="text" id='countSize' class="input-small" value='1000'>
+				    <span>Samples with </span><input type="text" id='nSize' class="input-small" value='50'><span>Datapoint per sample.</span>
+
+				  </p>
+				</p>
+				<p>
+				  
+				  <select id="variable" style='width:100px;margin-top:10px'>
+
+				    <option value="slow">Mean</option>
+				    <option value="medium">S.D</option>
+				    <option value="fast">Percentile</option>
+
+				  </select>
+				  <span>
+
+				    <a href="#" class="btn btn-danger popups" rel="popover" data-content="This will create a plot of the variable for each generated sample. Click this once you have generated some samples!" data-original-title="Inference" id='infer'>Infer!</a>
+
+				  </span>
+				</p>
+				</div>
+
+
+			<!--		<h3>Controller</h3>
 		<p class="toolbar">
 		  <button class='btn' type="button" id="stepButton" tabindex="1" title="Step">
 		  <img src="images/step.png" alt="Step" title="Step" />
@@ -268,7 +367,7 @@ head.js("js/lib/jquery.min.js",
     "js/dragdrop.js",
     "js/vis/histogram.js",
     "js/resizable/jquery.layout-latest.min.js",
-    "https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.21/jquery-ui.min.js",
+    "js/lib//jquery-ui.min.js",
      "js/exp/jquery.paginate.js"
     // "vis/script.js"
     	);
@@ -332,9 +431,76 @@ head.ready( function () {
 	                      parent : '.chart',
 	                      data : values,
 	                      range: [0,3]
-	                      });
-	    histogram();
+	                      })();
 
+	
+
+	      //Star pasting of random code from selvam's input
+	      /*
+		     *Loading MVC
+		     */
+		    model = new dataDrivenModel();
+		    view = new dataDrivenView(model);
+		    controller = new dataDrivenController(model,view);
+		    
+		    /*
+		     * Initialize the controller 
+		     */
+		    controller.initialize();   
+
+		      /*
+			     * Bind show button to createList function in appView.js
+			     */
+			    $("#showButton").on('click',function(){
+			      view.createList($('#showCount').text());
+			      });
+			    
+			    $('#startApp').on('click',function(){
+				console.log('Start App button clicked');
+				$('#welcome').animate({
+				  left:-2999},2000);
+			    });
+        
+		        $('#myTab a').click(function (e) {
+		      		e.preventDefault();
+		      		$(this).tab('show');
+		   		 });
+		 
+			    $('#dataDriven-tab').on('click',function(){
+			      //WARNING PROMPT
+				  
+			      $(this).update({to:'dataDriven'});
+			    });
+			    
+			    $('#simulationDriven-tab').on('click',function(){
+			      //WARNING PROMPT
+			      $(this).update({to:'simulationDriven'});
+			    });
+		    
+		     
+			    /* Array while holds the list of exp.js files already loaded*/    
+			    var expLoaded=['binomialCoin'];
+
+			     Experiment=binomialCoin;
+
+			    /* Ball and Urn Experiment   */
+			    $('#ballAndUrn').click(function(){
+			      //alert('1');
+			      if($.inArray('ballAndUrn', expLoaded)==-1)      
+			      //check whether the experiment script is already loaded
+				  {
+				    $.getScript("js/exp/ballAndUrn.js",function(){
+					console.log('file has loaded!');
+					Experiment=ballAndUrn;
+					//Initializing
+					alert(Experiment);
+					Experiment.initialize();
+				    });
+				      //head.js("js/exp/ballAndUrn.js");          //loading the Ball and Urn Script
+				    expLoaded.push('ballAndUrn');   //Making a entry in the array of loaded experiment scripts
+				  }
+			        
+			    });
 
 	});
 });

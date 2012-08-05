@@ -92,11 +92,13 @@ function Coin(canvas){
 	this.value; //1 heads, 0 tails, otherwise not tossed
 	this.prob = 0.5
 	//Local variables
-	var ctx = canvas.getContext("2d");
-	var size = canvas.width, r = size / 2;
+	var ctx , size, r ;
 	
 	//Methods
 	this.setValue = function(v) {
+		ctx=canvas.getContext("2d");
+		size = canvas.width;
+		r = size / 2;
 		ctx.clearRect(0, 0, size, size);
 		this.value = v;
 		if (this.value == 1){
@@ -127,6 +129,7 @@ function Coin(canvas){
 		var p = Math.random(), v;
 		if (p <= this.prob) v = 1; else v = 0;
 		this.setValue(v);
+		return v;
 	}
 }
 
@@ -682,6 +685,7 @@ function Parameter(input, label){
 	}
 	
 	this.setType = function(t){
+		alert('setType');
 		input.type = t;
 		this.setValue(Number(input.value));
 	}
