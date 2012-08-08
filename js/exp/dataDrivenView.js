@@ -43,6 +43,25 @@ var dataDrivenView = function(dataDrivenModel){
 			$('#sampleList').append(temp.join(''));
 			}
 		$('.plot').on('click',function(){
+
+
+			var values = $(this).parent().parent().find('pre').html().split(',');
+			var sampleID = $(this).parent().parent().find('.values').eq(0).text();
+			for(i in values){
+				values[i] = parseInt(values[i]);
+			}
+
+
+			$('.chart').html('');
+			$('.vis').find('h3').html('Sample No. ' + sampleID );
+			var randomPlot	= vis({
+		                      parent : '.chart',
+		                      data : values,
+		                      range: [0,10]
+	                      })();
+
+
+			/*
 			$('#plot .device').html('');			//empty the modal window 
 			var values=model.bootstrapSamples[$(this).attr('id')];
 			//var values=[2,3,5,4,3];
@@ -52,7 +71,7 @@ var dataDrivenView = function(dataDrivenModel){
 				data : values,
 				range:[1,10]
 			})();
-			
+			*/
 			});
 	}
 	/*

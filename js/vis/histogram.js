@@ -3,7 +3,7 @@ function vis(config){
  //Some default variables
 
     var defaults = {
-      'range' : [0,20],
+      'range' : d3.extent(config.data),
       'height' : $(config.parent).height(),
       'width' : $(config.parent).width()
     };
