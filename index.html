@@ -103,6 +103,10 @@
 	.tableset{
 		text-align:center;
 	}
+	div.chart{
+		min-height: 400px;
+		min-width: 500px;
+	}
     </style>
     
   </head>
@@ -261,7 +265,7 @@
 					</div>  
 					<div id='showListSlider'>
 						<div id="range"></div>
-						<div><button class='btn' type="button" id="showButton" tabindex="2" title="Show!" >Show!</button></div>
+						<div><button class='btn' type="button" id="showButton" tabindex="2" title="Show!" disabled="true">Show!</button></div>
 					</div>
 					<br>
 					<div id='sampleList'>
@@ -435,6 +439,7 @@
 			 */
 			$("#showButton").on('click',function(){
 				//a check to see if the sample count is 0 or not
+				console.log('it is not');
 				view.createList($('#showCount').text());
 			});
 			

@@ -46,6 +46,7 @@ return{
 		
 		$("#runButton").on('click',function(){
 		console.log('Run Started');
+		$("#showButton").removeAttr('disabled');
 		controller.run();
 		
 		});

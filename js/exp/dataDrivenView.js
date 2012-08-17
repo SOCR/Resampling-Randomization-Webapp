@@ -43,15 +43,24 @@ var dataDrivenView = function(dataDrivenModel){
 			}
 		$('.plot').on('click',function(){
 			$('.chart').html('');
-			var values=model.bootstrapSamples[$(this).attr('id')];
-			//var values=[1,2,3];
-			alert(values);
+			//var values=model.bootstrapSamples[$(this).attr('id')];
 			//$('.vis').find('h3').html('Sample No. ' + sampleID );
-			var randomPlot	= vis({
-		                      parent : '.chart',
-		                      data : values,
-		                      range: [0,10]
-	                      })();
+
+			//Temporary fix for getting the random sample data
+			var values = $(this).parent().parent().find('pre').text().split(',');
+			var sampleID = $(this).parent().parent().find('span.values').filter(':eq(0)').text();
+
+			$('#plot').find('h3').text(' Sample : ' + sampleID);
+
+			console.log(sampleID);
+
+				vis({
+					  parent : '.chart',
+			          data : values,
+			          height: 380,
+			          width: 500
+
+		           })();
 			/*
 			$('#plot .device').html('');			//empty the modal window 
 			var values=model.bootstrapSamples[$(this).attr('id')];

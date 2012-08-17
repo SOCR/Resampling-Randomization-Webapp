@@ -4139,7 +4139,7 @@ input[type="submit"].btn.btn-mini {
 
 .modal-backdrop,
 .modal-backdrop.fade.in {
-  opacity: 0.8;
+  opacity: 0.1;
   filter: alpha(opacity=80);
 }
 

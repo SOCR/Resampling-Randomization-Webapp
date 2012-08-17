@@ -1,9 +1,10 @@
 function vis(config){
 
  //Some default variables
+ var rangeDefault = [0,10]
 
     var defaults = {
-      'range' : [0,10],
+      'range' : rangeDefault,
       'height' : $(config.parent).height(),
       'width' : $(config.parent).innerWidth()
     };
@@ -13,6 +14,16 @@ function vis(config){
     //removing the padding from the parent
     $(config.parent).css('padding','0px');
 
+   /*
+
+    function returnInt(element){
+       return parseInt(element,10);
+    }
+ 
+    settings.range.map(returnInt);
+    console.log(settings.range);
+
+  */
   function chart(){
 
    // A formatter for counts.
@@ -23,8 +34,8 @@ function vis(config){
         h = config.height ? config.height :  $(config.parent).height(),
         w = config.width ? config.width : $(config.parent).width() ;
     */
-    var width = settings.width - margin.left - margin.right - 30,
-        height = settings.height - margin.top - margin.bottom -30;
+    var width = settings.width - margin.left - margin.right,
+        height = settings.height - margin.top - margin.bottom;
 
     var x = d3.scale.linear()
         .domain( settings.range )
