@@ -1,4 +1,3 @@
-
 var dataDrivenView = function(dataDrivenModel){
 /* private properties */
 	var model=dataDrivenModel;
@@ -43,6 +42,17 @@ var dataDrivenView = function(dataDrivenModel){
 			$('#sampleList').append(temp.join(''));
 			}
 		$('.plot').on('click',function(){
+			$('.chart').html('');
+			var values=model.bootstrapSamples[$(this).attr('id')];
+			//var values=[1,2,3];
+			alert(values);
+			//$('.vis').find('h3').html('Sample No. ' + sampleID );
+			var randomPlot	= vis({
+		                      parent : '.chart',
+		                      data : values,
+		                      range: [0,10]
+	                      })();
+			/*
 			$('#plot .device').html('');			//empty the modal window 
 			var values=model.bootstrapSamples[$(this).attr('id')];
 			//var values=[2,3,5,4,3];
@@ -52,7 +62,7 @@ var dataDrivenView = function(dataDrivenModel){
 				data : values,
 				range:[1,10]
 			})();
-			
+			*/
 			});
 	}
 	/*
@@ -94,28 +104,40 @@ var dataDrivenView = function(dataDrivenModel){
 		return {x: lx,y: ly};
 	}
 return{
-    	disableButtons:function(){
+    
+	/**
+     * Disables step,run and show buttons
+    */
+	disableButtons:function(){
 		stepButton.attr('disabled',"true"); 
 		runButton.attr('disabled',"true");
 		showButton.attr('disabled',"true");
 	},
-	
 	enableButtons:function(){
 		stepButton.removeAttr('disabled'); 
 		runButton.removeAttr('disabled');
 		showButton.removeAttr('disabled');
 	},
 	
+	/**
+     * Clears all canvas and div. Resetting the view of the whole App
+     *
+     */
 	clearAll:function(){
 		$('#displayCount').html('0');	//resetting the count to 0
-		$('#sampleList').html('');	//clear the sample List dive
-		$('#dataPlot').html('');	//clear dataPlot div
-		$('#dotPlot').html('');		//clear dotPlot div
+		$('#sampleList').html('');		//clear the sample List dive
+		$('#dataPlot').html('');		//clear dataPlot div
+		$('#dotPlot').html('');			//clear dotPlot div
 		$('#pagination').html('');
 		$('#details').html('');
+		$('#dataset').html('');
 		//also clear the canvas
 	},
 	
+	/**
+     * Dont know where its called?
+     *
+     */
 	createDatasetPlot:function(){
 		var values=[0.1,0.5];
 		var histogram = vis({
@@ -124,12 +146,14 @@ return{
 			range: [0,10]
 			})();
 		},
-	
+		
+	/**
+     * It generates all the samples List
+     * @dependencies : _create(start,stop)
+     */
 	createList:function(x){
 		console.log('createList invoked (view.js ln 131)');
 		var range=x.split('-');
-		
-		
 		if((range[1]-range[0])<500)
 			{	
 				_create(range[0],range[1]-range[0]);
@@ -140,13 +164,21 @@ return{
 				_create(range[0],500);
 			}
 		},
-	
+		
+	/**
+     * update the counter display
+     *
+     */
 	updateCounter:function(){
 		//count value changed on top
 		$('#displayCount').text(model.getCount());
 		return true;
 	},
 	
+	/**
+     * update the slider value
+     *
+     */
 	updateSlider:function(){
 		//get the count and set it as the maximum value
 		//$( "#range" ).slider({ disabled: false });
@@ -155,6 +187,11 @@ return{
 		//$( "#showCount" ).html($( "#range" ).slider( "values",0 )+" - " + $( "#range" ).slider( "values", 1 ) );
 		//alert($( "#range" ).slider( "value"));
 	},
+	
+	/**
+     * Create the slider for show option
+     *
+     */
 	createSlider:function(){
 		$( "#range" ).slider({
 			range: true,
@@ -165,76 +202,134 @@ return{
 				$( "#showCount" ).html( ui.values[ 0 ] + " - " + ui.values[ 1 ] );
 			}
 		});
-		
 		$( "#showCount" ).html($( "#range" ).slider( "values",0 )+" - " + $( "#range" ).slider( "values", 1 ) );
 		//$("#amount" ).val( "$" + $( "#range" ).slider( "value" ) );
 		//$("slider").hide();
 	},
-	createControllerView:function(){
-		var html='<button class="btn" type="button" id="stepButton" tabindex="1" title="Step"><img src="img/step.png" alt="Step" title="Step" /> </button> <button class="btn btn-success" type="button" id="runButton" tabindex="2" title="Run" ><img id="runImage" src="img/run.png" alt="Run" title="Run" /></button><button class="btn btn-danger" type="button" id="stopButton" tabindex="3" title="Stop" ><img id="stopImage" src="img/stop.png" alt="Stop" title="Stop" /></button><button class="btn" type="button" id="resetButton" tabindex="4" title="Reset" ><img src="img/reset.png" alt="Reset" title="Reset" /></button><span><i class="icon-question-sign popups" rel="popover" data-content="<ul><li>Step Button : generates 1 sample</li><li>Run Button : generates X sample..X can be set from the option below</li><li>Stop Button :Stops the sample generation</li><li>Reset Button : Resets all values</li></ul>" data-original-title="Controls"></i></span><p><span>Speed:  </span><select id="speed" style="width:100px" tabindex="3" title="Animation Speed"><option value="slow">slow</option><option value="medium">medium</option><option value="fast">fast</option></select></p><p class="tool"><span>Generate</span><input type="text" id="countSize" class="input-small" value="1000"> <span>Samples with </span><input type="text" id="nSize" class="input-small" value="50"><span>Datapoint per sample.</span></p><p><select id="variable" style="width:100px;margin-top:10px"><option value="slow">Mean</option><option value="medium">S.D</option><option value="fast">Percentile</option></select><span><a href="#" class="btn btn-danger popups" rel="popover" data-content="This will create a plot of the variable for each generated sample. Click this once you have generated some samples!" data-original-title="Inference" id="infer">Infer!</a></span></p>';
-		$('#controller-content').html(html);
-	},
-	/*
-	animates the resample generation process....input is the resample datapoints array indexes
+	
+	/**
+	*@method: createControllerView
+	*@description: called for replacing the controller div with data driven controls.
+	*@return : none
 	*/
-	animate:function(x){
-	//clear old
-	//for(var i=0;i<;)
-	//console.log('indexes of resample: '+x);
-	var data=Experiment.getDataset();
-	var noOfSamples=$('#q').width()/30;		//number of samples in 1 row
-	var increment=30;
-	alert(data);
-	for(var i=0;i<x.length;i++)
-		{
-			//alert(model.bootstrapSamples[model.getCount()-1]);
-			var y='#coin'+x[i];
-			var z='#coin-container'+x[i];
-			y=$(y).clone();
-			$(z).append(y).css('z-index','10');
-			$(y).addClass('click');
-			//$(currentCoin).addClass('coin'+i);
-			$(y).css('-webkit-transition','all 5s');
+	createControllerView:function(){
+		$( "#amount" ).val( "$" + $( "#slider" ).slider( "value" ) );
+		var html='<div id="buttonPanel"><button class="btn" type="button" id="stepButton" tabindex="1" title="Step"><img src="img/step.png" alt="Step" title="Step" /> </button> <button class="btn btn-success" type="button" id="runButton" tabindex="2" title="Run" ><img id="runImage" src="img/run.png" alt="Run" title="Run" /></button><button class="btn btn-danger" type="button" id="stopButton" tabindex="3" title="Stop" ><img id="stopImage" src="img/stop.png" alt="Stop" title="Stop" /></button><button class="btn" type="button" id="resetButton" tabindex="4" title="Reset" ><img src="img/reset.png" alt="Reset" title="Reset" /></button><span><i class="icon-question-sign popups" rel="popover" data-content="<ul><li>Step Button : generates 1 sample</li><li>Run Button : generates X sample..X can be set from the option below</li><li>Stop Button :Stops the sample generation</li><li>Reset Button : Resets all values</li></ul>" data-original-title="Controls"></i></span></div><div id="speedSlider"><div><span class="badge badge-warning">Speed: <span id="speedCount">200</span>ms</span></div><div id="speed"></div></div><div class="tool"><span>Generate</span><input type="text" id="countSize" class="input-small" value="1000"> <span>Samples with </span><input type="text" id="nSize" class="input-small" value="50"><span>Datapoint per sample.</span></div><div><select id="variable" style="width:100px;margin-top:10px"><option value="slow">Mean</option><option value="medium">S.D</option><option value="fast">Percentile</option></select><span><a href="#" class="btn btn-danger popups" rel="popover" data-content="This will create a plot of the variable for each generated sample. Click this once you have generated some samples!" data-original-title="Inference" id="infer">Infer!</a></span></div>';
+		$('#controller-content').html(html);
+		$( "#speed" ).slider({
+			value:400,
+			min: 200,
+			max: 2000,
+			step: 50,
+			slide: function( event, ui ) {
+			$( "#speedCount" ).html( ui.value );
+			}
+		});
+	},
+	
+	/**
+	*@method: animate
+	*@description: animates the resample generation process....input is the resample datapoints array indexes
+	*@return : none
+	*/
+	animate:function(setting){
+		var data=Experiment.getDataset();		// data is in the form of an array!
+		var stopCount=setting.stopCount;		// Number of datapoints in a generated random sample
+		var keys=setting.keys;					// keys=array indexs of the datapoints in the dataset which are present in the current random sample 
+		var i=0;
+		var _dimensions=Experiment.getSampleHW();
+		setTimeout(animation);					//first call
+				
+		function animation(){
+			var speed=$('#speedCount').html();	//calculate the speed currently set from the browser itself
+			var sampleNumber=keys[i];			
+			var count=i;
+			var self = $("#device"+sampleNumber);	//reference to the device (i.e. coin , card, dice) canvas
+			var content=self.clone();				// make a copy of the sample canvas
+			currentX=$("#device"+sampleNumber+"-container").position().left; //get the X position of current sample canvas
+			console.log('currentX:'+currentX);
+			currentY=$("#device"+sampleNumber+"-container").position().top;  //get the Y position of current sample canvas
+			console.log('currentY:'+currentY);
 			
-			$(y).css('-webkit-transform','translate('+i+'px,150px)');
-			//alert(document.getElementById("coin"+x[i])[1]);
-			//alert($('#coin'+i)[0]);
-			//var k = new Coin($('#coin'+x[i])[0]);
-			//k.setValue(data[x[i]]);
-			var k = new Coin(document.getElementsByClassName("coin"+x[i])[1]);
-			k.setValue(data[x[i]]);
-			/*
-			$(y).css('-webkit-transition','all 1s');
-			$(y).css('-webkit-transform','translate(400px)');
+			samplesInRow=$('#generatedSamples').width()/_dimensions['width'] -1;				//number of samples in a row
 			
-			$('#dataPlot').append('<canvas id="coin5" class="coin panel click" title="Coin5" width="30" height="30">Coin7</canvas>');
+			/*Block to adjust the generatedSamples div height*/
+			var divHeight=(stopCount/samplesInRow)*_dimensions['height'];
+			$("#generatedSamples").height(divHeight);
+			alert(divHeight);
+			//
+			if(count<samplesInRow)
+				destinationX=count*_dimensions['width']+$('#generatedSamples').position().left;
+			else 
+				destinationX=(count%samplesInRow)*_dimensions['width']+$('#generatedSamples').position().left;
 			
-			var d = $('#coin5');
-			d.style.position = "absolute";
-			x=getPos(document.getElementById('coin5'));
-			d.style.left =x.lx;
-			d.style.top = x.ly;
-			*/
-		
+			console.log('destinationX:'+destinationX);
+			destinationY=Math.floor(count/samplesInRow)*_dimensions['height']+$('#generatedSamples').position().top;	//calculate the destination Y
+			console.log('destinationY:'+destinationY);
+			//self.css('-webkit-transition','all 0.5s');
+			self.transition({
+				perspective: '100px',
+				rotateY: '360deg',
+				duration:speed/2+'ms'
+			});
+			self.transition({
+				x:(destinationX-currentX),
+				y:(destinationY-currentY),
+				duration:speed/2+'ms'
+				},function(){
+					content.appendTo("#device"+sampleNumber+'-container');
+					self.removeAttr('id');					//remove the id on the moved coin
+					
+				if(Experiment.type=='coin')
+					{
+					var k = new Coin(document.getElementById("device"+sampleNumber));
+					k.setValue(data[sampleNumber]);
+					}
+				else if(Experiment.type=='card')
+					{
+					var k = new Card(document.getElementById("device"+sampleNumber));
+					k.setValue(data[sampleNumber]);
+					}
+				else
+					{
+					var k = new Ball(document.getElementById("device"+sampleNumber));
+					k.setValue(data[sampleNumber]);
+					}
+				}); //self.transition
+				
+				i=i+1;
+				if(i<stopCount)
+					setTimeout(animation,speed*1.2);
 		}
 	},
+	
+	/**
+	*@method: createDotPlot
+	*@description: Dot plot section in the accordion is populated by this call. call invoked when "infer" button pressed in the controller div.
+	*@return : none
+	*/
 	createDotplot:function(setting){
-		console.log('createDotplot started');
+		console.log('createDotplot invoked (dataDrivenView.js)');
+		$("#accordion").accordion( "activate" , 2);
 		//setting.variable;
-		
-		var values=model.getMean();
+		//var values=model.getMean();
 		//alert(values);
-		console.log(values);
+		console.log("Mean Values:"+ values );
+		var values = [4,2,3,4,1,5,6,7];
 		//get the mean array
 		var histogram = vis({
 			parent : '#dotplot',
-			data : values,
-			range:[0,10]
-			})();
-		
+			data : values
+		})();
 	},
-	updateDetails:function(){
-		console.log('updateDetails (view.js ln 233) invoked');
+	
+	/**
+	*@method: updateSimulationInfo
+	*@description: Called when the 'step button' is pressed in the controller div. Call is made in dataDrivenController.js
+	*@return : none
+	*/
+	updateSimulationInfo:function(){
+		console.log('updateDetails (dataDrivenView.js ln 319) invoked');
 		var array=['<table class="table table-striped">'];
 		array.push('<tr><td>Experiment Name</td><td><strong>'+Experiment.name+'</strong></td></tr>');
 		t=new Date();
@@ -244,17 +339,26 @@ return{
 		$('#details').html(array.join(''));
 	},
 	
+	/**
+	*@method: CoverPage
+	*@description: Called from the index.html page.
+	*@return : none
+	*/
 	CoverPage:function(){
-		console.log('CoverPage (view.js ln 240) invoked');
+		console.log('CoverPage() (view.js ln 240) invoked');
 		$('#welcome').css('height',$(window).height()).css('width',$(window).width());
 		$('.welcome-container').css('padding-top',$(window).height()/3).css('padding-left',$(window).height()/3);
-		
+		$('div.main-wrap').show();
 	},
+	
+	/**
+	*@method: loadInputSheet
+	*@description: Called from the {experiment}.js at the {Experiment}.generate() function.
+	*@return : none
+	*/
 	loadInputSheet:function(data){
-		console.log(data);
-		//alert('1');
-		//var data = [ ["Column 1", 10, 11, 12, 13], ["Column 2", 20, 11, 14, 13], ];
-		$('#input-table').inputtable('loadData',data);
+		console.log("loadInputSheet() has been called....data is : " +data);
+		$('#input').inputtable('loadData',data);
 		
 	}
 	

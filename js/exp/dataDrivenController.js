@@ -92,9 +92,13 @@ return{
 	step: function(){
 		view.disableButtons();					//disabling buttons
 		model.setN(nSize.val());				// save the datapoints size
-	        var keys=model.generateStep();					//generate one sample
+	    var keys=model.generateStep();				//generate one sample
 		view.updateCounter();					//update counter
-		view.animate(keys);						//show sample generation animation
+		view.animate({
+		stopCount:$('#nSize').val(),
+		speed:$('#speed').val(),
+		keys:keys
+		});						//show sample generation animation
 		view.enableButtons();					//enabling buttons
 		view.updateSlider();					//update slider count
 	},
@@ -126,11 +130,34 @@ return{
         },
     
 	reset: function(){
-		this.stop();
-		model.setCount(0);		//reset the total count
-		model.setSamples=[];	//empty the bootstrap samples
-		view.clearAll();		//clearing all the canvas
-		$('#showCount').html('');
+	var self=this;
+	$('<div></div>').appendTo('body')
+                    .html('<div><h6>Are you sure you want to reset? Data will be lost!</h6></div>')
+                    .dialog({
+                        modal: true, 
+						title: 'Reset Data?', 
+						zIndex: 10000, 
+						autoOpen: true,
+                        width: 'auto', 
+						resizable: false,
+                        buttons: {
+                            Yes: function () {
+							self.stop();
+							model.setCount(0);		//reset the total count
+							model.setSamples=[];	//empty the bootstrap samples
+							view.clearAll();		//clearing all the canvas
+							$('#showCount').html('');
+                            $(this).dialog("close");					//close the confirmation window
+                            },
+                            No: function () {
+                                $(this).dialog("close");
+                            }
+                        },
+                        close: function (event, ui) {
+                            $(this).remove();
+                        }
+                    });
+		
 		},
         
     

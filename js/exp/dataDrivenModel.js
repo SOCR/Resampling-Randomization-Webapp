@@ -47,8 +47,6 @@ function _generateMean(j){
 		for(var i in x) { total += parseInt(x[i]); }
 		//alert(total);
 		_sampleMean[j]=total/x.length;
-		
-	
 }
 
 return{
@@ -88,7 +86,7 @@ return{
 		
 	},
 	generateStep:function(){
-		var j=_n;
+		var j=$('#nSize').val();
 		var sample=[];
 		while(j--)
 			{
@@ -99,7 +97,7 @@ return{
 			}
 		bootstrapSamples[_count]=sample;
 		//bootstrapSamples[_count]= new Array(sample);
-		//console.log(_count+':'+bootstrapSamples[_count]);
+		console.log(_count+':'+bootstrapSamples[_count]);
 		_count++;
 		return keys;
 	},
@@ -131,12 +129,13 @@ return{
 		return _dataset;
 	},
 	setDataset:function(input){
-		if(input.processed && input.data)
-			{//alert(input.data);
+		if(input.processed )
+			{
 				_dataset=input.data;
+				console.log('setDataSet executed! simulation data is loaded now.');
 				return false;
 			}
-		else if(input.data)
+		else 
 			{
 		//emptying the array
 			_dataset=[];
@@ -153,11 +152,12 @@ return{
 					}
 				
 				}		
-			console.log('final data :' + _dataset);
-			return false;
+			console.log('setDataSet executed!data is loaded now. Data :' + _dataset);
+			if(_dataset.length!=0)
+				return false;
+			else
+				return true;
 		}
-		else
-			return true;
 		
 	},
         

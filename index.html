@@ -10,200 +10,17 @@
   
     <!-- head.js ... its a javascript loader tool -->
     <script src="js/lib/head.min.js"></script>
-    
+
     <!-- Le styles -->
-    <link href='http://fonts.googleapis.com/css?family=Lato:400,900' rel='stylesheet' type='text/css'>
-    <link href="css/bootstrap.css" rel="stylesheet">
-    <link href="css/stylePagination.css" rel="stylesheet">
-    <link href="css/animation.css" rel="stylesheet">
+    <!--<link rel="stylesheet" href='http://fonts.googleapis.com/css?family=Lato:400,900'  type='text/css'>-->
+    <link rel="stylesheet" href="css/bootstrap.css" >
+    <link rel="stylesheet"href="css/stylePagination.css" >
+    <link rel="stylesheet" href="css/animation.css" >
     <link rel="stylesheet" media="screen" href="css/jquery-ui.css">
-    <link rel="stylesheet" media="screen" href="input/css/table.css">
-    <link href="css/bootstrap-responsive.css" rel="stylesheet">
-    <style type="text/css">
-    .bar rect {
-      fill: steelblue;
-      shape-rendering: crispEdges;
-    }
-
-    .bar text {
-     fill: #fff;
-    }
-
-    .axis path, .axis line {
-      fill: none;
-      stroke: #000;
-      shape-rendering: crispEdges;
-    }	
-      body {
-        padding-top: 60px;
-        
-      }
-      .sidebar-nav {
-        padding: 9px 0;
-      }
-      .row-fluid{
-	padding-top:10px;
-	}
-      
-      .tab-content{overflow:visible;}
-	  
-/*
-    SampleList style starts here
- 	  
-*/
-     .entry{
-	      padding: 10px;
-	      border-bottom: 0; 
-	      &:last-of-type {
-        border-bottom: 1px solid black; 
-	}
-      }
-      .header{
-      background-color:#cdf;
-      }
-      .values{
-	color:brown;
-	font-weight:800;
-      }
-	
-      .span5,.span4{
-	border:1px solid;
-	padding:10px;
-      }
-      #sampleList{
-	height:330px;
-	overflow-y: scroll;
-      }
-      
-      #range{
-	width:50%;
-	float:left;
-	margin-right:10px;
-	margin-top:7px;
-	}
-
-	/* Adding a min-height for the plotted area : required ; */
-	div#dotplot{
-		min-height: 400px;
-		min-width:700px;
-	}
-	
-  /*
-    SampleList style ends here
- 	  
-*/
-  /*
-  Control and input tile style starts here 	  
-*/      
-	.slide-out-input,.slide-out-controller {
-	  border:1px solid;
-	  padding:10px;
-          
-          background: #ccc;
-          
-      }      
-      .up{
-	z-index:1;
-      }
-      #accordion div{
-	/*
-	height:350px;
-	display:inline;
-	border:1px solid;
-	*/
-	
-      }
-      #dataPlot, #currentSample{
-      /*float:left;
-      width:45%;
-      */margin:5px;
-      }
-      .input-handle,.controller-handle{
-	position:absolute;
-	left:-20px;
-	-webkit-transform: rotate(90deg);
-	transform:rotate(90deg);
-	-ms-transform:rotate(90deg); /* IE 9 */
-	-moz-transform:rotate(90deg); /* Firefox */
-	-webkit-transform:rotate(90deg); /* Safari and Chrome */
-	-o-transform:rotate(90deg); /* Opera */
-      }
-      
-      .controller-handle{
-	left:-30px;
-      }
-      .controller-handle,#slide-out-controller{
-	top:350px;
-      }
-      #slide-out-input,#slide-out-controller{
-	width:400px;
-	display:none;
-	position: absolute;
-        left:-425;
-	background-color:#ccc;
-	border:1px solid ;
-	padding:10px;
-	z-index:100;
-      }
-       .input-handle,#slide-out-input{
-	top:150px;
-      }
-   /*
-  Control and input tile style ends here 	  
-*/       
-      
-      .coin-container{
-      width: 30px;
-      height: 30px;
-      position: relative;
-      display:inline-block;
-      }
-      
-      .coin{
-	width: 100%;
-	height: 100%;
-	position: absolute;
-        top: 0;
-        left: 0;
-      }
-      .q{
-	height: 400px;
-	
-      }
-      
-      .ui-accordion-header{
-	background-color:#ccc;
-	border:1px solid;
-	
-      }
-      .ui-accordion-header a{text-decoration:none;}
-      .ui-accordion-content{
-	border:1px solid;
-      }
-      
-      #welcome{
-	
-	z-index: 9999;
-	position: absolute;
-	background-color: black;
-	top:0px;
-      }
-      
-      .font{
-	font-size: 20px;
-	color: white;
-	font-family: 'Lato', sans-serif;
-      }
-      
-      .welcome-title{
-	color:#1DC4F9;
-	font-size: 150px;
-      }
-      
-      .welcome-container div{
-	float:left;
-      }
-  </style>
+    <link rel="stylesheet" media="screen" href="css/input/table.css">
+	<link rel="stylesheet" type="text/css" href="css/jquery.jtweetsanywhere-1.3.1.css" />
+   	<link rel="stylesheet" href="css/common.css" >
+    <style type="text/css"> </style>
  
     <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
@@ -215,419 +32,577 @@
     <link rel="apple-touch-icon-precomposed" sizes="114x114" href="ico/apple-touch-icon-114-precomposed.png">
     <link rel="apple-touch-icon-precomposed" sizes="72x72" href="ico/apple-touch-icon-72-precomposed.png">
     <link rel="apple-touch-icon-precomposed" href="ico/apple-touch-icon-57-precomposed.png">
+    <style>
+    .bar rect {
+	  fill: steelblue;
+	  shape-rendering: crispEdges;
+	}
+
+	.bar text {
+	  fill: #fff;
+	}
+
+	.axis path, .axis line {
+	  fill: none;
+	  stroke: #000;
+	  shape-rendering: crispEdges;
+	}
+
+	circle.node{
+	  cursor:pointer;
+	}
+
+	rect{
+	  fill-opacity:0.65;
+	}
+	 rect.mean{
+	  fill: orange;
+	  fill-opacity:0.5;
+	}
+	.default-table{
+  	border-collapse: collapse;
+	  position: relative;
+	  -webkit-user-select: none;
+	  -khtml-user-select: none;
+	  -moz-user-select: none;
+	  -o-user-select: none;
+	  user-select: none;
+	  border-spacing: 0;
+	  border-top: 1px solid #CCC;
+	  border-left: 1px solid #CCC;
+	  margin:0 auto;
+	  }
+
+	.default-table td{
+		 border-right: 1px solid #CCC;
+	  border-bottom: 1px solid #CCC;
+	  min-width: 50px;
+	  width: 50px;
+	  height: 22px;
+	  padding: 0 7px 0 7px;
+
+	}
+	.default-table th{
+		background: #EEE;
+		font-weight:200;
+		color: #333;
+		border-right: 1px solid #CCC;
+		border-bottom: 1px solid #CCC;
+		 padding: 0 7px 0 7px;
+	}
+	div.container{
+		width: 500px;
+		margin:0 auto;
+		text-align:center;
+		padding:0 4 0 4;
+	}
+	.tableset{
+		text-align:center;
+	}
+    </style>
     
   </head>
 
-  <body>
+<body>
   <div id='header'>
-    <div class="navbar navbar-fixed-top">
-      <div class="navbar-inner">
-        <div class="container-fluid">
-          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </a>
-          <a class="brand" href="#">SOCR</a>
-          <div class="nav-collapse">
-            <ul class="nav">
-              <li class="active"><a href="#">Home</a></li>
-              <li><a data-toggle="modal" href="#aboutDesc">About</a></li>
-              <li><a data-toggle="modal" href="#simulationDesc">Simulations</a></li>
-	      <a data-toggle="modal" href="#help"><button class='btn btn-danger' >Need Help!</button></a>
-	      <a data-toggle="modal" href="#share"><button class='btn btn-success' >Share</button></a>	  
-            </ul>
-          </div><!--/.nav-collapse -->
-        </div>
-      </div>
-    </div>
-  </div>
-  <div id='main'>
-    <div id='welcome'>
-      <div class="welcome-container">
-	<div>
-	  <span><h2 class="font welcome-title">SOCR</h2></span>
-	</div>
-	<div style='margin-top:50px'>
-	  <span class="font" >Statistical online Computational Resource&nbsp;&nbsp;</span><button id="startApp" class="btn btn-primary btn-large">Start App >>> </button>
-	</div>
-      </div>
-    </div>
-    <div class="container-fluid">
-      <div class="row-fluid">
-	<div class='span8'>
-	  <div id='accordion'>
-	    <h3>
-	      <a href="#">DataSet <i class="icon-question-sign popups" rel="popover" data-content="It is graphical view of the dataset from where the random samples are generated.Goto input tab to get started!" data-original-title="Dataset"></i></a>
-	    </h3>
-	    <div class='q'>
-	      <div id="dataset" style='height: 150px;'></div>
-	      <h6>Generated Resample: <i class="icon-question-sign popups" rel="popover" data-content="This section contains all the datapoints in 1 random sample generated from the dataset. Switch to datadriven mode after the simulation. Then goto controller -> step button" data-original-title="Generated Sample"></i></h6>
-	    </div>		
-	    <h3><a href="#">Inference Plot <i class="icon-question-sign popups" rel="popover" data-content="It is graphical view of the dataset from where the random samples are generated.Goto input tab to get started!" data-original-title="Inference Plot"></i></a></h3>
-	    <div id='dotplot'></div>
-	    <h3><a href="#">Simulation Info <i class="icon-question-sign popups" rel="popover" data-content="It is graphical view of the dataset from where the random samples are generated.Goto input tab to get started!" data-original-title="Simulation Info"></i></a></h3>
-	    <div id='details'>
-	      
-	    </div>
-	  </div>
-	  <a class="input-handle" href='#'><button class='btn-primary btn-large'>Input</button></a>	
-	  <div id="slide-out-input" >
-		<h3> Input Tile</h3>
-		<!-- Add data-toggle="buttons-radio" for radio style toggling on btn-group -->
-		<ul id='myTab' class="nav nav-tabs">
-		    <li class="active"><a href="#dataDriven-content" id='dataDriven-tab' data-toggle="tab" >Data Driven</a></li>
-		    <li ><a href="#simulationDriven-content" id='simulationDriven-tab' data-toggle="tab" >Simulation Driven</a></li>
-		</ul>
-		<div id="myTabContent" class="tab-content">
-		    <div class="tab-pane fade active in" id="dataDriven-content">
-		      <div style='width:415px'>
-			<p><input type='text' class='input-large' value='url...(optional)'/><i class="icon-question-sign popups" rel="popover" data-content="If you have run the simulation once, then the data is already loaded into the app OR Input/Drag and Drop a URL to fetch data from it OR manually enter data by clicking on the Edit/Input button." data-original-title="How to input data?"></i></p>
-			<a data-toggle="modal" href="#inputTile"><button class='btn' >Input/Edit Data</button></a>
-                      </div>
-		      <!--<p> OR</p>
-		      <p><a class="btn" href="#">More Info &raquo;</a></p> -->
-		    </div>
-		    <div class="tab-pane fade" id="simulationDriven-content">
-		      <p style='width:400px'>There are many experiments available which generate samples and dont require the user to enter the sample set/data.<span><i class="icon-question-sign popups" rel="popover" data-content="Choose a experiment from the list to start generating samples!" data-original-title="Simulation Driven"></i></span></p>
-		      <div class="btn-group">
-			<button class="btn btn-success">Choose</button>
-			<button class="btn btn-success dropdown-toggle"><span class="caret"></span></button>
-			<ul class="dropdown-menu">
-			  <li><a href="#" id='binomialCoin'>Binomial Coin Toss</a></li>
-			  <li><a href="#" id='ballAndUrn'>Ball And Urn</a></li>
-			  <li><a href="#" id='dice'>Dice</a></li>
-			</ul>
-		      </div>
-		    </div>
-		  </div>
-            </div><!--/slide-out-input-->
-	  <a class="controller-handle" href="#"><button class='btn-primary btn-large '>Controller</button></a>
-	    <div id="slide-out-controller" >
-              <h3>Controller</h3>
-		<div id='controller-content'>
-		<p class="toolbar">
-		  <button class='btn' type="button" id="stepButton" tabindex="1" title="Step">
-		  <img src="img/step.png" alt="Step" title="Step" />
-		  </button>
-		  <button class='btn btn-success' type="button" id="runButton" tabindex="2" title="Run" >
-		  <img id="runImage" src="img/run.png" alt="Run" title="Run" />
-		  </button>
-		  <button class='btn btn-danger' type="button" id="stopButton" tabindex="3" title="Stop" >
-		  <img id="stopImage" src="img/stop.png" alt="Stop" title="Stop" />
-		  </button>
-		  <button class='btn' type="button" id="resetButton" tabindex="4" title="Reset" >
-		  <img src="img/reset.png" alt="Reset" title="Reset" />
-		  </button>
-		  <span>
-		    <i class="icon-question-sign popups" rel="popover" data-content="<ul><li>Step Button : generates 1 sample</li><li>Run Button : generates X sample..X can be set from the option below</li><li>Stop Button :Stops the sample generation</li><li>Reset Button : Resets all values</li></ul>" data-original-title="Controls"></i>
-		  </span>
-		</p>
-		<p>
-		  <span>Speed:  </span><select id="speed" style='width:100px' tabindex="3" title="Animation Speed">
-		    <option value="slow">slow</option>
-		    <option value="medium">medium</option>
-		    <option value="fast">fast</option>
-		   </select>
-		</p>
-		<p class="toolbar">
-		  <p class="tool">
-		    <span>Generate</span><input type="text" id='countSize' class="input-small" value='1000'>
-		    <span>Samples with </span><input type="text" id='nSize' class="input-small" value='50'><span>Datapoint per sample.</span>
-		  </p>
-		</p>
-		<p>
-		  
-		  <select id="variable" style='width:100px;margin-top:10px'>
-		    <option value="slow">Mean</option>
-		    <option value="medium">S.D</option>
-		    <option value="fast">Percentile</option>
-		  </select>
-		  <span>
-		    <a href="#" class="btn btn-danger popups" rel="popover" data-content="This will create a plot of the variable for each generated sample. Click this once you have generated some samples!" data-original-title="Inference" id='infer'>Infer!</a>
-		  </span>
-		</p>
+		<div class="navbar navbar-fixed-top">
+			<div class="navbar-inner">
+				<div class="container-fluid">
+					<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</a>
+					<a href="#" class=" brand" >SOCR</a>
+					<div class="nav-collapse">
+						<ul class="nav">
+							<li><a data-toggle="modal" href="#aboutDesc">About</a></li>
+							<li><a data-toggle="modal" href="#simulationDesc">Simulations</a></li>
+							<!--<a data-toggle="modal" href="#help"><button class='btn btn-danger' >Need Help!</button></a>-->
+							<a data-toggle="modal" href="#share"><button class='btn btn-success' >Buzz</button></a>
+						</ul>
+		  			</div><!--/.nav-collapse -->
+				</div>
+			</div>
 		</div>
-	</div><!--/slide-out-controller-->
-         
+	</div><!--/.header -->
+	<div id='main'>
+		<div id='welcome'>
+			<div class="welcome-container">
+			<div>
+				<span><h2 class="font welcome-title">SOCR</h2></span>
+			</div>
+			<div style='margin-top:50px'>
+				<span class="font" >Statistical Online Computational Resource&nbsp;&nbsp;</span><button id="startApp" class="btn btn-primary btn-large">Start App >>> </button>
+			</div>
+			</div>
+		</div>
+		<div class="container-fluid main-wrap">
+			<div class="row-fluid">
+				<div class='span8'>
+					<div id='accordion'>
+						<h3><a href="#">Input Content</a></h3>
+						<div>
+							<!--
+								Please fill in your dataset here
+								<input type="text" placholder="Type or Drag and Drop URL">
+
+							-->
+							Data Driven
+								<section id="drop"> Drag and Drop your URL</section>
+								
+									<div class ="input-controls"> Or fill in this Excel Sheet </div>
+									<div class="dataTable" id="input"></div>
+								
+
+						</div>
+						<h3>
+							<a href="#">DataSet <i class="icon-question-sign popups" rel="popover" data-content="It is graphical view of the dataset from where the random samples are generated.Goto input tab to get started!" data-original-title="Dataset"></i></a>
+						</h3>
+						<div class='q'>
+							<div id="dataset" style='height: 150px;'></div>
+							<h6>Generated Resample: <i class="icon-question-sign popups" rel="popover" data-content="This section contains all the datapoints in 1 random sample generated from the dataset. Switch to datadriven mode after the simulation. Then goto controller -> step button" data-original-title="Generated Sample"></i></h6>
+							<div id="generatedSamples"></div>
+						</div>		
+						<h3>
+							<a href="#">Inference Plot <i class="icon-question-sign popups" rel="popover" data-content="It is graphical view of the dataset from where the random samples are generated.Goto input tab to get started!" data-original-title="Inference Plot"></i></a>
+						</h3>
+						<div id='dotplot'></div>
+							<h3>
+								<a href="#">Simulation Info <i class="icon-question-sign popups" rel="popover" data-content="It is graphical view of the dataset from where the random samples are generated.Goto input tab to get started!" data-original-title="Simulation Info"></i></a>
+							</h3>
+						<div id='details'></div>
+					</div>
+					<a class="input-handle" href='#'>
+						<button class='btn-primary btn-large'>Input</button>
+					</a>	
+					<div id="slide-out-input" >
+						<h3> Input </h3>
+						<!-- Add data-toggle="buttons-radio" for radio style toggling on btn-group -->
+						<ul id='myTab' class="nav nav-tabs">
+							<li class="active"><a href="#dataDriven-content" id='dataDriven-tab' data-toggle="tab" >Data Driven</a></li>
+							<li ><a href="#simulationDriven-content" id='simulationDriven-tab' data-toggle="tab" >Simulation Driven</a></li>
+						</ul>
+						<div id="myTabContent" class="tab-content">
+							<div class="tab-pane fade active in" id="dataDriven-content">
+								<div style='width:415px'>
+									<p>
+										<input type='text' class='input-large' value='url...(optional)'/>
+										<i class="icon-question-sign popups" rel="popover" data-content="If you have run the simulation once, then the data is already loaded into the app OR Input/Drag and Drop a URL to fetch data from it OR manually enter data by clicking on the Edit/Input button." data-original-title="How to input data?"></i>
+									</p>
+									<a data-toggle="modal" href="#inputTile"><button class='btn' >Input/Edit Data</button></a>
+								</div>
+							</div>
+							<div class="tab-pane fade" id="simulationDriven-content">
+								<p style='width:400px'>There are many experiments available which generate samples and dont require the user to enter the sample set/data.<span><i class="icon-question-sign popups" rel="popover" data-content="Choose a experiment from the list to start generating samples!" data-original-title="Simulation Driven"></i></span>
+								</p>
+								<div class="btn-group" style='float:left'>
+									<button class="btn btn-success">Choose</button>
+									<button class="btn btn-success dropdown-toggle"><span class="caret"></span></button>
+									<ul class="dropdown-menu">
+										<li><a href="#" id='binomialCoin'>Binomial Coin Toss</a></li>
+										<li><a href="#" id='ballAndUrn'>Ball And Urn</a></li>
+										<li><a href="#" id='card'>Card Experiment</a></li>
+									</ul>
+							  </div>
+							  <div style='float:right'><strong>Current Experiment:</strong><h6 class='current-experiment'>Binomial Coin Toss</h6> </div>
+							</div>
+						 </div><!--/myTabContent-->
+					</div><!--/slide-out-input-->
+					<a class="controller-handle" href="#"><button class='btn-primary btn-large '>Controller</button></a>
+					<div id="slide-out-controller" >
+						<h3>Controller</h3>
+						<div id='controller-content'>
+						  <div id="buttonPanel">
+						    <button class="btn" type="button" id="stepButton" tabindex="1" title="Step"><img src="img/step.png" alt="Step" title="Step" /> </button>
+						    <button class="btn btn-success" type="button" id="runButton" tabindex="2" title="Run" ><img id="runImage" src="img/run.png" alt="Run" title="Run" /></button>
+						    <button class="btn btn-danger" type="button" id="stopButton" tabindex="3" title="Stop" ><img id="stopImage" src="img/stop.png" alt="Stop" title="Stop" /></button>
+						    <button class="btn" type="button" id="resetButton" tabindex="4" title="Reset" ><img src="img/reset.png" alt="Reset" title="Reset" /></button>
+						    <span>
+						      <i class="icon-question-sign popups" rel="popover" data-content="<ul><li>Step Button : generates 1 sample</li><li>Run Button : generates X sample..X can be set from the option below</li><li>Stop Button :Stops the sample generation</li><li>Reset Button : Resets all values</li></ul>" data-original-title="Controls"></i>
+						    </span>
+						  </div>
+						  <div id="speedSlider">
+						    <div>
+						      <span class="badge badge-warning">Speed: <span id="speedCount">400</span>ms</span>
+						    </div>
+						    <div id="speed"></div>
+						  </div>
+						  <div class="tool">
+						    <span>Generate</span><input type="text" id="countSize" class="input-small" value="1000"> <span>Samples with </span><input type="text" id="nSize" class="input-small" value="50"><span>Datapoint per sample.</span>
+						  </div>
+						  <div>
+						    <select id="variable" style="width:100px;margin-top:10px">
+						      <option value="slow">Mean</option>
+						      <option value="medium">S.D</option>
+						      <option value="fast">Percentile</option>
+						    </select>
+						    <span>
+						      <a href="#" class="btn btn-danger popups" rel="popover" data-content="This will create a plot of the variable for each generated sample. Click this once you have generated some samples!" data-original-title="Inference" id="infer">Infer!</a>
+						    </span>
+						  </div>
+						</div>
+					</div><!--/slide-out-controller-->
+		  		</div><!--span8-->
+				<div class="span4">
+					<h3>Sample List 
+						<span>
+							<i class="icon-question-sign popups" rel="popover" data-content="It shows the list of generated samples when the show button is pressed." data-original-title="Sample List"></i>
+						</span>
+					 </h3>
+					
+					<div style='padding-bottom:20px;'>
+						<span class="badge badge-warning">Samples Generated: <span id='displayCount'>0</span></span>
+						<span class="badge badge-success">Showing <span id='showCount'>0</span> samples</span>
+					</div>  
+					<div id='showListSlider'>
+						<div id="range"></div>
+						<div><button class='btn' type="button" id="showButton" tabindex="2" title="Show!" >Show!</button></div>
+					</div>
+					<br>
+					<div id='sampleList'>
+					<!--sampleList-->
+						<div id='pagination'>
+						</div>
+					</div>
+					<div class='pagination'>
+					<!--Page Numbers-->
+					</div>
+				</div><!--span4-->
       
-      </div><!--span8-->
-      
-	<div class="span4">
-		<h3>Sample List <span>
-		    <i class="icon-question-sign popups" rel="popover" data-content="It shows the list of generated samples when the show button is pressed." data-original-title="Sample List"></i>
-		  </span></h3>
-		
-		<div style='padding-bottom:20px;'>
-		  <span class="badge badge-warning">Samples Generated: <span id='displayCount'>0</span></span>
-		  <span class="badge badge-success">Showing <span id='showCount'>0</span> samples</span>
-		</div>  
-		<div id='slider'>
-		  <div id="range"></div>
-		  <div><button class='btn' type="button" id="showButton" tabindex="2" title="Show!" >Show!</button></div>
-		</div>
-		<br>
-		<div id='sampleList'>
-		<!--sampleList-->
-		
-		<div id='pagination'>
-		</div>
-		</div>
-		<div class='pagination'>
-		<!--Page Numbers-->
-		</div>
-	</div><!--span4-->
-      
-      </div><!--row-->
-      <hr>
+			</div><!--row-->
+			<hr>
       <!--
       Following divs are for the modal windows.
       -->
-	<div id="help" class="modal hide fade">  
-		  <div class="modal-header">
-			<a class="close" data-dismiss="modal">X</a>
-			<h3>Something bothering You?</h3>
-		  </div>
-		  <div class="modal-body">
-			<div>Please feel free to drop a mail at xyz@gmail.com</div>
-		  </div>
-		  
-	</div>
-      
-	<div id="share" class="modal hide fade">  
-		  <div class="modal-header">
-			<a class="close" data-dismiss="modal">X</a>
-			<h3>Lets Tell People!</h3>
-		  </div>
-		  <div class="modal-body">
-			<h4>Tweet</h4>
-			<div ></div>
-			<h4>Facebook Post</h4>
-			<div></div>
-			<h4>Mail</h4>
-		  </div>
-		  
-	</div>
-	<div id="inputTile" class="modal hide fade">  
-		  <div class="modal-header">
-			<a class="close" data-dismiss="modal">X</a>
-			<h3>Data Input </h3>
-		  </div>
-		  <div class="modal-body">
-			<div id="input-table" class="dataTable"></div>
-			<div id='status'>
+			<div id="help" class="modal hide fade">  
+				<div class="modal-header">
+					<a class="close" data-dismiss="modal">X</a>
+					<h3>Something bothering You?</h3>
+				</div>
+				<div class="modal-body">
+					<div>Please feel free to drop a mail at xyz@gmail.com</div>
+				</div>
 			</div>
-		  </div>
-	</div>
-	<div id="plot" class="modal hide fade">  
-		  <div class="modal-header">
-			<a class="close" data-dismiss="modal">X</a>
-			<h3>Sample Plot</h3>
-		  </div>
-		  <div class="modal-body">
-			<div class='device'></div>
-		  </div>
-		  
-	</div>
-	<div id="aboutDesc" class="modal hide fade">  
-		  <div class="modal-header">
-			<a class="close" data-dismiss="modal">X</a>
-			<h3>SOCR</h3>
-		  </div>
-		  <div class="modal-body">
-			<p>The goal of this project is to design a modern and portable SOCR web-app that demonstrates the concepts of statistical analysis such as resampling, randomization and probabilistic simulation and runs seamlessly across varied devices. The application will be based on HTML5, CSS3 and JavaScript framework</p>
-		  </div>
-		  <div class="modal-footer">
-			<a href="http://socr.ucla.edu" class="btn btn-primary">HomePage</a>
-		  </div>
-	</div>
-	<div id='simulationDesc' class="modal hide fade">
-	  <div class="modal-header">
-			<a class="close" data-dismiss="modal">X</a>
-			<h3>Simulations</h3>
-		  </div>
-	  <div class="modal-body">
-	    <p>There are a list of simulation experiments you can choose from to create the dataset for further analysis. Currently we have 4 experiments installed into the App. More are soon to come!</p>
-	    <ul>
-	    <li>Coin Toss </li>
-	    <li>Ball and Urn</li>
-	    </ul>
-	  </div>
-	</div>
-      <div id='footer'>
-	&copy; UCLA 2012
-      </div>
-
-    </div><!--/.fluid-container-->
-  </div> <!-- main -->
+			<div id="share" class="modal hide fade">  
+				<div class="modal-header">
+					<a class="close" data-dismiss="modal">X</a>
+					<h3>What are People Saying!</h3>
+				</div>
+				<div class="modal-body">
+					<h4>Tweet</h4>
+					<div id='tweetFeed'></div>
+				</div>
+			</div>
+			<div id="inputTile" class="modal hide fade">  
+				<div class="modal-header">
+					<a class="close" data-dismiss="modal">X</a>
+					<h3>Data Input </h3>
+				</div>
+				<div class="modal-body">
+					<div id="input-table" class="dataTable"></div>
+					<div id='status'></div>
+				</div>
+			</div>
+			<div id="plot" class="modal hide fade">  
+				<div class="modal-header">
+					<a class="close" data-dismiss="modal">X</a>
+					<h3>Sample Plot</h3>
+				</div>
+				<div class="modal-body">
+					<div class='chart'></div>
+				</div>
+			</div>
+			<div id="aboutDesc" class="modal hide fade">  
+				<div class="modal-header">
+					<a class="close" data-dismiss="modal">X</a>
+					<h3>SOCR</h3>
+				</div>
+				<div class="modal-body">
+					<p>The goal of this project is to design a modern and portable SOCR web-app that demonstrates the concepts of statistical analysis such as resampling, randomization and probabilistic simulation and runs seamlessly across varied devices. The application will be based on HTML5, CSS3 and JavaScript framework</p>
+				</div>
+				<div class="modal-footer">
+					<a href="http://socr.ucla.edu" class="btn btn-primary">HomePage</a>
+				</div>
+			</div>
+			<div id='simulationDesc' class="modal hide fade">
+			    <div class="modal-header">
+					<a class="close" data-dismiss="modal">X</a>
+					<h3>Simulations</h3>
+				</div>
+				<div class="modal-body">
+					<p>There are a list of simulation experiments you can choose from to create the dataset for further analysis. Currently we have 4 experiments installed into the App. More are soon to come!</p>
+					<ul>
+						<li>Coin Toss </li>
+						<li>Ball and Urn</li>
+					</ul>
+				</div>
+			</div>
+			<div id='footer'>
+			&copy; UCLA 2012
+			</div>
+		</div><!--/.fluid-container-->
+	</div> <!-- main -->
 </body>
     <!-- Le javascript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     <!--<script type='text/javascript' src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>-->
-    <script type='text/javascript'>
+<script type='text/javascript'>
     
     head.js("js/lib/jquery.min.js",
+    		"js/input/table.js",
             "js/bootstrap/bootstrap-transition.js",
             "js/bootstrap/bootstrap-alert.js",
             "js/bootstrap/bootstrap-tab.js",
             "js/bootstrap/bootstrap-button.js",
             "js/bootstrap/bootstrap-modal.js",
             "js/bootstrap/bootstrap-dropdown.js",
-            {coreFunctions:"js/exp/core.js"},
-	    {binomialCoin:"js/exp/binomialCoin.js"},
             "js/bootstrap/bootstrap-scrollspy.js",
             "js/bootstrap/bootstrap-tooltip.js",
             "js/bootstrap/bootstrap-popover.js",
             "js/bootstrap/bootstrap-collapse.js",
             "js/bootstrap/bootstrap-carousel.js",
             "js/bootstrap/bootstrap-typeahead.js",
-            {inputTile:"input/js/inputtable.js"},
-            {InputTile:"input/js/script.js"},
-	    "js/exp/eventDispatcher.js",
-	    {Model:"js/exp/dataDrivenModel.js"},
-	    {View:"js/exp/dataDrivenView.js"},
-	    {Controller:"js/exp/dataDrivenController.js"},
-	    "https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.21/jquery-ui.min.js",
-	    {D3:"vis/d3.v2.min.js"},
-	    "vis/script.js",
-	    "js/exp/jquery.paginate.js",
-	    "js/exp/socr.js",
-	    "js/exp/jquery.tabSlideOut.v1.3.js",
-		"js/exp/update.js"
+			{coreFunctions:"js/exp/core.js"},
+			{binomialCoin:"js/exp/binomialCoin.js"},
+			{cardExp:"js/exp/cardExp.js"},
+            {inputTile:"js/input/inputtable.js"},
+            {InputTile:"js/input/script.js"},
+			{Model:"js/exp/dataDrivenModel.js"},
+			{View:"js/exp/dataDrivenView.js"},
+			{Controller:"js/exp/dataDrivenController.js"},
+			"js/lib/jquery-ui.min.js",
+			{D3:"js/vis/d3.v2.min.js"},
+			"js/vis/histogram.js",
+			"js/exp/jquery.paginate.js",
+			"js/exp/socr.js",
+			"js/exp/update.js",
+			//"js/lib/jtweet/jquery.jtweetsanywhere-1.3.1.min.js",
+			"js/lib/jquery.transit.min.js",
+			"js/lib/jquery.easing.1.3.js",
+			"js/input/dragdrop.js"
 	    	);
     
-  head.ready(function () {
+	head.ready(function () {
+		/*
+		*Loading MVC
+		*/
+		model=new dataDrivenModel();
+		view=new dataDrivenView(model);
+		controller=new dataDrivenController(model,view);
+		/*
+		*  CoverPage rendering
+		*/
+		view.CoverPage();
+		/*
+		 * Resize event adjusts the cover page accordingly
+		 */
+		$(window).resize(function(){
+			view.CoverPage();
+		});
+		//$('.brand').popover({placement:'bottom'});
+		$(document).ready(function(){
+			/*
+			$('#tweetFeed').jTweetsAnywhere({
+				searchParams: 'q=simulation',
+				count: 10,
+				showTweetFeed: {
+					autorefresh: {
+						mode: 'trigger-insert',
+						interval: 60
+					},
+					paging: {
+					mode: 'more'
+					},
+					showTimestamp: {
+					refreshInterval: 15
+					}
+				}
+			}); */
+			
+			/*
+			 * Initialize the controller 
+			 */
+			controller.initialize();   
+		
+			/*
+			 * Bind show button to createList function in appView.js
+			 */
+			$("#showButton").on('click',function(){
+				//a check to see if the sample count is 0 or not
+				view.createList($('#showCount').text());
+			});
+			
+			$('#startApp').on('click',function(){
+				console.log('Start App button clicked');
+				$('#welcome').animate({
+					left:-2999},
+					1000,
+					'easeInCubic');
+			});
+			
+			$('.input-handle').on('click',function(){
+				$target = $('#slide-out-input');
+				//console.log($(this).attr('href'));
+				if(!$target.hasClass('active'))
+				{
+					$target.addClass('active').show().css({left:-425}).animate({left: 0}, 500);
+					$(this).css({left:-20}).animate({left: 410}, 500);
+				}
+				else
+				{
+					$target.removeClass('active').animate({
+							left: -425
+						}, 500);
+					$(this).css({left:400}).animate({left: -20}, 500);
+				}
+			}); //input-handle click
+			
+			$('.controller-handle').bind('click',function(){
+				$target = $('#slide-out-controller');
+				//console.log($(this).attr('href'));
+				if(!$target.hasClass('active'))
+				{
+					$target.addClass('active').show().css({left:-425}).animate({left: 0}, 500);
+					$(this).css({left:-30}).animate({left: 394}, 500);
+				}
+				else
+				{
+					$target.removeClass('active').animate({
+							left: -425
+						}, 500);
+					$(this).css({left:400}).animate({left: -30}, 500);
+				}
+			});//controller-handle click
+			
+			//For deciding which tile should come over which one!
+			$('.slide-out-input').on('click',function(){
+				$('.slide-out-controller').css('z-index',0);
+				$(this).css('z-index',20);
+			});
+			$('.slide-out-controller').on('click',function(){
+				$('.slide-out-input').css('z-index',0);
+				$(this).css('z-index',20);
+			});
+			/*Slide out feature ends
+			 */
+			 
+			$('#accordion').accordion();
+			$('.dropdown-toggle').dropdown();
+			$('.popups').popover();
+			
+			/*  Adding tab feature to the input tile   */
+			$('#myTab a').click(function (e) {
+			  e.preventDefault();
+			  $(this).tab('show');
+			});
+		 
+			$('#dataDriven-tab').on('click',function(){
+			  //WARNING PROMPT
+			  $("#accordion").accordion( "activate" , 0);
+				$(this).update({to:'dataDriven'});
+			});
+			
+			$('#simulationDriven-tab').on('click',function(){
+			  //WARNING PROMPT
+				$(this).update({to:'simulationDriven'});
+			});
+			
+			 
+		$( "#speed" ).slider({
+			value:400,
+			min: 200,
+			max: 2000,
+			step: 50,
+			slide: function( event, ui ) {
+			$( "#speedCount" ).html( ui.value );
+			}
+		});
+			/* Array while holds the list of exp.js files already loaded*/    
+			var expLoaded=['binomialCoin'];
+			Experiment=binomialCoin;
+			
+			$('#binomialCoin').click(function(){
+			$('.current-experiment').html('Binomial Coin Toss');
+				Experiment=binomialCoin;
+				Experiment.createControllerView();
+				Experiment.initialize();
+			});
+			
+			/* Ball and Urn Experiment   */
+			$('#ballAndUrn').click(function(){
+				$('.current-experiment').html('Ball and Urn');
+				if($.inArray('ballAndUrn', expLoaded)==-1)      //check whether the experiment script is already loaded
+				{
+					$.getScript("http://localhost/18-8-2012(ashwini)/js/exp/ballAndUrn.js",function(){
+						console.log('file has loaded!');
+						Experiment=ballAndUrn;
+						//Initializing
+						//alert(Experiment);
+						Experiment.createControllerView();
+						Experiment.initialize();
+					});
+					  //head.js("js/exp/ballAndUrn.js");          //loading the Ball and Urn Script
+					expLoaded.push('ballAndUrn');   //Making a entry in the array of loaded experiment scripts
+				}
+			});
+			
+			/* Card Experiment   */
+			$('#card').click(function(){
+				$('.current-experiment').html('Card Experiment');
+				if($.inArray('cardExp', expLoaded)==-1)      //check whether the experiment script is already loaded
+				{
+					$.getScript("http://localhost/18-8-2012(ashwini)/js/exp/cardExp.js",function(){
+						console.log('Card Experiment is loaded!');
+						Experiment=cardExp;
+						//Initializing
+						Experiment.createControllerView();
+						Experiment.initialize();
+					});
+					  //head.js("js/exp/ballAndUrn.js");          //loading the Ball and Urn Script
+					expLoaded.push('cardExp');   //Making a entry in the array of loaded experiment scripts
+				}
+				else
+				{
+					Experiment=cardExp;
+						//Initializing
+					Experiment.createControllerView();
+					Experiment.initialize();
+				}
+			});
 
-  $(document).ready(function(){
-    
-     /*
-     *Loading MVC
-     */
-    model=new dataDrivenModel();
-    view=new dataDrivenView(model);
-    controller=new dataDrivenController(model,view);
-    
-    /*
-     * Initialize the controller 
-     */
-    controller.initialize();   
-    
-    /*
-     *  CoverPage rendering
-     */
-    view.CoverPage();
-    /*
-     * Resize event adjusts the cover page accordingly
-     */
-    $(window).resize(function(){
-      view.CoverPage();
-      });
-    
-    /*
-     * Bind show button to createList function in appView.js
-     */
-    $("#showButton").on('click',function(){
-      view.createList($('#showCount').text());
-      });
-    
-    $('#startApp').on('click',function(){
-	console.log('Start App button clicked');
-	$('#welcome').animate({
-	  left:-2999},2000);
-    });
-        
-   
-	
-     $('.input-handle').on('click',function(){
-      $target = $('#slide-out-input');
-      //console.log($(this).attr('href'));
-      if(!$target.hasClass('active'))
-	  {
-	    $target.addClass('active').show().css({left:-425}).animate({left: 0}, 500);
-	    $(this).css({left:-20}).animate({left: 410}, 500);
-	  }
-	else
-	{
-	  $target.removeClass('active').animate({
-                    left: -425
-                }, 500);
-	  $(this).css({left:400}).animate({left: -20}, 500);
-	}
-      });
-    
-    $('.controller-handle').on('click',function(){
-      $target = $('#slide-out-controller');
-      //console.log($(this).attr('href'));
-      if(!$target.hasClass('active'))
-	  {
-	    $target.addClass('active').show().css({left:-425}).animate({left: 0}, 500);
-	    $(this).css({left:-30}).animate({left: 394}, 500);
-	  }
-	else
-	{
-	  $target.removeClass('active').animate({
-                    left: -425
-                }, 500);
-	  $(this).css({left:400}).animate({left: -30}, 500);
-	}
-      });
-    
-    //For deciding which tile should come over which one!
-    $('.slide-out-input').on('click',function(){
-        $('.slide-out-controller').css('z-index',0);
-	$(this).css('z-index',20);
-	});
-    $('.slide-out-controller').on('click',function(){
-	$('.slide-out-input').css('z-index',0);
-	$(this).css('z-index',20);
-	});
-    /*Slide out feature ends
-     */
-    $('#accordion').accordion();
-    $('.dropdown-toggle').dropdown();
-    $('.popups').popover();
-    //$('.coin').tooltip();
-    /*  Adding tab feature to the input tile   */
-    $('#myTab a').click(function (e) {
-      e.preventDefault();
-      $(this).tab('show');
-    });
- 
-    $('#dataDriven-tab').on('click',function(){
-      //WARNING PROMPT
-	  
-      $(this).update({to:'dataDriven'});
-    });
-    
-    $('#simulationDriven-tab').on('click',function(){
-      //WARNING PROMPT
-      $(this).update({to:'simulationDriven'});
-    });
-    
-     
-    /* Array while holds the list of exp.js files already loaded*/    
-    var expLoaded=['binomialCoin'];
-     Experiment=binomialCoin;
-    /* Ball and Urn Experiment   */
-    $('#ballAndUrn').click(function(){
-      //alert('1');
-      if($.inArray('ballAndUrn', expLoaded)==-1)      //check whether the experiment script is already loaded
-	  {
-	    $.getScript("js/exp/ballAndUrn.js",function(){
-		console.log('file has loaded!');
-		Experiment=ballAndUrn;
-		//Initializing
-		alert(Experiment);
-		Experiment.initialize();
-	    });
-	      //head.js("js/exp/ballAndUrn.js");          //loading the Ball and Urn Script
-	    expLoaded.push('ballAndUrn');   //Making a entry in the array of loaded experiment scripts
-	  }
-        
-    });
-    
-  }); //document ready function
-}); //head.js ready function
+			$('#input').inputtable({
+			    rows: 8,
+			    cols: 8,
+				minSpareCols : 1,
+				minSpareRows : 1,
+				fillHandle : true,
+				rowHeaders : true,
+				colHeaders : true,
+				legend: [
+			  /**
+			   * Legend 1
+			   */
+				{
+				  match: function (row, col, data) {
+					return !(data()[row][col]); //if the cell is empty
+				  },
+				  style: {
+					background: '#f5f5f5' //make the background yellow
+				  }
+				}
+				]
+			});
+			
+
+			 $('.input-controls').delegate('td','mousedown',function(){
+  					table.startEdit( $(this) );
+  					//console.log('Logging function called')
+				 });
+
+
+		}); //document ready function
+	}); //head.js ready function
 </script>
 </html>

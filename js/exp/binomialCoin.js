@@ -1,26 +1,37 @@
-//Binomial Coin Experiment
+/**Binomial Coin Experiment
+ *Dependencies on view.js
+ *
+*/
 var binomialCoin=(function(){
 
 
 //::::::: PRIVATE PROPERTIES :::::::::::::::
-var _pParam, _nParam; // binomialDist is the distribution object
-var _p = 0.5;	  		//Probability of heads
-var _N = 100;			//Maximum number of trials 
-var _count;			//keeps count of number of samples(coin tosses)generated
-var _n = 10; 			//Number of samples generated (coin tosses) for each step OR the number of trails in a step 
-var _coin = new Array(_N);
 var _stepID;
+var _pParam, _nParam; // binomialDist is the distribution object
+var _p = 0.5;	  		//Probability of heads (default value = 0.5)
+var _N = 100;			//Maximum number of trials 
+var _count;				//keeps count of number of coins tossed
+var _n = 10; 			//Number of coin tossed for each step 
 var _dataset=[];
+var _userReadableDataset=[];
+var _width='30';
+var _height='30';
+var _coin = new Array(_N);
+
 //::::::PRIVATE METHODS:::::::::::::
 
 function _tossCoin(){
 	//alert('count'+_count+'max:'+_n);
 	if (_count < _n){
 		_dataset[_count]=_coin[_count].toss();
+		if(_dataset[_count]=='1')
+				_userReadableDataset[_count]='H';
+		else
+			_userReadableDataset[_count]='T';
 		_count++;
 	}
 	else{
-		//view.loadInputSheet();
+		view.loadInputSheet(_userReadableDataset);
 		self.reset();
 	}
 }
@@ -28,31 +39,35 @@ function _tossCoin(){
 //:::::::::::: PUBLIC METHODS :::::::::::::
 return{
 	name:'Binomial Coin Toss',
-    	initialize: function(){
+	type:'coin',
+    initialize: function(){
 		//if u dont use var while defining a variable it is global!!
 		self=this;
-		nParam = new Parameter(document.getElementById("nInput"), document.getElementById("nLabel"));
-		nParam.setProperties(1, _N, 1, _n, "<var>n</var>");
-		 pParam = new Parameter(document.getElementById("pInput"), document.getElementById("pLabel"));
-		pParam.setProperties(0, 1, 0.01, _p, "<var>p</var>");
+		_nParam = new Parameter(document.getElementById("nInput"), document.getElementById("nLabel"));
+		_nParam.setProperties(1, _N, 1, _n, "<var>n</var>");
+		_pParam = new Parameter(document.getElementById("pInput"), document.getElementById("pLabel"));
+		_pParam.setProperties(0, 1, 0.01, _p, "<var>p</var>");
 		this.reset();
 		$("#sdbutton").on('click',function(){
 			Experiment.generate();
+			$("#accordion").accordion( "activate" , 1);
 			});
 		$('#nInput,#pInput').on('change',function(){
-			Experiment.setPN();
+			Experiment.setVariable();
+			});
+		$('#grsbutton').on('click',function(){
+			$('#dataDriven-tab').update({to:'dataDriven'});
 			});
 	},
 
 	generate: function(){
-		view.updateDetails();
+		view.updateSimulationInfo();		//updates experiment info into third tile in the accordion
 		//_n=$("#nInput").val();
-		this.setPN();
-             	//create the divs
-		this.createDataPlot(_n);
+		this.setVariable();
+        this.createDataPlot(_n);			//create the canvas fro the dataset
 		//assign a coin object to each
 		for (var i = 0; i < _n; i++)
-		_coin[i] = new Coin(document.getElementById("coin" + i));
+		_coin[i] = new Coin(document.getElementById("device" + i));
 		for (var i = 0; i < _n; i++){
                     _coin[i].prob = _p;
                     
@@ -60,57 +75,60 @@ return{
 		_count = 0; 
 		//resetting the sample space Coin array
 		for (var i = 0; i < _n; i++){
-                    if (i < _n) _coin[i].setValue(-1);
-                    else _coin[i].setValue(-2);
+            if (i < _n)
+				_coin[i].setValue(-1);
+            else
+				_coin[i].setValue(-2);
 		}
 		//run the Coin toss
 		_stepID = setInterval(_tossCoin, 50);
 	},
 	reset: function(){
 		clearInterval(_stepID);
-		this.setPN();
-            /*
-	    for (var i = 0; i < _N; i++){
-                    _coin[i].prob = _p;
-                    if (i < _n) _coin[i].setValue(-1);
-                    else _coin[i].setValue(-2);
-            }
-            */
-	},
+		this.setVariable();
+ 	},
 	createControllerView:function(){
-		var html='<p class="toolbar"><p class="tool"><span id="nLabel" class="badge badge-warning" for="nInput">N = </span><span id="nvalue"></span><input id="nInput" type="range" tabindex="7" class="parameter"/></p><p class="tool"><span id="pLabel" class="badge badge-warning" for="pInput">P = </span><span id="pvalue"></span><input id="pInput" type="range" tabindex="8" class="parameter"/></p><select id="rvSelect" tabindex="9" title="Random variable" ><option value="0" selected="true">Y: Number of heads</option><option value="1">M: Proportion of heads</option></select></p><button class="btn" id="sdbutton">Generate!</button>';
+	console.log("createControllerView for CardExp executed!");
+		var html='<p class="toolbar"><p class="tool"><span id="nLabel" class="badge badge-warning" for="nInput">N = </span><span id="nvalue"></span><input id="nInput" type="range" tabindex="7" class="parameter"/></p><p class="tool"><span id="pLabel" class="badge badge-warning" for="pInput">P = </span><span id="pvalue"></span><input id="pInput" type="range" tabindex="8" class="parameter"/></p><select id="rvSelect" tabindex="9" title="Random variable" ><option value="0" selected="true">Y: Number of heads</option><option value="1">M: Proportion of heads</option></select></p><button class="btn" id="sdbutton">Generate DataSet!</button>&nbsp;<button class="btn btn-danger" id="grsbutton">Generate Random Samples!</button>';
 		$('#controller-content').html(html);
 	},
-	createDataPlot:function(x){
+	
+	createDataPlot:function(size){
 		var temp=[];
-		for(var i=0;i<x;i++)
+		for(var i=0;i<size;i++)
 			{
-				temp.push('<div class="coin-container" id="coin-container');
+				temp.push('<div class="device-container" id="device');
 				temp.push(i);
-				temp.push('">');
-				temp.push('<canvas id="coin');
+				temp.push('-container">');
+				temp.push('<canvas id="device');
 				temp.push(i);
-				temp.push('" class="coin panel front');
+				temp.push('" class="device panel front');
 				temp.push(i);
 				temp.push('" width="30" height="30" title="sample');
 				temp.push(i);
 				temp.push('">Coin');
 				temp.push(i);
-				temp.push('</canvas><div class="panel back"></div>');
+				temp.push('</canvas>');
 				temp.push('</div>');
 			}
 		$('#dataset').html(temp.join(''));
-		$('.coin').tooltip();
+		
 	},
-	setPN:function(){
-		_p = pParam.getValue();
-		_n = nParam.getValue();
+	
+	setVariable:function(){
+		_p = _pParam.getValue();
+		_n = _nParam.getValue();
 	},
 	getDataset:function(){
 		return _dataset;
 	},
+	
 	getDatasetSize:function(){
 		return _n;
+	},
+	
+	getSampleHW:function(){
+	return {"height":_height,"width":_width};
 	}
 }//return
 }());

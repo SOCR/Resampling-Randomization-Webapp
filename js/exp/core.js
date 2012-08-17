@@ -179,7 +179,7 @@ function Card(canvas){
 	var cardImages =  new Image(1027, 615);
 	var width = 79, height = 123;
 	var symbol = ["\u2663", "\u2666", "\u2665", "\u2660"];
-	cardImages.src = "cards.png";
+	cardImages.src = "img/cards.png";
 	ctx.fillStyle = "gray";
 
 	cardImages.onload = function(){
@@ -685,7 +685,7 @@ function Parameter(input, label){
 	}
 	
 	this.setType = function(t){
-		alert('setType');
+//		alert('setType');
 		input.type = t;
 		this.setValue(Number(input.value));
 	}
