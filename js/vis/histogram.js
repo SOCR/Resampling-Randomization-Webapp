@@ -5,23 +5,26 @@ function vis(config){
     var defaults = {
       'range' : [0,10],
       'height' : $(config.parent).height(),
-      'width' : $(config.parent).width()
+      'width' : $(config.parent).innerWidth()
     };
 
     var settings = $.extend({}, defaults, config);
+
+    //removing the padding from the parent
+    $(config.parent).css('padding','0px');
 
   function chart(){
 
    // A formatter for counts.
     var formatCount = d3.format(",.0f");
 
-    var margin = {top: 10, right: 30, bottom: 30, left: 30};
+    var margin = {top: 10, right: 30, bottom: 30, left: 50};
     /*
         h = config.height ? config.height :  $(config.parent).height(),
         w = config.width ? config.width : $(config.parent).width() ;
     */
-    var width = settings.width - margin.left - margin.right,
-        height = settings.height - margin.top - margin.bottom;
+    var width = settings.width - margin.left - margin.right - 30,
+        height = settings.height - margin.top - margin.bottom -30;
 
     var x = d3.scale.linear()
         .domain( settings.range )
@@ -39,7 +42,8 @@ function vis(config){
 
     var xAxis = d3.svg.axis()
         .scale(x)
-        .orient("bottom");
+        .orient("bottom")
+        .tickSize(6,3,0);
 
     var yAxis = d3.svg.axis()
         .scale(y)
@@ -67,13 +71,18 @@ function vis(config){
         .attr("height", function(d) { return height - y(d.y); });
 
 
+        /*
     bar.append("text")
         .attr("dy", ".75em")
         .attr("y", 6)
         .attr("x", x(data[0].dx) / 2)
         .attr("text-anchor", "middle")
         .text(function(d) { return formatCount(d.y); });
+        Removed the text on top functionality as of now
+        */
 
+
+/* For plotting of the location of the current sample 
       var sample = settings.data
         var sum =0;
         for (i=0;i<sample.length;i++){
@@ -100,7 +109,7 @@ function vis(config){
                 .attr('y',function(d){  return y(d.y) })
                 .attr("height", function(d) { return height - y(d.y); });
 
-
+*/
     svg.append("g")
         .attr("class", "x axis")
         .attr("transform", "translate(0," + height + ")")
