@@ -112,6 +112,12 @@ return{
 			return _sampleMean;
 			
 		},
+	getMeanOf:function(sampleNumber){
+		var x=bootstrapSamples[sampleNumber];
+		var total=0;
+		for(var i in x) { total += parseInt(x[i]); }
+		return total/x.length;
+	},
 	error:function(x){
 		switch (x){
 		case('inputMissing'):

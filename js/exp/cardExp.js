@@ -43,6 +43,11 @@ return{
 		$("#sdbutton").on('click',function(){
 			Experiment.generate();
 			$("#accordion").accordion( "activate" , 1);
+			if(inputSliderState==1)
+				{
+				console.log("inputSliderState:"+inputSliderState);
+				$('.input-handle').trigger('click');
+				}
 			});
 		$('#nInput').on('change',function(){
 			Experiment.setVariable();

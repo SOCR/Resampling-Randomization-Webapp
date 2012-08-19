@@ -33,10 +33,12 @@
     <link rel="apple-touch-icon-precomposed" sizes="72x72" href="ico/apple-touch-icon-72-precomposed.png">
     <link rel="apple-touch-icon-precomposed" href="ico/apple-touch-icon-57-precomposed.png">
     <style>
-    svg {
+
+     svg {
      font-size: 13px;
      font-family:sans-serif;
     }
+
     .bar rect {
 	  fill: steelblue;
 	  shape-rendering: crispEdges;
@@ -103,10 +105,6 @@
 	.tableset{
 		text-align:center;
 	}
-	div.chart{
-		min-height: 400px;
-		min-width: 500px;
-	}
     </style>
     
   </head>
@@ -161,6 +159,7 @@
 								
 									<div class ="input-controls"> Or fill in this Excel Sheet </div>
 									<div class="dataTable" id="input"></div>
+									<div id='status'></div>
 								
 
 						</div>
@@ -175,7 +174,7 @@
 						<h3>
 							<a href="#">Inference Plot <i class="icon-question-sign popups" rel="popover" data-content="It is graphical view of the dataset from where the random samples are generated.Goto input tab to get started!" data-original-title="Inference Plot"></i></a>
 						</h3>
-						<div id='dotplot'></div>
+						<div id='dotplot'> First go to the controller tile and run the experiment to generate some random samples(example. 1000 samples).Then press "infer" to see the histogram!</div>
 							<h3>
 								<a href="#">Simulation Info <i class="icon-question-sign popups" rel="popover" data-content="It is graphical view of the dataset from where the random samples are generated.Goto input tab to get started!" data-original-title="Simulation Info"></i></a>
 							</h3>
@@ -198,7 +197,7 @@
 										<input type='text' class='input-large' value='url...(optional)'/>
 										<i class="icon-question-sign popups" rel="popover" data-content="If you have run the simulation once, then the data is already loaded into the app OR Input/Drag and Drop a URL to fetch data from it OR manually enter data by clicking on the Edit/Input button." data-original-title="How to input data?"></i>
 									</p>
-									<a data-toggle="modal" href="#inputTile"><button class='btn' >Input/Edit Data</button></a>
+									<a data-toggle="modal" href="#"><button class='btn' id='inputEditButton' >Input/Edit Data</button></a>
 								</div>
 							</div>
 							<div class="tab-pane fade" id="simulationDriven-content">
@@ -232,7 +231,7 @@
 						  </div>
 						  <div id="speedSlider">
 						    <div>
-						      <span class="badge badge-warning">Speed: <span id="speedCount">400</span>ms</span>
+						      <span class="badge badge-warning">Animation Time: <span id="speedCount">400</span>ms</span>
 						    </div>
 						    <div id="speed"></div>
 						  </div>
@@ -265,7 +264,7 @@
 					</div>  
 					<div id='showListSlider'>
 						<div id="range"></div>
-						<div><button class='btn' type="button" id="showButton" tabindex="2" title="Show!" disabled="true">Show!</button></div>
+						<div><button class='btn' type="button" id="showButton" tabindex="2" title="Show!" >Show!</button></div>
 					</div>
 					<br>
 					<div id='sampleList'>
@@ -393,6 +392,11 @@
 	    	);
     
 	head.ready(function () {
+		
+		var baseUrl="http://localhost/17-8-2012/";
+		 inputSliderState=0;
+		 controllerSliderState=0;
+		
 		/*
 		*Loading MVC
 		*/
@@ -434,12 +438,15 @@
 			 */
 			controller.initialize();   
 		
+			$('#inputEditButton').on('click',function(){
+				$('#accordion').accordion( "activate" , 0);
+			});
+			
 			/*
 			 * Bind show button to createList function in appView.js
 			 */
 			$("#showButton").on('click',function(){
 				//a check to see if the sample count is 0 or not
-				console.log('it is not');
 				view.createList($('#showCount').text());
 			});
 			
@@ -458,6 +465,7 @@
 				{
 					$target.addClass('active').show().css({left:-425}).animate({left: 0}, 500);
 					$(this).css({left:-20}).animate({left: 410}, 500);
+					inputSliderState=1;
 				}
 				else
 				{
@@ -465,16 +473,18 @@
 							left: -425
 						}, 500);
 					$(this).css({left:400}).animate({left: -20}, 500);
+					inputSliderState=0;
 				}
 			}); //input-handle click
 			
-			$('.controller-handle').bind('click',function(){
+			$('.controller-handle').on('click',function(){
 				$target = $('#slide-out-controller');
 				//console.log($(this).attr('href'));
 				if(!$target.hasClass('active'))
 				{
 					$target.addClass('active').show().css({left:-425}).animate({left: 0}, 500);
 					$(this).css({left:-30}).animate({left: 394}, 500);
+					controllerSliderState=1;
 				}
 				else
 				{
@@ -482,6 +492,7 @@
 							left: -425
 						}, 500);
 					$(this).css({left:400}).animate({left: -30}, 500);
+					controllerSliderState=0;
 				}
 			});//controller-handle click
 			
@@ -515,7 +526,30 @@
 			
 			$('#simulationDriven-tab').on('click',function(){
 			  //WARNING PROMPT
-				$(this).update({to:'simulationDriven'});
+			  var self=this;
+				$('<div></div>').appendTo('body')
+                    .html('<div><h6>Moving from Data drive to Simulation Drive will reset the app!You want to continue?</h6></div>')
+                    .dialog({
+                        modal: true, 
+						title: 'Reset Data?', 
+						zIndex: 10000, 
+						autoOpen: true,
+                        width: 'auto', 
+						resizable: false,
+                        buttons: {
+                            Yes: function () {
+							$(this).update({to:'simulationDriven'});
+							$(this).dialog("close");					//close the confirmation window
+                            },
+                            No: function () {
+                                $(this).dialog("close");
+                            }
+                        },
+                        close: function (event, ui) {
+                            $(this).remove();
+                        }
+                    });
+		
 			});
 			
 			 
@@ -544,7 +578,7 @@
 				$('.current-experiment').html('Ball and Urn');
 				if($.inArray('ballAndUrn', expLoaded)==-1)      //check whether the experiment script is already loaded
 				{
-					$.getScript("http://localhost/18-8-2012(ashwini)/js/exp/ballAndUrn.js",function(){
+					$.getScript(baseUrl+"js/exp/ballAndUrn.js",function(){
 						console.log('file has loaded!');
 						Experiment=ballAndUrn;
 						//Initializing
@@ -562,7 +596,7 @@
 				$('.current-experiment').html('Card Experiment');
 				if($.inArray('cardExp', expLoaded)==-1)      //check whether the experiment script is already loaded
 				{
-					$.getScript("http://localhost/18-8-2012(ashwini)/js/exp/cardExp.js",function(){
+					$.getScript(baseUrl+"js/exp/cardExp.js",function(){
 						console.log('Card Experiment is loaded!');
 						Experiment=cardExp;
 						//Initializing
@@ -583,7 +617,7 @@
 
 			$('#input').inputtable({
 			    rows: 8,
-			    cols: 8,
+			    cols: 2,
 				minSpareCols : 1,
 				minSpareRows : 1,
 				fillHandle : true,
@@ -609,6 +643,68 @@
   					table.startEdit( $(this) );
   					//console.log('Logging function called')
 				 });
+			
+			$('#input').after("<br/><input class='btn' type='button' value='Done'><input class='btn' type='button' value='Reset'>");
+			//Binding function to the Button clicks
+			$("input[value='Done']").on('click',function(){
+				console.log("getSelected data :"+$("#input").inputtable('getSelected'));
+				//alert($("#input").inputtable('getData'));
+				//console.log($("#input").inputtable('getData'));
+				if($("#input").inputtable('getSelected'))
+					{
+					console.log("getSelected");
+					var isEmpty=model.setDataset({
+					data:$("#input").inputtable('getData'),
+					type:'getSelected',
+					processed:false,
+					})
+					}
+				else
+					{
+					console.log("getData");
+					var isEmpty=model.setDataset({
+					data:$("#input").inputtable('getData'),
+					type:'getData',
+					processed:false,
+					});
+					}
+
+			if(isEmpty==true)
+				$('#status').html('<br><div class="alert alert-error">No input given <i class="icon-info-sign"></i></div>');
+			else {
+					$('#status').html('<br><div class="alert alert-success">Data loaded successfully! <i class="icon-ok"></i></div>');
+					//view.createDatasetPlot();
+					//make a call to the controller for generating the dataset plot
+				}
+				return false;
+			});// Done click 
+			
+			$("input[value='Reset']").on('click',function(){
+				$('<div></div>').appendTo('body')
+                    .html('<div><h6>Are you sure you want to reset the data?</h6></div>')
+                    .dialog({
+                        modal: true, 
+						title: 'Reset Data?', 
+						zIndex: 10000, 
+						autoOpen: true,
+                        width: 'auto', 
+						resizable: false,
+                        buttons: {
+                            Yes: function () {
+							$("#input").inputtable('clear'); 		//clear the input sheet 
+							$('#status').html('<br/><div class="alert">Clear! Enter some value to get started!');  //display the message in the status div below the done and reset buttons
+                            $(this).dialog("close");					//close the confirmation window
+                            },
+                            No: function () {
+                                $(this).dialog("close");
+                            }
+                        },
+                        close: function (event, ui) {
+                            $(this).remove();
+                        }
+                    });
+			
+			}); //Reset click
 
 
 		}); //document ready function

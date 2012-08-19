@@ -46,7 +46,6 @@ return{
 		
 		$("#runButton").on('click',function(){
 		console.log('Run Started');
-		$("#showButton").removeAttr('disabled');
 		controller.run();
 		
 		});
@@ -91,6 +90,11 @@ return{
 	},
 	
 	step: function(){
+		if(controllerSliderState==1)
+				{
+				console.log("controllerSliderState:"+controllerSliderState);
+				$('.controller-handle').trigger('click');
+				}
 		view.disableButtons();					//disabling buttons
 		model.setN(nSize.val());				// save the datapoints size
 	    var keys=model.generateStep();				//generate one sample

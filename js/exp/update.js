@@ -28,8 +28,10 @@
         
 	}
 	if(setting.to == 'simulationDriven')
-        {	console.log("simulationDriven tab has been clicked!");
-	    view.clearAll();
+        {	
+		console.log("Update.js : simulationDriven tab has been clicked!");
+	    $("#input").inputtable('clear'); 		//clear the input sheet 
+		view.clearAll();
 		console.log("view cleared");
 	    model.reset();
 		console.log("model reset");

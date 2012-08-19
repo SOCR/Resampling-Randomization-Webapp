@@ -35,7 +35,7 @@ var dataDrivenView = function(dataDrivenModel){
 			temp.push(i);
 			temp.push('</span> &nbsp;&nbsp;  Datapoints:<span class="values">');
 			temp.push(_datapoints);
-			temp.push('</span>&nbsp;&nbsp;<a data-toggle="modal" href="#plot"><i class="icon-fullscreen plot" id="'+i+'"></i></a> &nbsp; <a href="#"><i class="icon-filter" id="'+i+'"></i></a></span><pre>');
+			temp.push('</span>&nbsp;&nbsp;<a data-toggle="modal" href="#plot"><i class="icon-fullscreen plot" id="'+i+'"></i></a> &nbsp; <a href="#"><i class="icon-filter contribution" id="'+i+'"></i></a></span><pre>');
 			//alert(i+' :'+model.bootstrapSamples[i-1]);
 			temp.push(model.bootstrapSamples[i-1]);
 			temp.push('</pre></div>');
@@ -44,34 +44,30 @@ var dataDrivenView = function(dataDrivenModel){
 		$('.plot').on('click',function(){
 			$('.chart').html('');
 			//var values=model.bootstrapSamples[$(this).attr('id')];
+			//var values=[1,2,3];
+			//alert(values);
 			//$('.vis').find('h3').html('Sample No. ' + sampleID );
-
-			//Temporary fix for getting the random sample data
 			var values = $(this).parent().parent().find('pre').text().split(',');
 			var sampleID = $(this).parent().parent().find('span.values').filter(':eq(0)').text();
 
 			$('#plot').find('h3').text(' Sample : ' + sampleID);
 
-			console.log(sampleID);
+			console.log(values);
 
 				vis({
 					  parent : '.chart',
 			          data : values,
-			          height: 380,
-			          width: 500
+			       height: 380,
+			          width: 500,
+					  range:[0,10]
 
 		           })();
-			/*
-			$('#plot .device').html('');			//empty the modal window 
-			var values=model.bootstrapSamples[$(this).attr('id')];
-			//var values=[2,3,5,4,3];
-			console.log('Random sample plot... values:'+values);
-			var histogram = vis({
-				parent : '.device',
-				data : values,
-				range:[1,10]
-			})();
-			*/
+			});
+			
+			$('.contribution').on('click',function(){
+			console.log(model.getMeanOf($(this).attr('id')));
+			$("#accordion").accordion( "activate" , 2);
+			
 			});
 	}
 	/*
@@ -265,7 +261,7 @@ return{
 			/*Block to adjust the generatedSamples div height*/
 			var divHeight=(stopCount/samplesInRow)*_dimensions['height'];
 			$("#generatedSamples").height(divHeight);
-			alert(divHeight);
+			//alert(divHeight);
 			//
 			if(count<samplesInRow)
 				destinationX=count*_dimensions['width']+$('#generatedSamples').position().left;
@@ -279,12 +275,12 @@ return{
 			self.transition({
 				perspective: '100px',
 				rotateY: '360deg',
-				duration:speed/2+'ms'
+				duration:speed/4+'ms'
 			});
 			self.transition({
 				x:(destinationX-currentX),
 				y:(destinationY-currentY),
-				duration:speed/2+'ms'
+				duration:speed/4+'ms'
 				},function(){
 					content.appendTo("#device"+sampleNumber+'-container');
 					self.removeAttr('id');					//remove the id on the moved coin
@@ -321,14 +317,15 @@ return{
 		console.log('createDotplot invoked (dataDrivenView.js)');
 		$("#accordion").accordion( "activate" , 2);
 		//setting.variable;
-		//var values=model.getMean();
+		var values = model.getMean();
 		//alert(values);
 		console.log("Mean Values:"+ values );
-		var values = [4,2,3,4,1,5,6,7];
+		//var values = [4,2,3,4,1,5,6,7];
 		//get the mean array
 		var histogram = vis({
 			parent : '#dotplot',
-			data : values
+			data : values,
+			range: [0,10]
 		})();
 	},
 	
