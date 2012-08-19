@@ -1,4 +1,4 @@
-var dataDrivenModel=function(){
+var appModel=function(){
 //::::::: PRIVATE PROPERTIES :::::::::::::::
 
 /*
@@ -134,18 +134,24 @@ return{
 	getDataset:function(){
 		return _dataset;
 	},
+	/**
+	*@method: setDataset
+	*@param: input 
+	*@description: sets the data from the input sheet into the app model
+	*/
 	setDataset:function(input){
-		if(input.processed )
+	console.log('setDataSet() invoked!');
+		if(input.processed)
 			{
 				_dataset=input.data;
-				console.log('setDataSet executed! simulation data is loaded now.');
+				console.log('Simulation data is loaded now.');
 				return false;
 			}
 		else 
 			{
 		//emptying the array
 			_dataset=[];
-			console.log('input data :'+input.data);
+			console.log('Input Data :'+input.data);
 			for (var i = 0; i < input.data.length; i++)
 				{
 				for(var j = 0; j < input.data[i].length; j++)
@@ -158,7 +164,7 @@ return{
 					}
 				
 				}		
-			console.log('setDataSet executed!data is loaded now. Data :' + _dataset);
+			console.log('Data is loaded now. Data :' + _dataset);
 			if(_dataset.length!=0)
 				return false;
 			else

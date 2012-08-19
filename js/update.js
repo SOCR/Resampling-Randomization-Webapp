@@ -23,7 +23,7 @@
             //view.clearAll();
 	    //reset the data
 	    //model.reset();
-            controller.loadController('dataDriven');
+        controller.loadController('dataDriven');
 	    console.log('DataSet: '+model.getDataset());
         
 	}

@@ -55,13 +55,7 @@
   /*
   Control and input tile style starts here 	  
 */      
-	.slide-out-input,.slide-out-controller {
-	  border: 1px solid;
-	  padding: 10px;
-      background: #F5F5F5;
-          
-      }      
-      .up{
+    .up{
 		z-index:1;
       }
       #accordion div{
@@ -99,10 +93,10 @@
 	display:none;
 	position: absolute;
         left:-425;
-	background-color:#ccc;
+	background-color:#eee;
 	border:1px solid ;
 	padding:10px;
-	z-index:100;
+	
       }
        .input-handle,#slide-out-input{
 	top:150px;
@@ -110,185 +104,16 @@
    /*
   Control and input tile style ends here 	  
 */       
-      
-      .coin-container{
-      width: 30px;
-      height: 30px;
-      position: relative;
-      display:inline-block;
-      }
-      
-      .coin{
-	width: 100%;
-	height: 100%;
-	position: absolute;
-        top: 0;
-        left: 0;
-      }
-      .q{
-	height: 400px;
-	
-      }
-      
-      .ui-accordion-header{
-	background-color:#ccc;
-	border:1px solid;
-	
-      }
-      .ui-accordion-header a{text-decoration:none;}
-      .ui-accordion-content{
-	border:1px solid;
-      }
-      
-      #welcome{
-	
-	z-index: 9999;
-	position: absolute;
-	background-color: black;
-	top:0px;
-      }
-      
-      .font{
-	font-size: 20px;
-	color: white;
-	font-family: 'Lato', sans-serif;
-      }
-      
-      .welcome-title{
-	color:#1DC4F9;
-	font-size: 150px;
-      }
-      
-      .welcome-container div{
-	float:left;
-      }
+
+
 	
 	#dataSet,#generatedSamples{
 	height:200px;
 	border:1px solid #e3e3e3;
 	padding:5px;
 	}
-	
-	
-      body {
-        padding-top: 60px;
-        
-      }
-      .sidebar-nav {
-        padding: 9px 0;
-      }
-      .row-fluid{
-	padding-top:10px;
-	}
-      
-      .tab-content{overflow:visible;}
-	  
-/*
-    SampleList style starts here
- 	  
-*/
-     .entry{
-	      padding: 10px;
-	      border-bottom: 0; 
-	      &:last-of-type {
-        border-bottom: 1px solid black; 
-	}
-      }
-      .header{
-      background-color:#cdf;
-      }
-      .values{
-	color:brown;
-	font-weight:800;
-      }
-	
-      .span5,.span4{
-	padding:10px;
-	border:0;
-      }
-      #sampleList{
-	height:400px;
-	overflow-y: auto;
-      }
-      
-      #range{
-	width:50%;
-	float:left;
-	margin-right:10px;
-	margin-top:7px;
-	}
 
-	/* Adding a min-height for the plotted area : required ; */
-	div#dotplot{
-		min-height: 400px;
-		min-width:700px;
-	}
-	
-  /*
-    SampleList style ends here
- 	  
-*/
-  /*
-  Control and input tile style starts here 	  
-*/      
-	.slide-out-input,.slide-out-controller {
-	  border:1px solid;
-	  padding:10px;
-          
-          background: #ccc;
-          
-      }      
-      .up{
-	z-index:1;
-      }
-      #accordion div{
-	/*
-	height:350px;
-	display:inline;
-	border:1px solid;
-	*/
-	
-      }
-      #dataPlot, #currentSample{
-      /*float:left;
-      width:45%;
-      */margin:5px;
-      }
-      .input-handle,.controller-handle{
-	position:absolute;
-	left:-20px;
-	-webkit-transform: rotate(90deg);
-	transform:rotate(90deg);
-	-ms-transform:rotate(90deg); /* IE 9 */
-	-moz-transform:rotate(90deg); /* Firefox */
-	-webkit-transform:rotate(90deg); /* Safari and Chrome */
-	-o-transform:rotate(90deg); /* Opera */
-      }
-      
-      .controller-handle{
-	left:-30px;
-      }
-      .controller-handle,#slide-out-controller{
-	top:350px;
-      }
-      #slide-out-input,#slide-out-controller{
-	width:400px;
-	display:none;
-	position: absolute;
-    left:-425;
-	background-color:#FFFFFF;
-	border:1px solid #454545;
-	padding:10px;
-	z-index:100;
-      }
-       .input-handle,#slide-out-input{
-	top:150px;
-      }
-   /*
-  Control and input tile style ends here 	  
-*/       
-      
-      .device-container{
+    .device-container{
       width: 30px;
       height: 30px;
       position: relative;

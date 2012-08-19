@@ -1,6 +1,6 @@
-var dataDrivenView = function(dataDrivenModel){
+var appView = function(appModel){
 /* private properties */
-	var model=dataDrivenModel;
+	var model=appModel;
 	var _datapoints=$('#nSize').val();
 /*public properties */	
 	runButton = $("#runButton"),
@@ -118,6 +118,10 @@ return{
 		runButton.attr('disabled',"true");
 		showButton.attr('disabled',"true");
 	},
+	
+	/**
+     * Disables step,run and show buttons
+    */
 	enableButtons:function(){
 		stepButton.removeAttr('disabled'); 
 		runButton.removeAttr('disabled');
@@ -125,8 +129,9 @@ return{
 	},
 	
 	/**
-     * Clears all canvas and div. Resetting the view of the whole App
-     *
+     *@method - clearAll
+	 *@description: Clears all canvas and div. Resetting the view of the whole App
+     * @dependencies : none
      */
 	clearAll:function(){
 		$('#displayCount').html('0');	//resetting the count to 0
@@ -153,20 +158,29 @@ return{
 		},
 		
 	/**
-     * It generates all the samples List
+     *@method - createList(range)
+	 *@param -  x - start and end sample number seperated by '-'
+	 *@description: It generates all the samples List
      * @dependencies : _create(start,stop)
      */
 	createList:function(x){
 		console.log('createList invoked (view.js ln 131)');
-		var range=x.split('-');
-		if((range[1]-range[0])<500)
-			{	
-				_create(range[0],range[1]-range[0]);
+		if(model.bootstrapSamples.length==0)
+			{
+			$("#sampleList").html('<div class="alert alert-error"><a class="close" data-dismiss="alert" href="#">x</a><h4 class="alert-heading">No Random samples to show!</h4>Please generate a dataset using the list of experiments or manually enter the data. Then generate some random samples from the controller tile before click "show"</div>');
 			}
-		else
-			{	
-				_createPagination(range[0],range[1]);
-				_create(range[0],500);
+		
+		else{
+			var range=x.split('-');
+			if((range[1]-range[0])<500)
+				{	
+					_create(range[0],range[1]-range[0]);
+				}
+			else
+				{	
+					_createPagination(range[0],range[1]);
+					_create(range[0],500);
+				}
 			}
 		},
 		
@@ -186,11 +200,9 @@ return{
      */
 	updateSlider:function(){
 		//get the count and set it as the maximum value
-		//$( "#range" ).slider({ disabled: false });
 		$( "#range" ).slider( "option", "max", model.getCount());
 		$( "#range" ).slider( "option", "min", 0);
 		//$( "#showCount" ).html($( "#range" ).slider( "values",0 )+" - " + $( "#range" ).slider( "values", 1 ) );
-		//alert($( "#range" ).slider( "value"));
 	},
 	
 	/**
@@ -209,7 +221,6 @@ return{
 		});
 		$( "#showCount" ).html($( "#range" ).slider( "values",0 )+" - " + $( "#range" ).slider( "values", 1 ) );
 		//$("#amount" ).val( "$" + $( "#range" ).slider( "value" ) );
-		//$("slider").hide();
 	},
 	
 	/**
@@ -219,7 +230,7 @@ return{
 	*/
 	createControllerView:function(){
 		$( "#amount" ).val( "$" + $( "#slider" ).slider( "value" ) );
-		var html='<div id="buttonPanel"><button class="btn" type="button" id="stepButton" tabindex="1" title="Step"><img src="img/step.png" alt="Step" title="Step" /> </button> <button class="btn btn-success" type="button" id="runButton" tabindex="2" title="Run" ><img id="runImage" src="img/run.png" alt="Run" title="Run" /></button><button class="btn btn-danger" type="button" id="stopButton" tabindex="3" title="Stop" ><img id="stopImage" src="img/stop.png" alt="Stop" title="Stop" /></button><button class="btn" type="button" id="resetButton" tabindex="4" title="Reset" ><img src="img/reset.png" alt="Reset" title="Reset" /></button><span><i class="icon-question-sign popups" rel="popover" data-content="<ul><li>Step Button : generates 1 sample</li><li>Run Button : generates X sample..X can be set from the option below</li><li>Stop Button :Stops the sample generation</li><li>Reset Button : Resets all values</li></ul>" data-original-title="Controls"></i></span></div><div id="speedSlider"><div><span class="badge badge-warning">Speed: <span id="speedCount">200</span>ms</span></div><div id="speed"></div></div><div class="tool"><span>Generate</span><input type="text" id="countSize" class="input-small" value="1000"> <span>Samples with </span><input type="text" id="nSize" class="input-small" value="50"><span>Datapoint per sample.</span></div><div><select id="variable" style="width:100px;margin-top:10px"><option value="slow">Mean</option><option value="medium">S.D</option><option value="fast">Percentile</option></select><span><a href="#" class="btn btn-danger popups" rel="popover" data-content="This will create a plot of the variable for each generated sample. Click this once you have generated some samples!" data-original-title="Inference" id="infer">Infer!</a></span></div>';
+		var html='<div id="buttonPanel"><button class="btn" type="button" id="stepButton" tabindex="1" title="Step"><img src="img/step.png" alt="Step" title="Step" /> </button> <button class="btn btn-success" type="button" id="runButton" tabindex="2" title="Run" ><img id="runImage" src="img/run.png" alt="Run" title="Run" /></button><button class="btn btn-danger" type="button" id="stopButton" tabindex="3" title="Stop" ><img id="stopImage" src="img/stop.png" alt="Stop" title="Stop" /></button><button class="btn" type="button" id="resetButton" tabindex="4" title="Reset" ><img src="img/reset.png" alt="Reset" title="Reset" /></button><span><i class="icon-question-sign popups" rel="popover" data-content="<ul><li>Step Button : generates 1 sample</li><li>Run Button : generates X sample..X can be set from the option below</li><li>Stop Button :Stops the sample generation</li><li>Reset Button : Resets all values</li></ul>" data-original-title="Controls"></i></span>&nbsp;&nbsp;<button class="btn controller-back">Back</button></div><div id="speedSlider"><div><span class="badge badge-warning">Speed: <span id="speedCount">200</span>ms</span></div><div id="speed"></div></div><div class="tool"><span>Generate</span><input type="text" id="countSize" class="input-small" value="1000"> <span>Samples with </span><input type="text" id="nSize" class="input-small" value="50"><span>Datapoint per sample.</span></div><div><select id="variable" style="width:100px;margin-top:10px"><option value="slow">Mean</option><option value="medium">S.D</option><option value="fast">Percentile</option></select><span><a href="#" class="btn btn-danger popups" rel="popover" data-content="This will create a plot of the variable for each generated sample. Click this once you have generated some samples!" data-original-title="Inference" id="infer">Infer!</a></span></div>';
 		$('#controller-content').html(html);
 		$( "#speed" ).slider({
 			value:400,
@@ -230,10 +241,15 @@ return{
 			$( "#speedCount" ).html( ui.value );
 			}
 		});
+		$('.controller-back').on('click',function(){
+			Experiment.createControllerView();
+			Experiment.initialize();
+		});
 	},
 	
 	/**
 	*@method: animate
+	*@param: setting
 	*@description: animates the resample generation process....input is the resample datapoints array indexes
 	*@return : none
 	*/
@@ -325,7 +341,8 @@ return{
 		var histogram = vis({
 			parent : '#dotplot',
 			data : values,
-			range: [0,10]
+			height:390,
+			range: [0,1]
 		})();
 	},
 	
@@ -341,6 +358,7 @@ return{
 		t=new Date();
 		array.push('<tr><td>Start Time </td><td><strong>'+t.getTime()+'</strong></td></tr>');
 		array.push('<tr><td>DataSet Size </td><td><strong>'+Experiment.getDatasetSize()+'</strong></td></tr>');
+		//array.push('<tr><td>Number of Random Samples : </td><td><strong>'+model.bootstrapSamples+'</strong></td></tr>');
 		array.push('</table>');
 		$('#details').html(array.join(''));
 	},
@@ -370,12 +388,3 @@ return{
 	
     }//return
 };
-
-/*
-INCOMPLETE FUNCTIONS
-
-clear
-getMean
-
-*/
-

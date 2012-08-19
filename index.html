@@ -15,7 +15,6 @@
     <!--<link rel="stylesheet" href='http://fonts.googleapis.com/css?family=Lato:400,900'  type='text/css'>-->
     <link rel="stylesheet" href="css/bootstrap.css" >
     <link rel="stylesheet"href="css/stylePagination.css" >
-    <link rel="stylesheet" href="css/animation.css" >
     <link rel="stylesheet" media="screen" href="css/jquery-ui.css">
     <link rel="stylesheet" media="screen" href="css/input/table.css">
 	<link rel="stylesheet" type="text/css" href="css/jquery.jtweetsanywhere-1.3.1.css" />
@@ -34,7 +33,7 @@
     <link rel="apple-touch-icon-precomposed" href="ico/apple-touch-icon-57-precomposed.png">
     <style>
 
-     svg {
+    svg {
      font-size: 13px;
      font-family:sans-serif;
     }
@@ -119,10 +118,10 @@
 						<span class="icon-bar"></span>
 						<span class="icon-bar"></span>
 					</a>
-					<a href="#" class=" brand" >SOCR</a>
+					<a data-toggle="modal" href="#aboutDesc" class=" brand" >SOCR</a>
 					<div class="nav-collapse">
 						<ul class="nav">
-							<li><a data-toggle="modal" href="#aboutDesc">About</a></li>
+							<li><a  href="http://wiki.stat.ucla.edu/socr/index.php/SOCR_ResamplingSimulation_Activity" target='_blank'>About</a></li>
 							<li><a data-toggle="modal" href="#simulationDesc">Simulations</a></li>
 							<!--<a data-toggle="modal" href="#help"><button class='btn btn-danger' >Need Help!</button></a>-->
 							<a data-toggle="modal" href="#share"><button class='btn btn-success' >Buzz</button></a>
@@ -139,7 +138,7 @@
 				<span><h2 class="font welcome-title">SOCR</h2></span>
 			</div>
 			<div style='margin-top:50px'>
-				<span class="font" >Statistical Online Computational Resource&nbsp;&nbsp;</span><button id="startApp" class="btn btn-primary btn-large">Start App >>> </button>
+				<span class="font" >Statistical Online Computational Resource-- WebApp&nbsp;&nbsp;</span><button id="startApp" class="btn btn-primary btn-large">Start App >>> </button>
 			</div>
 			</div>
 		</div>
@@ -158,8 +157,9 @@
 								<section id="drop"> Drag and Drop your URL</section>
 								
 									<div class ="input-controls"> Or fill in this Excel Sheet </div>
-									<div class="dataTable" id="input"></div>
 									<div id='status'></div>
+									<div class="dataTable" id="input"></div>
+									
 								
 
 						</div>
@@ -376,33 +376,38 @@
 			{cardExp:"js/exp/cardExp.js"},
             {inputTile:"js/input/inputtable.js"},
             {InputTile:"js/input/script.js"},
-			{Model:"js/exp/dataDrivenModel.js"},
-			{View:"js/exp/dataDrivenView.js"},
-			{Controller:"js/exp/dataDrivenController.js"},
+			{Model:"js/appModel.js"},
+			{View:"js/appView.js"},
+			{Controller:"js/appController.js"},
 			"js/lib/jquery-ui.min.js",
 			{D3:"js/vis/d3.v2.min.js"},
 			"js/vis/histogram.js",
-			"js/exp/jquery.paginate.js",
-			"js/exp/socr.js",
-			"js/exp/update.js",
-			//"js/lib/jtweet/jquery.jtweetsanywhere-1.3.1.min.js",
+			"js/jquery.paginate.js",
+			//"js/exp/socr.js",
+			"js/update.js",
+			"js/lib/jtweet/jquery.jtweetsanywhere-1.3.1.min.js",
 			"js/lib/jquery.transit.min.js",
 			"js/lib/jquery.easing.1.3.js",
 			"js/input/dragdrop.js"
 	    	);
     
 	head.ready(function () {
-		
-		var baseUrl="http://localhost/17-8-2012/";
-		 inputSliderState=0;
-		 controllerSliderState=0;
+		var url = window.location.href;
+		var baseUrl = url.substring(0, url.indexOf('index.html'));
+		console.log("baseUrl:"+baseUrl);
+		//var baseUrl="http://localhost/17-8-2012/";
+		/*
+		GLOBAL VARIABLES...TO BE ACCESSED FROM {experiment}.js files.
+		*/
+		inputSliderState=0;
+		controllerSliderState=0;
 		
 		/*
 		*Loading MVC
 		*/
-		model=new dataDrivenModel();
-		view=new dataDrivenView(model);
-		controller=new dataDrivenController(model,view);
+		model=new appModel();
+		view=new appView(model);
+		controller=new appController(model,view);
 		/*
 		*  CoverPage rendering
 		*/
@@ -415,7 +420,6 @@
 		});
 		//$('.brand').popover({placement:'bottom'});
 		$(document).ready(function(){
-			/*
 			$('#tweetFeed').jTweetsAnywhere({
 				searchParams: 'q=simulation',
 				count: 10,
@@ -431,7 +435,7 @@
 					refreshInterval: 15
 					}
 				}
-			}); */
+			}); 
 			
 			/*
 			 * Initialize the controller 
@@ -496,18 +500,21 @@
 				}
 			});//controller-handle click
 			
+			//REDUNDENT....AS THE INPUT AND CONTROLLER TILE WILL NEVER OVERLAP
 			//For deciding which tile should come over which one!
-			$('.slide-out-input').on('click',function(){
-				$('.slide-out-controller').css('z-index',0);
-				$(this).css('z-index',20);
+			$('#slide-out-input').on('click',function(){
+				$('#slide-out-controller').css('z-index',0).css('opacity','0.8');
+				$(this).css('z-index',20).css('opacity','1');
 			});
-			$('.slide-out-controller').on('click',function(){
-				$('.slide-out-input').css('z-index',0);
-				$(this).css('z-index',20);
+			$('#slide-out-controller').on('click',function(){
+				$('#slide-out-input').css('z-index',0).css('opacity','0.8');
+				$(this).css('z-index',20).css('opacity','1');
 			});
-			/*Slide out feature ends
-			 */
-			 
+			
+			
+			/**
+			*Slide out feature ends
+			*/
 			$('#accordion').accordion();
 			$('.dropdown-toggle').dropdown();
 			$('.popups').popover();
@@ -637,14 +644,12 @@
 				}
 				]
 			});
-			
-
-			 $('.input-controls').delegate('td','mousedown',function(){
+     		 $('.input-controls').delegate('td','mousedown',function(){
   					table.startEdit( $(this) );
   					//console.log('Logging function called')
 				 });
 			
-			$('#input').after("<br/><input class='btn' type='button' value='Done'><input class='btn' type='button' value='Reset'>");
+			$('#input').before("<br/><input class='btn' type='button' value='Done'><input class='btn' type='button' value='Reset'>");
 			//Binding function to the Button clicks
 			$("input[value='Done']").on('click',function(){
 				console.log("getSelected data :"+$("#input").inputtable('getSelected'));
@@ -670,9 +675,9 @@
 					}
 
 			if(isEmpty==true)
-				$('#status').html('<br><div class="alert alert-error">No input given <i class="icon-info-sign"></i></div>');
+				$('#status').html('<div class="alert alert-error">No input given <i class="icon-info-sign"></i><a class="close" data-dismiss="alert" href="#">x</a></div>');
 			else {
-					$('#status').html('<br><div class="alert alert-success">Data loaded successfully! <i class="icon-ok"></i></div>');
+					$('#status').html('<div class="alert alert-success">Data loaded successfully! <i class="icon-ok"><a class="close" data-dismiss="alert" href="#">x</a></i></div>');
 					//view.createDatasetPlot();
 					//make a call to the controller for generating the dataset plot
 				}
@@ -692,7 +697,7 @@
                         buttons: {
                             Yes: function () {
 							$("#input").inputtable('clear'); 		//clear the input sheet 
-							$('#status').html('<br/><div class="alert">Clear! Enter some value to get started!');  //display the message in the status div below the done and reset buttons
+							$('#status').html('<div class="alert"><a class="close" data-dismiss="alert" href="#">x</a>Clear! Enter some value to get started!</div>');  //display the message in the status div below the done and reset buttons
                             $(this).dialog("close");					//close the confirmation window
                             },
                             No: function () {

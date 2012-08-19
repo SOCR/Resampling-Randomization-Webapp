@@ -1,7 +1,7 @@
-var dataDrivenController=function(dataDrivenModel,view){
+var appController=function(appModel,view){
 /* PRIVATE PROPERTIES   */
-	model=dataDrivenModel;
-	view=view || new dataDrivenView();
+	model=appModel;
+	view=view || new appView();
 	
 	var _id=0;				//stores the id for setInterval in run mode
 	var _runsElasped=0;			//keeps count of number of resamples generated
