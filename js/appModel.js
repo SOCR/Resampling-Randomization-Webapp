@@ -1,73 +1,91 @@
-var appModel=function(){
-//::::::: PRIVATE PROPERTIES :::::::::::::::
+/**
+*  appModel.js is the model object for the SOCR app.
+*
+*@author: selvam , ashwini 
+*
+*SOCR - Statistical Online Computational Resource
+*/
 
+var appModel=function(){
 /*
- *FOR DATA DRIVEN 
+ *FOR DATA DRIVEN
  *
  */
-
-//var runCount = 0;			//Keeps track of number of runs elapsed 
-var _stopCount = 1000;			//Number of runs to be made when 'run' button is pressed 
-var _count=0;				//keeps count of number of samples generated from start
-var _dataset=['1','2','3','4','5','6','7','8','9','10'];			// All the input datapoints from wich bootstrap sample is generated
-var _n=50;				//Number of datapoints in a bootstrap sample or Sample Size
-var bootstrapSamples=new Array();	//Contains all the bootstrap samples generated
-//var variables;				//number of variables
-var _data;
-var sample=[];
-var keys=[];
-var _temp;
-var _sampleMean=[];
-var coin = new Array(N);
+//::::::: PRIVATE PROPERTIES :::::::::::::::
+	var _stopCount = 1000;			//Number of runs to be made when 'run' button is pressed 
+	var _count=0;				//keeps count of number of samples generated from start
+	var _dataset=['1','2','3','4','5','6','7','8','9','10'];			// All the input datapoints from wich bootstrap sample is generated
+	var _n=50;				//Number of datapoints in a bootstrap sample or Sample Size
+	var bootstrapSamples=new Array();	//Contains all the bootstrap samples generated
+	//var variables;				//number of variables
+	var _data;
+	var sample=[];
+	var keys=[];
+	var _temp;
+	var _sampleMean=[];
+	var coin = new Array(N);
 /*
  *FOR SIMULATION DRIVEN
  *
  */
-var N=100;
-var p = 0.5;	  		//Probability of heads
-var N = 50;			//Maximum number of trials 
+	var N=100;
+	var p = 0.5;	  		//Probability of heads
+	var N = 50;			//Maximum number of trials 
 
 /*
  IF EVENT DISPATCH MODEL IS TO BE IMPLEMENTED
- 
-subject = new LIB_makeSubject(['generateSamples','generateSample']); //list of all the events with observer pattern
-
+	subject = new LIB_makeSubject(['generateSamples','generateSample']); //list of all the events with observer pattern
 */
 
-/* PUBLIC METHODS   */
+/* PRIVATE METHODS   */
 
-/* returns a random number in the range [min,max]*/
-function _getRandomInt(min, max) {
-	return Math.floor(Math.random() * (max - min )) + min;
-    }
+	/**
+	*@method: [private] _getRandomInt()
+	*@desc:  returns a random number in the range [min,max]
+	*/
+	function _getRandomInt(min, max) {
+		return Math.floor(Math.random() * (max - min )) + min;
+		}
 
-function _generateMean(j){
-		var x=bootstrapSamples[j];
+	/**
+	*@method: [private] _generateMean()
+	*@param:  sampleNumber - the random sample number for which the mean is to be calculated
+	*@desc:  returns a random number in the range [min,max]
+	*@return: the calculated mean value
+	*/
+	function _generateMean(sampleNumber){
+		var x=bootstrapSamples[parseInt(sampleNumber)];
 		var total=0;
-		for(var i in x) { total += parseInt(x[i]); }
-		//alert(total);
-		_sampleMean[j]=total/x.length;
-}
+		for(var i=0;i<x.length;i++) 
+			{ total += parseInt(x[i]); }
+		//console.log("total :"+total);	
+		return total/x.length;
+	}
 
 return{
 	/* PUBLIC PROPERTIES   */
-	//stopCount:stopCount,
-	//count:count,
 	bootstrapSamples:bootstrapSamples,
 	sample:sample,
-	/* PUBLIC METHODS   */
 	
+	/* PUBLIC METHODS   */
 	/*
 	addObserver:subject.addObserver(),
 	removeObserver:subject.removeObserver()
 	*/    
-        //i think this should be a private function
-	/*generates*/
+    //i think this should be a private function
+	/**
+	*@method: [public] generateTrail()
+	*@desc:  rgenerating a random number between 0 and dataSet size 
+	*/
 	generateTrail:function(){
 		randomKey=_getRandomInt(0, _dataset.length);	//generating a random number between 0 and dataSet size 
 		return {data:_dataset[randomKey],key:randomKey};			//returning the generated trail into a bootstrap sample array
 	},
-        
+    
+	/**
+	*@method: [public] generateSample()
+	*@desc:  rgenerating a random number between 0 and dataSet size 
+	*/
 	generateSample:function(){
 		var j=_n;
 		//bootstrapSamples[_count]=new Array();			//initializing the new sample array
@@ -85,6 +103,12 @@ return{
 		_count++;		//incrementing the total count - number of samples generated from start of simulation
 		
 	},
+	
+	/**
+	*@method: [public] generateStep()
+	*@desc:  executed when the user presses step button in the controller tile. The click binding of the step button is done in the {experiment}.js
+	*@dependencies: generateTrail()
+	*/
 	generateStep:function(){
 		var j=$('#nSize').val();
 		var sample=[];
@@ -101,23 +125,33 @@ return{
 		_count++;
 		return keys;
 	},
+	
+	/**
+	*@method: [public] getMean()
+	*@desc:  executed when the user presses "infer" button in the controller tile. The click binding of the step button is done in the {experiment}.js
+	*@dependencies: generateTrail()
+	*/
 	getMean:function(){
 		for(var j=0;j<_count;j++)
 			{
-			_generateMean(j);
-			//this.stop();
-			//alert(bootstrapSamples[j]);
-			//console.log(_sampleMean[j]);
+			_sampleMean[j]=_generateMean(j);
+			console.log(_sampleMean[j]);
 			}
 			return _sampleMean;
 			
 		},
-	getMeanOf:function(sampleNumber){
-		var x=bootstrapSamples[sampleNumber];
-		var total=0;
-		for(var i in x) { total += parseInt(x[i]); }
-		return total/x.length;
+	/**
+	*@method: [public] getMeanOf()
+	*@desc:  executed when the user presses "infer" button in the controller tile. The click binding of the step button is done in the {experiment}.js
+	*@dependencies: generateTrail()
+	*/	
+	getMeanOf:function(sampleNo){
+		return _generateMean(sampleNo);
 	},
+	
+	/**
+	*   NOT USED ANYWHERE
+	*/
 	error:function(x){
 		switch (x){
 		case('inputMissing'):
@@ -130,7 +164,11 @@ return{
 		}
 	},
 	
-	/*  getter and setter for variable 'dataSet'  */
+	/**
+	*@method: [public] getDataset()
+	*@desc:  getter and setter funtion for dataSet variable. 
+	*@dependencies: generateTrail()
+	*/
 	getDataset:function(){
 		return _dataset;
 	},
@@ -141,6 +179,7 @@ return{
 	*/
 	setDataset:function(input){
 	console.log('setDataSet() invoked!');
+	console.log(input.range);
 		if(input.processed)
 			{
 				_dataset=input.data;
@@ -149,8 +188,7 @@ return{
 			}
 		else 
 			{
-		//emptying the array
-			_dataset=[];
+			_dataset=[];			//emptying the array
 			console.log('Input Data :'+input.data);
 			for (var i = 0; i < input.data.length; i++)
 				{
@@ -172,18 +210,26 @@ return{
 		}
 		
 	},
-        
+    
+	/**
+	*@method: [public] getSample()
+	*@desc:  getter and setter funtion for dataSet variable. 
+	*@dependencies: generateTrail()
+	*/
 	getSample:function(index){
 		return bootstrapSamples[index];
-	},
-	getSamples:function(){
-		return bootstrapSamples;
 	},
 	setSample:function(data,index){
 		bootstrapSamples[index]=sampleModel(data,index);
 	},
 	
-	/*  getter and setter for variable 'n'  */
+	
+	getSamples:function(){
+		return bootstrapSamples;
+	},
+	
+	
+	/*  getter and setter for variable '_stopCount'  */
 	setStopCount:function(y){
 		//alert(y);
 		_stopCount=y;
@@ -191,14 +237,15 @@ return{
 	getStopCount:function(){
 		return _stopCount;
 	},
-	/*  getter and setter for variable 'n'  */
+	
+	/*  getter and setter for variable '_n'  */
 	setN:function(z){
 		_n=z;
 	},
 	getN:function(){
 		return _n;
 	},
-	/*  getter and setter for variable 'n'  */
+	/*  getter and setter for variable '_count'  */
 	setCount:function(v){
 		_count=v;
 	},

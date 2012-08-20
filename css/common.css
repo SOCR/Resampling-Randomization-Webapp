@@ -173,8 +173,9 @@
 	
 	#speed{
 	width:80%;
+	margin-top:10px;
 	}
-//Few additions by Ashwini
+/*Few additions by Ashwini*/
 .main-wrap{
 	display:none;
 }

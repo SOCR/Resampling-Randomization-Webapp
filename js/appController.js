@@ -1,9 +1,17 @@
+/**
+*  appController.js is the controller object for the SOCR app.
+*
+*@author: selvam , ashwini 
+*
+*SOCR - Statistical Online Computational Resource
+*/
+
 var appController=function(appModel,view){
 /* PRIVATE PROPERTIES   */
 	model=appModel;
 	view=view || new appView();
 	
-	var _id=0;				//stores the id for setInterval in run mode
+	var _id=0;					//stores the id for setInterval in run mode
 	var _runsElasped=0;			//keeps count of number of resamples generated
 	var _this;
 	var _noOfSteps=0;
@@ -46,27 +54,27 @@ return{
 		
 		$("#runButton").on('click',function(){
 		console.log('Run Started');
-		controller.run();
+		_this.run();
 		
 		});
 		$("#stepButton").on('click',function(){
 		console.log('Step pressed ');
-		controller.step();
+		_this.step();
 		});
 		$("#stopButton").on('click',function(){
 		console.log('Stop Pressed ');
-		controller.stop();
+		_this.stop();
 		});
 		$("#resetButton").on('click',function(){
 		console.log('Reset pressed');
-		controller.reset();
+		_this.reset();
 		});
 		$("#infer").on('click',function(){
-		controller.setDotplot();
+		_this.setDotplot();
 		});
 		$("#doneButton").on('click',function(){
 		console.log('Done Pressed');
-		if(controller.setInput()==false)
+		if(_this.setInput()==false)
 			alert('Input some correct data!');
 		});
 		
@@ -74,6 +82,106 @@ return{
 		view.createSlider();
 		$('.dropdown-toggle').dropdown();
 		$('.popups').popover();
+		
+		// Twitter Feed
+		$('#tweetFeed').jTweetsAnywhere({
+				searchParams: 'q=simulation',
+				count: 10,
+				showTweetFeed: {
+					autorefresh: {
+						mode: 'trigger-insert',
+						interval: 60
+					},
+					paging: {
+					mode: 'more'
+					},
+					showTimestamp: {
+					refreshInterval: 15
+					}
+				}
+			}); 
+		
+			$('#inputEditButton').on('click',function(){
+				$('#accordion').accordion( "activate" , 0);
+			});
+			
+			/*
+			 * Bind show button to createList function in appView.js
+			 */
+			$("#showButton").on('click',function(){
+				//a check to see if the sample count is 0 or not
+				view.createList($('#showCount').text());
+			});
+			
+			$('#startApp').on('click',function(){
+				console.log('Start App button clicked');
+				$('#welcome').animate({
+					left:-2999},
+					1000,
+					'easeInCubic');
+			});
+			
+			//REDUNDENT....AS THE INPUT AND CONTROLLER TILE WILL NEVER OVERLAP
+			//For deciding which tile should come over which one!
+			$('#slide-out-input').on('click',function(){
+				$('#slide-out-controller').css('z-index',0).css('opacity','0.8');
+				$(this).css('z-index',20).css('opacity','1');
+			});
+			$('#slide-out-controller').on('click',function(){
+				$('#slide-out-input').css('z-index',0).css('opacity','0.8');
+				$(this).css('z-index',20).css('opacity','1');
+			});
+			
+			
+			/**
+			*Slide out feature ends
+			*/
+			$('#accordion').accordion();
+			$('.dropdown-toggle').dropdown();
+			$('.popups').popover();
+			
+			/*  Adding tab feature to the input tile   */
+			$('#myTab a').click(function (e) {
+			  e.preventDefault();
+			  $(this).tab('show');
+			});
+		 
+			$('#dataDriven-tab').on('click',function(){
+			  //WARNING PROMPT
+			  $("#accordion").accordion( "activate" , 0);
+				$(this).update({to:'dataDriven'});
+			});
+			
+			$('#simulationDriven-tab').on('click',function(){
+			  //WARNING PROMPT
+			  var self=this;
+				$('<div></div>').appendTo('body')
+                    .html('<div><h6>Moving from Data drive to Simulation Drive will reset the app!You want to continue?</h6></div>')
+                    .dialog({
+                        modal: true, 
+						title: 'Reset Data?', 
+						zIndex: 10000, 
+						autoOpen: true,
+                        width: 'auto', 
+						resizable: false,
+                        buttons: {
+                            Yes: function () {
+							$(this).update({to:'simulationDriven'});
+							$(this).dialog("close");					//close the confirmation window
+                            },
+                            No: function () {
+							$('#myTab li:eq(0) a').tab('show');
+                                $(this).dialog("close");
+                            }
+                        },
+                        close: function (event, ui) {
+                            $(this).remove();
+                        }
+                    });
+		
+			});
+		
+		
 		console.log('initialization done');
 	},
 	/*not used till now....currently the input/js/script.js file calls setDataset function directly when the done button is pressed*/
@@ -196,7 +304,7 @@ return{
 						{	console.log('simulation drive has some data');
 						//alert(Experiment.getDataset());
 							model.setDataset({
-								data:Experiment.getDataset(),
+								data:Experiment.getDataset('calculation'),
 								processed:true
 								});	
 							console.log(model.getDataset());

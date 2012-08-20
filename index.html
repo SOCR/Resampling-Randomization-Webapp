@@ -392,10 +392,11 @@
 	    	);
     
 	head.ready(function () {
+		
 		var url = window.location.href;
 		var baseUrl = url.substring(0, url.indexOf('index.html'));
 		console.log("baseUrl:"+baseUrl);
-		//var baseUrl="http://localhost/17-8-2012/";
+		
 		/*
 		GLOBAL VARIABLES...TO BE ACCESSED FROM {experiment}.js files.
 		*/
@@ -408,59 +409,28 @@
 		model=new appModel();
 		view=new appView(model);
 		controller=new appController(model,view);
+		
 		/*
 		*  CoverPage rendering
 		*/
 		view.CoverPage();
+		
 		/*
 		 * Resize event adjusts the cover page accordingly
 		 */
 		$(window).resize(function(){
 			view.CoverPage();
 		});
+		
 		//$('.brand').popover({placement:'bottom'});
 		$(document).ready(function(){
-			$('#tweetFeed').jTweetsAnywhere({
-				searchParams: 'q=simulation',
-				count: 10,
-				showTweetFeed: {
-					autorefresh: {
-						mode: 'trigger-insert',
-						interval: 60
-					},
-					paging: {
-					mode: 'more'
-					},
-					showTimestamp: {
-					refreshInterval: 15
-					}
-				}
-			}); 
-			
+					
 			/*
 			 * Initialize the controller 
 			 */
 			controller.initialize();   
-		
-			$('#inputEditButton').on('click',function(){
-				$('#accordion').accordion( "activate" , 0);
-			});
 			
-			/*
-			 * Bind show button to createList function in appView.js
-			 */
-			$("#showButton").on('click',function(){
-				//a check to see if the sample count is 0 or not
-				view.createList($('#showCount').text());
-			});
 			
-			$('#startApp').on('click',function(){
-				console.log('Start App button clicked');
-				$('#welcome').animate({
-					left:-2999},
-					1000,
-					'easeInCubic');
-			});
 			
 			$('.input-handle').on('click',function(){
 				$target = $('#slide-out-input');
@@ -498,68 +468,8 @@
 					$(this).css({left:400}).animate({left: -30}, 500);
 					controllerSliderState=0;
 				}
-			});//controller-handle click
-			
-			//REDUNDENT....AS THE INPUT AND CONTROLLER TILE WILL NEVER OVERLAP
-			//For deciding which tile should come over which one!
-			$('#slide-out-input').on('click',function(){
-				$('#slide-out-controller').css('z-index',0).css('opacity','0.8');
-				$(this).css('z-index',20).css('opacity','1');
-			});
-			$('#slide-out-controller').on('click',function(){
-				$('#slide-out-input').css('z-index',0).css('opacity','0.8');
-				$(this).css('z-index',20).css('opacity','1');
-			});
-			
-			
-			/**
-			*Slide out feature ends
-			*/
-			$('#accordion').accordion();
-			$('.dropdown-toggle').dropdown();
-			$('.popups').popover();
-			
-			/*  Adding tab feature to the input tile   */
-			$('#myTab a').click(function (e) {
-			  e.preventDefault();
-			  $(this).tab('show');
-			});
-		 
-			$('#dataDriven-tab').on('click',function(){
-			  //WARNING PROMPT
-			  $("#accordion").accordion( "activate" , 0);
-				$(this).update({to:'dataDriven'});
-			});
-			
-			$('#simulationDriven-tab').on('click',function(){
-			  //WARNING PROMPT
-			  var self=this;
-				$('<div></div>').appendTo('body')
-                    .html('<div><h6>Moving from Data drive to Simulation Drive will reset the app!You want to continue?</h6></div>')
-                    .dialog({
-                        modal: true, 
-						title: 'Reset Data?', 
-						zIndex: 10000, 
-						autoOpen: true,
-                        width: 'auto', 
-						resizable: false,
-                        buttons: {
-                            Yes: function () {
-							$(this).update({to:'simulationDriven'});
-							$(this).dialog("close");					//close the confirmation window
-                            },
-                            No: function () {
-                                $(this).dialog("close");
-                            }
-                        },
-                        close: function (event, ui) {
-                            $(this).remove();
-                        }
-                    });
+			});//controller-handle click		
 		
-			});
-			
-			 
 		$( "#speed" ).slider({
 			value:400,
 			min: 200,
@@ -652,36 +562,34 @@
 			$('#input').before("<br/><input class='btn' type='button' value='Done'><input class='btn' type='button' value='Reset'>");
 			//Binding function to the Button clicks
 			$("input[value='Done']").on('click',function(){
-				console.log("getSelected data :"+$("#input").inputtable('getSelected'));
-				//alert($("#input").inputtable('getData'));
-				//console.log($("#input").inputtable('getData'));
-				if($("#input").inputtable('getSelected'))
+				var temp=$("#input").inputtable('getData');
+				var selected=$("#input").inputtable('getSelected');
+				if(temp.clean(',').length==0)
+					{
+					$('#status').html('<div class="alert alert-error">No input given <i class="icon-info-sign"></i><a class="close" data-dismiss="alert" href="#">x</a></div>');
+					}
+				else if(selected)
 					{
 					console.log("getSelected");
-					var isEmpty=model.setDataset({
-					data:$("#input").inputtable('getData'),
-					type:'getSelected',
-					processed:false,
-					})
+					model.setDataset({
+						data:$("#input").inputtable('getData'),
+						range:selected,
+						type:'getSelected',
+						processed:false,
+						});
+					$('#status').html('<div class="alert alert-success">Data loaded successfully! <i class="icon-ok"></i><a class="close" data-dismiss="alert" href="#">x</a></div>');
 					}
-				else
+				else 
 					{
 					console.log("getData");
-					var isEmpty=model.setDataset({
-					data:$("#input").inputtable('getData'),
-					type:'getData',
-					processed:false,
+					model.setDataset({
+						data:$("#input").inputtable('getData'),
+						range:1,
+						type:'getData',
+						processed:false,
 					});
+					$('#status').html('<div class="alert alert-success">Data loaded successfully! <i class="icon-ok"></i><a class="close" data-dismiss="alert" href="#">x</a></div>');
 					}
-
-			if(isEmpty==true)
-				$('#status').html('<div class="alert alert-error">No input given <i class="icon-info-sign"></i><a class="close" data-dismiss="alert" href="#">x</a></div>');
-			else {
-					$('#status').html('<div class="alert alert-success">Data loaded successfully! <i class="icon-ok"><a class="close" data-dismiss="alert" href="#">x</a></i></div>');
-					//view.createDatasetPlot();
-					//make a call to the controller for generating the dataset plot
-				}
-				return false;
 			});// Done click 
 			
 			$("input[value='Reset']").on('click',function(){
@@ -708,9 +616,17 @@
                             $(this).remove();
                         }
                     });
-			
 			}); //Reset click
-
+		
+		Array.prototype.clean = function(deleteValue) {
+		  for (var i = 0; i < this.length; i++) {
+			if (this[i] == deleteValue) {         
+			  this.splice(i, 1);
+			  i--;
+			}
+		  }
+		  return this;
+		};
 
 		}); //document ready function
 	}); //head.js ready function
