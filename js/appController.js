@@ -146,12 +146,14 @@ return{
 			  $(this).tab('show');
 			});
 		 
+			$('#dataDriven-tab').unbind('click');
 			$('#dataDriven-tab').on('click',function(){
 			  //WARNING PROMPT
 			  $("#accordion").accordion( "activate" , 0);
 				$(this).update({to:'dataDriven'});
 			});
 			
+			$('#simulationDriven-tab').unbind('click');
 			$('#simulationDriven-tab').on('click',function(){
 			  //WARNING PROMPT
 			  var self=this;
@@ -244,6 +246,7 @@ return{
     
 	reset: function(){
 	var self=this;
+	
 	$('<div></div>').appendTo('body')
                     .html('<div><h6>Are you sure you want to reset? Data will be lost!</h6></div>')
                     .dialog({

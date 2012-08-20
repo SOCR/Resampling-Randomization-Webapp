@@ -61,7 +61,10 @@ var appModel=function(){
 		//console.log("total :"+total);	
 		return total/x.length;
 	}
-
+	function _standardDev(){
+	;
+	}
+	
 return{
 	/* PUBLIC PROPERTIES   */
 	bootstrapSamples:bootstrapSamples,
@@ -148,6 +151,13 @@ return{
 	getMeanOf:function(sampleNo){
 		return _generateMean(sampleNo);
 	},
+	getMeanOfDataset:function(){
+		var total=0;
+		for(var i=0;i<_dataset.length;i++) 
+			{ total += parseInt(_dataset[i]); }
+		//console.log("total :"+total);	
+		return total/_dataset.length;
+	},
 	
 	/**
 	*   NOT USED ANYWHERE
@@ -179,7 +189,8 @@ return{
 	*/
 	setDataset:function(input){
 	console.log('setDataSet() invoked!');
-	console.log(input.range);
+	console.log("cell range: "+input.range);
+		//input.processed is true incase of a simulation -> data mode switch
 		if(input.processed)
 			{
 				_dataset=input.data;
@@ -190,6 +201,19 @@ return{
 			{
 			_dataset=[];			//emptying the array
 			console.log('Input Data :'+input.data);
+			console.log('Input Type :'+input.type);
+			//iterate through rows
+			for(var i=input.range[0];i<=input.range[2];i++)
+				{
+					for(var j=input.range[1];j<=input.range[3];j++)
+						{
+						if (input.data[i][j] != '')
+							{         
+							_dataset.push(input.data[i][j]);
+							}
+						}
+				}
+			/*
 			for (var i = 0; i < input.data.length; i++)
 				{
 				for(var j = 0; j < input.data[i].length; j++)
@@ -202,11 +226,8 @@ return{
 					}
 				
 				}		
+			*/
 			console.log('Data is loaded now. Data :' + _dataset);
-			if(_dataset.length!=0)
-				return false;
-			else
-				return true;
 		}
 		
 	},

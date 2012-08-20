@@ -180,6 +180,13 @@ return{
 	
 	getSampleHW:function(){
 	return {"height":_height,"width":_width};
+	},
+	
+	getCalculationDataset:function(){
+	return _dataset;
+	},
+	getUserReadableDataset:function(){
+	return _userReadableDataset;
 	}
 
 
