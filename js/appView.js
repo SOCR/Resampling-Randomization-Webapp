@@ -354,13 +354,15 @@ return{
 		var values = model.getMean();
 		//alert(values);
 		console.log("Mean Values:"+ values );
+		var meanDataset = model.getMeanOfDataset();
 		//var values = [4,2,3,4,1,5,6,7];
 		//get the mean array
 		var histogram = vis({
 			parent : '#dotplot',
 			data : values,
 			height:390,
-			range: [0,1]
+			range: [0,10],
+			dataSetMean :meanDataset
 		})();
 	},
 	
