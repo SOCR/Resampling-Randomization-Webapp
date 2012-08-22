@@ -59,7 +59,7 @@ addEvent(drop, 'drop', function (e) {
     parent : '.dataTable'
   });
   table.loadURL(e.dataTransfer.getData('Text'));
-
+ 
   /*
 
   var fetchHTML = (function (){
