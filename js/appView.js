@@ -60,16 +60,11 @@ var appView = function(appModel){
 			var sampleID = $(this).parent().parent().find('span.values').filter(':eq(0)').text();
 
 			$('#plot').find('h3').text(' Sample : ' + sampleID);
-
-			console.log(values);
-
-				vis({
+				vis({ 
 					  parent : '.chart',
 			          data : values,
-			       height: 380,
-			          width: 500,
-					  range:[0,10]
-
+			      	  height: 380,
+			          width: 500
 		           })();
 			});
 			
@@ -354,14 +349,7 @@ return{
 		console.log('createDotplot invoked (dataDrivenView.js)');
 		$("#accordion").accordion( "activate" , 2);
 		// Function to get the Max value in Array
-			Array.prototype.max = function( array ){
-			return Math.max.apply( Math, array );
-			};
-
-			// Function to get the Min value in Array
-			Array.prototype.min = function( array ){
-			return Math.min.apply( Math, array );
-			};
+			
 		//setting.variable;
 		if(setting.variable=='mean')
 			var values = model.getMean();

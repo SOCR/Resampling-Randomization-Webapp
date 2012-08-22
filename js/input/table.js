@@ -40,7 +40,7 @@ var table = function () {
 			//Remove all obligatory posts from before
 
 	 			$(controls).html( html );
-	 			var control = '<div class="input-controls"> Range : <input type="text" name="start"> - <input type="text" name="end"> <input type="button" class="btn" value="Generate submatrix" id="submatrix"> <div> <input type="button" value="Done Editing" class="btn" id="generateMatrix"></div></div>';
+	 			var control = '<div class="input-controls"> Range : <input type="text" name="start" class="input-mini" placeholder="start"> - <input type="text" name="end" class="input-mini" placeholder="end">  <div> <input type="button" class="btn" value="Generate submatrix" id="submatrix"> <input type="button" value="Done Editing" class="btn" id="generateMatrix"></div></div>';
 	 			$(controls).prepend(control);
 	}
 	var parseHeadings = function( html ){
@@ -158,6 +158,7 @@ var table = function () {
 		},
 		loadURL :  function ( url ){	
 			request( url, parent );
+			$(parent).html('')
 			$(parent).find('input:eq(1)').val( getMatrixsize )
 		},
 		selectData :  function ( coords ){
