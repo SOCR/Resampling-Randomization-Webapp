@@ -221,34 +221,7 @@
 					<div id="slide-out-controller" >
 						<h3>Controller</h3>
 						<div id='controller-content'>
-						  <div id="buttonPanel">
-						    <button class="btn" type="button" id="stepButton" tabindex="1" title="Step"><img src="img/step.png" alt="Step" title="Step" /> </button>
-						    <button class="btn btn-success" type="button" id="runButton" tabindex="2" title="Run" ><img id="runImage" src="img/run.png" alt="Run" title="Run" /></button>
-						    <button class="btn btn-danger" type="button" id="stopButton" tabindex="3" title="Stop" ><img id="stopImage" src="img/stop.png" alt="Stop" title="Stop" /></button>
-						    <button class="btn" type="button" id="resetButton" tabindex="4" title="Reset" ><img src="img/reset.png" alt="Reset" title="Reset" /></button>
-						    <span>
-						      <i class="icon-question-sign popups" rel="popover" data-content="<ul><li>Step Button : generates 1 sample</li><li>Run Button : generates X sample..X can be set from the option below</li><li>Stop Button :Stops the sample generation</li><li>Reset Button : Resets all values</li></ul>" data-original-title="Controls"></i>
-						    </span>
-						  </div>
-						  <div id="speedSlider">
-						    <div>
-						      <span class="badge badge-warning">Animation Time: <span id="speedCount">400</span>ms</span>
-						    </div>
-						    <div id="speed"></div>
-						  </div>
-						  <div class="tool">
-						    <span>Generate</span><input type="text" id="countSize" class="input-small" value="1000"> <span>Samples with </span><input type="text" id="nSize" class="input-small" value="50"><span>Datapoint per sample.</span>
-						  </div>
-						  <div>
-						    <select id="variable" style="width:100px;margin-top:10px">
-						      <option value="slow">Mean</option>
-						      <option value="medium">S.D</option>
-						      <option value="fast">Percentile</option>
-						    </select>
-						    <span>
-						      <a href="#" class="btn btn-danger popups" rel="popover" data-content="This will create a plot of the variable for each generated sample. Click this once you have generated some samples!" data-original-title="Inference" id="infer">Infer!</a>
-						    </span>
-						  </div>
+							<div class="alert alert-error"><a class="close" data-dismiss="alert" href="#">x</a>Choose a experiment from "simulation drive" or enter data in the "data drive" first!</div>
 						</div>
 					</div><!--/slide-out-controller-->
 		  		</div><!--span8-->
@@ -501,6 +474,7 @@
 						Experiment=ballAndUrn;
 						//Initializing
 						//alert(Experiment);
+						view.clearAll();
 						Experiment.createControllerView();
 						Experiment.initialize();
 					});
@@ -628,7 +602,22 @@
 		  }
 		  return this;
 		};
+		
+		
+		var urlParams = {};
+(function () {
+    var match,
+        pl     = /\+/g,  // Regex for replacing addition symbol with a space
+        search = /([^&=]+)=?([^&]*)/g,
+        decode = function (s) { return decodeURIComponent(s.replace(pl, " ")); },
+        query  = window.location.search.substring(1);
 
+    while (match = search.exec(query))
+       urlParams[decode(match[1])] = decode(match[2]);
+})();
+
+	
+		//alert(urlParams.q);
 		}); //document ready function
 	}); //head.js ready function
 </script>

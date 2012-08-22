@@ -75,9 +75,10 @@ var appView = function(appModel){
 			
 			$('.contribution').on('click',function(){
 			console.log($(this).attr('id'));
-			console.log(model.getMeanOf($(this).attr('id')));
+			console.log("Mean of this sample:"+model.getMeanOf($(this).attr('id')));
 			$("#accordion").accordion( "activate" , 2);
 			console.log("dataset mean:"+model.getMeanOfDataset());
+			console.log("standard deviation:"+model.getStandardDevOf($(this).attr('id')));
 			
 			});
 	}
@@ -159,6 +160,7 @@ return{
 		$('#pagination').html('');
 		$('#details').html('');
 		$('#dataset').html('');
+		$("#input").inputtable('clear'); 
 		//also clear the canvas
 	},
 	
@@ -171,7 +173,7 @@ return{
 		var histogram = vis({
 			parent : '#dataPlot',
 			data : values,
-			range: [0,10]
+			range: [0,1]
 			})();
 		},
 		
@@ -350,18 +352,34 @@ return{
 	createDotplot:function(setting){
 		console.log('createDotplot invoked (dataDrivenView.js)');
 		$("#accordion").accordion( "activate" , 2);
+		// Function to get the Max value in Array
+			Array.max = function( array ){
+			return Math.max.apply( Math, array );
+			};
+
+			// Function to get the Min value in Array
+			Array.min = function( array ){
+			return Math.min.apply( Math, array );
+			};
 		//setting.variable;
-		var values = model.getMean();
+		if(setting.variable=='mean')
+			var values = model.getMean();
+		else if (setting.variable=='standardDev')
+			var values = model.getStandardDev();
+		else
+			var values = model.getPercentile();
 		//alert(values);
 		console.log("Mean Values:"+ values );
 		var meanDataset = model.getMeanOfDataset();
 		//var values = [4,2,3,4,1,5,6,7];
+		//var start=Array.min(values);
+		//var stop=Array.max(values);
 		//get the mean array
 		var histogram = vis({
 			parent : '#dotplot',
 			data : values,
 			height:390,
-			range: [0,10],
+			range: [0,1],
 			dataSetMean :meanDataset
 		})();
 	},

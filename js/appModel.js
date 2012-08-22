@@ -50,7 +50,7 @@ var appModel=function(){
 	/**
 	*@method: [private] _generateMean()
 	*@param:  sampleNumber - the random sample number for which the mean is to be calculated
-	*@desc:  returns a random number in the range [min,max]
+	*@desc: 
 	*@return: the calculated mean value
 	*/
 	function _generateMean(sampleNumber){
@@ -61,8 +61,30 @@ var appModel=function(){
 		//console.log("total :"+total);	
 		return total/x.length;
 	}
-	function _standardDev(){
-	;
+	
+	/**
+	*@method: [private] _standardDev()
+	*@param:  sampleNumber - the random sample number for which the mean is to be calculated
+	*@desc:  returns a random number in the range [min,max]
+	*@return: the calculated mean standard deviation
+	*/
+	function _standardDev(sampleNumber){
+		//get mean 
+		var _mean=_generateMean(sampleNumber);
+		var squaredTotal=0;
+		//calculate the square of each number
+		var x=bootstrapSamples[parseInt(sampleNumber)];
+		var _length=x.length;
+		for(var i=0;i<_length;i++) 
+			{ 
+			squaredTotal+= parseInt(x[i])*parseInt(x[i]); 
+			}
+			//console.log("Term1:"+squaredTotal/_length);
+			//console.log("Term2:"+_mean);
+		var y= Math.sqrt((squaredTotal/_length)-_mean);
+		console.log("Standard deviation:"+y);
+		return y;
+		
 	}
 	
 return{
@@ -158,7 +180,9 @@ return{
 		//console.log("total :"+total);	
 		return total/_dataset.length;
 	},
-	
+	getStandardDevOf:function(sampleNo){
+		return _standardDev(sampleNo);
+	},
 	/**
 	*   NOT USED ANYWHERE
 	*/

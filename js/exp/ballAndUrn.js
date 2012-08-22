@@ -30,12 +30,12 @@ function _selectBall(){
 			{
 			_ball[_count].ballColor = "red";
 			_y++;
-			_userReadableDataset[_count]="R";
+			_userReadableDataset[_count]="1";
 			}
 		else 
 			{
 			_ball[_count].ballColor = "green";
-			_userReadableDataset[_count]="G";
+			_userReadableDataset[_count]="0";
 			}
 		_dataset[_count]=_s[_count];
 		_ball[_count].setValue(_s[_count]);
@@ -171,7 +171,7 @@ return{
 	},
 	
 	getDataset:function(){
-		return _dataset;
+		return _userReadableDataset;
 	},
 	
 	getDatasetSize:function(){
