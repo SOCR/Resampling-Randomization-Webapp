@@ -221,7 +221,13 @@ return{
 				console.log('Simulation data is loaded now.');
 				return false;
 			}
-		else 
+			else if(input.type=='url')
+			{
+				_dataset=input.data.split(",");
+				console.log('Simulation data is loaded now.');
+				return false;
+			}
+		else
 			{
 			_dataset=[];			//emptying the array
 			console.log('Input Data :'+input.data);

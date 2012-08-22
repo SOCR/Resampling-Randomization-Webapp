@@ -25,9 +25,9 @@ function _tossCoin(){
 	if (_count < _n){
 		_dataset[_count]=_coin[_count].toss();
 		if(_dataset[_count]=='1')
-				_userReadableDataset[_count]='H';
+				_userReadableDataset[_count]='1';
 		else
-			_userReadableDataset[_count]='T';
+			_userReadableDataset[_count]='0';
 		_count++;
 	}
 	else{
