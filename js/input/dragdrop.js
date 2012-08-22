@@ -58,7 +58,7 @@ addEvent(drop, 'drop', function (e) {
   table.init({
     parent : '.dataTable'
   });
-  table.loadURL('data/icethickness.htm');
+  table.loadURL(e.dataTransfer.getData('Text'));
 
   /*
 
