@@ -1,7 +1,10 @@
 function vis(config){
 
  //Some default variables
- var rangeDefault = [0,10]
+ var rangeDefault = d3.extent( config.data );
+  console.log(rangeDefault)
+ rangeDefault[0] = 0;
+ console.log(rangeDefault)
 
     var defaults = {
       'range' : rangeDefault,
@@ -81,15 +84,17 @@ function vis(config){
         .attr('y',function(d){  return y(d.y) })
         .attr("height", function(d) { return height - y(d.y); });
 
+        console.log(x(data[0].dx))
+
         if(settings.dataSetMean){
 
         console.log('DataSet Mean '+ settings.dataSetMean);
 
           var meanbar = svg.append('rect')
                 .attr('x',function(){ return x(settings.dataSetMean) })
-                .attr('y',function(){ return 10;})
+                .attr('y',function(){ return 0;})
                 .attr('width', function(){ return 40;})
-                .attr('height',function(){ return height - 10;})
+                .attr('height',function(){ return height ;})
                 .attr('class','meanBar')
 
        

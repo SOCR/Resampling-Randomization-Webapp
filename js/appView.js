@@ -354,12 +354,12 @@ return{
 		console.log('createDotplot invoked (dataDrivenView.js)');
 		$("#accordion").accordion( "activate" , 2);
 		// Function to get the Max value in Array
-			Array.max = function( array ){
+			Array.prototype.max = function( array ){
 			return Math.max.apply( Math, array );
 			};
 
 			// Function to get the Min value in Array
-			Array.min = function( array ){
+			Array.prototype.min = function( array ){
 			return Math.min.apply( Math, array );
 			};
 		//setting.variable;
@@ -380,7 +380,7 @@ return{
 			parent : '#dotplot',
 			data : values,
 			height:390,
-			range: [0,1],
+			//range: [0,1],
 			dataSetMean :meanDataset
 		})();
 	},
