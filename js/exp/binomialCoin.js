@@ -66,6 +66,7 @@ return{
 	},
 
 	generate: function(){
+			
 		view.updateSimulationInfo();		//updates experiment info into third tile in the accordion
 		//_n=$("#nInput").val();
 		this.setVariable();

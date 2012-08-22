@@ -287,6 +287,7 @@ return{
 			var count=i;
 			var self = $("#device"+sampleNumber);	//reference to the device (i.e. coin , card, dice) canvas
 			var content=self.clone();				// make a copy of the sample canvas
+			self.addClass('removable');
 			currentX=$("#device"+sampleNumber+"-container").position().left; //get the X position of current sample canvas
 			console.log('currentX:'+currentX);
 			currentY=$("#device"+sampleNumber+"-container").position().top;  //get the Y position of current sample canvas

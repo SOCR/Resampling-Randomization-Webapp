@@ -209,6 +209,7 @@ return{
 		model.setN(nSize.val());				// save the datapoints size
 	    var keys=model.generateStep();				//generate one sample
 		view.updateCounter();					//update counter
+		$(".removable").remove();				//remove the previously generated canvas during animation
 		view.animate({
 		stopCount:$('#nSize').val(),
 		speed:$('#speed').val(),
