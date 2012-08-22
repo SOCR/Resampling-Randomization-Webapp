@@ -83,27 +83,7 @@ function vis(config){
 
         if(settings.dataSetMean){
 
-          /*
-
-            var data2 = d3.layout().histogram()(settings.dataSetMean);
-
-            var bar = svg.selectAll(".bar")
-              .data(data2)
-            .enter().append("g")
-
-              .attr("class", "meanBar");
-
-          bar.append("rect")
-              .attr("x", function(d,i){ return x(d.x); })
-              .attr("width", x(data2[0].dx) - 1)
-              .attr('y',height)    
-            .transition()
-            .delay( function(d,i){ return i*50; } )
-              .attr('y',function(d){  return y(10) })
-              .attr("height", function(d) { return height - y(10); });
-
-        */
-        console.log('DataSet MEan'+settings.dataSetMean);
+        console.log('DataSet Mean '+ settings.dataSetMean);
 
           var meanbar = svg.append('rect')
                 .attr('x',function(){ return x(settings.dataSetMean) })
