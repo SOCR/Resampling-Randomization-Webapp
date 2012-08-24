@@ -496,6 +496,10 @@
 				Experiment=binomialCoin;
 				Experiment.createControllerView();
 				Experiment.initialize();
+				if(inputSliderState!=0)
+					$(".input-handle").trigger("click");
+				if(controllerSliderState==0)
+					$(".controller-handle").trigger("click");
 			});
 			
 			/* Ball and Urn Experiment   */

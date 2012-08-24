@@ -46,7 +46,7 @@ var appView = function(appModel){
 			temp.push(_datapoints);
 			temp.push('</span>&nbsp;&nbsp;<a data-toggle="modal" href="#plot"><i class="icon-fullscreen plot" id="'+i+'"></i></a> &nbsp; <a href="#"><i class="icon-filter contribution" id="'+i+'"></i></a></span><pre>');
 			//alert(i+' :'+model.bootstrapSamples[i-1]);
-			temp.push(model.bootstrapSamples[i-1]);
+			temp.push(model.bootstrapSamples[i]);
 			temp.push('</pre></div>');
 			$('#sampleList').append(temp.join(''));
 			}
@@ -60,11 +60,16 @@ var appView = function(appModel){
 			var sampleID = $(this).parent().parent().find('span.values').filter(':eq(0)').text();
 
 			$('#plot').find('h3').text(' Sample : ' + sampleID);
-				vis({ 
+
+			console.log(values);
+
+				vis({
 					  parent : '.chart',
 			          data : values,
-			      	  height: 380,
-			          width: 500
+			       height: 380,
+			          width: 500,
+					  range:[0,10]
+
 		           })();
 			});
 			
@@ -245,7 +250,7 @@ return{
 	*/
 	createControllerView:function(){
 		$( "#amount" ).val( "$" + $( "#slider" ).slider( "value" ) );
-		var html='<div id="buttonPanel"><button class="btn" type="button" id="stepButton" tabindex="1" title="Step"><img src="img/step.png" alt="Step" title="Step" /> </button> <button class="btn btn-success" type="button" id="runButton" tabindex="2" title="Run" ><img id="runImage" src="img/run.png" alt="Run" title="Run" /></button><button class="btn btn-danger" type="button" id="stopButton" tabindex="3" title="Stop" ><img id="stopImage" src="img/stop.png" alt="Stop" title="Stop" /></button><button class="btn" type="button" id="resetButton" tabindex="4" title="Reset" ><img src="img/reset.png" alt="Reset" title="Reset" /></button><span><i class="icon-question-sign popups" rel="popover" data-content="<ul><li>Step Button : generates 1 sample</li><li>Run Button : generates X sample..X can be set from the option below</li><li>Stop Button :Stops the sample generation</li><li>Reset Button : Resets all values</li></ul>" data-original-title="Controls"></i></span>&nbsp;&nbsp;<button class="btn controller-back">Back</button></div><div id="speedSlider"><div><span class="badge badge-warning">Animation Time: <span id="speedCount">200</span>ms</span></div><div id="speed"></div></div><div class="tool"><span>Generate</span><input type="text" id="countSize" class="input-small" value="1000"> <span>Samples with </span><input type="text" id="nSize" class="input-small" value="50"><span>Datapoint per sample.</span></div><div><select id="variable" style="width:100px;margin-top:10px"><option value="slow">Mean</option><option value="medium">Standard Dev.</option><option value="fast">Percentile</option></select><span><a href="#" class="btn btn-danger popups" rel="popover" data-content="This will create a plot of the variable for each generated sample. Click this once you have generated some samples!" data-original-title="Inference" id="infer">Infer!</a></span></div>';
+		var html='<div id="buttonPanel"><button class="btn" type="button" id="stepButton" tabindex="1" title="Step"><img src="img/step.png" alt="Step" title="Step" /> </button> <button class="btn btn-success" type="button" id="runButton" tabindex="2" title="Run" ><img id="runImage" src="img/run.png" alt="Run" title="Run" /></button><button class="btn btn-danger" type="button" id="stopButton" tabindex="3" title="Stop" ><img id="stopImage" src="img/stop.png" alt="Stop" title="Stop" /></button><button class="btn" type="button" id="resetButton" tabindex="4" title="Reset" ><img src="img/reset.png" alt="Reset" title="Reset" /></button><span><i class="icon-question-sign popups" rel="popover" data-content="<ul><li>Step Button : generates 1 sample</li><li>Run Button : generates X sample..X can be set from the option below</li><li>Stop Button :Stops the sample generation</li><li>Reset Button : Resets all values</li></ul>" data-original-title="Controls"></i></span>&nbsp;&nbsp;<button class="btn controller-back">Back</button></div><div id="speedSlider"><div><span class="badge badge-warning">Animation Time: <span id="speedCount">200</span>ms</span></div><div id="speed"></div></div><div class="tool"><span>Generate</span><input type="text" id="countSize" class="input-small" value="1000"> <span>Samples with </span><input type="text" id="nSize" class="input-small" value="50"><span>Datapoint per sample.</span></div><div><select id="variable" style="width:100px;margin-top:10px"><option value="mean">Mean</option><option value="standardDev">Standard Dev.</option><option value="fast">Percentile</option></select><span><a href="#" class="btn btn-danger popups" rel="popover" data-content="This will create a plot of the variable for each generated sample. Click this once you have generated some samples!" data-original-title="Inference" id="infer">Infer!</a></span></div>';
 		$('#controller-content').html(html);
 		$( "#speed" ).slider({
 			value:400,
@@ -349,17 +354,36 @@ return{
 		console.log('createDotplot invoked (dataDrivenView.js)');
 		$("#accordion").accordion( "activate" , 2);
 		// Function to get the Max value in Array
-			
+			Array.max = function( array ){
+			return Math.max.apply( Math, array );
+			};
+
+			// Function to get the Min value in Array
+			Array.min = function( array ){
+			return Math.min.apply( Math, array );
+			};
 		//setting.variable;
 		if(setting.variable=='mean')
+			{
 			var values = model.getMean();
+			var datum = model.getMeanOfDataset();
+			console.log("Mean Values:"+ values );
+			
+			}
 		else if (setting.variable=='standardDev')
+			{
 			var values = model.getStandardDev();
+			var datum=model.getSdOfDataset();
+			console.log("SD Values:"+ values );
+			}
 		else
+			{
 			var values = model.getPercentile();
+			//var datum=model.getSdOfDataset();
+			}
 		//alert(values);
-		console.log("Mean Values:"+ values );
-		var meanDataset = model.getMeanOfDataset();
+		
+		
 		//var values = [4,2,3,4,1,5,6,7];
 		//var start=Array.min(values);
 		//var stop=Array.max(values);
@@ -368,8 +392,8 @@ return{
 			parent : '#dotplot',
 			data : values,
 			height:390,
-			//range: [0,1],
-			dataSetMean :meanDataset
+			range: [0,1],
+			dataSetMean :datum
 		})();
 	},
 	

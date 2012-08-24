@@ -282,7 +282,8 @@ return{
 	$('#dotplot').html('');
 	//create dotplot
 	console.log("setdotplot started");
-	view.createDotplot({variable:'mean'});
+	console.log("variable:"+$('#variable').val());
+	view.createDotplot({variable:$('#variable').val()});
 	//focus on dotplot
 	//$('#dotplot').addclass('ui-state-active');
 	//$('#dotplot').addclass('ui-state-active');

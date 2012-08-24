@@ -71,6 +71,8 @@ var appModel=function(){
 	function _standardDev(sampleNumber){
 		//get mean 
 		var _mean=_generateMean(sampleNumber);
+		
+		/*
 		var squaredTotal=0;
 		//calculate the square of each number
 		var x=bootstrapSamples[parseInt(sampleNumber)];
@@ -82,8 +84,10 @@ var appModel=function(){
 			//console.log("Term1:"+squaredTotal/_length);
 			//console.log("Term2:"+_mean);
 		var y= Math.sqrt((squaredTotal/_length)-_mean);
-		console.log("Standard deviation:"+y);
-		return y;
+		*/
+		var sd=Math.sqrt(_mean*(1-_mean));
+		//console.log("Standard deviation:"+sd);
+		return sd;
 		
 	}
 	
@@ -183,6 +187,23 @@ return{
 	getStandardDevOf:function(sampleNo){
 		return _standardDev(sampleNo);
 	},
+	getSdOfDataset:function(){
+		var _mean=this.getMeanOfDataset();
+		//var total=0;
+		var _sd=_mean*(1-_mean);
+		console.log("dataset SD:"+_sd);
+		return _sd;
+	},
+	getStandardDev:function(){
+	var _sampleStandardDev=[];
+	for(var j=0;j<_count;j++)
+			{
+			_sampleStandardDev[j]=_standardDev(j);
+			//console.log(_sampleMean[j]);
+			}
+			return _sampleStandardDev;
+			
+		},
 	/**
 	*   NOT USED ANYWHERE
 	*/
