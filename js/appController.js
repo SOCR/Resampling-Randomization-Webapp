@@ -71,6 +71,12 @@ return{
 		});
 		$("#infer").on('click',function(){
 		_this.setDotplot();
+		$("#percentile-div").css('display','');
+		});
+		$("#percentile").on('click',function(){
+		//alert("value"+$("#percentile-value-display").html());
+		view.setPercentile($("#percentile-value-display").html());
+		//$("#percentile-div").css('display','');
 		});
 		$("#doneButton").on('click',function(){
 		console.log('Done Pressed');
