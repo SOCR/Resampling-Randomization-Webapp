@@ -132,18 +132,20 @@ return{
      * Disables step,run and show buttons
     */
 	disableButtons:function(){
-		stepButton.attr('disabled',"true"); 
-		runButton.attr('disabled',"true");
-		showButton.attr('disabled',"true");
+		console.log("disableButtons invoked");
+		$("#stepButton").attr('disabled',"true"); 
+		$("#runButton").attr('disabled',"true");
+		$("#showButton").attr('disabled',"true");
 	},
 	
 	/**
      * Disables step,run and show buttons
     */
 	enableButtons:function(){
-		stepButton.removeAttr('disabled'); 
-		runButton.removeAttr('disabled');
-		showButton.removeAttr('disabled');
+		console.log("enableButtons invoked");
+		$("#stepButton").removeAttr('disabled'); 
+		$("#runButton").removeAttr('disabled'); 
+		$("#showButton").removeAttr('disabled'); 
 	},
 	
 	/**
@@ -191,6 +193,9 @@ return{
 			}
 		
 		else{
+			$("#sampleList").height($(window).innerHeight());
+			alert($(window).innerHeight());
+			alert($(document).innerHeight());
 			var range=x.split('-');
 			if((range[1]-range[0])<500)
 				{	
@@ -274,6 +279,8 @@ return{
 	*@return : none
 	*/
 	animate:function(setting){
+		this.disableButtons();
+		//disable the back button in the controller tile
 		var data=Experiment.getDataset();		// data is in the form of an array!
 		var stopCount=setting.stopCount;		// Number of datapoints in a generated random sample
 		var keys=setting.keys;					// keys=array indexs of the datapoints in the dataset which are present in the current random sample 
@@ -342,38 +349,41 @@ return{
 				i=i+1;
 				if(i<stopCount)
 					setTimeout(animation,speed);
+				else
+					{
+						view.enableButtons();
+						console.log("enableButtons() invoked");
+					}
 		}
 	},
 	
 	/**
 	*@method: createDotPlot
-	*@description: Dot plot section in the accordion is populated by this call. call invoked when "infer" button pressed in the controller div.
+	*@description: Dot plot tab in the accordion is populated by this call. call invoked when "infer" button pressed in the controller tile.
 	*@return : none
 	*/
 	createDotplot:function(setting){
-		console.log('createDotplot invoked (dataDrivenView.js)');
-		$("#accordion").accordion( "activate" , 2);
+		console.log('createDotplot invoked (View.js)');
+		$("#accordion").accordion( "activate" , 2);		//activate the dotplot accordion tab
 		// Function to get the Max value in Array
-			Array.max = function( array ){
+		Array.max = function( array ){
 			return Math.max.apply( Math, array );
-			};
-
-			// Function to get the Min value in Array
-			Array.min = function( array ){
+		};
+		// Function to get the Min value in Array
+		Array.min = function( array ){
 			return Math.min.apply( Math, array );
-			};
+		};
 		//setting.variable;
 		if(setting.variable=='mean')
 			{
-			var values = model.getMean();
-			var datum = model.getMeanOfDataset();
-			console.log("Mean Values:"+ values );
-			
+			var values = model.getMean();			//Mean values of all the generated random samples
+			var datum = model.getMeanOfDataset();	//datum is the dataset mean value
+			console.log("Mean Values:"+ values );	
 			}
 		else if (setting.variable=='standardDev')
 			{
-			var values = model.getStandardDev();
-			var datum=model.getSdOfDataset();
+			var values = model.getStandardDev();	//Standard deviation values of all the generated random samples
+			var datum=model.getSdOfDataset();		//datum is the dataset SD value
 			console.log("SD Values:"+ values );
 			}
 		else
@@ -381,25 +391,22 @@ return{
 			var values = model.getPercentile();
 			//var datum=model.getSdOfDataset();
 			}
-		//alert(values);
-		
-		
+			
 		//var values = [4,2,3,4,1,5,6,7];
 		//var start=Array.min(values);
 		//var stop=Array.max(values);
-		//get the mean array
 		var histogram = vis({
 			parent : '#dotplot',
 			data : values,
 			height:390,
 			range: [0,1],
-			dataSetMean :datum
+			dataSetMean :datum				//*** @ASHWINI - change the dataSetMean variable to somethingelse like datum or something generic 
 		})();
 	},
 	
 	/**
 	*@method: updateSimulationInfo
-	*@description: Called when the 'step button' is pressed in the controller div. Call is made in dataDrivenController.js
+	*@description: Called when the 'step button' is pressed in the controller tile. Call is made in appController.js
 	*@return : none
 	*/
 	updateSimulationInfo:function(){
@@ -407,11 +414,15 @@ return{
 		var array=['<table class="table table-striped">'];
 		array.push('<tr><td>Experiment Name</td><td><strong>'+Experiment.name+'</strong></td></tr>');
 		t=new Date();
-		array.push('<tr><td>Start Time </td><td><strong>'+t.getTime()+'</strong></td></tr>');
+		//array.push('<tr><td>Start Time </td><td><strong>'+t.getTime()+'</strong></td></tr>');
 		array.push('<tr><td>DataSet Size </td><td><strong>'+Experiment.getDatasetSize()+'</strong></td></tr>');
-		//array.push('<tr><td>Number of Random Samples : </td><td><strong>'+model.bootstrapSamples+'</strong></td></tr>');
+		array.push('<tr><td>Number of Random Samples : </td><td><strong>'+model.bootstrapSamples.length+'</strong></td></tr>');
+		array.push('<tr><td>DataSet Mean : </td><td><strong>'+model.getMeanOfDataset()+'</strong></td></tr>');
+		array.push('<tr><td>DataSet Standard Deviation: </td><td><strong>'+model.getSdOfDataset()+'</strong></td></tr>');
 		array.push('</table>');
+		console.log("no of samples "+model.bootstrapSamples.length);
 		$('#details').html(array.join(''));
+		//ADD NUMBER OF RANDOM SAMPLES GENERATED , DATASET MEAN ,SD
 	},
 	
 	/**

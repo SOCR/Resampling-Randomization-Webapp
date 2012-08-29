@@ -515,6 +515,10 @@
 						view.clearAll();
 						Experiment.createControllerView();
 						Experiment.initialize();
+						if(inputSliderState!=0)
+					$(".input-handle").trigger("click");
+				if(controllerSliderState==0)
+					$(".controller-handle").trigger("click");
 					});
 					  //head.js("js/exp/ballAndUrn.js");          //loading the Ball and Urn Script
 					expLoaded.push('ballAndUrn');   //Making a entry in the array of loaded experiment scripts

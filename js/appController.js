@@ -200,6 +200,7 @@ return{
 	},
 	
 	step: function(){
+		$("#accordion").accordion( "activate" , 1);
 		if(controllerSliderState==1)
 				{
 				console.log("controllerSliderState:"+controllerSliderState);
@@ -215,8 +216,9 @@ return{
 		speed:$('#speed').val(),
 		keys:keys
 		});						//show sample generation animation
-		view.enableButtons();					//enabling buttons
+		//view.enableButtons();					//enabling buttons
 		view.updateSlider();					//update slider count
+		view.updateSimulationInfo();
 	},
 
 	run:function(){
@@ -232,6 +234,7 @@ return{
 		_generate();
 		_id=setInterval(_generate,0);
 		//this.stop();
+		view.updateSimulationInfo();
 	},
 	
 	stop:function(){
