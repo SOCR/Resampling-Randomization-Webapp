@@ -255,7 +255,7 @@ return{
 	*/
 	createControllerView:function(){
 		$( "#amount" ).val( "$" + $( "#slider" ).slider( "value" ) );
-		var html='<div id="buttonPanel"><button class="btn" type="button" id="stepButton" tabindex="1" title="Step"><img src="img/step.png" alt="Step" title="Step" /> </button> <button class="btn btn-success" type="button" id="runButton" tabindex="2" title="Run" ><img id="runImage" src="img/run.png" alt="Run" title="Run" /></button><button class="btn btn-danger" type="button" id="stopButton" tabindex="3" title="Stop" ><img id="stopImage" src="img/stop.png" alt="Stop" title="Stop" /></button><button class="btn" type="button" id="resetButton" tabindex="4" title="Reset" ><img src="img/reset.png" alt="Reset" title="Reset" /></button><span><i class="icon-question-sign popups" rel="popover" data-content="<ul><li>Step Button : generates 1 sample</li><li>Run Button : generates X sample..X can be set from the option below</li><li>Stop Button :Stops the sample generation</li><li>Reset Button : Resets all values</li></ul>" data-original-title="Controls"></i></span>&nbsp;&nbsp;<button class="btn controller-back">Back</button></div><div id="speedSlider"><div><span class="badge badge-warning">Animation Time: <span id="speedCount">200</span>ms</span></div><div id="speed"></div></div><div class="tool"><span>Generate</span><input type="text" id="countSize" class="input-small" value="1000"> <span>Samples with </span><input type="text" id="nSize" class="input-small" value="50"><span>Datapoint per sample.</span></div><div><select id="variable" style="width:100px;margin-top:10px"><option value="mean">Mean</option><option value="standardDev">Standard Dev.</option><option value="fast">Percentile</option></select><span><a href="#" class="btn btn-danger popups" rel="popover" data-content="This will create a plot of the variable for each generated sample. Click this once you have generated some samples!" data-original-title="Inference" id="infer">Infer!</a></span></div>';
+		var html='<div id="buttonPanel"><button class="btn" type="button" id="stepButton" tabindex="1" title="Step"><img src="img/step.png" alt="Step" title="Step" /> </button> <button class="btn btn-success" type="button" id="runButton" tabindex="2" title="Run" ><img id="runImage" src="img/run.png" alt="Run" title="Run" /></button><button class="btn btn-danger" type="button" id="stopButton" tabindex="3" title="Stop" ><img id="stopImage" src="img/stop.png" alt="Stop" title="Stop" /></button><button class="btn" type="button" id="resetButton" tabindex="4" title="Reset" ><img src="img/reset.png" alt="Reset" title="Reset" /></button><span><i class="icon-question-sign popups" rel="popover" data-content="<ul><li>Step Button : generates 1 sample</li><li>Run Button : generates X sample..X can be set from the option below</li><li>Stop Button :Stops the sample generation</li><li>Reset Button : Resets all values</li></ul>" data-original-title="Controls"></i></span>&nbsp;&nbsp;<button class="btn controller-back">Back</button></div><div id="speedSlider"><div><span class="badge badge-warning">Animation Time: <span id="speedCount">200</span>ms</span></div><div id="speed"></div></div><div class="tool"><span>Generate</span><input type="text" id="countSize" class="input-small" value="1000"> <span>Samples with </span><input type="text" id="nSize" class="input-small" value="50"><span>Datapoint per sample.</span></div><div><select id="variable" style="width:100px;margin-top:10px"><option value="mean">Mean</option><option value="count">Count</option><option value="standardDev">Standard Dev.</option><option value="fast">Percentile</option></select><span><a href="#" class="btn btn-danger popups" rel="popover" data-content="This will create a plot of the variable for each generated sample. Click this once you have generated some samples!" data-original-title="Inference" id="infer">Infer!</a></span></div>';
 		$('#controller-content').html(html);
 		$( "#speed" ).slider({
 			value:400,
@@ -386,6 +386,12 @@ return{
 			var datum=model.getSdOfDataset();		//datum is the dataset SD value
 			console.log("SD Values:"+ values );
 			}
+		else if (setting.variable=='count')
+			{
+			var values = model.getCounts();	//Standard deviation values of all the generated random samples
+			var datum=model.getCountOfDataset();		//datum is the dataset SD value
+			console.log("Count Values:"+ values );
+			}
 		else
 			{
 			var values = model.getPercentile();
@@ -393,13 +399,14 @@ return{
 			}
 			
 		//var values = [4,2,3,4,1,5,6,7];
-		//var start=Array.min(values);
-		//var stop=Array.max(values);
+		var start=Math.floor(Array.min(values));
+		var stop=Math.ceil(Array.max(values));
+		console.log("start"+start+"stop"+stop);
 		var histogram = vis({
 			parent : '#dotplot',
 			data : values,
 			height:390,
-			range: [0,1],
+			range: [0,stop],
 			dataSetMean :datum				//*** @ASHWINI - change the dataSetMean variable to somethingelse like datum or something generic 
 		})();
 	},

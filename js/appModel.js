@@ -54,12 +54,17 @@ var appModel=function(){
 	*@return: the calculated mean value
 	*/
 	function _generateMean(sampleNumber){
+		var total=_generateCount(sampleNumber);
+		//console.log("total :"+total);	
+		return total/bootstrapSamples[sampleNumber].length;
+	}
+	
+	function _generateCount(sampleNumber){
 		var x=bootstrapSamples[parseInt(sampleNumber)];
 		var total=0;
 		for(var i=0;i<x.length;i++) 
 			{ total += parseInt(x[i]); }
-		//console.log("total :"+total);	
-		return total/x.length;
+		return total;
 	}
 	
 	/**
@@ -174,8 +179,8 @@ return{
 	*@desc:  executed when the user presses "infer" button in the controller tile. The click binding of the step button is done in the {experiment}.js
 	*@dependencies: generateTrail()
 	*/	
-	getMeanOf:function(sampleNo){
-		return _generateMean(sampleNo);
+	getMeanOf:function(sampleNumber){
+		return _generateMean(sampleNumber);
 	},
 	getMeanOfDataset:function(){
 		var total=0;
@@ -184,16 +189,7 @@ return{
 		//console.log("total :"+total);	
 		return total/_dataset.length;
 	},
-	getStandardDevOf:function(sampleNo){
-		return _standardDev(sampleNo);
-	},
-	getSdOfDataset:function(){
-		var _mean=this.getMeanOfDataset();
-		//var total=0;
-		var _sd=_mean*(1-_mean);
-		console.log("dataset SD:"+_sd);
-		return _sd;
-	},
+	
 	getStandardDev:function(){
 	var _sampleStandardDev=[];
 	for(var j=0;j<_count;j++)
@@ -203,7 +199,42 @@ return{
 			}
 			return _sampleStandardDev;
 			
-		},
+	},
+	getStandardDevOf:function(sampleNo){
+		return _standardDev(sampleNo);
+	},
+	
+	getSdOfDataset:function(){
+		var _mean=this.getMeanOfDataset();
+		//var total=0;
+		var _sd=_mean*(1-_mean);
+		console.log("dataset SD:"+_sd);
+		return _sd;
+	},
+	getCounts:function(){
+		console.log("getCount() invoked");
+		var _sampleCount=[];
+		for(var j=0;j<_count;j++)
+			{
+			_sampleCount[j]=_generateCount(j);
+			console.log(_sampleCount[j]);
+			}
+			return _sampleCount;
+		
+	},
+	
+	getCountOf:function(sampleNumber){
+		return _generateCount(sampleNumber);
+	},
+	getCountOfDataset:function(){
+		var total=0;
+		for(var i=0;i<_dataset.length;i++) 
+			{ total += parseInt(_dataset[i]); }
+		//console.log("total :"+total);	
+		return total;
+	},
+	
+	
 	/**
 	*   NOT USED ANYWHERE
 	*/

@@ -100,6 +100,19 @@ return{
 					}
 				}
 			}); 
+		$('#tweetbox').jTweetsAnywhere({
+			showTweetBox:{
+				counter: true,
+				width: 380,
+				height: 65,
+				label: '<span style="color: #A4A4A4">Post your doubts here!</span>',
+				defaultContent: '#simulation #socr',
+				onTweet: function(textTweet, htmlTweet){
+					alert('You tweeted: ' + textTweet);
+				}
+			}
+		});
+
 		
 			$('#inputEditButton').on('click',function(){
 				$('#accordion').accordion( "activate" , 0);
