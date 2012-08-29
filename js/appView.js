@@ -229,8 +229,8 @@ return{
 		
 		else{
 			$("#sampleList").height($(window).innerHeight());
-			alert($(window).innerHeight());
-			alert($(document).innerHeight());
+			//alert($(window).innerHeight());
+			//alert($(document).innerHeight());
 			var range=x.split('-');
 			if((range[1]-range[0])<500)
 				{	
