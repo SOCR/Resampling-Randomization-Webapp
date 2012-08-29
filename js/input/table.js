@@ -158,6 +158,17 @@ var table = function () {
 			$(parent).html('Loading ...')
 		},
 		loadURL :  function ( url ){	
+
+			var requestHost = document.createElement("a");
+   				requestHost.href = url;
+
+   				if(window.location.hostname !== requestHost.hostname){
+   					$(controls).html('');
+   					$(parent).html('<div class="alert alert-danger">Data Sets should be on same server</div>');
+   					return;
+
+   				}
+
 			request( url, parent );
 			$(parent).html('')
 			$(parent).find('input:eq(1)').val( getMatrixsize )
