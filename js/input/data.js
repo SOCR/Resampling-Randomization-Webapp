@@ -85,9 +85,15 @@
                         }
                     });
 			}); //Reset click
+			
+			$('section.controls #submatrix_spreadsheet').on('click',function(){
+					var start = $('section.controls').find('input[name="start"]').val(),
+			 			end =   $('section.controls').find('input[name="end"]').val();
+			 			console.log($('#input').inputtable('getDataFromCoords',start,end))
+			 		})
 		
 		/*
-			Commenting out the protype as it was interfering with drag and drop table, will look into it later
+			Commenting out the prototype as it was interfering with drag and drop table, will look into it later
 			
 			Array.prototype.clean = function(deleteValue) {
 			  for (var i = 0; i < this.length; i++) {

@@ -2249,7 +2249,7 @@
       }
     };
 
-    /**
+  /**
   * Returns array containing selected data
   * @public
   */  
@@ -2270,6 +2270,34 @@
     }
     return box;
   };
+  /*
+    Returns the submatrix of data with the extremities of data coordinates
+    @public
+
+  */
+
+  this.getDataFromCoords = function(start,stop){
+    var coords = [];
+
+        var startArray = start.split(',');
+        var stopArray = stop.split(',');
+        var coords = startArray.concat(stopArray);
+      
+
+     var box = new Array(coords[2]-coords[0]+1);
+    for(var iii = 0; iii < box.length; iii++) {
+      box[iii] = new Array(coords[3] - coords[1] + 1);
+    }
+    for(var iii = coords[0]; iii <= coords[2]; iii++) {
+      for(var jjj = coords[1]; jjj <= coords[3]; jjj++) {
+
+        box[iii-coords[0]][jjj-coords[1]] = datamap.data[iii][jjj];
+
+      }
+    }
+    return box;
+
+  }
 
     /**
      * Load data from array

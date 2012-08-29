@@ -214,6 +214,10 @@ section.datadriven-wrap .controls{
 section.datadriven-wrap .controls .status{
 	display:none;
 }
+section.datadriven-wrap .controls input[type="text"]{
+	height: 14px;
+	margin:0px;
+}
 section.datadriven-wrap .spreadsheet{
 	margin-top: 30px;
 	overflow: auto;
