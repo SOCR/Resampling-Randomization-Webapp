@@ -8,7 +8,7 @@ var table = function () {
 					.attr('type','text').val(''),
 		matrix = [],
 		lastEdit ='',
-		parent = '.dataTable';
+		parent = 'section.droptable';
 		controls = '.input-controls' // By default need to work on them later
 
 	var request = function ( uri,parent ){
@@ -29,6 +29,7 @@ var table = function () {
 	 				.prepend(titlesToHTML(titles))
 
 
+
 	 			);
 
 	 	});
@@ -38,9 +39,9 @@ var table = function () {
 
 	var insertData = function( html ){
 			//Remove all obligatory posts from before
-
-	 			$(controls).html( html );
-	 			var control = '<div class="input-controls"> Range : <input type="text" name="start" class="input-mini" placeholder="start"> - <input type="text" name="end" class="input-mini" placeholder="end">  <div> <input type="button" class="btn" value="Generate submatrix" id="submatrix"> <input type="button" value="Done Editing" class="btn" id="generateMatrix"></div></div>';
+			console.log($(parent))
+	 			$(parent).html( html );
+	 			var control = '<div class="input-controls"> Range : <input type="text" name="start" class="input-mini" placeholder="start"> - <input type="text" name="end" class="input-mini" placeholder="end">  <div> <input type="button" class="btn" value="Generate submatrix" id="submatrix"> <input type="button" value="Use entire matrix" class="btn" id="generateMatrix"></div></div>';
 	 			$(controls).prepend(control);
 	}
 	var parseHeadings = function( html ){

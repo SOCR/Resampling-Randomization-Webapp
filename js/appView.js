@@ -52,33 +52,68 @@ var appView = function(appModel){
 			}
 		$('.plot').on('click',function(){
 			$('.chart').html('');
-			//var values=model.bootstrapSamples[$(this).attr('id')];
-			//var values=[1,2,3];
-			//alert(values);
-			//$('.vis').find('h3').html('Sample No. ' + sampleID );
+		
 			var values = $(this).parent().parent().find('pre').text().split(',');
 			var sampleID = $(this).parent().parent().find('span.values').filter(':eq(0)').text();
 
 			$('#plot').find('h3').text(' Sample : ' + sampleID);
 
-			console.log(values);
-
 				vis({
 					  parent : '.chart',
 			          data : values,
-			       height: 380,
+			      	  height: 380,
 			          width: 500,
-					  range:[0,10]
+					//  range:[0,10]
 
 		           })();
 			});
 			
 			$('.contribution').on('click',function(){
-			console.log($(this).attr('id'));
+			
 			console.log("Mean of this sample:"+model.getMeanOf($(this).attr('id')));
 			$("#accordion").accordion( "activate" , 2);
 			console.log("dataset mean:"+model.getMeanOfDataset());
-			console.log("standard deviation:"+model.getStandardDevOf($(this).attr('id')));
+			console.log("standard deviation:"+ model.getStandardDevOf($(this).attr('id')));
+			$('#dotplot').html('');
+			createDotplot({
+				variable : 'mean',
+				sample : {
+					mean : model.getMeanOf($(this).attr('id')),
+					meanDataset : model.getMeanOfDataset(),
+					standardDev : model.getStandardDevOf($(this).attr('id'))
+				}
+			});
+
+			function createDotplot(setting){	
+					if(setting.variable=='mean')
+					{
+					var values = model.getMean();
+					var datum = model.getMeanOfDataset();
+					console.log("Mean Values:"+ values );
+					
+					}
+				else if (setting.variable=='standardDev')
+					{
+					var values = model.getStandardDev();
+					var datum=model.getSdOfDataset();
+					console.log("SD Values:"+ values );
+					}
+				else
+					{
+					var values = model.getPercentile();
+					//var datum=model.getSdOfDataset();
+					}
+				var histogram = vis({
+					parent : '#dotplot',
+					data : values,
+					height:390,
+					range: [0,1],
+					dataSetMean :datum,
+					sample : setting.sample
+				})();
+			}
+				var html = '<div> Mean of Sample :'+ model.getMeanOf($(this).attr('id')) +' Mean of DataSet : '+ model.getMeanOfDataset() +' Standard Deviation :'+ model.getStandardDevOf($(this).attr('id')) +'</div>';
+				$('#accordion').append(html)
 			
 			});
 	}
@@ -363,8 +398,9 @@ return{
 	*@return : none
 	*/
 	createDotplot:function(setting){
-		console.log('createDotplot invoked (View.js)');
-		$("#accordion").accordion( "activate" , 2);		//activate the dotplot accordion tab
+
+		$("#accordion").accordion( "activate" , 2);
+
 		// Function to get the Max value in Array
 		Array.max = function( array ){
 			return Math.max.apply( Math, array );
@@ -402,6 +438,7 @@ return{
 		var start=Math.floor(Array.min(values));
 		var stop=Math.ceil(Array.max(values));
 		console.log("start"+start+"stop"+stop);
+
 		var histogram = vis({
 			parent : '#dotplot',
 			data : values,

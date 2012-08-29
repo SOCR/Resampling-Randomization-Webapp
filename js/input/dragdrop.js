@@ -46,7 +46,7 @@ var drop = document.querySelector('#drop');
 // Tells the browser that we *can* drop on this target
 addEvent(drop, 'dragover', cancel);
 addEvent(drop, 'dragenter', function(e){
- console.log(e);
+ $(drop).addClass('active');
 });
 addEvent(drop, 'drop', function (e) {
   if (e.preventDefault) e.preventDefault(); // stops the browser from redirecting off to the text.
@@ -56,7 +56,7 @@ addEvent(drop, 'drop', function (e) {
   console.log('Start fetching information for ' + e.dataTransfer.getData('Text'));
   
   table.init({
-    parent : '.dataTable'
+    parent : 'section.droptable'
   });
   table.loadURL(e.dataTransfer.getData('Text'));
  
