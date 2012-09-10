@@ -14,7 +14,8 @@ var  _n = 10;					//Number of balls to be drawn in one sample
 var  _N = 50;					//Max number of balls that can be drawn in one sample --> max(_n)=_N.
 var _y;
 var _count;						//keeps count of number of balls drawn
-var _dataset=[];
+var _keys=[];
+var _values=[];
 var _userReadableDataset=[];
 var _width='30';
 var _height='30';
@@ -30,19 +31,21 @@ function _selectBall(){
 			{
 			_ball[_count].ballColor = "red";
 			_y++;
-			_userReadableDataset[_count]="1";
+			//_userReadableDataset[_count]="R";
+			_values[_count]="1";
 			}
 		else 
 			{
 			_ball[_count].ballColor = "green";
-			_userReadableDataset[_count]="0";
+			//_userReadableDataset[_count]="G";
+			_values[_count]="0";
 			}
-		_dataset[_count]=_s[_count];
-		_ball[_count].setValue(_s[_count]);
+		_keys[_count]=_s[_count];
+		_ball[_count].setValue(_keys[_count],_values[_count]);
 		_count++;
 	}
 	else{
-		view.loadInputSheet(_userReadableDataset);
+		view.loadInputSheet(_values);
 		//process the _dataset and convert it into a human readable sample space (example instead of 0 and 1 show tail and head)
 		_self.reset();
 	}
@@ -135,7 +138,7 @@ return{
 	},
 
 	createControllerView:function(){
-	console.log("createControllerView for CardExp executed!");
+	console.log("createControllerView for Ball and Urn executed!");
 	var html='<p class="toolbar"><p class="tool"><span id="nLabel" class="badge badge-warning" for="nInput">Draw N Balls = </span><span id="nvalue"></span><input id="nInput" type="range" tabindex="7" class="parameter"/></p><p class="tool"><span id="mLabel" class="badge badge-warning" for="pInput">Total M Balls = </span><span id="mvalue"></span><input id="mInput" type="range" tabindex="8" class="parameter"/></p><p class="tool"><span id="rLabel" class="badge badge-warning" for="rInput">Red Balls = </span><span id="rvalue"></span><input id="rInput" type="range" tabindex="8" class="parameter"/></p><p class="tool"><input type="checkbox" tabindex="7" id="type"><span for="replaceCheck">With replacement</span></p></p><button class="btn" id="sdbutton">Generate DataSet!</button>&nbsp;<button class="btn btn-danger" id="grsbutton">Generate Random Samples!</button>';
 		$('#controller-content').html(html);
 	},
@@ -171,7 +174,13 @@ return{
 	},
 	
 	getDataset:function(){
-		return _userReadableDataset;
+		return _keys;
+	},
+	getDatasetKeys:function(){
+		return _keys;
+	},
+	getDatasetValues:function(){
+		return _values;
 	},
 	
 	getDatasetSize:function(){
@@ -180,13 +189,6 @@ return{
 	
 	getSampleHW:function(){
 	return {"height":_height,"width":_width};
-	},
-	
-	getCalculationDataset:function(){
-	return _dataset;
-	},
-	getUserReadableDataset:function(){
-	return _userReadableDataset;
 	}
 
 

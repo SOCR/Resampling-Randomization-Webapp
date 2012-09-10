@@ -35,11 +35,8 @@
 		console.log("view cleared");
 	    model.reset();
 		console.log("model reset");
-		
-		
-            controller.loadController('simulationDriven');
-	    
-	}
+		controller.loadController('simulationDriven');
+	    }
 		
     };
 })(jQuery);

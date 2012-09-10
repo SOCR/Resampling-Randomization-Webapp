@@ -407,6 +407,7 @@
             "js/bootstrap/bootstrap-typeahead.js",
 			{coreFunctions:"js/exp/core.js"},
 			{binomialCoin:"js/exp/binomialCoin.js"},
+			{ballAndUrn:"js/exp/ballAndUrn.js"},
 			{cardExp:"js/exp/cardExp.js"},
             {inputTile:"js/input/inputtable.js"},
             {InputTile:"js/input/script.js"},
@@ -505,21 +506,21 @@
 				}
 			});//controller-handle click		
 		
-		$( "#speed" ).slider({
-			value:400,
-			min: 200,
-			max: 2000,
-			step: 50,
-			slide: function( event, ui ) {
-			$( "#speedCount" ).html( ui.value );
-			}
-		});
+			$( "#speed" ).slider({
+				value:400,
+				min: 200,
+				max: 2000,
+				step: 50,
+				slide: function( event, ui ) {
+				$( "#speedCount" ).html( ui.value );
+				}
+			});
 			/* Array while holds the list of exp.js files already loaded*/    
 			var expLoaded=['binomialCoin'];
 			Experiment=binomialCoin;
 			
 			$('#binomialCoin').click(function(){
-			$('.current-experiment').html('Binomial Coin Toss');
+				$('.current-experiment').html('Binomial Coin Toss');
 				Experiment=binomialCoin;
 				Experiment.createControllerView();
 				Experiment.initialize();
@@ -535,20 +536,26 @@
 				if($.inArray('ballAndUrn', expLoaded)==-1)      //check whether the experiment script is already loaded
 				{
 					$.getScript(baseUrl+"js/exp/ballAndUrn.js",function(){
-						console.log('file has loaded!');
+						console.log('ballAndUrn.js file has loaded!');
 						Experiment=ballAndUrn;
 						//Initializing
-						//alert(Experiment);
 						view.clearAll();
 						Experiment.createControllerView();
 						Experiment.initialize();
 						if(inputSliderState!=0)
-					$(".input-handle").trigger("click");
-				if(controllerSliderState==0)
-					$(".controller-handle").trigger("click");
+							$(".input-handle").trigger("click");
+						if(controllerSliderState==0)
+							$(".controller-handle").trigger("click");
 					});
 					  //head.js("js/exp/ballAndUrn.js");          //loading the Ball and Urn Script
 					expLoaded.push('ballAndUrn');   //Making a entry in the array of loaded experiment scripts
+				}
+				else
+				{
+					Experiment=ballAndUrn;
+						//Initializing
+					Experiment.createControllerView();
+					Experiment.initialize();
 				}
 			});
 			
@@ -558,11 +565,15 @@
 				if($.inArray('cardExp', expLoaded)==-1)      //check whether the experiment script is already loaded
 				{
 					$.getScript(baseUrl+"js/exp/cardExp.js",function(){
-						console.log('Card Experiment is loaded!');
+						console.log('cardExp.js file is loaded!');
 						Experiment=cardExp;
 						//Initializing
 						Experiment.createControllerView();
 						Experiment.initialize();
+						if(inputSliderState!=0)
+							$(".input-handle").trigger("click");
+						if(controllerSliderState==0)
+							$(".controller-handle").trigger("click");
 					});
 					  //head.js("js/exp/ballAndUrn.js");          //loading the Ball and Urn Script
 					expLoaded.push('cardExp');   //Making a entry in the array of loaded experiment scripts
@@ -607,6 +618,7 @@
 					processed:false,
 					type:'url'
 					});
+					
 			view.loadInputSheet(urlParams.dataset.split(","));
 
 		$('section .response').html('Data loaded successfully! Just go to controller tile and start generating random samples!<i class="icon-ok"></i>').show();

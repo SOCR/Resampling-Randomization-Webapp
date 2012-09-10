@@ -23,6 +23,9 @@ $(document).ready(function(){
 				}
 				]
 			});
+		
+		/*
+		
 		//Placing 2 buttons Done and Reset just after the input-table	
 		$('#input-table').after("<br/><br/><input class='btn' type='button' value='Done'><input class='btn' type='button' value='Reset'>");
 		//Binding function to the Button clicks
@@ -71,6 +74,6 @@ $(document).ready(function(){
                     });
 			
 			}); //Reset click
-		
+	*/	
 	})(jQuery);
 })

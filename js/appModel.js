@@ -18,10 +18,11 @@ var appModel=function(){
 	var _n=50;				//Number of datapoints in a bootstrap sample or Sample Size
 	var bootstrapSamples=new Array();	//Contains all the bootstrap samples generated
 	//var variables;				//number of variables
+	var bootstrapSampleValues=[];
 	var _data;
 	var sample=[];
-	var keys=[];
-	var _temp;
+	var _datasetKeys=[];
+	var _datasetValues=[];
 	var _sampleMean=[];
 	var coin = new Array(N);
 /*
@@ -56,14 +57,15 @@ var appModel=function(){
 	function _generateMean(sampleNumber){
 		var total=_generateCount(sampleNumber);
 		//console.log("total :"+total);	
-		return total/bootstrapSamples[sampleNumber].length;
+		return total/bootstrapSampleValues[sampleNumber].length;
 	}
 	
 	function _generateCount(sampleNumber){
-		var x=bootstrapSamples[parseInt(sampleNumber)];
+		var x=bootstrapSampleValues[sampleNumber];
 		var total=0;
 		for(var i=0;i<x.length;i++) 
 			{ total += parseInt(x[i]); }
+		
 		return total;
 	}
 	
@@ -76,29 +78,15 @@ var appModel=function(){
 	function _standardDev(sampleNumber){
 		//get mean 
 		var _mean=_generateMean(sampleNumber);
-		
-		/*
-		var squaredTotal=0;
-		//calculate the square of each number
-		var x=bootstrapSamples[parseInt(sampleNumber)];
-		var _length=x.length;
-		for(var i=0;i<_length;i++) 
-			{ 
-			squaredTotal+= parseInt(x[i])*parseInt(x[i]); 
-			}
-			//console.log("Term1:"+squaredTotal/_length);
-			//console.log("Term2:"+_mean);
-		var y= Math.sqrt((squaredTotal/_length)-_mean);
-		*/
 		var sd=Math.sqrt(_mean*(1-_mean));
 		//console.log("Standard deviation:"+sd);
 		return sd;
-		
 	}
 	
 return{
 	/* PUBLIC PROPERTIES   */
 	bootstrapSamples:bootstrapSamples,
+	bootstrapSampleValues:bootstrapSampleValues,
 	sample:sample,
 	
 	/* PUBLIC METHODS   */
@@ -112,8 +100,12 @@ return{
 	*@desc:  rgenerating a random number between 0 and dataSet size 
 	*/
 	generateTrail:function(){
-		randomKey=_getRandomInt(0, _dataset.length);	//generating a random number between 0 and dataSet size 
-		return {data:_dataset[randomKey],key:randomKey};			//returning the generated trail into a bootstrap sample array
+		randomIndex=_getRandomInt(0, _datasetValues.length);	//generating a random number between 0 and dataSet size 
+		return {
+			key:_datasetKeys[randomIndex],
+			value:_datasetValues[randomIndex],
+			index:randomIndex
+			};			//returning the generated trail into a bootstrap sample array
 	},
     
 	/**
@@ -121,21 +113,21 @@ return{
 	*@desc:  rgenerating a random number between 0 and dataSet size 
 	*/
 	generateSample:function(){
-		var j=_n;
-		//bootstrapSamples[_count]=new Array();			//initializing the new sample array
+		var j=_n;				//has to dynamic...get from DOM
 		var sample=[];
+		var values=[];
 		while(j--)
 			{
-			//bootstrapSamples[_count][j]=this.generateTrail();
 			var temp=this.generateTrail();
 			//alert(temp.data);
-			sample[j]=temp.data;	//inserting the new sample
+			sample[j]=temp.key;	//inserting the new sample
+			values[j]=temp.value;
 			}
 		bootstrapSamples[_count]=sample;
-		//bootstrapSamples[_count]= new Array(sample);
+		bootstrapSampleValues[_count]=values;
+		//console.log(values);
 		//console.log(_count+':'+bootstrapSamples[_count]);
 		_count++;		//incrementing the total count - number of samples generated from start of simulation
-		
 	},
 	
 	/**
@@ -146,18 +138,22 @@ return{
 	generateStep:function(){
 		var j=$('#nSize').val();
 		var sample=[];
+		var values=[];
+		var indexes=[];
 		while(j--)
 			{
 			//bootstrapSamples[_count][j]=this.generateTrail();
 			var temp=this.generateTrail();
-			sample[j]=temp.data;	//inserting the new sample
-			keys[j]=temp.key;
+			sample[j]=temp.key;	//inserting the new sample
+			values[j]=temp.value;
+			indexes[j]=temp.index;
 			}
 		bootstrapSamples[_count]=sample;
+		bootstrapSampleValues[_count]=values;
 		//bootstrapSamples[_count]= new Array(sample);
-		console.log(_count+':'+bootstrapSamples[_count]);
+		console.log(_count+' random sample:'+sample);
 		_count++;
-		return keys;
+		return indexes;
 	},
 	
 	/**
@@ -169,7 +165,7 @@ return{
 		for(var j=0;j<_count;j++)
 			{
 			_sampleMean[j]=_generateMean(j);
-			console.log(_sampleMean[j]);
+			//console.log(_sampleMean[j]);
 			}
 			return _sampleMean;
 			
@@ -184,10 +180,10 @@ return{
 	},
 	getMeanOfDataset:function(){
 		var total=0;
-		for(var i=0;i<_dataset.length;i++) 
-			{ total += parseInt(_dataset[i]); }
+		for(var i=0;i<_datasetValues.length;i++) 
+			{ total += parseInt(_datasetValues[i]); }
 		//console.log("total :"+total);	
-		return total/_dataset.length;
+		return total/_datasetValues.length;
 	},
 	
 	getStandardDev:function(){
@@ -228,10 +224,32 @@ return{
 	},
 	getCountOfDataset:function(){
 		var total=0;
-		for(var i=0;i<_dataset.length;i++) 
-			{ total += parseInt(_dataset[i]); }
+		for(var i=0;i<_datasetValues.length;i++) 
+			{ total += parseInt(_datasetValues[i]); }
 		//console.log("total :"+total);	
 		return total;
+	},
+	getPercentile:function(){
+	console.log("getPercentile() invoked");
+		var _samplePercentile=[];
+		for(var j=0;j<_count;j++)
+			{
+			_samplePercentile[j]=this.getPercentileOf(j);
+			//console.log(_samplePercentile[j]);
+			}
+			return _samplePercentile;
+		
+	},
+	getPercentileOf:function(sampleNumber){
+	var temp=bootstrapSampleValues[sampleNumber].sort(function(a,b){return a-b});
+		var position=bootstrapSampleValues[sampleNumber].length/2;
+		//console.log(bootstrapSampleValues[sampleNumber]);
+		return temp[position];
+	},
+	getPercentileOfDataset:function(){
+		var temp=_datasetValues.sort(function(a,b){return a-b});
+		var position=_datasetValues.length/2;
+		return temp[position];
 	},
 	
 	
@@ -256,7 +274,7 @@ return{
 	*@dependencies: generateTrail()
 	*/
 	getDataset:function(){
-		return _dataset;
+		return _datasetKeys;
 	},
 	/**
 	*@method: setDataset
@@ -265,25 +283,28 @@ return{
 	*/
 	setDataset:function(input){
 	console.log('setDataSet() invoked!');
-	console.log("cell range: "+input.range);
-		//input.processed is true incase of a simulation -> data mode switch
+	//input.processed is true incase of a simulation -> data mode switch
 		if(input.processed)
 			{
-				_dataset=input.data;
+				_datasetKeys=input.data;
+				_datasetValues=input.values;
 				console.log('Simulation data is loaded now.');
 				return false;
 			}
 			else if(input.type=='url')
 			{
-				_dataset=input.data.split(",");
+			//both _datasetValues and _datasetKeys will have the same values
+				_datasetValues=input.data.split(",");
 				console.log('Simulation data is loaded now.');
 				return false;
 			}
 		else
 			{
-			_dataset=[];			//emptying the array
+			_datasetValues=[];			//emptying the array
+			_datasetKeys=[];
 			console.log('Input Data :'+input.data);
 			console.log('Input Type :'+input.type);
+			console.log('Input Type :'+input.range);
 			//iterate through rows
 			for(var i=input.range[0];i<=input.range[2];i++)
 				{
@@ -291,7 +312,7 @@ return{
 						{
 						if (input.data[i][j] != '')
 							{         
-							_dataset.push(input.data[i][j]);
+							_datasetValues.push(input.data[i][j]);
 							}
 						}
 				}
@@ -302,14 +323,15 @@ return{
 					{
 						if (input.data[i][j] != '')
 						{         
-							_dataset.push(input.data[i][j]);
+							_datasetValues.push(input.data[i][j]);
 							
 						}
 					}
 				
 				}		
 			*/
-			console.log('Data is loaded now. Data :' + _dataset);
+			_datasetKeys=_datasetValues;
+			console.log('Data is loaded now. Data :' + _datasetValues);
 		}
 		
 	},
@@ -356,7 +378,8 @@ return{
 		return _count;
 	},
 	reset:function(){
-		_dataset=[];
+		_datasetKeys=[];
+		_datasetValues=[];
 		//this.bootstrapSamples=[];
 		this.setCount(0);
 	}

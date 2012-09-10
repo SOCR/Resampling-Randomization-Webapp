@@ -12,8 +12,8 @@ var _p = 0.5;	  		//Probability of heads (default value = 0.5)
 var _N = 100;			//Maximum number of trials 
 var _count;				//keeps count of number of coins tossed
 var _n = 10; 			//Number of coin tossed for each step 
-var _dataset=[];
-var _userReadableDataset=[];
+var _keys=[];
+var _values=[];
 var _width='30';
 var _height='30';
 var _coin = new Array(_N);
@@ -23,15 +23,15 @@ var _coin = new Array(_N);
 function _tossCoin(){
 	//alert('count'+_count+'max:'+_n);
 	if (_count < _n){
-		_dataset[_count]=_coin[_count].toss();
-		if(_dataset[_count]=='1')
-				_userReadableDataset[_count]='1';
+		_values[_count]=_coin[_count].toss();
+		if(_values[_count]=='1')
+			_keys[_count]='H';
 		else
-			_userReadableDataset[_count]='0';
+			_keys[_count]='T';
 		_count++;
 	}
 	else{
-		view.loadInputSheet(_userReadableDataset);
+		view.loadInputSheet(_values);
 		self.reset();
 	}
 }
@@ -48,6 +48,8 @@ return{
 		_pParam = new Parameter(document.getElementById("pInput"), document.getElementById("pLabel"));
 		_pParam.setProperties(0, 1, 0.01, _p, "<var>p</var>");
 		this.reset();
+		
+		// BINDING BUTTONS OF THE CONTROLLER
 		$("#sdbutton").on('click',function(){
 			Experiment.generate();
 			$("#accordion").accordion( "activate" , 1);
@@ -94,7 +96,7 @@ return{
 		this.setVariable();
  	},
 	createControllerView:function(){
-	console.log("createControllerView for CardExp executed!");
+	console.log("createControllerView for binomialCoin executed!");
 		var html='<p class="toolbar"><p class="tool"><span id="nLabel" class="badge badge-warning" for="nInput">N = </span><span id="nvalue"></span><input id="nInput" type="range" tabindex="7" class="parameter"/></p><p class="tool"><span id="pLabel" class="badge badge-warning" for="pInput">P = </span><span id="pvalue"></span><input id="pInput" type="range" tabindex="8" class="parameter"/></p><select id="rvSelect" tabindex="9" title="Random variable" ><option value="0" selected="true">Y: Number of heads</option><option value="1">M: Proportion of heads</option></select></p><button class="btn" id="sdbutton">Generate DataSet!</button>&nbsp;<button class="btn btn-danger" id="grsbutton">Generate Random Samples!</button>';
 		$('#controller-content').html(html);
 	},
@@ -125,8 +127,15 @@ return{
 		_p = _pParam.getValue();
 		_n = _nParam.getValue();
 	},
+	
 	getDataset:function(){
-		return _dataset;
+		return _keys;
+	},
+	getDatasetKeys:function(){
+		return _keys;
+	},
+	getDatasetValues:function(){
+		return _values;
 	},
 	
 	getDatasetSize:function(){

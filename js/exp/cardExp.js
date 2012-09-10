@@ -10,8 +10,8 @@ var _nParam;		//User defined Parameters..bound to the buttons on the controller 
 var  _n = 12;
 var _deck, _hand, _suit, _value;
 var _d, _count;
-var _dataset=[];
-var _userReadableDataset=[];
+var _keys=[];
+var _values=[];
 var _width='79';
 var _height='123';
 //::::::PRIVATE METHODS:::::::::::::
@@ -19,12 +19,13 @@ var _height='123';
 function _dealCard(){
 	if (_count < _n){
 	_hand[_count].setValue(_d[_count]);
-		_dataset[_count]=_d[_count];
-		
+		_keys[_count]=_d[_count];
+		_values[_count]=_d[_count];
 		_count++;
 	}
 	else{
-		view.loadInputSheet(_dataset);
+		console.log("Card Generated Dataset : "+_values + "-- cardExp.js");
+		view.loadInputSheet(_values);
 		_self.reset();
 	}
 }
@@ -45,24 +46,22 @@ return{
 			$("#accordion").accordion( "activate" , 1);
 			if(inputSliderState==1)
 				{
-				console.log("inputSliderState:"+inputSliderState);
 				$('.input-handle').trigger('click');
 				}
-			});
+		});
 		$('#nInput').on('change',function(){
 			Experiment.setVariable();
-			});
+		});
 		$('#grsbutton').on('click',function(){
-		
 			$('#dataDriven-tab').update({to:'dataDriven'});
-			});
+		});
 	},
+	
 	generate: function(){
 		view.updateSimulationInfo();		//updates experiment info into third tile in the accordion
 		//_n=$("#nInput").val();
 		this.setVariable();
-		
-        this.createDataPlot(_n);			//create the canvas fro the dataset
+		this.createDataPlot(_n);			//create the canvas fro the dataset
 		$(".device-container").width(_width);
 		$(".device-container").height(_height);
 		_hand = new Array(_n);
@@ -117,7 +116,13 @@ return{
 	_n = _nParam.getValue();
 	},
 	getDataset:function(){
-	return _dataset;
+		return _keys;
+	},
+	getDatasetKeys:function(){
+		return _keys;
+	},
+	getDatasetValues:function(){
+		return _values;
 	},
 	getDatasetSize:function(){
 	return _n;

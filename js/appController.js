@@ -70,6 +70,8 @@ return{
 		_this.reset();
 		});
 		$("#infer").on('click',function(){
+		//create loading gif
+		
 		_this.setDotplot();
 		$("#percentile-div").css('display','');
 		});
@@ -228,12 +230,13 @@ return{
 		view.disableButtons();					//disabling buttons
 		model.setN(nSize.val());				// save the datapoints size
 	    var keys=model.generateStep();				//generate one sample
+		//console.log("keys"+keys);
 		view.updateCounter();					//update counter
 		$(".removable").remove();				//remove the previously generated canvas during animation
 		view.animate({
-		stopCount:$('#nSize').val(),
-		speed:$('#speed').val(),
-		keys:keys
+			stopCount:$('#nSize').val(),
+			speed:$('#speed').val(),
+			keys:keys
 		});						//show sample generation animation
 		//view.enableButtons();					//enabling buttons
 		view.updateSlider();					//update slider count
@@ -331,7 +334,8 @@ return{
 						{	console.log('simulation drive has some data');
 						//alert(Experiment.getDataset());
 							model.setDataset({
-								data:Experiment.getDataset('calculation'),
+								data:Experiment.getDatasetKeys(),
+								values:Experiment.getDatasetValues(),
 								processed:true
 								});	
 							console.log(model.getDataset());

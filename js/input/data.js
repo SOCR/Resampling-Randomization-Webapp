@@ -92,9 +92,6 @@
 			 			console.log($('#input').inputtable('getDataFromCoords',start,end))
 			 		})
 		
-		/*
-			Commenting out the prototype as it was interfering with drag and drop table, will look into it later
-			
 			Array.prototype.clean = function(deleteValue) {
 			  for (var i = 0; i < this.length; i++) {
 				if (this[i] == deleteValue) {         
@@ -104,5 +101,5 @@
 			  }
 			  return this;
 			};
-		*/
+		
 })();

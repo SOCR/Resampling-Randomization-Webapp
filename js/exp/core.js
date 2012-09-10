@@ -144,20 +144,19 @@ function Ball(canvas){
 	var size = canvas.width, r = size / 2;
 	var label;
 	//Methods
-	this.setValue = function(v) {
+	this.setValue = function(key,value) {
 		ctx.clearRect(0, 0, size, size);
-		this.value = v;
-		if (v >= 0){
+		this.value = value;
+		label = key;
+		if (value > 0){
 			ctx.fillStyle = this.ballColor;
-			label = v;
 		}
-		else if (v == -1){
+		else if (value == -1){
 			ctx.fillStyle = "rgb(100, 100, 100)";
 			label = "";
 		}
 		else{
-			ctx.fillStyle = "rgba(200, 200, 200, 1)";
-			label = "";
+			ctx.fillStyle = "green";
 		}
 		ctx.beginPath();
 		ctx.arc(r, r, r, 0, 2 * Math.PI, true);
@@ -183,7 +182,7 @@ function Card(canvas){
 	ctx.fillStyle = "gray";
 
 	cardImages.onload = function(){
-		ctx.drawImage(cardImages, 2 * width, 4 * height, width, height, 0, 0, width, height);
+		//ctx.drawImage(cardImages, 2 * width, 4 * height, width, height, 0, 0, width, height);
 	}
 	
 	this.setValue = function(x){
@@ -194,7 +193,7 @@ function Card(canvas){
 			this.denomination = this.value - 13 * (this.suit - 1);
 			ctx.drawImage(cardImages, (this.denomination - 1) * width, (this.suit - 1) * height, width, height, 0, 0, width, height);
 		}
-		else if (this.value == 0) ctx.drawImage(cardImages, 2 * width, 4 * height, width, height, 0, 0, width, height);
+		//else if (this.value == 0) ctx.drawImage(cardImages, 2 * width, 4 * height, width, height, 0, 0, width, height);
 		else ctx.clearRect(0, 0, width, height);
 	}
 }
