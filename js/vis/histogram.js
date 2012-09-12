@@ -110,7 +110,7 @@ function vis(config){
 
                   var content = '<h3> Mean : ' + settings.dataSetMean + '</h3>';
                   console.log(viswrap.tooltip)
-                  viswrap.tooltip.show([left, top], content, 'n');
+                  viswrap.tooltip.show([left, top], content, 's');
 
                 })
                 .on('mouseout', function(){ 

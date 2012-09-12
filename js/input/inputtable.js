@@ -2277,11 +2277,23 @@
   */
 
   this.getDataFromCoords = function(start,stop){
+    console.log(start + ' ' + stop)
     var coords = [];
 
         var startArray = start.split(',');
         var stopArray = stop.split(',');
         var coords = startArray.concat(stopArray);
+
+/*
+Todo: Make it easier
+        var row = startArray[0],
+            col =startArray[1],
+            endRow = stopArray[0],
+            endCol = stopArray[1];
+
+           Inputtable.selectCell(row,col,endRow,endCol)
+  
+  */
       
 
      var box = new Array(coords[2]-coords[0]+1);

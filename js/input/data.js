@@ -1,6 +1,5 @@
 (function(){
 	
-
 	/*
 
 		data.js for spreadsheet generation, and binding various hookups
@@ -17,7 +16,7 @@
     	binding all events for easing controls
 
     */ 				
-	$controls.find('input[value="Done"]').on('click', processSpreadsheet);
+	$controls.find('input[value="Done"]').on('click', processSpreadsheet );
 	$controls.find('input[value="Reset"]').on('click', resetSpreadsheet);
 	$controls.find('#submatrix_spreadsheet').on('click',function(){
 		
@@ -27,10 +26,14 @@
 
 		} else {
 
-			console.log( $dataTable.inputtable('getDataFromCoords') )
 
 			var start = $controls.find('input[name="start"]').val(),
 	 			end =   $controls.find('input[name="end"]').val();
+
+	 	var startArray = start.split(',');
+        var stopArray = end.split(',');
+          		$dataTable.inputtable('selectCell',startArray[0],startArray[1],stopArray[0],stopArray[1]);
+          			 			console.log( $dataTable.inputtable('getDataFromCoords',start, end) )
 
  		}
  			
@@ -78,14 +81,11 @@
 					.html( text )
 			);
 
-		console.log( text )
-
 	}
 
 
-	var processSpreadsheet = function(){
+	var processSpreadsheet = function(e){
 
-		console.log('Data function')
 		/*
 		
 			Process spreadsheet function, takes into consideration two cases
@@ -94,10 +94,10 @@
 		
 		*/
 		
-		if( $dataTable.inputtable('getSelected') ){
+		if( isSelected()  ){
 
-			console.log('Coordinates are selected ' + $dataTable.inputtable('getSelected') )
-			var selectedCoords = $dataTable.inputtable('getSelected') ;
+			console.log('Coordinates are selected ' + isSelected() )
+			var selectedCoords = isSelected() ;
 
 		}
 			
@@ -112,7 +112,7 @@
 				model.setDataset({
 
 						data:$dataTable.inputtable('getSelectedData'),
-						range:selected,
+						//range:selected,
 						type:'getSelected',
 						processed:false
 
@@ -237,6 +237,25 @@
 
 		return false;
 	}
+
+	$controls.find('input[value="Done"]').on('click', processSpreadsheet );
+	$controls.find('input[value="Reset"]').on('click', resetSpreadsheet);
+	$controls.find('#submatrix_spreadsheet').on('click',function(){
+		
+		if( isSelected() ){
+
+			console.log( isSelected() )
+
+		} else {
+
+			var start = $controls.find('input[name="start"]').val(),
+	 			end =   $controls.find('input[name="end"]').val();
+	 			console.log(start + ' ' + end)
+	 				console.log( $dataTable.inputtable('getDataFromCoords', start, end) )
+
+ 		}
+ 			
+ 	})
 			
 
 			Array.prototype.clean = function(deleteValue) {
