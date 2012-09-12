@@ -30,7 +30,7 @@ function vis(config){
    // A formatter for counts.
     var formatCount = d3.format(",.0f");
 
-    var margin = {top: 10, right: 30, bottom: 30, left: 50};
+    var margin = {top: 50, right: 30, bottom: 30, left: 50};
     /*
         h = config.height ? config.height :  $(config.parent).height(),
         w = config.width ? config.width : $(config.parent).width() ;
@@ -104,13 +104,20 @@ function vis(config){
                 .attr('height',function(){ return height ;})
                 .attr('class','meanBar')
                 .on('mouseover', function(d){ 
-                    d3.select(this).classed('hover', true) 
-                    console.log(d3.select(this));
-                  })
-                  .on('mouseout', function(){ 
-                    d3.select(this).classed('hover', false) 
-                  })
+                  d3.select(this).classed('hover', true) 
+                  var left = $(this).position().left,
+                      top = $(this).position().top;
 
+                  var content = '<h3> Mean : ' + settings.dataSetMean + '</h3>';
+                  console.log(viswrap.tooltip)
+                  viswrap.tooltip.show([left, top], content, 'n');
+
+                })
+                .on('mouseout', function(){ 
+                    d3.select(this).classed('hover', false) 
+                    viswrap.tooltip.cleanup();
+
+              });
        
         }
 

@@ -6,12 +6,13 @@
 
 (function() {
 
-  var vistooltip = window.vis.tooltip = {};
+  window.viswrap = {};
+  var viswraptooltip = window.viswrap.tooltip = {};
 
-  vistooltip.show = function(pos, content, gravity, dist) {
+  viswraptooltip.show = function(pos, content, gravity, dist) {
 
     var container = document.createElement("div");
-        container.className = "vistooltip";
+        container.className = "viswraptooltip";
 
     gravity = gravity || 's';
     dist = dist || 20;
@@ -78,16 +79,16 @@
     return container;
   };
 
-  vistooltip.cleanup = function() {
+  viswraptooltip.cleanup = function() {
 
       // Find the tooltips, mark them for removal by this class (so others cleanups won't find it)
-      var tooltips = document.getElementsByClassName('vistooltip');
+      var tooltips = document.getElementsByClassName('viswraptooltip');
       var purging = [];
       while(tooltips.length) {
         purging.push(tooltips[0]);
         tooltips[0].style.transitionDelay = "0 !important";
         tooltips[0].style.opacity = 0;
-        tooltips[0].className = "vistooltip-pending-removal";
+        tooltips[0].className = "viswraptooltip-pending-removal";
       }
 
 
@@ -100,5 +101,5 @@
     }, 500);
   };
 
-
+  console.log(viswrap)
 })();
