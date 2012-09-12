@@ -77,12 +77,21 @@ function vis(config){
         .attr("x", function(d,i){ return x(d.x); })
         .attr("width", x(data[0].dx) - 1)
         .attr('y',height)    
+        .on('mouseover', function(d){ 
+          d3.select(this).classed('hover', true) 
+
+        })
+        .on('mouseout', function(){ 
+          d3.select(this).classed('hover', false) 
+        })
       .transition()
       .delay( function(d,i){ return i*50; } )
         .attr('y',function(d){  return y(d.y) })
-        .attr("height", function(d) { return height - y(d.y); });
+        .attr("height", function(d) { return height - y(d.y); })
+        
+        //.on('mouseover',function(d){ console.log(this) } );
 
-        console.log(x(data[0].dx))
+        //console.log(x(data[0].dx))
 
         if(settings.dataSetMean){
 
@@ -94,6 +103,13 @@ function vis(config){
                 .attr('width', function(){ return 10;})
                 .attr('height',function(){ return height ;})
                 .attr('class','meanBar')
+                .on('mouseover', function(d){ 
+                    d3.select(this).classed('hover', true) 
+                    console.log(d3.select(this));
+                  })
+                  .on('mouseout', function(){ 
+                    d3.select(this).classed('hover', false) 
+                  })
 
        
         }

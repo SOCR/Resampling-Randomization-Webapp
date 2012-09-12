@@ -64,7 +64,14 @@ function vis(config){
       .transition()
       .delay( function(d,i){ return i*50; } )
         .attr('y',function(d){  return y(d.y) })
-        .attr("height", function(d) { return height - y(d.y); });
+        .attr("height", function(d) { return height - y(d.y); })
+        .on('mouseover', function(d){ 
+          d3.select(this).classed('hover', true) 
+          console.log(d3.select(this));
+
+      })
+        .on('mouseout', function(){ d3.select(this).classed('hover', false) });
+
 
     bar.append("text")
         .attr("dy", ".75em")

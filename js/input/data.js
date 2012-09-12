@@ -1,7 +1,49 @@
 (function(){
-	$dataTable = $('#input');
+	
 
-	$('#input').inputtable({
+	/*
+
+		data.js for spreadsheet generation, and binding various hookups
+
+	*/
+
+	$dataTable = $('#input');
+	$controls = $('section.controls');
+	$parent = $('div.spreadsheet');
+	$response = $('#status');
+
+	 /*
+    	
+    	binding all events for easing controls
+
+    */ 				
+	$controls.find('input[value="Done"]').on('click', processSpreadsheet);
+	$controls.find('input[value="Reset"]').on('click', resetSpreadsheet);
+	$controls.find('#submatrix_spreadsheet').on('click',function(){
+		
+		if( isSelected() ){
+
+			console.log( isSelected() )
+
+		} else {
+
+			console.log( $dataTable.inputtable('getDataFromCoords') )
+
+			var start = $controls.find('input[name="start"]').val(),
+	 			end =   $controls.find('input[name="end"]').val();
+
+ 		}
+ 			
+ 	})
+
+ 	/*
+	
+		Spreadsheet generation code, pretty much self explanatory
+
+ 	*/
+
+	$dataTable.inputtable({
+
 			    rows: 8,
 			    cols: 2,
 				minSpareCols : 1,
@@ -10,27 +52,104 @@
 				rowHeaders : true,
 				colHeaders : true,
 				legend: [
-			 	 /**
-			   		* Legend 1
-			   	*/
-				{
-				  match: function (row, col, data) {
-					return !(data()[row][col]); //if the cell is empty
-				  },
-				  style: {
-					background: '#f5f5f5' //make the background yellow
-				  }
-				}
-			]
+					{
+					  match: function (row, col, data) {
+						return !(data()[row][col]);
+
+					},
+					 style: {
+						background: '#f5f5f5' 
+						//if the cell is empty, change the back ground to grey
+					  }
+					}
+				]
+
 
 	});
-     	
+     				
+	var displayResponse = function( text,type ){
+		/*
+			Todo : DRY the reponse code
+		*/
+
+		$response.append(
+				$('<div></div>')
+					.addClass('alert')
+					.html( text )
+			);
+
+		console.log( text )
+
+	}
+
+
+	var processSpreadsheet = function(){
+
+		console.log('Data function')
+		/*
+		
+			Process spreadsheet function, takes into consideration two cases
+			1. Data is selected, getSelectedData
+			2. Entire Dataset
+		
+		*/
+		
+		if( $dataTable.inputtable('getSelected') ){
+
+			console.log('Coordinates are selected ' + $dataTable.inputtable('getSelected') )
+			var selectedCoords = $dataTable.inputtable('getSelected') ;
+
+		}
 			
-			//$('#input').before("<br/><input class='btn' type='button' value='Done'><input class='btn' type='button' value='Reset'>");
-			//Binding function to the Button clicks
-			$("input[value='Done']").on('click',function(){
-				var temp=$("#input").inputtable('getData');
-				var selected=$("#input").inputtable('getSelected');
+		if( selectedCoords ){
+
+				/* 
+					Data is selected, go ahead with extracting submatrix
+					@Todo : highlight the selected Data
+
+				*/
+
+				model.setDataset({
+
+						data:$dataTable.inputtable('getSelectedData'),
+						range:selected,
+						type:'getSelected',
+						processed:false
+
+				});
+
+				displayResponse( 'Data loaded successfully<i class="icon-ok"></i>', 'success');
+
+
+		} else {
+
+				console.log('No coordinates are selected')
+				/*
+					Case of no selection, entire matrix is passed
+				*/
+				model.setDataset({
+						data:$dataTable.inputtable('getData'),
+						range:1,
+						type:'getData',
+						processed:false,
+					});
+
+				displayResponse( 'Data loaded successfully<i class="icon-ok"></i>', 'success');
+
+		}
+
+	}
+
+			/*
+		
+			Commented out the earlier verison of the code,
+			@ Todo 
+			1. Check for empty dataset
+
+
+				var temp = $dataTable.inputtable('getData');
+				
+				console.log(selected);
 
 				if(temp.clean(',').length==0)
 					{
@@ -39,28 +158,33 @@
 				else if(selected)
 					{
 					console.log("getSelected");
+
 					model.setDataset({
-						data:$("#input").inputtable('getData'),
+						data:$dataTable.inputtable('getData'),
 						range:selected,
 						type:'getSelected',
 						processed:false,
 						});
+
 				$('section .response').html('Data loaded successfully<i class="icon-ok"></i>').show();
 					}
 				else 
 					{
-					console.log("getSelectedData : " + $("#input").inputtable('getSelectedData'));
+					console.log("getSelectedData : " + $dataTable.inputtable('getSelectedData'));
+
 					model.setDataset({
-						data:$("#input").inputtable('getSelectedData'),
+						data:$dataTable.inputtable('getSelectedData'),
 						range:1,
 						type:'getData',
 						processed:false,
 					});
-					$('section .response').html('Data loaded successfully<i class="icon-ok"></i>').show();
+					$('section .response').html('Data loaded<i class="icon-ok"></i>').show();
 					}
-			});// Done click 
-			
-			$("input[value='Reset']").on('click',function(){
+			}
+
+			 */
+	var resetSpreadsheet = function(){
+
 				$('<div></div>').appendTo('body')
                     .html('<div><h6>Are you sure you want to reset the data?</h6></div>')
                     .dialog({
@@ -72,9 +196,10 @@
 						resizable: false,
                         buttons: {
                             Yes: function () {
-							$("#input").inputtable('clear'); 		//clear the input sheet 
-							$('#status').html('<div class="alert"><a class="close" data-dismiss="alert" href="#">x</a>Clear! Enter some value to get started!</div>');  //display the message in the status div below the done and reset buttons
-                            $(this).dialog("close");					//close the confirmation window
+                            	//clear the input sheet 
+								$dataTable.inputtable('clear'); 		
+								$('#status').html('<div class="alert"><a class="close" data-dismiss="alert" href="#">x</a>Clear! Enter some value to get started!</div>');  //display the message in the status div below the done and reset buttons
+	                            $(this).dialog("close");					//close the confirmation window
                             },
                             No: function () {
                                 $(this).dialog("close");
@@ -84,14 +209,36 @@
                             $(this).remove();
                         }
                     });
-			}); //Reset click
+			}
 			
-			$('section.controls #submatrix_spreadsheet').on('click',function(){
-					var start = $('section.controls').find('input[name="start"]').val(),
-			 			end =   $('section.controls').find('input[name="end"]').val();
-			 			console.log($('#input').inputtable('getDataFromCoords',start,end))
-			 		})
-		
+			
+	/*
+		Private method to check whether the grid is selected or not, if it is return the extremities
+
+	*/	
+
+	var isSelected = function(){
+
+		var coords =  $dataTable.inputtable('getSelected');
+		if(coords){
+
+			/*
+				Simple check for deselected members as the getSelected method returns the coordinates of last cell worked on
+
+			*/
+			if( coords[0] === coords [2]  && coords[1] === coords [3]){
+				return false;
+
+			} else{
+				return coords;
+
+			}
+		}
+
+		return false;
+	}
+			
+
 			Array.prototype.clean = function(deleteValue) {
 			  for (var i = 0; i < this.length; i++) {
 				if (this[i] == deleteValue) {         
@@ -101,5 +248,5 @@
 			  }
 			  return this;
 			};
-		
+
 })();

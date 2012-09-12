@@ -19,12 +19,16 @@ body {
 }
 
 #wrapper-menu-top {
-	background: white url('bg02-white-left.png') no-repeat left top;
+	/*	
+		background: white url('bg02-white-left.png') no-repeat left top;
+		*/
 }
 
 #menu-top {
+	/*
 	background: transparent url('bg02-white-right.png') no-repeat right top;
 	overflow: hidden; /* no idea why this works, but it fixes a FF problem */
+
 }
 
 #menu-top ul {
@@ -42,7 +46,7 @@ body {
 
 #menu-top a {
 	float: left;
-	background:url(menuleft.png) no-repeat left top;
+	/* background:url(menuleft.png) no-repeat left top; */
 	margin:0;
 	padding:0 0 0 4px;
 	text-decoration:none;
@@ -50,7 +54,7 @@ body {
 }
 
 #menu-top a span {
-	background: transparent url(menuright.png) no-repeat right top;
+	/* background: transparent url(menuright.png) no-repeat right top; */
 	padding:5px 15px 4px 6px;
 	color:#5b8fbe;
 	display: block;
@@ -59,8 +63,10 @@ body {
 }
 
  #menu-top a:hover { background-position:0% -42px; }
+
  #menu-top a:hover span {	background-position:100% -42px; }
 
+/*
 #wrapper-header {
 	background: transparent url('bg.png') top center repeat-x;
 }
@@ -76,7 +82,7 @@ body {
 #wrapper-header3 {
 	background: transparent url('bg02-blue-right.png') top right no-repeat;
 }
-
+ 
 #header h1 {
 	margin: 0 20px;
 	padding: 0;
@@ -92,10 +98,10 @@ body {
 * html #wrapper-content { height: 1%; }
 
 #content {
-	/* background: transparent url('bg02-white-right.png') no-repeat right top; */
+	/* background: transparent url('bg02-white-right.png') no-repeat right top; 
 	padding: 10px 10px 10px 10px;
 }
-
+*/
 
 
 * html #wrapper-menu-page { margin-right: 5px; }

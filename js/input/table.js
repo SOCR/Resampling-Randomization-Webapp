@@ -164,7 +164,7 @@ var table = function () {
 
    				if(window.location.hostname !== requestHost.hostname){
    					$(controls).html('');
-   					$(parent).html('<div class="alert alert-danger">Data Sets should be on same server</div>');
+   					$(parent).html('<div class="alert alert-danger">Data Sets should be on same server due to security reasons</div>');
    					return;
 
    				}

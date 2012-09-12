@@ -9,6 +9,11 @@ body {
 .bar rect {
   fill: steelblue;
   shape-rendering: crispEdges;
+  fill-opacity: 0.9;
+}
+
+.bar rect.hover{
+  fill-opacity: 1;
 }
 
 .bar text {
@@ -21,10 +26,68 @@ body {
   shape-rendering: crispEdges;
 }
 
+/********************
+ * TOOLTIP CSS 
+ */
+
+.viswraptooltip {
+  position: absolute;
+  background-color: rgba(255,255,255,1);
+  padding: 10px;
+  border: 1px solid #ddd;
+  z-index: 10000;
+
+  font-family: Arial;
+  font-size: 13px;
+
+  transition: opacity 500ms linear;
+  -moz-transition: opacity 500ms linear;
+  -webkit-transition: opacity 500ms linear;
+
+  transition-delay: 500ms;
+  -moz-transition-delay: 500ms;
+  -webkit-transition-delay: 500ms;
+
+  -moz-box-shadow: 4px 4px 8px rgba(0,0,0,.5);
+  -webkit-box-shadow: 4px 4px 8px rgba(0,0,0,.5);
+  box-shadow: 4px 4px 8px rgba(0,0,0,.5);
+
+  -moz-border-radius: 10px;
+  border-radius: 10px;
+
+  pointer-events: none;
+
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.viswraptooltip h3 {
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+
+.viswraptooltip p {
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+
+.viswraptooltip span {
+  display: inline-block;
+  margin: 2px 0;
+}
+
 </style>
 <body>
   <div class="chart"></div> 
-<script src="d3.v2.min.js"></script>
+<script src="./d3.v2.min.js"></script>
+<script src="http://code.jquery.com/jquery.min.js"></script>
+<script src="./tooltip.js"></script>
 <script>
 
 
@@ -46,7 +109,7 @@ function vis(config){
       //generate chart here
       //d- data
       //i -`this`
-      console.log(config);
+  
 
     // A formatter for counts.
     var formatCount = d3.format(",.0f");
@@ -87,7 +150,46 @@ function vis(config){
     bar.append("rect")
         .attr("x", 1)
         .attr("width", x(data[0].dx) - 1)
-        .attr("height", function(d) { return height - y(d.y); });
+        .attr("height", function(d) { return height - y(d.y); })
+        .on('mouseover', function(d){ 
+          d3.select(this).classed('hover', true) 
+          var left = $(this).position().left,
+              top = $(this).position().top;
+
+          var content = '<h3>' + d + '</h3>';
+          console.log(viswrap.tooltip)
+          viswrap.tooltip.show([left, top], content, 'n');
+
+      })
+        .on('mouseout', function(){ 
+            d3.select(this).classed('hover', false) 
+            viswrap.tooltip.cleanup();
+
+      });
+
+        /*
+           graph.dispatch.on('elementMouseover', function(e) {
+        var offsetElement = document.getElementById("chart"),
+                left = e.pos[0],
+                top = e.pos[1];
+
+                /*
+        var content = '<h3>' + e.label + '</h3>' +
+                '<p>' +
+                e.value +
+                '</p>';
+               
+
+        var content = '<p>' + e.point.y + '</p>';
+
+        vis.tooltip.show([left, top], content, e.value < 0 ? 'n' : 's');
+          });
+
+          graph.dispatch.on('elementMouseout', function(e) {
+              vis.tooltip.cleanup();
+          });
+
+          */
 
     bar.append("text")
         .attr("dy", ".75em")
@@ -129,6 +231,5 @@ function vis(config){
                       data : values
                       });
     histogram();
-  alert(randomIrwinHall(10));
-
+ 
 </script>
