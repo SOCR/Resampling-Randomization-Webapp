@@ -7,12 +7,14 @@
 */
 
 var appView = function(appModel){
+
 /* private properties */
 	var model=appModel;
 	var _datapoints=$('#nSize').val();
 	var _currentVariable;
 	var _currentValues;
-/*public properties */	
+
+/* public properties */	
 	runButton = $("#runButton"),
 	stepButton =$("#stepButton"),
 	stopButton =$("#stopButton"),
@@ -23,7 +25,8 @@ var appView = function(appModel){
 	dotPlot=$("#dotPlot"),
 	countSize=$("#countSize"),
 	nSize=$('#nSize');
-	//input tile
+	
+/* Input Module */
 	doneButton=$("#doneButton");
 	showButton=$("#showButton");
 	
@@ -484,9 +487,13 @@ return{
 	*@return : none
 	*/
 	CoverPage:function(){
-		console.log('CoverPage() (view.js ln 240) invoked');
-		$('#welcome').css('height',$(window).height()).css('width',$(window).width());
-		$('.welcome-container').css('padding-top',$(window).height()/3).css('padding-left',$(window).height()/3);
+		console.log('CoverPage()');
+
+		var height = $(window).height(),
+			width = $(window).width();
+
+		$('#welcome').css('height', height );
+	//	$('.welcome-container').css('padding-top',height/3).css('padding-left', height/3);
 		$('div.main-wrap').show();
 	},
 	

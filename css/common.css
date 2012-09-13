@@ -144,12 +144,17 @@
 	border:1px solid;
       }
       
+      /*
+		Start definitions for the welcome splash screen
+      */
       #welcome{
-	
+	width: 100%;
+	height: 100%;
 	z-index: 9999;
 	position: absolute;
 	background-color: black;
 	top:0px;
+	left: 0px;
       }
       
       .font{
@@ -157,16 +162,24 @@
 	color: white;
 	font-family: 'Lato', sans-serif;
       }
+
+      div.welcome-container{
+      	width:600px;
+      	margin:120px auto;
+      }
       
       .welcome-title{
 	color:#1DC4F9;
 	font-size: 150px;
+	line-height: 150px;
       }
       
       .welcome-container div{
 	float:left;
+	width: 600px;
       }
 	  
+
 	#speedSlider{
 	padding-top:5%;
 	padding-bottom:5%;

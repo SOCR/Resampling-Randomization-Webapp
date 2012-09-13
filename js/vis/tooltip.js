@@ -101,5 +101,4 @@
     }, 500);
   };
 
-  console.log(viswrap)
 })();
