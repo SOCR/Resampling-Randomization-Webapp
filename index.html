@@ -226,7 +226,9 @@
 				<span><h2 class="font welcome-title">SOCR</h2></span>
 			</div>
 			<div>
-				<span class="font" >Statistical Online Computational Resource -- WebApp&nbsp;&nbsp;</span><button id="startApp" class="btn btn-primary btn-large"> Initialise </button>
+				<span class="font" >Statistical Online Computational Resource -- WebApp&nbsp;&nbsp;</span>
+				
+				<div><button id="startApp" class="btn btn-primary btn-large" disabled> Initialising ... </button></div>
 			</div>
 			</div>
 		</div>
@@ -517,7 +519,18 @@
 		/*
 		*  CoverPage rendering
 		*/
+
 		view.CoverPage();
+
+		document.onreadystatechange = function(){
+			 if (document.readyState == 'complete'){
+			 	/* All resources are loaded */
+			 	$('#startApp').removeAttr('disabled')
+			 					.html('Launch')
+			 	
+			 };
+		}
+		
 		
 		/*
 		 * Resize event adjusts the cover page accordingly

@@ -179,6 +179,9 @@
 	width: 600px;
       }
 	  
+	  #startApp{
+	  	margin: 10px auto;
+	  }
 
 	#speedSlider{
 	padding-top:5%;
