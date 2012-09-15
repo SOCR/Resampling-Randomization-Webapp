@@ -30,10 +30,11 @@
 			var start = $controls.find('input[name="start"]').val(),
 	 			end =   $controls.find('input[name="end"]').val();
 
-	 	var startArray = start.split(',');
-        var stopArray = end.split(',');
-          		$dataTable.inputtable('selectCell',startArray[0],startArray[1],stopArray[0],stopArray[1]);
-          			 			console.log( $dataTable.inputtable('getDataFromCoords',start, end) )
+		 	var startArray = start.split(','),
+	        	stopArray = end.split(',');
+
+          	$dataTable.inputtable('selectCell',startArray[0],startArray[1],stopArray[0],stopArray[1]);
+          	console.log( $dataTable.inputtable('getDataFromCoords',start, end) )
 
  		}
  			
@@ -47,13 +48,13 @@
 
 	$dataTable.inputtable({
 
-			    rows: 8,
-			    cols: 2,
+			    rows: 15,
+			    cols: 4,
 				minSpareCols : 1,
 				minSpareRows : 1,
 				fillHandle : true,
 				rowHeaders : true,
-				colHeaders : true,
+				//colHeaders : true,
 				legend: [
 					{
 					  match: function (row, col, data) {

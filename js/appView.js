@@ -58,10 +58,10 @@ var appView = function(appModel){
 		$('.plot').on('click',function(){
 			$('.chart').html('');
 		
-			var values = $(this).parent().parent().find('pre').text().split(',');
-			var sampleID = $(this).parent().parent().find('span.values').filter(':eq(0)').text();
+			var values = $(this).parent().parent().find('pre').text().split(','),
+				sampleID = $(this).parent().parent().find('span.values').filter(':eq(0)').text();
 
-			$('#plot').find('h3').text(' Sample : ' + sampleID);
+			$('#plot').find('h3').text(' Sample : ' + sampleID );
 
 				vis({
 					  parent : '.chart',
@@ -226,14 +226,15 @@ return{
      * @dependencies : _create(start,stop)
      */
 	createList:function(x){
-		console.log('createList invoked (view.js ln 131)');
+		console.log('createList invoked (view.js)');
 		if(model.bootstrapSamples.length==0)
 			{
 			$("#sampleList").html('<div class="alert alert-error"><a class="close" data-dismiss="alert" href="#">x</a><h4 class="alert-heading">No Random samples to show!</h4>Please generate a dataset using the list of experiments or manually enter the data. Then generate some random samples from the controller tile before click "show"</div>');
 			}
 		
 		else{
-			$("#sampleList").height($(window).innerHeight());
+
+			//$("#sampleList").height($(window).innerHeight());
 			//alert($(window).innerHeight());
 			//alert($(document).innerHeight());
 			var range=x.split('-');

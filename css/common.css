@@ -34,12 +34,14 @@
       }
 	
       .span5,.span4{
-	border:1px solid;
-	padding:10px;
+      	/*
+		border:1px solid #666;
+		*/
+		padding:10px;
       }
       #sampleList{
-	height:330px;
-	overflow-y: scroll;
+	height:400px;
+	overflow-y: auto;
       }
       
       #range{
@@ -93,7 +95,7 @@
 	width:400px;
 	display:none;
 	position: absolute;
-        left:-425;
+    left:-425;
 	background-color:#eee;
 	border:1px solid ;
 	padding:10px;
@@ -133,15 +135,18 @@
 	height: 400px;
 	
       }
-      
-      .ui-accordion-header{
-	background-color:#F5F5F5;
-	border:1px solid;
-	color:#666;
-      }
-      .ui-accordion-header a{text-decoration:none;}
-      .ui-accordion-content{
-	border:1px solid;
+     /*
+		Start styling for accordion menu
+     */
+    .ui-accordion-header{
+		background-color:#F5F5F5;
+		color:#666;
+	}
+    .ui-accordion-header a{
+    	text-decoration:none;
+    }
+    .ui-accordion-content{
+		/*border:1px solid;*/
       }
       
       /*
@@ -192,51 +197,53 @@
 	width:80%;
 	margin-top:10px;
 	}
-/*Few additions by Ashwini*/
-.main-wrap{
-	display:none;
-}
-#drop{
-  	padding: 10px;
-  	border: 2px dashed #e8e8e8;
-  	min-width: 300px;
-  	max-width : 500px;
-  	text-align:center;
-  	margin-left: 30px;
-  }
-section.active{
-	background: #FFD38C;
-	border: 0;
-}
-.dataTable{
-	margin:0 auto;
-}
-.input-controls{
-	margin:10px;
-}
-section.datadriven-wrap{
-	height: 400px;
-	overflow: hidden;
-	position: relative;
-}
-section.datadriven-wrap .controls{
-	position: absolute;
-	top: 0px;
-	left: 0px;
-	height: 30px;
-	border-bottom: 1px solid #e3e3e3;
-	width:100%;
-}
-section.datadriven-wrap .controls .status{
-	display:none;
-}
-section.datadriven-wrap .controls input[type="text"]{
-	height: 14px;
-	margin:0px;
-}
-section.datadriven-wrap .spreadsheet{
-	margin-top: 30px;
-	overflow: auto;
-	max-height: 368px;
+/*
+	Styling for the input module
+*/
+	.main-wrap{
+		display:none;
+	}
+	#drop{
+	  	padding: 10px;
+	  	border: 2px dashed #e8e8e8;
+	  	min-width: 300px;
+	  	max-width : 500px;
+	  	text-align:center;
+	  	margin-left: 30px;
+	  }
+	section.active{
+		background: #FFD38C;
+		border: 0;
+	}
+	.dataTable{
+		margin:0 auto;
+	}
+	.input-controls{
+		margin:10px;
+	}
+	section.datadriven-wrap{
+		height: 400px;
+		overflow: hidden;
+		position: relative;
+	}
+	section.datadriven-wrap .controls{
+		position: absolute;
+		top: 0px;
+		left: 0px;
+		height: 30px;
+		border-bottom: 1px solid #e3e3e3;
+		width:100%;
+	}
+	section.datadriven-wrap .controls .status{
+		display:none;
+	}
+	section.datadriven-wrap .controls input[type="text"]{
+		height: 14px;
+		margin:0px;
+	}
+	section.datadriven-wrap .spreadsheet{
+		margin-top: 30px;
+		overflow: auto;
+		max-height: 368px;
 
-}
+	}
