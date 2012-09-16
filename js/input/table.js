@@ -22,15 +22,19 @@ var table = function () {
 	 		 	table = filterTables( tables ),
 	 		 	titles = parseHeadings ( table );
 
-	 		 	matrix = htmlToArray( table );
+	 		 	matrix = htmlToArray( table );	
+	 		 	console.log(uri)
+	 		 	$('#dropmatrix').inputtable('loadData',matrix);
+	 		 	/*
 
 	 		 	insertData(arrayToHTML(matrix)
 	 				.addClass('default-table')
 	 				.prepend(titlesToHTML(titles))
+	 				);
 
+				*/
 
-
-	 			);
+	 			
 
 	 	});
 		

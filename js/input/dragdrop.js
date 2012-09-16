@@ -53,13 +53,41 @@ addEvent(drop, 'drop', function (e) {
   
   drop.innerHTML = e.dataTransfer.getData('Text') ;
 
-  console.log('Start fetching information for ' + e.dataTransfer.getData('Text'));
   
+  $('#dropmatrix').inputtable({
+
+          rows: 15,
+          cols: 4,
+        minSpareCols : 1,
+        minSpareRows : 1,
+        fillHandle : true,
+        rowHeaders : true,
+        //colHeaders : true,
+        legend: [
+          {
+            match: function (row, col, data) {
+            return !(data()[row][col]);
+
+          },
+           style: {
+            background: '#f5f5f5' 
+            //if the cell is empty, change the back ground to grey
+            }
+          }
+        ]
+
+
+  });
   table.init({
     parent : 'section.droptable'
   });
-  table.loadURL(e.dataTransfer.getData('Text'));
- 
+  var a = e.dataTransfer.getData('Text');
+  console.log(a);
+  var bottleNeck = setInterval(function(){
+      table.loadURL(a);
+      console.log("Table should've been fetched")
+      clearInterval(bottleNeck);
+    }, 1);
   /*
 
   var fetchHTML = (function (){
