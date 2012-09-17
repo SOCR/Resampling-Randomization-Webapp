@@ -54,19 +54,6 @@
 				minSpareRows : 1,
 				fillHandle : true,
 				rowHeaders : true,
-				//colHeaders : true,
-				legend: [
-					{
-					  match: function (row, col, data) {
-						return !(data()[row][col]);
-
-					},
-					 style: {
-						background: '#f5f5f5' 
-						//if the cell is empty, change the back ground to grey
-					  }
-					}
-				]
 
 
 	});

@@ -8,7 +8,7 @@ var table = function () {
 					.attr('type','text').val(''),
 		matrix = [],
 		lastEdit ='',
-		parent = '.dataTable';
+		parent = 'section.droptable';
 		controls = '.input-controls' // By default need to work on them later
 
 	var request = function ( uri,parent ){
@@ -22,14 +22,25 @@ var table = function () {
 	 		 	table = filterTables( tables ),
 	 		 	titles = parseHeadings ( table );
 
-	 		 	matrix = htmlToArray( table );
+	 		 	matrix = htmlToArray( table );	
+	 		 	console.log(uri)
+	 		 	console.log('Sync Start')
+	 		 	setTimeout(
+	 		 	function(){	$('#input-table').inputtable('loadData',matrix)
+	 		 		console.log('Hello from within the async')
+	 		 		}
+	 		 		,1 );
+	 		 	console.log('Sync End')
+	 		 	/*
 
-	 		 	insertData(arrayToHTML(matrix)
-	 				.addClass('default-table')
-	 				.prepend(titlesToHTML(titles))
+		 		 	insertData(arrayToHTML(matrix)
+		 			//	.addClass('default-table')
+		 			//	.prepend(titlesToHTML(titles))
+		 				);
 
+				*/
 
-	 			);
+	 			
 
 	 	});
 		
@@ -38,10 +49,10 @@ var table = function () {
 
 	var insertData = function( html ){
 			//Remove all obligatory posts from before
-
-	 			$(controls).html( html );
-	 			var control = '<div class="input-controls"> Range : <input type="text" name="start"> - <input type="text" name="end"> <input type="button" class="btn" value="Generate submatrix" id="submatrix"> <div> <input type="button" value="Done Editing" class="btn" id="generateMatrix"></div></div>';
-	 			$(controls).prepend(control);
+		//	console.log($(parent))
+	 			$(parent).html( html );
+	 			//var control = '<div class="input-controls"> Range : <input type="text" name="start" class="input-mini" placeholder="start"> - <input type="text" name="end" class="input-mini" placeholder="end">  <div> <input type="button" class="btn" value="Generate submatrix" id="submatrix"> <input type="button" value="Use entire matrix" class="btn" id="generateMatrix"></div></div>';
+	 	//		$(controls).prepend(control);
 	}
 	var parseHeadings = function( html ){
 
@@ -157,7 +168,19 @@ var table = function () {
 			$(parent).html('Loading ...')
 		},
 		loadURL :  function ( url ){	
+
+			var requestHost = document.createElement("a");
+   				requestHost.href = url;
+
+   				if(window.location.hostname !== requestHost.hostname){
+   					$(controls).html('');
+   					$(parent).html('<div class="alert alert-danger">Data Sets should be on same server due to security reasons</div>');
+   					return;
+
+   				}
+
 			request( url, parent );
+			$(parent).html('')
 			$(parent).find('input:eq(1)').val( getMatrixsize )
 		},
 		selectData :  function ( coords ){

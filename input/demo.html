@@ -2,6 +2,7 @@
 <head>
 	<script src="./js/jquery.min.js"></script>
 	<script src="./js/inputtable.js"></script>
+	<script src="./js/table.js"></script>
 	<link rel="stylesheet" media="screen" href="css/table.css">
 	<style>
 	body{
@@ -34,6 +35,18 @@
 		</div>
 	</div>
 	</div>
-	</script><script src="./js/script.js"></script>
-</body>
+	<script>
+		$('#input-table').inputtable({
+		 	rows: 5,
+		    cols: 3,
+			minSpareCols : 1,
+			minSpareRows : 1,
+			fillHandle : true
+		})
+
+		console.log('Table Initilaised');
+
+		table.loadURL('http://localhost/socr_3/data/heightsweights.htm');
+	</script>
+	</body>
 </html>

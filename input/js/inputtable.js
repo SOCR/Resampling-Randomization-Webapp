@@ -702,13 +702,26 @@
        * @return {Object} ending td in pasted area
        */
       populateFromArray: function (start, input, end, allowHtml, source) {
+
+        /*
+
+          r/c - Current Row/Col
+          rlen/clen - total number of rows/cols
+          changes  - empty array
+
+        */
+    
         var r, rlen, c, clen, td, endTd, changes = [], current = {};
         rlen = input.length;
         if (rlen === 0) {
           return false;
         }
+        /*
+          To break up the loop start where you last left
+        */
         current.row = start.row;
         current.col = start.col;
+
         for (r = 0; r < rlen; r++) {
           if ((end && current.row > end.row) || (!priv.settings.minSpareRows && current.row > self.rowCount - 1)) {
             break;
@@ -733,6 +746,7 @@
             r = -1;
           }
         }
+        
         if (priv.settings.onBeforeChange && changes.length) {
           var result = priv.settings.onBeforeChange(changes);
           if (result === false) {
@@ -749,6 +763,8 @@
           }
           setData.push([changes[i][0], changes[i][1], changes[i][3]]);
         }
+        
+        
         endTd = self.setDataAtCell(0, 0, setData, allowHtml);
         if (changes.length) {
           self.container.triggerHandler("datachange.inputtable", [changes, source || 'populateFromArray']);
@@ -2177,6 +2193,89 @@
         ];
       }
 
+      /*
+
+      The for loop which acts as the bottleneck.
+      Start -> The async implementation of setDataAtCell  
+      @variables : timer, processor, busy
+
+      */
+
+      var busy = false, 
+          processor = false,
+          i = 0,
+          ilen = values.length;
+
+          if(processor){
+            clearInterval(processor);
+          }
+
+          // Show the loading sign
+          console.log('The request has started :)' )
+          processor = setInterval(function(){
+
+            if(!busy){
+              busy =  true;
+              row = values[i][0];
+              col = values[i][1];
+              value = values[i][2];
+
+              /*
+                If the rows and cols don't exit then create them :)
+              */
+
+              if (priv.settings.minSpareRows) {
+                while (row > self.rowCount - 1) {
+                  datamap.createRow();
+                  grid.createRow();
+                  refreshRows = true;
+                }
+              }
+              if (priv.settings.minSpareCols) {
+                while (col > self.colCount - 1) {
+                  datamap.createCol();
+                  grid.createCol();
+                  refreshCols = true;
+                }
+              }
+              var td = grid.getCellAtCoords({row: row, col: col});
+
+              // Should I remove the check?
+              switch (typeof value) {
+                case 'string':
+                  break;
+
+                case 'number':
+                  value += '';
+                  break;
+
+                default:
+                  value = '';
+              }
+              /*
+                Escapes the string
+              */
+              if (!allowHtml) {
+                escaped = value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;"); 
+              }
+
+              td.innerHTML = (escaped || value).replace(/\n/g, '<br/>');
+              self.minWidthFix(td);
+              datamap.set(row, col, value);
+         
+              if(++i > ilen){
+                clearInterval(processor);
+                console.log('Finished proessing :)')
+              }
+
+            busy = false;
+
+            }
+          }
+          ,1)
+
+      /*
+
       for (var i = 0, ilen = values.length; i < ilen; i++) {
         row = values[i][0];
         col = values[i][1];
@@ -2208,24 +2307,32 @@
           default:
             value = '';
         }
+        
         if (!allowHtml) {
-          escaped = value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;"); //escape html special chars
+          escaped = value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;"); 
         }
         td.innerHTML = (escaped || value).replace(/\n/g, '<br/>');
         self.minWidthFix(td);
         datamap.set(row, col, value);
-        grid.updateLegend({row: row, col: col});
-      }
+      
+       
+      //  grid.updateLegend({row: row, col: col});
+      } */
+
+
+
       if (refreshRows) {
         self.blockedCols.refresh();
       }
       if (refreshCols) {
         self.blockedRows.refresh();
       }
+
       var recreated = grid.keepEmptyRows();
       if (!recreated) {
         selection.refreshBorders();
       }
+
       setTimeout(function () {
         if (!refreshRows) {
           self.blockedRows.dimensions(values);
@@ -2234,6 +2341,7 @@
           self.blockedCols.dimensions(values);
         }
       }, 10);
+
       return td;
     };
 
