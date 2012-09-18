@@ -450,13 +450,15 @@ return{
 		var start=Math.floor(Array.min(values));
 		var stop=Math.ceil(Array.max(values));
 		console.log("start"+start+"stop"+stop);
+		console.log(values);
 		_currentValues=values;
 		var histogram = vis({
 			parent : '#dotplot',
 			data : values,
 			height:390,
-			range: [0,stop*2],
-			dataSetMean :datum				//*** @ASHWINI - change the dataSetMean variable to somethingelse like datum or something generic 
+			//range: [0,stop],
+			datum :datum,
+			variable: setting.variable				//*** @ASHWINI - change the dataSetMean variable to somethingelse like datum or something generic 
 		})();
 		
 	},
@@ -505,7 +507,10 @@ return{
 	*/
 	loadInputSheet:function(data){
 		console.log("loadInputSheet() has been called....data is : " +data);
-		$('#input').inputtable('loadData',data);
+		/*
+			Temporarily disabling it, I think we should leave the input matrix for data driven purposes only, perhaps the right place would be in the simulation info
+		*/
+		//$('#input').inputtable('loadData',data);
 		
 	},
 	/*

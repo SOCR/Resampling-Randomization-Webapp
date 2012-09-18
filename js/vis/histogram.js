@@ -2,7 +2,11 @@ function vis(config){
 
  //Some default variables
  var rangeDefault = d3.extent( config.data );
- rangeDefault[0] = 0;
+       rangeDefault[0] = 0;
+
+  /*
+    Making all the histograms start from the zero number, not sure if it's the right way
+  */
 
     var defaults = {
       'range' : rangeDefault,
@@ -93,12 +97,12 @@ function vis(config){
 
         //console.log(x(data[0].dx))
 
-        if(settings.dataSetMean){
+        if(settings.datum){
 
-        console.log('DataSet Mean '+ settings.dataSetMean);
+       // console.log('DataSet Mean '+ settings.datum);
 
           var meanbar = svg.append('rect')
-                .attr('x',function(){ return x(settings.dataSetMean) })
+                .attr('x',function(){ return x(settings.datum) })
                 .attr('y',function(){ return 0;})
                 .attr('width', function(){ return 10;})
                 .attr('height',function(){ return height ;})
@@ -108,8 +112,8 @@ function vis(config){
                   var left = $(this).position().left,
                       top = $(this).position().top;
 
-                  var content = '<h3> Mean : ' + settings.dataSetMean + '</h3>';
-                  console.log(viswrap.tooltip)
+                  var content = '<h3> '+ settings.variable +' : ' + settings.datum + '</h3>';
+                 // console.log(viswrap.tooltip)
                   viswrap.tooltip.show([left, top], content, 's');
 
                 })

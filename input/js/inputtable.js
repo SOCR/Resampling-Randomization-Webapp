@@ -764,7 +764,7 @@
           setData.push([changes[i][0], changes[i][1], changes[i][3]]);
         }
         
-        
+
         endTd = self.setDataAtCell(0, 0, setData, allowHtml);
         if (changes.length) {
           self.container.triggerHandler("datachange.inputtable", [changes, source || 'populateFromArray']);
@@ -2263,9 +2263,10 @@
               self.minWidthFix(td);
               datamap.set(row, col, value);
          
-              if(++i > ilen){
+              if(++i > ilen-1 ){
+                 console.log('Finished proessing :)')
                 clearInterval(processor);
-                console.log('Finished proessing :)')
+               
               }
 
             busy = false;
