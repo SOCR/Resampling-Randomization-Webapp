@@ -225,7 +225,7 @@ return{
 	 *@description: It generates all the samples List
      * @dependencies : _create(start,stop)
      */
-	createList:function(x){
+	createList:function(start,end){
 		console.log('createList invoked (view.js)');
 		if(model.bootstrapSamples.length==0)
 			{
@@ -233,19 +233,14 @@ return{
 			}
 		
 		else{
-
-			//$("#sampleList").height($(window).innerHeight());
-			//alert($(window).innerHeight());
-			//alert($(document).innerHeight());
-			var range=x.split('-');
-			if((range[1]-range[0])<500)
+			if((end-start)<500)
 				{	
-					_create(range[0],range[1]-range[0]);
+					_create(start,end-start);
 				}
 			else
 				{	
-					_createPagination(range[0],range[1]);
-					_create(range[0],500);
+					_createPagination(start,end);
+					_create(start,500);
 				}
 			}
 		},
@@ -283,6 +278,8 @@ return{
 			values: [ 75, 300 ],
 			slide: function( event, ui ) {
 				$( "#showCount" ).html( ui.values[ 0 ] + " - " + ui.values[ 1 ] );
+				$(".show-list-start").val(ui.values[0]);
+				$(".show-list-end").val(ui.values[1]);
 			}
 		});
 		$( "#showCount" ).html($( "#range" ).slider( "values",0 )+" - " + $( "#range" ).slider( "values", 1 ) );

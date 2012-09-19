@@ -50,41 +50,54 @@ return{
 	initialize:function(){
 		_this=this;
 		console.log('initialization started');
-		//add event listeners
-		
+		/*ADDING EVENT LISTENERS STARTS*/
 		$("#runButton").on('click',function(){
-		console.log('Run Started');
-		_this.run();
-		
+			console.log('Run Started');
+			_this.run();
 		});
 		$("#stepButton").on('click',function(){
-		console.log('Step pressed ');
-		_this.step();
+			console.log('Step pressed ');
+			_this.step();
 		});
 		$("#stopButton").on('click',function(){
-		console.log('Stop Pressed ');
-		_this.stop();
+			console.log('Stop Pressed ');
+			_this.stop();
 		});
-		$("#resetButton").on('click',function(){
-		console.log('Reset pressed');
-		_this.reset();
+			$("#resetButton").on('click',function(){
+			console.log('Reset pressed');
+			_this.reset();
 		});
 		$("#infer").on('click',function(){
 		//create loading gif
-		
-		_this.setDotplot();
-		$("#percentile-div").css('display','');
+			_this.setDotplot();
 		});
 		$("#percentile").on('click',function(){
-		//alert("value"+$("#percentile-value-display").html());
-		view.setPercentile($("#percentile-value-display").html());
-		//$("#percentile-div").css('display','');
+			view.setPercentile($("#percentile-value-display").html());
 		});
 		$("#doneButton").on('click',function(){
-		console.log('Done Pressed');
-		if(_this.setInput()==false)
-			alert('Input some correct data!');
+			console.log('Done Pressed');
+			if(_this.setInput()==false)
+				alert('Input some correct data!');
 		});
+		$('#inputEditButton').on('click',function(){
+			$('#accordion').accordion( "activate" , 0);
+		});
+			
+		/*
+		 * Bind show button to createList function in appView.js
+		 */
+		$("#showButton").on('click',function(){
+			//a check to see if the sample count is 0 or not
+			view.createList($('.show-list-start').val(),$('.show-list-end').val());
+		});
+		$('#startApp').on('click',function(){
+			console.log('Start App button clicked');
+			$('#welcome').animate({
+				left:-2999},
+				1000,
+				'easeInCubic');
+		});
+		/*ADDING EVENT LISTENERS ENDS*/
 		
 		//create a slider
 		view.createSlider();
@@ -121,27 +134,6 @@ return{
 			}
 		});
 
-		
-			$('#inputEditButton').on('click',function(){
-				$('#accordion').accordion( "activate" , 0);
-			});
-			
-			/*
-			 * Bind show button to createList function in appView.js
-			 */
-			$("#showButton").on('click',function(){
-				//a check to see if the sample count is 0 or not
-				view.createList($('#showCount').text());
-			});
-			
-			$('#startApp').on('click',function(){
-				console.log('Start App button clicked');
-				$('#welcome').animate({
-					left:-2999},
-					1000,
-					'easeInCubic');
-			});
-			
 			//REDUNDENT....AS THE INPUT AND CONTROLLER TILE WILL NEVER OVERLAP
 			//For deciding which tile should come over which one!
 			$('#slide-out-input').on('click',function(){
