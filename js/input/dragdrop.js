@@ -56,8 +56,8 @@ addEvent(drop, 'drop', function (e) {
   
   $('#dropmatrix').inputtable({
 
-          rows: 15,
-          cols: 4,
+         rows: 15,
+        cols: 4,
         minSpareCols : 1,
         minSpareRows : 1,
         fillHandle : true
@@ -67,12 +67,8 @@ addEvent(drop, 'drop', function (e) {
     parent : 'section.droptable'
   });
   var a = e.dataTransfer.getData('Text');
-  console.log(a);
-  var bottleNeck = setInterval(function(){
-      table.loadURL(a);
-      console.log("Table should've been fetched")
-      clearInterval(bottleNeck);
-    }, 1);
+  table.loadURL(a);
+  
   /*
 
   var fetchHTML = (function (){

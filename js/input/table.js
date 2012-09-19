@@ -8,7 +8,7 @@ var table = function () {
 					.attr('type','text').val(''),
 		matrix = [],
 		lastEdit ='',
-		parent = 'section.droptable';
+		parent = 'section.drag div.spreadsheet div.alert-response';
 		controls = '.input-controls' // By default need to work on them later
 
 	var request = function ( uri,parent ){
@@ -162,7 +162,7 @@ var table = function () {
 			$(parent).html('Loading ...')
 		},
 		loadURL :  function ( url ){	
-
+			//$(parent).html('');
 			var requestHost = document.createElement("a");
    				requestHost.href = url;
 
@@ -174,7 +174,7 @@ var table = function () {
    				}
 
 			request( url, parent );
-			$(parent).html('')
+			//$(parent).html('')
 			$(parent).find('input:eq(1)').val( getMatrixsize )
 		},
 		selectData :  function ( coords ){

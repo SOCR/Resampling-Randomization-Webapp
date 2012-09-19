@@ -245,13 +245,11 @@
 											<li><a href="#dragdrop" data-toggle="tab">Drag Drop</a></li>
 										</ul>
 							</div>
-							<div class="tab-content">
+							<div class="tab-content" class="datadriven-wrap">
 								 <div class="tab-pane active" id="spreadsheet">
-									<section class = "datadriven-wrap">
+									<section class = "datadriven-wrap copy">
 							
 									<section class = "controls">
-									
-										Data Driven :
 										<input class="btn" type='button' value='Done'>
 										<input class="btn btn-danger" type='button' value='Reset'>
 										<span class="response"></span>
@@ -260,11 +258,10 @@
 
 									<div class = "spreadsheet">
 
-
-									
-									 	<div class="dataTable" id="input"></div>
-									 	<div id="status"></div>	
-										``
+										<div id="status"></div>	
+									 	<div class="dataTable spreadsheet_copy" id="input"></div>
+									 	
+										
 									</div>
 
 									</section>
@@ -272,10 +269,26 @@
 								</div>
 
 								<div class="tab-pane" id="dragdrop">
-								  <section id="drop"> Drag and Drop your URL</section>
-								  <div id="dropmatrix" class="dataTable"></div>
-								  <div class ="input-controls"></div>
-								  <section class="droptable spreadsheet"></section>
+
+								<section class = "datadriven-wrap drag">
+
+									<section class = "controls ">
+										<input class="btn" type='button' value='Done'>
+										<input class="btn btn-danger" type='button' value='Reset'>
+										<span class="response"></span>
+										Range : <input type="text" name="start" class="input-mini" placeholder="start"> - <input type="text" name="end" class="input-mini" placeholder="end">  <input type="button" class="btn" value="Generate submatrix" id="submatrix_spreadsheet"> 
+									</section>
+
+								  <div class="spreadsheet">
+
+								  	 <section id="drop"> Drag and Drop your URL</section>
+								  	<div class="alert-response"><div>
+								  	<div id="dropmatrix" class="dataTable spreadsheet_drag"></div>
+								  </div>
+								  <!--<div class ="input-controls"></div>
+								  <section class="droptable spreadsheet"></section>-->
+
+								</section>
 								</div>
 
 							</div>		
