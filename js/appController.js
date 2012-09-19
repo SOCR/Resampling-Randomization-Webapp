@@ -69,6 +69,9 @@ return{
 		});
 		$("#infer").on('click',function(){
 		//create loading gif
+			if(model.bootstrapSamples.length==0)
+				$("#controller-content").append('<div class="alert alert-error"><a class="close" data-dismiss="alert" href="#">x</a><h4 class="alert-heading">No Random samples to infer From!</h4>Please generate some random samples. Click "back" button on the controller to go to the "Generate Random Samples!" button.</div>');
+			else
 			_this.setDotplot();
 		});
 		$("#percentile").on('click',function(){
@@ -195,8 +198,6 @@ return{
                     });
 		
 			});
-		
-		
 		console.log('initialization done');
 	},
 	/*not used till now....currently the input/js/script.js file calls setDataset function directly when the done button is pressed*/
@@ -305,9 +306,7 @@ return{
 	//$('#dotplot').addclass('ui-state-active');
 	//$('#dotplot').addclass('ui-state-active');
 	},
-	getDotPlot:function(){
 	
-	},
 	loadController:function(x){
 		if(x=='simulationDriven')
 			{

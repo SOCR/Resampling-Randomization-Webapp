@@ -24,6 +24,9 @@ var appModel=function(){
 	var _datasetKeys=[];
 	var _datasetValues=[];
 	var _sampleMean=[];
+	var _sampleStandardDev=[];
+	var _samplePercentile=[];
+
 	var coin = new Array(N);
 /*
  *FOR SIMULATION DRIVEN
@@ -162,13 +165,15 @@ return{
 	*@dependencies: generateTrail()
 	*/
 	getMean:function(){
-		for(var j=0;j<_count;j++)
-			{
-			_sampleMean[j]=_generateMean(j);
-			//console.log(_sampleMean[j]);
-			}
+		if(_sampleMean.length==bootstrapSampleValues.length)
 			return _sampleMean;
-			
+		else{
+			for(var j=_sampleMean.length;j<_count;j++)
+				{
+				_sampleMean[j]=_generateMean(j);
+				}
+				return _sampleMean;
+			}
 		},
 	/**
 	*@method: [public] getMeanOf()
@@ -187,14 +192,17 @@ return{
 	},
 	
 	getStandardDev:function(){
-	var _sampleStandardDev=[];
-	for(var j=0;j<_count;j++)
+	if(_sampleStandardDev.length==bootstrapSampleValues.length)
+			return _sampleStandardDev;
+	else
+		{
+		for(var j=_sampleStandardDev.length;j<_count;j++)
 			{
 			_sampleStandardDev[j]=_standardDev(j);
 			//console.log(_sampleMean[j]);
 			}
 			return _sampleStandardDev;
-			
+		}	
 	},
 	getStandardDevOf:function(sampleNo){
 		return _standardDev(sampleNo);
@@ -231,13 +239,17 @@ return{
 	},
 	getPercentile:function(){
 	console.log("getPercentile() invoked");
-		var _samplePercentile=[];
+	if(_samplePercentile.length==bootstrapSampleValues.length)
+			return _samplePercentile;
+	else
+		{
 		for(var j=0;j<_count;j++)
 			{
 			_samplePercentile[j]=this.getPercentileOf(j);
 			//console.log(_samplePercentile[j]);
 			}
 			return _samplePercentile;
+		}
 		
 	},
 	getPercentileOf:function(sampleNumber){
