@@ -9,10 +9,10 @@
 var appView = function(appModel){
 
 /* private properties */
-	var model=appModel;
-	var _datapoints=$('#nSize').val();
-	var _currentVariable;
-	var _currentValues;
+	var model=appModel;					// [OBJECT] Reference to the App's model object.
+	var _datapoints=$('#nSize').val();	// Reference to the number of datapoints in each random sample
+	var _currentVariable;				// [ARRAY] Reference to current inference varaible [mean , SD , count , percentile]
+	var _currentValues;					// [ARRAY] Reference to current inference variable's value of each random sample.
 
 /* public properties */	
 	runButton = $("#runButton"),
@@ -26,11 +26,6 @@ var appView = function(appModel){
 	countSize=$("#countSize"),
 	nSize=$('#nSize');
 	
-/* Input Module */
-	doneButton=$("#doneButton");
-	showButton=$("#showButton");
-	
-	
 	/**
 	*@method: [private] _create
 	*@param :  start: the first sample number to be displayed
@@ -38,8 +33,8 @@ var appView = function(appModel){
 	*@desc:   populates the sampleList div with random samples
 	*/ 
 	function _create(start,size){
-		console.log("_create funtion started");
-		console.log(model.bootstrapSamples);
+		console.log("_create("+start+","+size+") funtion started");
+		//console.log(model.bootstrapSamples);
 		y=parseInt(start)+size;
 		$('#sampleList').html('');		//first empty the sample list
 		//change the loop to a inverse while loop
@@ -129,9 +124,8 @@ var appView = function(appModel){
 	*@param :  y: how many samples to be displayed
 	*@desc:  creates interactive pagination depending upon the number of samples being shown
 	*/
-	
-	
 	function _createPagination(x,y){
+	console.log("_createPagination() invoked");
 		var count=Math.ceil((y-x)/500);		//number of pages
 		$(".pagination").paginate({
 				count 				: count,
@@ -152,26 +146,19 @@ var appView = function(appModel){
 								  }
 			});
 		$('.pagination li').on('click',function(){
-			//alert('1');
 			var start=$(this).text()*500-500;
 			console.log(start);
 			_create(start,500);
 			});
 	}
-	
-	function getPos(el) {
-		// yay readability
-		for (var lx=0, ly=0;
-			el != null;
-			lx += el.offsetLeft, ly += el.offsetTop, el = el.offsetParent);
-		return {x: lx,y: ly};
-	}
+
 return{
-    
-	/**
-     * Disables step,run and show buttons
-    */
-	disableButtons:function(){
+ 	/**
+     *@method - disableButtons()
+	 *@description: Disables step,run and show buttons
+     * @dependencies : none
+     */
+  	disableButtons:function(){
 		console.log("disableButtons invoked");
 		$("#stepButton").attr('disabled',"true"); 
 		$("#runButton").attr('disabled',"true");
@@ -179,8 +166,10 @@ return{
 	},
 	
 	/**
-     * Disables step,run and show buttons
-    */
+     *@method - enableButtons()
+	 *@description: Enables step,run and show buttons
+     * @dependencies : none
+     */
 	enableButtons:function(){
 		console.log("enableButtons invoked");
 		$("#stepButton").removeAttr('disabled'); 
@@ -189,7 +178,7 @@ return{
 	},
 	
 	/**
-     *@method - clearAll
+     *@method - clearAll()
 	 *@description: Clears all canvas and div. Resetting the view of the whole App
      * @dependencies : none
      */
@@ -204,6 +193,7 @@ return{
 		$('#dataset').html('');
 		$("#input").inputtable('clear'); 
 		//also clear the canvas
+		_currentValues=[];
 	},
 	
 	/**
@@ -217,21 +207,22 @@ return{
 			data : values,
 			range: [0,1]
 			})();
-		},
+	},
 		
 	/**
-     *@method - createList(range)
-	 *@param -  x - start and end sample number seperated by '-'
-	 *@description: It generates all the samples List
+     *@method : createList(range)
+	 *@param :start- start sample number
+	 *@param : end -  stop sample number
+	 *@description: It generates all the samples in the List
      * @dependencies : _create(start,stop)
      */
 	createList:function(start,end){
-		console.log('createList invoked (view.js)');
+		console.log('createList('+start+','+end+') invoked ');
 		if(model.bootstrapSamples.length==0)
-			{
+			{ 
+			// if no random samples have been generated, display a alert message!
 			$("#sampleList").html('<div class="alert alert-error"><a class="close" data-dismiss="alert" href="#">x</a><h4 class="alert-heading">No Random samples to show!</h4>Please generate a dataset using the list of experiments or manually enter the data. Then generate some random samples from the controller tile before click "show"</div>');
 			}
-		
 		else{
 			if((end-start)<500)
 				{	
@@ -243,21 +234,21 @@ return{
 					_create(start,500);
 				}
 			}
-		},
-		
+	},
 	/**
-     * update the counter display
-     *
+     *@method : updateCounter()
+	 *@description: update the counter display
+     * @dependencies : none
      */
 	updateCounter:function(){
 		//count value changed on top
 		$('#displayCount').text(model.getCount());
 		return true;
 	},
-	
 	/**
-     * update the slider value
-     *
+     *@method : updateSlider()
+	 *@description:update the slider value
+     * @dependencies : none
      */
 	updateSlider:function(){
 		//get the count and set it as the maximum value
@@ -267,10 +258,11 @@ return{
 	},
 	
 	/**
-     * Create the slider for show option
-     *
+     *@method : createShowSlider()
+	 *@description:Create the slider for show option
+     * @dependencies : none
      */
-	createSlider:function(){
+	createShowSlider:function(){
 		$( "#range" ).slider({
 			range: true,
 			min: 0,
@@ -283,7 +275,6 @@ return{
 			}
 		});
 		$( "#showCount" ).html($( "#range" ).slider( "values",0 )+" - " + $( "#range" ).slider( "values", 1 ) );
-		//$("#amount" ).val( "$" + $( "#range" ).slider( "value" ) );
 	},
 	
 	/**
@@ -304,7 +295,6 @@ return{
 			$( "#speedCount" ).html( ui.value );
 			}
 		});
-				
 		$('.controller-back').on('click',function(){
 			Experiment.createControllerView();
 			Experiment.initialize();
@@ -444,8 +434,11 @@ return{
 			}
 			
 		//var values = [4,2,3,4,1,5,6,7];
-		var start=Math.floor(Array.min(values));
-		var stop=Math.ceil(Array.max(values));
+		//var start=Math.floor(Array.min(values));
+		//var stop=Math.ceil(Array.max(values));
+		var temp=values.sort(function(a,b){return a-b});
+		var start=temp[0];
+		var stop=temp[values.length-1]
 		console.log("start"+start+"stop"+stop);
 		console.log(values);
 		_currentValues=values;
@@ -462,36 +455,30 @@ return{
 	
 	/**
 	*@method: updateSimulationInfo
-	*@description: Called when the 'step button' is pressed in the controller tile. Call is made in appController.js
+	*@description: Called when the 'step button' or 'run button' is pressed in the controller tile. Call is made in appController.js
 	*@return : none
 	*/
 	updateSimulationInfo:function(){
-		console.log('updateDetails (dataDrivenView.js ln 319) invoked');
+		console.log('updateSimulationInfo() invoked');
 		var array=['<table class="table table-striped">'];
 		array.push('<tr><td>Experiment Name</td><td><strong>'+Experiment.name+'</strong></td></tr>');
-		t=new Date();
-		//array.push('<tr><td>Start Time </td><td><strong>'+t.getTime()+'</strong></td></tr>');
 		array.push('<tr><td>DataSet Size </td><td><strong>'+Experiment.getDatasetSize()+'</strong></td></tr>');
 		array.push('<tr><td>Number of Random Samples : </td><td><strong>'+model.bootstrapSamples.length+'</strong></td></tr>');
 		array.push('<tr><td>DataSet Mean : </td><td><strong>'+model.getMeanOfDataset()+'</strong></td></tr>');
 		array.push('<tr><td>DataSet Standard Deviation: </td><td><strong>'+model.getSdOfDataset()+'</strong></td></tr>');
 		array.push('</table>');
-		console.log("no of samples "+model.bootstrapSamples.length);
 		$('#details').html(array.join(''));
-		//ADD NUMBER OF RANDOM SAMPLES GENERATED , DATASET MEAN ,SD
 	},
 	
 	/**
 	*@method: CoverPage
-	*@description: Called from the index.html page.
+	*@description: Called from the index.html page. Called whenever the window is resized!
 	*@return : none
 	*/
 	CoverPage:function(){
-		console.log('CoverPage()');
-
+		console.log('CoverPage() invoked!');
 		var height = $(window).height(),
 			width = $(window).width();
-
 		$('#welcome').css('height', height );
 	//	$('.welcome-container').css('padding-top',height/3).css('padding-left', height/3);
 		$('div.main-wrap').show();
@@ -508,7 +495,6 @@ return{
 			Temporarily disabling it, I think we should leave the input matrix for data driven purposes only, perhaps the right place would be in the simulation info
 		*/
 		//$('#input').inputtable('loadData',data);
-		
 	},
 	/*
 	setPercentile:function(x){
@@ -522,7 +508,5 @@ return{
 		return _currentValues[Math.floor(index)];
 	}
 	*/
-	
-	
-    }//return
+	}//return
 };

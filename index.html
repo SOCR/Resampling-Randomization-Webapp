@@ -519,7 +519,8 @@
 		
 		var url = window.location.href;
 		var baseUrl = url.substring(0, url.indexOf('index.html'));
-		
+		if(baseUrl=='')
+			baseUrl=url;
 		/*
 		GLOBAL VARIABLES...TO BE ACCESSED FROM {experiment}.js files.
 		*/

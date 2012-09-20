@@ -7,10 +7,6 @@
 */
 
 var appModel=function(){
-/*
- *FOR DATA DRIVEN
- *
- */
 //::::::: PRIVATE PROPERTIES :::::::::::::::
 	var _stopCount = 1000;			//Number of runs to be made when 'run' button is pressed 
 	var _count=0;				//keeps count of number of samples generated from start
@@ -26,16 +22,7 @@ var appModel=function(){
 	var _sampleMean=[];
 	var _sampleStandardDev=[];
 	var _samplePercentile=[];
-
-	var coin = new Array(N);
-/*
- *FOR SIMULATION DRIVEN
- *
- */
-	var N=100;
-	var p = 0.5;	  		//Probability of heads
-	var N = 50;			//Maximum number of trials 
-
+	
 /*
  IF EVENT DISPATCH MODEL IS TO BE IMPLEMENTED
 	subject = new LIB_makeSubject(['generateSamples','generateSample']); //list of all the events with observer pattern
@@ -294,7 +281,11 @@ return{
 	*@description: sets the data from the input sheet into the app model
 	*/
 	setDataset:function(input){
-	console.log('setDataSet() invoked!');
+		console.log('setDataSet() invoked!');
+		console.log('Input Data :'+input.data);
+		console.log('Input Type :'+input.type);
+		console.log('Input Range :'+input.range);
+		console.log('Input Values :'+input.values);
 	//input.processed is true incase of a simulation -> data mode switch
 		if(input.processed)
 			{
@@ -303,22 +294,19 @@ return{
 				console.log('Simulation data is loaded now.');
 				return false;
 			}
-			else if(input.type=='url')
+		else if(input.type=='url')
 			{
 			//both _datasetValues and _datasetKeys will have the same values
 				_datasetValues=input.data.split(",");
 				console.log('Simulation data is loaded now.');
 				return false;
 			}
-		else
+		else if(input.type=='getData' || input.type=='getSelected')
 			{
 			_datasetValues=[];			//emptying the array
 			_datasetKeys=[];
-			console.log('Input Data :'+input.data);
-			console.log('Input Type :'+input.type);
-			console.log('Input Type :'+input.range);
 			//iterate through rows
-			for(var i=input.range[0];i<=input.range[2];i++)
+			/*for(var i=input.range[0];i<=input.range[2];i++)
 				{
 					for(var j=input.range[1];j<=input.range[3];j++)
 						{
@@ -328,7 +316,7 @@ return{
 							}
 						}
 				}
-			/*
+			*/
 			for (var i = 0; i < input.data.length; i++)
 				{
 				for(var j = 0; j < input.data[i].length; j++)
@@ -339,13 +327,10 @@ return{
 							
 						}
 					}
-				
-				}		
-			*/
+				}
 			_datasetKeys=_datasetValues;
 			console.log('Data is loaded now. Data :' + _datasetValues);
 		}
-		
 	},
     
 	/**
@@ -356,16 +341,10 @@ return{
 	getSample:function(index){
 		return bootstrapSamples[index];
 	},
-	setSample:function(data,index){
-		bootstrapSamples[index]=sampleModel(data,index);
-	},
-	
 	
 	getSamples:function(){
 		return bootstrapSamples;
 	},
-	
-	
 	/*  getter and setter for variable '_stopCount'  */
 	setStopCount:function(y){
 		//alert(y);
@@ -394,16 +373,12 @@ return{
 		_datasetValues=[];
 		//this.bootstrapSamples=[];
 		this.setCount(0);
+	},
+	resetVariables:function(){
+		_sampleMean=[];
+		_sampleStandardDev=[];
+		_samplePercentile=[];
 	}
 	
 }//return
 };
-
-
-
-/*
-INCOMPLETE FUNCTIONS
-
-error
-
-*/
