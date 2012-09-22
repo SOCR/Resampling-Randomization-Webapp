@@ -81,7 +81,7 @@
 			2. Entire Dataset
 		
 		*/
-		
+		$("#dataDriven-tab").trigger('click');
 		if( isSelected()  ){
 
 			console.log('Coordinates are selected ' + isSelected() )

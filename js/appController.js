@@ -101,7 +101,7 @@ var appController=function(appModel,view){
 	
 		// Twitter Feed
 		$('#tweetFeed').jTweetsAnywhere({
-				searchParams: 'q=simulation',
+				searchParams: 'q=doubt,ucla',
 				count: 10,
 				showTweetFeed: {
 					autorefresh: {
@@ -314,7 +314,7 @@ var appController=function(appModel,view){
 	loadController:function(x){
 		if(x=='simulationDriven')
 			{
-				Experiment.createControllerView();
+				Experiment.createControllerView(x);
 				Experiment.initialize();
 				
 			}

@@ -446,7 +446,7 @@ return{
 			parent : '#dotplot',
 			data : values,
 			height:390,
-			//range: [0,stop],
+			//range: [start,stop],
 			datum :datum,
 			variable: setting.variable				//*** @ASHWINI - change the dataSetMean variable to somethingelse like datum or something generic 
 		})();
