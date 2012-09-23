@@ -437,8 +437,14 @@ return{
 		//var start=Math.floor(Array.min(values));
 		//var stop=Math.ceil(Array.max(values));
 		var temp=values.sort(function(a,b){return a-b});
+<<<<<<< HEAD
 		var start=Math.floor(temp[0]);
 		var stop=Math.ceil(temp[values.length-1]);
+=======
+		var start=(temp[0];
+        var stop=temp[values.length-1];
+
+>>>>>>> [UI] Minor Bug fixed. Controller view not activated when user inputs data.
 		console.log("start"+start+"stop"+stop);
 		console.log(values);
 		_currentValues=values;
