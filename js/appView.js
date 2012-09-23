@@ -437,8 +437,8 @@ return{
 		//var start=Math.floor(Array.min(values));
 		//var stop=Math.ceil(Array.max(values));
 		var temp=values.sort(function(a,b){return a-b});
-		var start=temp[0];
-		var stop=temp[values.length-1]
+		var start=Math.floor(temp[0]);
+		var stop=Math.ceil(temp[values.length-1]);
 		console.log("start"+start+"stop"+stop);
 		console.log(values);
 		_currentValues=values;
@@ -446,9 +446,9 @@ return{
 			parent : '#dotplot',
 			data : values,
 			height:390,
-			//range: [start,stop],
+			range: [start,stop],
 			datum :datum,
-			variable: setting.variable				//*** @ASHWINI - change the dataSetMean variable to somethingelse like datum or something generic 
+			variable: setting.variable				
 		})();
 		
 	},
