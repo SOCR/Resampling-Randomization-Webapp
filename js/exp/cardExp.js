@@ -25,7 +25,7 @@ function _dealCard(){
 	}
 	else{
 		console.log("Card Generated Dataset : "+_values + "-- cardExp.js");
-		view.loadInputSheet(_values);
+		//view.loadInputSheet(_values);
 		_self.reset();
 	}
 }

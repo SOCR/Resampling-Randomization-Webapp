@@ -60,6 +60,7 @@
 							<li><a  href="http://wiki.stat.ucla.edu/socr/index.php/SOCR_ResamplingSimulation_Activity" target='_blank'>About</a></li>
 							<li><a data-toggle="modal" href="#simulationDesc">Simulations</a></li>
 							<!--<a data-toggle="modal" href="#help"><button class='btn btn-danger' >Need Help!</button></a>-->
+							<li><a data-toggle="modal" href="#faq">FAQ</a></li>
 							<a data-toggle="modal" href="#share"><button class='btn btn-success' >Buzz</button></a>
 							<a data-toggle="modal" href="#generate-url"><button class='btn btn-success' id='share-instance-button'>Share Instance!</button></a>
 						</ul>
@@ -318,6 +319,36 @@
 					</ul>
 				</div>
 			</div>
+			<div id='faq' class="modal hide fade">
+			    <div class="modal-header">
+					<a class="close" data-dismiss="modal">X</a>
+					<h3>FAQ</h3>
+				</div>
+				<div class="modal-body">
+					<h4>Visiting for the first time?</h4>
+					<p>So, This is basically a simulation app for drawing important inferences from either user provided data OR simulation generated data. It uses the bootstrap algorithm to draw random samples from a dataset to calculate the relevant parameters.</p>
+					<h4>How to generate data using the inbuilt simulations?</h4>
+					<p>
+						<ol>
+							<li>First choose a pre-loaded experiment from the list in the input tile {which opens up when you click on the blue <b>input</b> vertical button }.</li>
+							<li>Set the parameters in the controller tile.</li>
+							<li>Generate a dataset to draw random samples from.</li>
+							<li>Generate a lot random samples  by pressing the green <b>run</b> button.</li>
+							<li>Set the range of samples you want to see in the SampleList (on the right side of the page) and click <b>show</b> button.</li>
+							<li>Choose the variable from the drop down in the controller tile and click on the red <b>infer</b> button to see the visualization.</li>
+						</ol>
+					</p>
+					<h4>What is this share instance button?</h4>
+					<p>Incase you want to share your app with the data loaded {not the generated random samples} and the predefined settings. You can just generate the url are {click the share instance}and share it with anyone you like !</p>
+					<h4>What inference can I deduce from this application?</h4>
+					<p>Currently we support 4 variables. <b>Mean , Count ,Standard Deviation , Percentile</b> .</p>
+					<h4>Where can I find the documentation for the SOCR webapp?</h4>
+					<p>We will be shortly uploading the API along with a documentation.</p>
+					<h4>How to install my own experiment into SOCR webapp?</h4>
+					<p>We will be shortly uploading the API along with a documentation.</p>
+					
+				</div>
+			</div>
 			<div id='footer'>
 			<!-- Start SOCR footer -->
 				<a href="http://www.socr.ucla.edu/">SOCR Resource</a>
@@ -418,16 +449,13 @@
 			view.CoverPage();
 		});
 		
-		//$('.brand').popover({placement:'bottom'});
 		$(document).ready(function(){
 					
 			/*
 			 * Initialize the controller 
 			 */
 			controller.initialize();   
-			
-			
-			
+					
 			$('.input-handle').on('click',function(){
 				$target = $('#slide-out-input');
 				//console.log($(this).attr('href'));
@@ -617,7 +645,6 @@
 		}); //document ready function
 	}); //head.js ready function
 </script>
-
 <!-- Start Tracking Code -->
 <!-- Start of StatCounter Code -->
 	<script type="text/javascript">
@@ -636,3 +663,4 @@
 <!-- End of GoogleAnalytics Code -->
 
 </html>
+

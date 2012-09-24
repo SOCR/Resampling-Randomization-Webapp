@@ -62,12 +62,12 @@
 		/*
 			Todo : DRY the reponse code
 		*/
-
+		$response.html('').slideUp(300);;
 		$response.append(
 				$('<div></div>')
 					.addClass('alert')
 					.html( text )
-			);
+			).slideDown(300);
 
 	}
 
