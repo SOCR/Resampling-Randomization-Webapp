@@ -107,7 +107,8 @@
 				});
 
 				displayResponse( 'Data loaded successfully<i class="icon-ok"></i>', 'success');
-
+				$(".controller-handle").trigger('click');
+				
 
 		} else {
 
@@ -123,7 +124,8 @@
 					});
 
 				displayResponse( 'Data loaded successfully<i class="icon-ok"></i>', 'success');
-
+				$(".controller-handle").trigger('click');
+				
 		}
 
 	}

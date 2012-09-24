@@ -31,7 +31,7 @@ function _tossCoin(){
 		_count++;
 	}
 	else{
-		view.loadInputSheet(_values);
+		//view.loadInputSheet(_values);
 		self.reset();
 	}
 }

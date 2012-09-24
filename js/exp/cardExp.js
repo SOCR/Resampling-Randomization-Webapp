@@ -39,7 +39,7 @@ return{
 		_self=this;
 		
 		_nParam = new Parameter(document.getElementById("nInput"), document.getElementById("nLabel"));
-		_nParam.setProperties(1, 12, 1, _n, "<var>n</var>");
+		_nParam.setProperties(1, 10, 1, _n, "<var>n</var>");
 		this.reset();
 		$("#sdbutton").on('click',function(){
 			Experiment.generate();

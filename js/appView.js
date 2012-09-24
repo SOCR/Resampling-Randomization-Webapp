@@ -44,7 +44,7 @@ var appView = function(appModel){
 			temp.push(i);
 			temp.push('</span> &nbsp;&nbsp;  Datapoints:<span class="values">');
 			temp.push(_datapoints);
-			temp.push('</span>&nbsp;&nbsp;<a data-toggle="modal" href="#plot"><i class="icon-fullscreen plot" id="'+i+'"></i></a> &nbsp; <a href="#"><i class="icon-filter contribution" id="'+i+'"></i></a></span><pre>');
+			temp.push('</span>&nbsp;&nbsp;<a data-toggle="modal" href="#plot"><i class="icon-fullscreen plot" id="'+i+'"></i></a> &nbsp; <a href="#"><i class="icon-filter contribution" id="'+i+'"></i></a>&nbsp; <a href="#"><i class="icon-retweet toggle-sample" data-type="sample" id="'+i+'"></i></a></span><pre>');
 			//alert(i+' :'+model.bootstrapSamples[i-1]);
 			temp.push(model.bootstrapSamples[i]);
 			temp.push('</pre></div>');
@@ -66,6 +66,20 @@ var appView = function(appModel){
 					//  range:[0,10]
 
 		           })();
+			});
+
+			$('.toggle-sample').on('click',function(){
+				var id=$(this).attr('id');
+				if($(this).attr('data-type')==='value')
+						{
+							$(this).parent().parent().find('pre').text(model.bootstrapSamples[id]);
+							$(this).attr('data-type','sample');
+						}
+				else
+					{
+						$(this).parent().parent().find('pre').text(model.bootstrapSampleValues[id]);
+						$(this).attr('data-type','value');
+					}
 			});
 			
 			$('.contribution').on('click',function(){
@@ -284,7 +298,7 @@ return{
 	*/
 	createControllerView:function(){
 		$( "#amount" ).val( "$" + $( "#slider" ).slider( "value" ) );
-		var html='<div id="buttonPanel"><button class="btn" type="button" id="stepButton" tabindex="1" title="Step"><img src="img/step.png" alt="Step" title="Step" /> </button> <button class="btn btn-success" type="button" id="runButton" tabindex="2" title="Run" ><img id="runImage" src="img/run.png" alt="Run" title="Run" /></button><button class="btn btn-danger" type="button" id="stopButton" tabindex="3" title="Stop" ><img id="stopImage" src="img/stop.png" alt="Stop" title="Stop" /></button><button class="btn" type="button" id="resetButton" tabindex="4" title="Reset" ><img src="img/reset.png" alt="Reset" title="Reset" /></button><span><i class="icon-question-sign popups" rel="popover" data-content="<ul><li>Step Button : generates 1 sample</li><li>Run Button : generates X sample..X can be set from the option below</li><li>Stop Button :Stops the sample generation</li><li>Reset Button : Resets all values</li></ul>" data-original-title="Controls"></i></span>&nbsp;&nbsp;<button class="btn controller-back">Back</button></div><div id="speedSlider"><div><span class="badge badge-warning">Animation Time: <span id="speedCount">200</span>ms</span></div><div id="speed"></div></div><div class="tool"><span>Generate</span><input type="text" id="countSize" class="input-small" value="1000"> <span>Samples with </span><input type="text" id="nSize" class="input-small" value="50"><span>Datapoint per sample.</span></div><div><select id="variable" style="width:100px;margin-top:10px"><option value="mean">Mean</option><option value="count">Count</option><option value="standardDev">Standard Dev.</option><option value="Percentile">Percentile</option></select><span><a href="#" class="btn btn-danger popups" rel="popover" data-content="This will create a plot of the variable for each generated sample. Click this once you have generated some samples!" data-original-title="Inference" id="infer">Infer!</a></span></div>';
+		var html='<div id="buttonPanel"><button class="btn" type="button" id="stepButton" tabindex="1" title="Step"><img src="img/step.png" alt="Step" title="Step" /> </button> <button class="btn btn-success" type="button" id="runButton" tabindex="2" title="Run" ><img id="runImage" src="img/run.png" alt="Run" title="Run" /></button><button class="btn btn-danger" type="button" id="stopButton" tabindex="3" title="Stop" ><img id="stopImage" src="img/stop.png" alt="Stop" title="Stop" /></button><button class="btn" type="button" id="resetButton" tabindex="4" title="Reset" >Reset</button><span><i class="icon-question-sign popups" rel="popover" data-content="<ul><li>Step Button : generates 1 sample</li><li>Run Button : generates X sample..X can be set from the option below</li><li>Stop Button :Stops the sample generation</li><li>Reset Button : Resets all values</li></ul>" data-original-title="Controls"></i></span>&nbsp;&nbsp;<button class="btn controller-back">Back</button></div><div id="speedSlider"><div><span class="badge badge-warning">Animation Time: <span id="speedCount">200</span>ms</span></div><div id="speed"></div></div><div class="tool"><span>Generate</span><input type="text" id="countSize" class="input-small" value="1000"> <span>Samples with </span><input type="text" id="nSize" class="input-small" value="50"><span>Datapoint per sample.</span></div><div><select id="variable" style="width:100px;margin-top:10px"><option value="mean">Mean</option><option value="count">Count</option><option value="standardDev">Standard Dev.</option><option value="Percentile">Percentile</option></select><span><a href="#" class="btn btn-danger popups" rel="popover" data-content="This will create a plot of the variable for each generated sample. Click this once you have generated some samples!" data-original-title="Inference" id="infer">Infer!</a></span></div>';
 		$('#controller-content').html(html);
 		$( "#speed" ).slider({
 			value:400,
@@ -437,14 +451,8 @@ return{
 		//var start=Math.floor(Array.min(values));
 		//var stop=Math.ceil(Array.max(values));
 		var temp=values.sort(function(a,b){return a-b});
-<<<<<<< HEAD
 		var start=Math.floor(temp[0]);
 		var stop=Math.ceil(temp[values.length-1]);
-=======
-		var start=(temp[0];
-        var stop=temp[values.length-1];
-
->>>>>>> [UI] Minor Bug fixed. Controller view not activated when user inputs data.
 		console.log("start"+start+"stop"+stop);
 		console.log(values);
 		_currentValues=values;
