@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <!-- Meta data -- For SEO -->
     <meta charset="utf-8">
-    <title>SOCR Web-App</title>
+    <title>SOCR Randomization and Resampling Web-App</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Simulation App,Randomization and Resampling App">
     <meta name="author" content="selvam,ashwini,ivo">
@@ -22,8 +21,8 @@
    	<link rel="stylesheet" href="css/common.css" >
     <link rel="stylesheet" href="css/vis.css" >
 	<link rel="stylesheet" href="css/default-table.css" >
- 
-    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+   	<link rel="stylesheet" type="text/css" href="css/SOCR_Tools_style.css">
+     <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
     <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
@@ -65,7 +64,7 @@
 							<a data-toggle="modal" href="#generate-url"><button class='btn btn-success' id='share-instance-button'>Share Instance!</button></a>
 						</ul>
 		  			</div><!--/.nav-collapse -->
-					<a href="#" class=" brand" style='margin-left:10%' >Statistical Online Computational Resource -- WebApp</a>
+					<a href="#" class=" brand" style='margin-left:10%' >Statistical Online Computational Resource - Resampling WebApp</a> 
 				</div>
 			</div>
 		</div>
@@ -79,7 +78,7 @@
 				<span><h2 class="font welcome-title">SOCR</h2></span>
 			</div>
 			<div>
-				<span class="font" >Statistical Online Computational Resource -- WebApp&nbsp;&nbsp;</span>
+				<span class="font" >Statistical Online Computational Resource - Resampling WebApp &nbsp;</span> 
 				
 				<div><button id="startApp" class="btn btn-primary btn-large" disabled> Initialising ... </button></div>
 			</div>
@@ -169,7 +168,10 @@
 						<button class='btn-primary btn-large'>Input</button>
 					</a>	
 					<div id="slide-out-input" >
-						<h3> Input </h3>
+						<h3> Input 
+							<i class="icon-question-sign popups" rel="popover" data-content="There are two ways to generate a dataset (from which we will draw random samples). <b>Data Driven :</b> Choose this if you want to enter your custom data. <b>Simulation Driven:</b> Choose this if you want to use a pre-defined experiment to generate a dataset for you!" data-original-title="What is Input Data?">
+							</i>
+						</h3>
 						<!-- Add data-toggle="buttons-radio" for radio style toggling on btn-group -->
 						<ul id='myTab' class="nav nav-tabs">
 							<li class="active"><a href="#dataDriven-content" id='dataDriven-tab' data-toggle="tab" >Data Driven</a></li>
@@ -350,6 +352,7 @@
 				</div>
 			</div>
 			<div id='footer'>
+
 			<!-- Start SOCR footer -->
 				<a href="http://www.socr.ucla.edu/">SOCR Resource</a>
 				Visitor number <img src="http://counter.digits.com/wc/-d/4/SOCR"
@@ -358,7 +361,6 @@
 				href="http://socr.ucla.edu/SOCR_Email.png"><img alt="SOCR Email"
 				title="SOCR Email" src="http://www.socr.ucla.edu/SOCR_Email.png"
 				style="border: 0px solid ;"></a>
-			<!-- End SOCR footer -->
 			</div>
 		</div><!--/.fluid-container-->
 	</div> <!-- main -->
@@ -645,7 +647,6 @@
 		}); //document ready function
 	}); //head.js ready function
 </script>
-<!-- Start Tracking Code -->
 <!-- Start of StatCounter Code -->
 	<script type="text/javascript">
 		var sc_project=5714596; 
@@ -662,5 +663,7 @@
 	  <script type="text/javascript"> _uacct = "UA-676559-1"; urchinTracker(); </script>
 <!-- End of GoogleAnalytics Code -->
 
+
 </html>
+
 

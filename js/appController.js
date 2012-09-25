@@ -38,6 +38,7 @@ var appController=function(appModel,view){
 		}
 	else
 		{
+		console.log(model.bootstrapSamples);
 		view.updateSimulationInfo();
 		_this.stop();
 		}
@@ -144,6 +145,7 @@ var appController=function(appModel,view){
 		$('#accordion').accordion();
 		$('.dropdown-toggle').dropdown();
 		$('.popups').popover();
+		$('.tooltips').tooltip();
 		view.createShowSlider();	
 		
 		/*  Adding tab feature to the input tile   */
@@ -281,8 +283,8 @@ var appController=function(appModel,view){
                             Yes: function () {
 							_this.stop();
 							model.setCount(0);		//reset the total count
-							model.bootstrapSamples=[];	//empty the bootstrap samples
-							model.bootstrapSamplesValues=[];	//empty the bootstrap samples
+							model.bootstrapSamples.splice(0, model.bootstrapSamples.length);	//empty the bootstrap samples
+							model.bootstrapSamplesValues.splice(0, model.bootstrapSamplesValues.length);	//empty the bootstrap samples
 							model.resetVariables();
 							view.clearAll();		//clearing all the canvas
 							$('#showCount').html('');

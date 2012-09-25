@@ -191,12 +191,12 @@
 
 	#speedSlider{
 	padding-top:5%;
-	padding-bottom:5%;
+	padding-bottom:10%;
 	}
 	
 	#speed{
-	width:80%;
-	margin-top:10px;
+		float: right;
+		width:60%;
 	}
 /*
 	Styling for the input module

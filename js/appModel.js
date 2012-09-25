@@ -14,12 +14,14 @@ var appModel=function(){
 	var _n=50;				//Number of datapoints in a bootstrap sample or Sample Size
 	var bootstrapSamples=new Array();	//Contains all the bootstrap samples generated
 	//var variables;				//number of variables
-	var bootstrapSampleValues=[];
+	var bootstrapSampleValues=new Array();
 	var _data;
-	var sample=[];
+	var sample;
 	var _datasetKeys=[];
 	var _datasetValues=[];
+
 	var _sampleMean=[];
+	var _sampleCount=[];
 	var _sampleStandardDev=[];
 	var _samplePercentile=[];
 	
@@ -77,7 +79,7 @@ return{
 	/* PUBLIC PROPERTIES   */
 	bootstrapSamples:bootstrapSamples,
 	bootstrapSampleValues:bootstrapSampleValues,
-	sample:sample,
+	
 	
 	/* PUBLIC METHODS   */
 	/*
@@ -204,7 +206,6 @@ return{
 	},
 	getCounts:function(){
 		console.log("getCount() invoked");
-		var _sampleCount=[];
 		for(var j=0;j<_count;j++)
 			{
 			_sampleCount[j]=_generateCount(j);
@@ -369,15 +370,20 @@ return{
 		return _count;
 	},
 	reset:function(){
+		//dataset values deleted
 		_datasetKeys=[];
 		_datasetValues=[];
+		//random samples delted
 		//this.bootstrapSamples=[];
+		this.bootstrapSampleValues=[];
+		//setting the global random sample count to 0
 		this.setCount(0);
 	},
 	resetVariables:function(){
 		_sampleMean=[];
 		_sampleStandardDev=[];
 		_samplePercentile=[];
+		_sampleCount=[];
 	}
 	
 }//return
