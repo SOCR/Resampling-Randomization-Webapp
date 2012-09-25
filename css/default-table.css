@@ -1,0 +1,60 @@
+
+	.default-table{
+  	border-collapse: collapse;
+	  position: relative;
+	  -webkit-user-select: none;
+	  -khtml-user-select: none;
+	  -moz-user-select: none;
+	  -o-user-select: none;
+	  user-select: none;
+	  border-spacing: 0;
+	  border-top: 1px solid #CCC;
+	  border-left: 1px solid #CCC;
+	  margin:0 auto;
+	  }
+
+	.default-table td{
+		 border-right: 1px solid #CCC;
+	  border-bottom: 1px solid #CCC;
+	  min-width: 50px;
+	  width: 50px;
+	  height: 22px;
+	  padding: 0 7px 0 7px;
+
+	}
+	.default-table th{
+		background: #EEE;
+		font-weight:200;
+		color: #333;
+		border-right: 1px solid #CCC;
+		border-bottom: 1px solid #CCC;
+		 padding: 0 7px 0 7px;
+	}
+
+.default-table tr:first-child th.htNoFrame,
+	.default-table th:first-child.htNoFrame,
+	.default-table th.htNoFrame {
+	  border-left-width: 0;
+	  background-color: white;
+	  border-color: #FFF;
+	}
+.default-table input{ 
+	border: 2px solid #5292F7;
+	  outline-width: 0;
+	  margin: 0;
+	  padding: 1px 4px 0 2px;
+	  font-family: Arial, Helvetica, sans-serif; /*repeat from .dataTable (inherit doesn't work with IE<8) */
+	  line-height: 1.3em;
+	  font-size: 13px;
+	  box-shadow: 1px 2px 5px rgba(0, 0, 0, 0.4);
+  	resize: none;
+}
+	div.container{
+		width: 500px;
+		margin:0 auto;
+		text-align:center;
+		padding:0 4 0 4;
+	}
+	.tableset{
+		text-align:center;
+	}
