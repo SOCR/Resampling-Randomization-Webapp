@@ -284,7 +284,7 @@ var appController=function(appModel,view){
 							_this.stop();
 							model.setCount(0);		//reset the total count
 							model.bootstrapSamples.splice(0, model.bootstrapSamples.length);	//empty the bootstrap samples
-							model.bootstrapSamplesValues.splice(0, model.bootstrapSamplesValues.length);	//empty the bootstrap samples
+							model.bootstrapSampleValues.splice(0, model.bootstrapSampleValues.length);	//empty the bootstrap samples
 							model.resetVariables();
 							view.clearAll();		//clearing all the canvas
 							$('#showCount').html('');
