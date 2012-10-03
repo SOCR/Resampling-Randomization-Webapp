@@ -98,6 +98,11 @@ var appView = function(appModel){
 				}
 			});
 
+			
+   			/*
+			 Renders the dotplot, 
+  			 @ToDo : show individual contributions on a box chart
+			 */
 			function createDotplot(setting){	
 					if(setting.variable=='mean')
 					{
@@ -127,7 +132,10 @@ var appView = function(appModel){
 				})();
 			}
 				var html = '<div> Mean of Sample :'+ model.getMeanOf($(this).attr('id')) +' Mean of DataSet : '+ model.getMeanOfDataset() +' Standard Deviation :'+ model.getStandardDevOf($(this).attr('id')) +'</div>';
-				$('#accordion').append(html)
+				
+				var table =['<table class="table table-striped>"'];
+				table.push('<tr><td>Mean Of Sample</td><td></td></tr>')
+				$('#contribution-details').html(html)
 			
 			});
 	}

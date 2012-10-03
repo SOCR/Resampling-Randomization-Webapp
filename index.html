@@ -162,7 +162,7 @@
 							<h3>
 								<a href="#">Simulation Info <i class="icon-question-sign popups" rel="popover" data-content="It is graphical view of the dataset from where the random samples are generated.Goto input tab to get started!" data-original-title="Simulation Info"></i></a>
 							</h3>
-						<div id='details'></div>
+						<div id='details'></div><div id="contribution-details"></div>
 					</div>
 					<a class="input-handle" href='#'>
 						<button class='btn-primary btn-large'>Input</button>
@@ -272,10 +272,13 @@
 				</div>
 				<div class="modal-body">
 					<div id='settings'></div>
+					<div class = "generate-response"></div>
 				</div>
+				
 				<div class="modal-footer">
 					<input type="text" id="url" class="input-large" value="url..." style="float:left"><a id='generate-url-button' class="btn btn-primary">Generate</a>
 				</div>
+				
 			</div>
 			<div id="inputTile" class="modal hide fade">  
 				<div class="modal-header">
@@ -617,6 +620,7 @@
 			}
 			
 		$("#share-instance-button").on('click',function(){
+			$('.generate-response').html('');
 			var html="<p>Dataset:<strong>"+model.getDataset()+"</strong></p>";
 			html+="<p>Count Size:<strong>"+$("#countSize").val()+"</strong></p>";
 			html+="<p>datapoints:<strong>"+$("#nSize").val()+"</strong></p>";
@@ -625,8 +629,20 @@
 		});
 		
 		$("#generate-url-button").on('click',function(){
-			$("#url").val(baseUrl+"index.html?"+"type=url&dataset="+model.getDataset()+"&countSize="+$("#countSize").val()+"&nSize="+$("#nSize").val());
-		
+	
+			
+				
+			if(model.getDataset()!=''){
+				
+				$("#url").val(baseUrl+"index.html?"+"type=url&dataset="+model.getDataset()+"&countSize="+$("#countSize").val()+"&nSize="+$("#nSize").val());
+				}
+			else{
+				
+				console.log('Dataset not initialised');
+				var alertblock = '<div class="alert alert-block">Dataset not initialised</div>';
+				$('.generate-response').html(alertblock);
+
+				}
 		});
 		 $('.input-controls').delegate('td','mousedown',function(){
   					table.startEdit( $(this) );
