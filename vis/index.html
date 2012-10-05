@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+body {
+  font: 10px sans-serif;
+}
+
+.bar rect {
+  fill: steelblue;
+  shape-rendering: crispEdges;
+  fill-opacity: 0.9;
+}
+
+.bar rect.hover{
+  fill-opacity: 1;
+}
+
+.bar text {
+  fill: #fff;
+}
+
+.axis path, .axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+/********************
+ * TOOLTIP CSS 
+ */
+
+.viswraptooltip {
+  position: absolute;
+  background-color: rgba(255,255,255,1);
+  padding: 10px;
+  border: 1px solid #ddd;
+  z-index: 10000;
+
+  font-family: Arial;
+  font-size: 13px;
+
+  transition: opacity 500ms linear;
+  -moz-transition: opacity 500ms linear;
+  -webkit-transition: opacity 500ms linear;
+
+  transition-delay: 500ms;
+  -moz-transition-delay: 500ms;
+  -webkit-transition-delay: 500ms;
+
+  -moz-box-shadow: 4px 4px 8px rgba(0,0,0,.5);
+  -webkit-box-shadow: 4px 4px 8px rgba(0,0,0,.5);
+  box-shadow: 4px 4px 8px rgba(0,0,0,.5);
+
+  -moz-border-radius: 10px;
+  border-radius: 10px;
+
+  pointer-events: none;
+
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.viswraptooltip h3 {
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+
+.viswraptooltip p {
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+
+.viswraptooltip span {
+  display: inline-block;
+  margin: 2px 0;
+}
+
+</style>
+<body>
+  <div class="chart"></div> 
+<script src="./d3.v2.min.js"></script>
+<script src="http://code.jquery.com/jquery.min.js"></script>
+<script src="./tooltip.js"></script>
+<script>
+
+
+function randomIrwinHall(m) {
+  return function() {
+    for (var s = 0, j = 0; j < m; j++) s += Math.random();
+    return s / m;
+  };
+}
+
+function vis(config){
+  //Some default variables
+
+  var width = 600,
+      height = 400;
+
+  function chart(){
+    
+      //generate chart here
+      //d- data
+      //i -`this`
+  
+
+    // A formatter for counts.
+    var formatCount = d3.format(",.0f");
+
+    var margin = {top: 10, right: 30, bottom: 30, left: 30},
+        width = config.height - margin.left - margin.right,
+        height = config.width - margin.top - margin.bottom;
+
+    var x = d3.scale.linear()
+        .domain([0, 1])
+        .range([0, width]);
+
+    // chart a histogram using twenty uniformly-spaced bins.
+    var data = d3.layout.histogram()
+        .bins(x.ticks(20))
+        (config.data);
+
+    var y = d3.scale.linear()
+        .domain([0, d3.max(data, function(d) { return d.y; })])
+        .range([height, 0]);
+
+    var xAxis = d3.svg.axis()
+        .scale(x)
+        .orient("bottom");
+
+    var svg = d3.select(config.parent).append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+      .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    var bar = svg.selectAll(".bar")
+        .data(data)
+      .enter().append("g")
+        .attr("class", "bar")
+        .attr("transform", function(d) { return "translate(" + x(d.x) + "," + y(d.y) + ")"; });
+
+    bar.append("rect")
+        .attr("x", 1)
+        .attr("width", x(data[0].dx) - 1)
+        .attr("height", function(d) { return height - y(d.y); })
+        .on('mouseover', function(d){ 
+          d3.select(this).classed('hover', true) 
+          var left = $(this).position().left,
+              top = $(this).position().top;
+
+          var content = '<h3>' + d + '</h3>';
+          console.log(viswrap.tooltip)
+          viswrap.tooltip.show([left, top], content, 'n');
+
+      })
+        .on('mouseout', function(){ 
+            d3.select(this).classed('hover', false) 
+            viswrap.tooltip.cleanup();
+
+      });
+
+        /*
+           graph.dispatch.on('elementMouseover', function(e) {
+        var offsetElement = document.getElementById("chart"),
+                left = e.pos[0],
+                top = e.pos[1];
+
+                /*
+        var content = '<h3>' + e.label + '</h3>' +
+                '<p>' +
+                e.value +
+                '</p>';
+               
+
+        var content = '<p>' + e.point.y + '</p>';
+
+        vis.tooltip.show([left, top], content, e.value < 0 ? 'n' : 's');
+          });
+
+          graph.dispatch.on('elementMouseout', function(e) {
+              vis.tooltip.cleanup();
+          });
+
+          */
+
+    bar.append("text")
+        .attr("dy", ".75em")
+        .attr("y", 6)
+        .attr("x", x(data[0].dx) / 2)
+        .attr("text-anchor", "middle")
+        .text(function(d) { return formatCount(d.y); });
+
+    svg.append("g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(0," + height + ")")
+        .call(xAxis); 
+   
+  }
+
+  //Default methods
+  chart.width = function(value) {
+    if (!arguments.length) return width;
+    width = value;
+    return chart;
+    };
+
+  chart.height = function(value) {
+    if (!arguments.length) return height;
+    height = value;
+    return chart;
+  };
+
+  return chart;
+}  
+
+    // chart an Irwin–Hall distribution of 10 random variables.
+    var values = d3.range(1000).map(randomIrwinHall(10));
+
+    var histogram = vis({
+                      height: 400, 
+                      width: 400,
+                      parent : '.chart',
+                      data : values
+                      });
+    histogram();
+ 
+</script>

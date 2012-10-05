@@ -1,0 +1,52 @@
+<!DOCTYPE HTML>
+<head>
+	<script src="./js/jquery.min.js"></script>
+	<script src="./js/inputtable.js"></script>
+	<script src="./js/table.js"></script>
+	<link rel="stylesheet" media="screen" href="css/table.css">
+	<style>
+	body{
+	font-family:Arial,Verdana;
+	margin-top:20px;
+	margin-right:20px;
+	}
+	div.container{
+	margin-left:auto;
+	margin-right:auto;
+	width:500px;
+	}
+	</style>
+	<title>SOCR Input Demonstration</title>
+</head>
+<body>
+	<div class="container">
+	<div class="row">
+		<div class="span12">
+		</div>
+		<div class="span6">
+		<h4>Input Table</h4>
+		<p>
+			 Try copy pasting any tabular data in this grid, The first row should be the column header
+		</p>
+		</div>
+		<div class="span6 table">
+			<div id="input-table" class="dataTable">
+			</div>
+		</div>
+	</div>
+	</div>
+	<script>
+		$('#input-table').inputtable({
+		 	rows: 5,
+		    cols: 3,
+			minSpareCols : 1,
+			minSpareRows : 1,
+			fillHandle : true
+		})
+
+		console.log('Table Initilaised');
+
+		table.loadURL('http://localhost/socr_3/data/heightsweights.htm');
+	</script>
+	</body>
+</html>
