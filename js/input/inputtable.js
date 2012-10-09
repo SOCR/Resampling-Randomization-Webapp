@@ -2169,7 +2169,7 @@
      * @param {Boolean} [allowHtml]
      */
     this.setDataAtCell = function (row, col, values, allowHtml) {
-      var refreshRows = false, refreshCols = false, escaped, value;
+      var refreshRows = false, refreshCols = false, escaped, value, td;
 
       if (typeof values !== "object") { //is stringish
         values = [
@@ -2195,13 +2195,14 @@
           }
 
           // Show the loading sign
-          console.log('The request has started :)' )
+          console.log('Insertion of data at cells initialised' )
+          
           processor = setInterval(function(){
 
             if(!busy){
               busy =  true;
-              row = values[i][0];
-              col = values[i][1];
+              row = values[i][0] ;
+              col = values[i][1] ;
               value = values[i][2];
 
               /*
@@ -2222,7 +2223,7 @@
                   refreshCols = true;
                 }
               }
-              var td = grid.getCellAtCoords({row: row, col: col});
+              td = grid.getCellAtCoords({row: row, col: col});
 
               // Should I remove the check?
               switch (typeof value) {
@@ -2247,7 +2248,7 @@
               self.minWidthFix(td);
               datamap.set(row, col, value);
          
-              if(++i > ilen){
+              if(++i > ilen - 1){
                 clearInterval(processor);
                 console.log('Finished proessing :)')
               }
@@ -2327,7 +2328,7 @@
       }, 10);
 
       return td;
-    };
+    }; 
 
     /**
      * Returns current selection. Returns undefined if there is no selection.
@@ -2362,6 +2363,36 @@
     }
     return box;
   };
+  /**
+     * Return non-empty data as array
+     * @public
+     * @return {Array}
+  */
+  this.getNonEmptyData = function () {
+  
+  
+    var data = datamap.getAll(),
+        rlen = data.length,
+        clen = data[0].length,
+        nonEmptyRows,
+        nonEmptyCols;
+
+    for (var r = rlen - 1; r >= 0; r--) {
+        if (data[r][0] !== '') {
+          nonEmptyRows = r;
+          break;
+        }
+    }
+
+    for (var c = clen - 1; c >= 0; c--) {
+        if (data[0][c] !== '') {
+          nonEmptyCols = c;
+          break;
+        }
+    }
+  
+      return datamap.getRange({row: nonEmptyRows, col: 0},{row: 0, col: nonEmptyCols});
+    };
   /*
     Returns the submatrix of data with the extremities of data coordinates
     @public
