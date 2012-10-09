@@ -12,9 +12,9 @@ var appModel=function(){
 	var _count=0;				//keeps count of number of samples generated from start
 	var _dataset=['1','2','3','4','5','6','7','8','9','10'];			// All the input datapoints from wich bootstrap sample is generated
 	var _n=50;				//Number of datapoints in a bootstrap sample or Sample Size
-	var bootstrapSamples=new Array();	//Contains all the bootstrap samples generated
+	var bootstrapSamples=new Array();	//Contains all the bootstrap samples generated E,g., H,T,T,T,H,H,T.
+	var bootstrapSampleValues=new Array(); //Contains all the bootstrap sample's value generated E,g., 1,0,0,0,1,1,0.
 	//var variables;				//number of variables
-	var bootstrapSampleValues=new Array();
 	var _data;
 	var sample;
 	var _datasetKeys=[];
@@ -38,7 +38,7 @@ var appModel=function(){
 	*/
 	function _getRandomInt(min, max) {
 		return Math.floor(Math.random() * (max - min )) + min;
-		}
+	}
 
 	/**
 	*@method: [private] _generateMean()
@@ -57,7 +57,6 @@ var appModel=function(){
 		var total=0;
 		for(var i=0;i<x.length;i++) 
 			{ total += parseInt(x[i]); }
-		
 		return total;
 	}
 	
@@ -117,7 +116,6 @@ return{
 			}
 		bootstrapSamples[_count]=sample;
 		bootstrapSampleValues[_count]=values;
-		//console.log(values);
 		//console.log(_count+':'+bootstrapSamples[_count]);
 		_count++;		//incrementing the total count - number of samples generated from start of simulation
 	},

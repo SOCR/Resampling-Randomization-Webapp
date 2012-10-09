@@ -44,84 +44,80 @@ var appView = function(appModel){
 			temp.push(i);
 			temp.push('</span> &nbsp;&nbsp;  Datapoints:<span class="values">');
 			temp.push(_datapoints);
-			temp.push('</span>&nbsp;&nbsp;<a data-toggle="modal" href="#plot"><i class="icon-fullscreen plot" id="'+i+'"></i></a> &nbsp; <a href="#"><i class="icon-filter contribution" id="'+i+'"></i></a>&nbsp; <a href="#"><i class="icon-retweet toggle-sample" data-type="sample" id="'+i+'"></i></a></span><pre>');
-			//alert(i+' :'+model.bootstrapSamples[i-1]);
+			temp.push('</span>&nbsp;&nbsp;<a data-toggle="modal" href="#plot" class="tooltips" rel="tooltip" data-original-title="plot"><i class="icon-fullscreen plot" id="'+i+'"></i></a> &nbsp; <a href="#" class="tooltips" rel="tooltip" data-original-title="contribution"><i class="icon-filter contribution" id="'+i+'"></i></a>&nbsp; <a href="#" class="tooltips" rel="tooltip" data-original-title="toggle"><i class="icon-retweet toggle-sample" data-type="sample" id="'+i+'"></i></a></span><pre>');
 			temp.push(model.bootstrapSamples[i]);
 			temp.push('</pre></div>');
 			$('#sampleList').append(temp.join(''));
 			}
+		$('.tooltips').tooltip();
 		$('.plot').on('click',function(){
 			$('.chart').html('');
-		
 			var values = $(this).parent().parent().find('pre').text().split(','),
 				sampleID = $(this).parent().parent().find('span.values').filter(':eq(0)').text();
-
 			$('#plot').find('h3').text(' Sample : ' + sampleID );
-
-				vis({
-					  parent : '.chart',
-			          data : values,
-			      	  height: 380,
-			          width: 500,
-					//  range:[0,10]
-
-		           })();
-			});
+			vis({
+				parent : '.chart',
+			    data : values,
+			    height: 380,
+			    width: 500,
+				//  range:[0,10]
+	        	})();
+			});//click binding for .plot
 
 			$('.toggle-sample').on('click',function(){
 				var id=$(this).attr('id');
 				if($(this).attr('data-type')==='value')
-						{
-							$(this).parent().parent().find('pre').text(model.bootstrapSamples[id]);
-							$(this).attr('data-type','sample');
-						}
+					{
+						console.log(model.bootstrapSamples[id]);
+						$(this).parent().parent().find('pre').text(model.bootstrapSamples[id]);
+						$(this).attr('data-type','sample');
+					}
 				else
 					{
+						console.log("qwe:"+model.getSampleValues[id]);
 						$(this).parent().parent().find('pre').text(model.bootstrapSampleValues[id]);
 						$(this).attr('data-type','value');
 					}
-			});
+			});//click binding for .toggle-sample
 			
 			$('.contribution').on('click',function(){
-			
-			console.log("Mean of this sample:"+model.getMeanOf($(this).attr('id')));
-			$("#accordion").accordion( "activate" , 2);
-			console.log("dataset mean:"+model.getMeanOfDataset());
-			console.log("standard deviation:"+ model.getStandardDevOf($(this).attr('id')));
-			$('#dotplot').html('');
-			createDotplot({
-				variable : 'mean',
-				sample : {
-					mean : model.getMeanOf($(this).attr('id')),
-					meanDataset : model.getMeanOfDataset(),
-					standardDev : model.getStandardDevOf($(this).attr('id'))
-				}
-			});
+				console.log("Mean of this sample:"+model.getMeanOf($(this).attr('id')));
+				$("#accordion").accordion( "activate" , 2);
+				console.log("dataset mean:"+model.getMeanOfDataset());
+				console.log("standard deviation:"+ model.getStandardDevOf($(this).attr('id')));
+				$('#dotplot').html('');
+				createDotplot({
+					variable : 'mean',
+					sample : {
+						mean : model.getMeanOf($(this).attr('id')),
+						meanDataset : model.getMeanOfDataset(),
+						standardDev : model.getStandardDevOf($(this).attr('id'))
+					}
+				});
 
-			
-   			/*
+			/*
 			 Renders the dotplot, 
   			 @ToDo : show individual contributions on a box chart
 			 */
 			function createDotplot(setting){	
-					if(setting.variable=='mean')
+				if(setting.variable=='mean')
 					{
-					var values = model.getMean();
-					var datum = model.getMeanOfDataset();
-					console.log("Mean Values:"+ values );
-					
+						var values = model.getMean();
+						var datum = model.getMeanOfDataset();
+						console.log("Mean Values:"+ values );
 					}
 				else if (setting.variable=='standardDev')
 					{
-					var values = model.getStandardDev();
-					var datum=model.getSdOfDataset();
-					console.log("SD Values:"+ values );
+						var values = model.getStandardDev();
+						var datum=model.getSdOfDataset();
+						console.log("SD Values:"+ values );
 					}
 				else
 					{
-					var values = model.getPercentile();
-					//var datum=model.getSdOfDataset();
+						var values = model.getPercentile();
+						//var datum=model.getSdOfDataset();
 					}
+				
 				var histogram = vis({
 					parent : '#dotplot',
 					data : values,
@@ -131,12 +127,12 @@ var appView = function(appModel){
 					sample : setting.sample
 				})();
 			}
-				var html = '<div> Mean of Sample :'+ model.getMeanOf($(this).attr('id')) +' Mean of DataSet : '+ model.getMeanOfDataset() +' Standard Deviation :'+ model.getStandardDevOf($(this).attr('id')) +'</div>';
-				
-				var table =['<table class="table table-striped>"'];
-				table.push('<tr><td>Mean Of Sample</td><td></td></tr>')
-				$('#contribution-details').html(html)
 			
+			var html = '<div> Mean of Sample :'+ model.getMeanOf($(this).attr('id')) +' Mean of DataSet : '+ model.getMeanOfDataset() +' Standard Deviation :'+ model.getStandardDevOf($(this).attr('id')) +'</div>';
+				
+			var table =['<table class="table table-striped>"'];
+			table.push('<tr><td>Mean Of Sample</td><td></td></tr>')
+				$('#contribution-details').html(html)
 			});
 	}
 	 
@@ -331,6 +327,18 @@ return{
 	*/
 	animate:function(setting){
 		this.disableButtons();
+		// Add the class ui-state-disabled to the headers that you want disabled
+		$( ".ui-accordion-header").addClass("ui-state-disabled");
+		// Now the hack to implement the disabling functionnality
+		var accordion = $( "#accordion" ).data("accordion");
+		accordion._std_clickHandler = accordion._clickHandler;
+		accordion._clickHandler = function( event, target ) {
+    	var clicked = $( event.currentTarget || target );
+    	if (! clicked.hasClass("ui-state-disabled"))
+    		{
+        		this._std_clickHandler(event, target);
+	    	}
+		};
 		//disable the back button in the controller tile
 		var data=Experiment.getDatasetValues();		// data is in the form of an array!
 		var datakeys=Experiment.getDatasetKeys();		// data is in the form of an array!
@@ -404,6 +412,7 @@ return{
 					setTimeout(animation,speed);
 				else
 					{
+						$( ".ui-accordion-header" ).removeClass("ui-state-disabled");
 						view.enableButtons();
 						console.log("enableButtons() invoked");
 					}
