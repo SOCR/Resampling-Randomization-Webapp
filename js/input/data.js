@@ -13,6 +13,10 @@
     */
   $controls.find('input[value="Done"]').on('click', processSpreadsheet);
   $controls.find('input[value="Reset"]').on('click', resetSpreadsheet);
+  $dataTable.parent().on('mouseup', checkSelected);
+  $('a.dragdrop').on('click', function(){
+      $('#drop').slideToggle();
+  })
   $controls.find('#submatrix_spreadsheet').on('click', function () {
     if(isSelected()) {
       var response = isSelected();
@@ -32,15 +36,16 @@
 	
 		Spreadsheet generation code, pretty much self explanatory
 
- 	*/
+ 	*/ 
   $dataTable.inputtable({
-    rows: 15,
+    rows: 10,
     cols: 4,
     minSpareCols: 1,
     minSpareRows: 1,
     fillHandle: true,
-    rowHeaders: true,
+    
   });
+
   var displayResponse = function (text, type) {
     /*
 			Todo : DRY the reponse code
@@ -182,6 +187,13 @@
       }
     }
     return false;
+  }
+
+  var checkSelected =  function() {
+    console.log('Mouseup Event on spreadsheet')
+    if( isSelected() ){
+      console.log( isSelected() );
+    }
   }
   $controls.find('input[value="Done"]').on('click', processSpreadsheet);
   $controls.find('input[value="Reset"]').on('click', resetSpreadsheet);

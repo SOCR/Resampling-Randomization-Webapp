@@ -84,6 +84,7 @@ var appController=function(appModel,view){
 		
 		$('#inputEditButton').on('click',function(){
 			$('#accordion').accordion( "activate" , 0);
+			$('.input-handle').trigger('click');
 		});
 		
 		$("#showButton").on('click',function(){

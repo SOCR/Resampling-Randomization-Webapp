@@ -91,6 +91,31 @@
 					<div id='accordion'>
 						<h3><a href="#">Data Driven</a></h3>
 						<div>
+							<!-- Abandoning the old tab based switch mode for drag and drop -->
+							<section class = "datadriven-wrap copy">
+							
+									<section class = "controls">
+										<input class="btn" type='button' value='Done'>
+										<input class="btn btn-danger" type='button' value='Reset'>
+										<span class="response"></span>
+										<!--
+										Range : <input type="text" name="start" class="input-mini" placeholder="start"> - <input type="text" name="end" class="input-mini" placeholder="end">  
+										-->
+										<input type="button" class="btn" value="Use Selected" id="submatrix_spreadsheet" disabled = "disabled"> 
+										<a class = "dragdrop btn btn-info" > Fetch from URL </a>
+									</section>
+
+									<div class = "spreadsheet">
+
+										<section id="drop"> Drag and Drop your URL </section>
+										<div id="status"></div>	
+									 	<div class="dataTable spreadsheet_copy" id="input"></div>
+									 	
+										
+									</div>
+
+							</section>
+							<!--
 							<div class="tabbable">
 										<ul class="nav nav-tabs">
 											<li class="active"><a href="#spreadsheet" data-toggle="tab">Spreadsheet</a></li>
@@ -133,17 +158,16 @@
 
 								  <div class="spreadsheet">
 
-								  	 <section id="drop"> Drag and Drop your URL</section>
+								  	
 								  	<div class="alert-response"><div>
 								  	<div id="dropmatrix" class="dataTable spreadsheet_drag"></div>
 								  </div>
-								  <!--<div class ="input-controls"></div>
-								  <section class="droptable spreadsheet"></section>-->
+								
 
 								</section>
 								</div>
 
-							</div>		
+							</div> -->		
 									
 						</div>	
 								

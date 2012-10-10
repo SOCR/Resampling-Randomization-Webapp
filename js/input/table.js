@@ -12,10 +12,13 @@ var table = function () {
 		controls = '.input-controls' // By default need to work on them later
 
 	var request = function ( uri,parent ){
-
+		
+		if( uri.substr(0,7) !== 'http://'){
+			uri = 'http://' + uri;
+		}
 		//ToDo :  Check for valid urls
-	 	$.get( uri, function(d){
-//	 		console.log('Fetching Successful');
+	 	$.get(uri, function(d){
+	//	 		console.log('Fetching Successful');
 
 	 		var tableCount = $(d).find('table').length,
 	 			tables = $(d).find('table'),
@@ -23,8 +26,7 @@ var table = function () {
 	 		 	titles = parseHeadings ( table );
 
 	 		 	matrix = htmlToArray( table );	
-	 		 	console.log(uri)
-	 		 	$('#dropmatrix').inputtable('loadData',matrix);
+	 		 	$('#input').inputtable('loadData',matrix);
 	 		 	/*
 
 	 		 	insertData(arrayToHTML(matrix)
@@ -96,6 +98,11 @@ var table = function () {
 	        })
 	        matrix.push(row);
     	 });
+
+     	/*
+			Check if the table has th elements instead
+			@Todo
+     	*/
      	 
      	 return matrix;
 	}

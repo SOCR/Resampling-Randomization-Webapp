@@ -212,6 +212,9 @@
 	  	text-align:center;
 	  	margin-left: 30px;
 	  	margin-top:10px;
+	  	margin-bottom: 10px;
+	  	display: none;
+
 	  }
 	section.active{
 		background: #FFD38C;
@@ -248,4 +251,10 @@
 		overflow: auto;
 		max-height: 368px;
 
+	}
+	/*
+		Styles for the toggle button of drag and drop
+	*/
+	a.dragdrop{
+		color: #fff;
 	}
