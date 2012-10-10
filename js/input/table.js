@@ -8,7 +8,7 @@ var table = function () {
 					.attr('type','text').val(''),
 		matrix = [],
 		lastEdit ='',
-		parent = 'section.drag div.spreadsheet div.alert-response';
+		parent = '#status';
 		controls = '.input-controls' // By default need to work on them later
 
 	var request = function ( uri,parent ){
@@ -93,7 +93,7 @@ var table = function () {
 		$stats = $(html);
      	$stats.find('tr').each(function(){
 	        var row = [];
-	        $(this).find('td').not('eq(0)').each(function(){
+	        $(this).find('td').each(function(){
 	          row.push( $(this).text() );
 	        })
 	        matrix.push(row);
@@ -103,7 +103,17 @@ var table = function () {
 			Check if the table has th elements instead
 			@Todo
      	*/
+     	 if(matrix[0][0] === ''){
+     	 	var row = [];
+     	 	$stats.find('tr').filter(':eq(0)').find('th').each(function(i,v){
+     	 	  matrix[0][i -1] = $(this).text();
+     	 	});
+     	 	console.log('Matrix first row was empty')
+     	 }
      	 
+     	 matrix[0][0] = 'Matrix mode testing';
+     	 console.log(matrix);
+     	 matrix.splice(0,1);
      	 return matrix;
 	}
 
@@ -166,7 +176,7 @@ var table = function () {
 		init : function(config){
 			// A basic config intializor
 			var parent = config.parent;
-			$(parent).html('Loading ...')
+			//$(parent).html('Loading ...')
 		},
 		loadURL :  function ( url ){	
 			//$(parent).html('');

@@ -48,9 +48,10 @@ addEvent(drop, 'dragover', cancel);
 addEvent(drop, 'dragenter', function(e){
  $(drop).addClass('active');
 });
+
 addEvent(drop, 'drop', function (e) {
-  if (e.preventDefault) e.preventDefault(); // stops the browser from redirecting off to the text.
-  
+
+  if (e.preventDefault) e.preventDefault(); // stops the browser from redirecting off to the text.  
   drop.innerHTML = e.dataTransfer.getData('Text') ;
 
   
@@ -64,7 +65,7 @@ addEvent(drop, 'drop', function (e) {
 
   });
   table.init({
-    parent : 'section.droptable'
+    parent : '#status'
   });
   var a = e.dataTransfer.getData('Text');
   table.loadURL(a);

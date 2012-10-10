@@ -13,11 +13,18 @@
     */
   $controls.find('input[value="Done"]').on('click', processSpreadsheet);
   $controls.find('input[value="Reset"]').on('click', resetSpreadsheet);
-  $dataTable.parent().on('mouseup', checkSelected);
-  $('a.dragdrop').on('click', function(){
-      $('#drop').slideToggle();
-  })
+ 
   $controls.find('#submatrix_spreadsheet').on('click', function () {
+
+       model.setDataset({
+          data: $dataTable.inputtable('getSelectedData'),
+        //range:selected,
+          type: 'getSelected',
+          processed: false
+      });
+
+       displayResponse(' Submatrix loaded <i class="icon-ok"></i>', 'success');
+    /*
     if(isSelected()) {
       var response = isSelected();
       $dataTable.inputtable('selectCell', response[1], response[0], response[3], response[2]);
@@ -30,7 +37,7 @@
       $dataTable.inputtable('selectCell', startArray[0], startArray[1], stopArray[0], stopArray[1]);
       console.log(startArray + '  ' + stopArray);
       console.log($dataTable.inputtable('getDataFromCoords', start, end))
-    }
+    } */
   })
   /*
 	
@@ -76,11 +83,11 @@
 					@Todo : highlight the selected Data
 
 				*/
-      model.setDataset({
-        data: $dataTable.inputtable('getSelectedData'),
+          model.setDataset({
+          data: $dataTable.inputtable('getSelectedData'),
         //range:selected,
-        type: 'getSelected',
-        processed: false
+          type: 'getSelected',
+          processed: false
       });
       displayResponse(' Data loaded successfully <i class="icon-ok"></i>', 'success');
       $(".controller-handle").trigger('click');
@@ -190,13 +197,18 @@
   }
 
   var checkSelected =  function() {
-    console.log('Mouseup Event on spreadsheet')
     if( isSelected() ){
-      console.log( isSelected() );
+      $('#submatrix_spreadsheet').removeAttr('disabled');
+      console.log('Enabling the submatrix selection option');
+
     }
   }
   $controls.find('input[value="Done"]').on('click', processSpreadsheet);
   $controls.find('input[value="Reset"]').on('click', resetSpreadsheet);
+  $dataTable.parent().on('mouseup', checkSelected );
+  $('a.dragdrop').on('click', function(){
+      $('#drop').slideToggle();
+  })
   /*
   $controls.find('#submatrix_spreadsheet').on('click', function () {
     if(isSelected()) {
