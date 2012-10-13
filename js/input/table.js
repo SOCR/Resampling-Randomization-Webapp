@@ -20,8 +20,8 @@ var table = function () {
 	 	$.get(uri, function(d){
 	//	 		console.log('Fetching Successful');
 
-	 		var tableCount = $(d).find('table').length,
-	 			tables = $(d).find('table'),
+	 		var tableCount = $(d).is('table') ? $(d).length : $(d).find('table').length,
+	 			tables = $(d).is('table') ? $(d) : $(d).find('table'),
 	 		 	table = filterTables( tables ),
 	 		 	titles = parseHeadings ( table );
 
