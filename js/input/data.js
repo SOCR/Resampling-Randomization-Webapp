@@ -89,7 +89,8 @@
         });
         if(status==true)
             {
-              displayResponse(' Data loaded successfully <i class="icon-ok"></i>', 'success');        
+              displayResponse(' Data loaded successfully <i class="icon-ok"></i>', 'success'); 
+              $("#dataDriven-tab").trigger('click');       
               $(".controller-handle").trigger('click');
             }
         else

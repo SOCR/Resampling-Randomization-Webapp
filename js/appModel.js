@@ -186,7 +186,7 @@ return{
 		for(var j=_sampleStandardDev.length;j<_count;j++)
 			{
 			_sampleStandardDev[j]=_generateStandardDev(j);
-			//console.log(_sampleMean[j]);
+			//console.log(_sampleStandardDev[j]);
 			}
 			return _sampleStandardDev;
 		}	

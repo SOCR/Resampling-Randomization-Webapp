@@ -58,13 +58,16 @@ var appView = function(appModel){
 			var sampleID=$(this).attr('id');
 			var values=model.getSampleValue(sampleID);
 			//console.log("values for plot click:"+values);
+			var temp=values.sort(function(a,b){return a-b});
+			var start=Math.floor(temp[0]);
+			var stop=Math.ceil(temp[values.length-1])+1;
 			$('#plot').find('h3').text(' Sample : ' + sampleID );
 			vis({
 				parent : '.chart',
 			    data : values,
 			    height: 380,
 			    width: 500,
-				// range:[start,stop]
+				//range:[start,stop]
 	        	})();
 		});//click binding for .plot
 
@@ -484,7 +487,7 @@ return{
 			parent : '#dotplot',
 			data : values,
 			height:390,
-			range: [start,stop],
+			//range: [start,stop],
 			datum :datum,
 			variable: setting.variable				
 		})();
