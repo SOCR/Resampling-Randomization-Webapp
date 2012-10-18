@@ -64,7 +64,7 @@ var appView = function(appModel){
 			    data : values,
 			    height: 380,
 			    width: 500,
-				//  range:[0,10]
+				// range:[start,stop]
 	        	})();
 		});//click binding for .plot
 
@@ -213,7 +213,7 @@ return{
 		$('#dataPlot').html('');		//clear dataPlot div
 		$('#dotPlot').empty();			//clear dotPlot div
 		$('#accordion').accordion( "activate" , 0);
-		$('#pagination').html('');
+		$('.pagination').html('');
 		$('#details').html('');
 		$('#dataset').html('');
 		$("#input").inputtable('clear'); 

@@ -15,15 +15,13 @@
   $controls.find('input[value="Reset"]').on('click', resetSpreadsheet);
  
   $controls.find('#submatrix_spreadsheet').on('click', function () {
-
-       model.setDataset({
-          data: $dataTable.inputtable('getSelectedData'),
-        //range:selected,
-          type: 'getSelected',
-          processed: false
-      });
-
-       displayResponse(' Submatrix loaded <i class="icon-ok"></i>', 'success');
+    model.setDataset({
+      data: $dataTable.inputtable('getSelectedData'),
+      //range:selected,
+      type: 'getSelected',
+      processed: false
+    });
+    displayResponse(' Submatrix loaded <i class="icon-ok"></i>', 'success');
     processSpreadsheet();
     /*
     if(isSelected()) {
@@ -72,8 +70,7 @@
 			2. Entire Dataset
 		
 		*/
-    console.log($(this).parent().parent().hasClass('copy'))
-    $("#dataDriven-tab").trigger('click');
+    console.log($(this).parent().parent().hasClass('copy'));
     if(isSelected()) {
       console.log('Coordinates are selected ' + isSelected())
       var selectedCoords = isSelected();
@@ -84,27 +81,43 @@
 					@Todo : highlight the selected Data
 
 				*/
-          model.setDataset({
+      var status=model.setDataset({
           data: $dataTable.inputtable('getSelectedData'),
-        //range:selected,
+          //range:selected,
           type: 'getSelected',
           processed: false
-      });
-      displayResponse(' Data loaded successfully <i class="icon-ok"></i>', 'success');
-      $(".controller-handle").trigger('click');
+        });
+        if(status==true)
+            {
+              displayResponse(' Data loaded successfully <i class="icon-ok"></i>', 'success');        
+              $(".controller-handle").trigger('click');
+            }
+        else
+          {
+            displayResponse('No Data to load ', 'failure');
+          }
+      
     } else {
       console.log('No coordinates are selected')
       /*
 					Case of no selection, entire matrix is passed
 				*/
-      model.setDataset({
+      var status=model.setDataset({
         data: $dataTable.inputtable('getNonEmptyData'),
         range: 1,
         type: 'getData',
         processed: false,
       });
-      displayResponse('Data loaded successfully <i class="icon-ok"></i>', 'success');
-      $(".controller-handle").trigger('click');
+      if(status==true)
+        {
+          displayResponse('Data loaded successfully <i class="icon-ok"></i>', 'success');
+          $("#dataDriven-tab").trigger('click');
+          $(".controller-handle").trigger('click');    
+        }
+      else
+        {
+          displayResponse('No Data to load ', 'failure');
+        }
     }
   }
   /*

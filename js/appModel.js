@@ -15,11 +15,10 @@ var appModel=function(){
 	var bootstrapSamples=new Array();	//Contains all the bootstrap samples generated E,g., H,T,T,T,H,H,T.
 	var bootstrapSampleValues=new Array(); //Contains all the bootstrap sample's value generated E,g., 1,0,0,0,1,1,0.
 	//var variables;				//number of variables
-	var _data;
-	var sample;
+	/*TODO: make the datasetKeys and datasetValues multidimensional to account for [Issue #4].
+	*/
 	var _datasetKeys=[];
 	var _datasetValues=[];
-
 	var _sampleMean=[];
 	var _sampleCount=[];
 	var _sampleStandardDev=[];
@@ -31,7 +30,6 @@ var appModel=function(){
 */
 
 /* PRIVATE METHODS   */
-
 	/**
 	*@method: [private] _getRandomInt()
 	*@desc:  returns a random number in the range [min,max]
@@ -48,9 +46,9 @@ var appModel=function(){
 	*/
 	function _generateMean(sampleNumber){
 		var total=_generateCount(sampleNumber);
-		//console.log("total :"+total);	
 		return total/bootstrapSampleValues[sampleNumber].length;
 	}
+	
 	/**
 	*@method: [private] _generateCount()
 	*@param:  sampleNumber - the random sample number for which the count is to be calculated
@@ -72,10 +70,8 @@ var appModel=function(){
 	*@return: the calculated mean standard deviation
 	*/
 	function _generateStandardDev(sampleNumber){
-		//get mean 
 		var _mean=_generateMean(sampleNumber);
 		var sd=Math.sqrt(_mean*(1-_mean));
-		//console.log("Standard deviation:"+sd);
 		return sd;
 	}
 	
@@ -84,16 +80,15 @@ return{
 	bootstrapSamples:bootstrapSamples,
 	bootstrapSampleValues:bootstrapSampleValues,
 	
-	
 	/* PUBLIC METHODS   */
 	/*
 	addObserver:subject.addObserver(),
 	removeObserver:subject.removeObserver()
 	*/    
-    //i think this should be a private function
-	/**
+    
+    /**
 	*@method: [public] generateTrail()
-	*@desc:  rgenerating a random number between 0 and dataSet size 
+	*@desc:  Generating a random number between 0 and dataSet size {@ashwini: I think this should be a private function}
 	*/
 	generateTrail:function(){
 		randomIndex=_getRandomInt(0, _datasetValues.length);	//generating a random number between 0 and dataSet size 
@@ -109,13 +104,12 @@ return{
 	*@desc:  rgenerating a random number between 0 and dataSet size 
 	*/
 	generateSample:function(){
-		var j=_n;				//has to dynamic...get from DOM
+		var j=$('#nSize').val();				
 		var sample=[];
 		var values=[];
 		while(j--)
 			{
 			var temp=this.generateTrail();
-			//alert(temp.data);
 			sample[j]=temp.key;	//inserting the new sample
 			values[j]=temp.value;
 			}
@@ -146,7 +140,7 @@ return{
 		bootstrapSamples[_count]=sample;
 		bootstrapSampleValues[_count]=values;
 		//bootstrapSamples[_count]= new Array(sample);
-		console.log(_count+' random sample:'+sample);
+		//console.log(_count+' random sample:'+sample);
 		_count++;
 		return indexes;
 	},
@@ -167,6 +161,7 @@ return{
 				return _sampleMean;
 			}
 		},
+	
 	/**
 	*@method: [public] getMeanOf()
 	*@desc:  executed when the user presses "infer" button in the controller tile. The click binding of the step button is done in the {experiment}.js
@@ -257,7 +252,7 @@ return{
 	
 	
 	/**
-	*   NOT USED ANYWHERE
+	*   NOT USED ANYWHERE ....TODO: REMOVE
 	*/
 	error:function(x){
 		switch (x){
@@ -334,8 +329,19 @@ return{
 					}
 				}
 			console.log(_datasetValues.length);
-			_datasetKeys=_datasetValues;
-			console.log('Data is loaded now. Data :' + _datasetValues);
+			if(_datasetValues.length==0)
+				{
+					_datasetValues=0;
+					console.log("returning false");
+					return false;
+				}
+			else{
+					_datasetKeys=_datasetValues;
+					console.log("returning true");
+					console.log('Data is loaded now. Data :' + _datasetValues);
+					return true;
+				}
+
 		}
 	},
     /**
@@ -394,6 +400,8 @@ return{
 		this.bootstrapSampleValues=[];
 		//setting the global random sample count to 0
 		this.setCount(0);
+		//Triggering view reset
+		view.clearAll();
 	},
 	resetVariables:function(){
 		_sampleMean=[];
