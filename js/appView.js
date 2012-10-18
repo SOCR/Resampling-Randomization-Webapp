@@ -37,6 +37,7 @@ var appView = function(appModel){
 		//console.log(model.bootstrapSamples);
 		y=parseInt(start)+size;
 		$('#sampleList').html('');		//first empty the sample list
+		_datapoints=$('#nSize').val();
 		//change the loop to a inverse while loop
 		for(var i=start;i<y;i++)
 			{
@@ -50,10 +51,13 @@ var appView = function(appModel){
 			$('#sampleList').append(temp.join(''));
 			}
 		$('.tooltips').tooltip();
+		
+		/*plot icon is present on each child of the sampleList Div . It basically opens a popup and plots a bar chart of that particular sample.*/
 		$('.plot').on('click',function(){
 			$('.chart').html('');
-			var values = $(this).parent().parent().find('pre').text().split(','),
-				sampleID = $(this).parent().parent().find('span.values').filter(':eq(0)').text();
+			var sampleID=$(this).attr('id');
+			var values=model.getSampleValue(sampleID);
+			//console.log("values for plot click:"+values);
 			$('#plot').find('h3').text(' Sample : ' + sampleID );
 			vis({
 				parent : '.chart',
@@ -62,38 +66,41 @@ var appView = function(appModel){
 			    width: 500,
 				//  range:[0,10]
 	        	})();
-			});//click binding for .plot
+		});//click binding for .plot
 
-			$('.toggle-sample').on('click',function(){
+		/**toggle-sample icon is present on each child of the sampleList Div . It basically toggles the data if the sample and sampleValue are different.
+		*	TODO : disable this button if the app is data driven mode (as the sample and sampleValues are same.)
+		*/
+		$('.toggle-sample').on('click',function(){
 				var id=$(this).attr('id');
 				if($(this).attr('data-type')==='value')
 					{
-						console.log(model.bootstrapSamples[id]);
-						$(this).parent().parent().find('pre').text(model.bootstrapSamples[id]);
+						//console.log(model.bootstrapSamples[id]);
+						$(this).parent().parent().find('pre').text(model.getSample(id));
 						$(this).attr('data-type','sample');
 					}
 				else
 					{
-						console.log("qwe:"+model.getSampleValues[id]);
-						$(this).parent().parent().find('pre').text(model.bootstrapSampleValues[id]);
+						//console.log("qwe:"+model.getSampleValue(id));
+						$(this).parent().parent().find('pre').text(model.getSampleValue(id));
 						$(this).attr('data-type','value');
 					}
-			});//click binding for .toggle-sample
+		});//click binding for .toggle-sample
 			
-			$('.contribution').on('click',function(){
-				console.log("Mean of this sample:"+model.getMeanOf($(this).attr('id')));
-				$("#accordion").accordion( "activate" , 2);
-				console.log("dataset mean:"+model.getMeanOfDataset());
-				console.log("standard deviation:"+ model.getStandardDevOf($(this).attr('id')));
-				$('#dotplot').html('');
-				createDotplot({
-					variable : 'mean',
-					sample : {
-						mean : model.getMeanOf($(this).attr('id')),
-						meanDataset : model.getMeanOfDataset(),
-						standardDev : model.getStandardDevOf($(this).attr('id'))
-					}
-				});
+		$('.contribution').on('click',function(){
+			console.log("Mean of this sample:"+model.getMeanOf($(this).attr('id')));
+			$("#accordion").accordion( "activate" , 2);
+			console.log("dataset mean:"+model.getMeanOfDataset());
+			console.log("standard deviation:"+ model.getStandardDevOf($(this).attr('id')));
+			$('#dotplot').html('');
+			createDotplot({
+				variable : 'mean',
+				sample : {
+					mean : model.getMeanOf($(this).attr('id')),
+					meanDataset : model.getMeanOfDataset(),
+					standardDev : model.getStandardDevOf($(this).attr('id'))
+				}
+			});
 
 			/*
 			 Renders the dotplot, 
@@ -122,7 +129,7 @@ var appView = function(appModel){
 					parent : '#dotplot',
 					data : values,
 					height:390,
-					range: [0,1],
+					range: [0,10],
 					dataSetMean :datum,
 					sample : setting.sample
 				})();

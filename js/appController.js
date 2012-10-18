@@ -103,7 +103,7 @@ var appController=function(appModel,view){
 	
 		// Twitter Feed
 		$('#tweetFeed').jTweetsAnywhere({
-				searchParams: 'q=doubt,ucla',
+				searchParams: 'q=socr,doubt',
 				count: 10,
 				showTweetFeed: {
 					autorefresh: {

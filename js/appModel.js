@@ -51,7 +51,12 @@ var appModel=function(){
 		//console.log("total :"+total);	
 		return total/bootstrapSampleValues[sampleNumber].length;
 	}
-	
+	/**
+	*@method: [private] _generateCount()
+	*@param:  sampleNumber - the random sample number for which the count is to be calculated
+	*@desc: 
+	*@return: the calculated total count value for the sample
+	*/
 	function _generateCount(sampleNumber){
 		var x=bootstrapSampleValues[sampleNumber];
 		var total=0;
@@ -61,12 +66,12 @@ var appModel=function(){
 	}
 	
 	/**
-	*@method: [private] _standardDev()
+	*@method: [private] _generateStandardDev()
 	*@param:  sampleNumber - the random sample number for which the mean is to be calculated
 	*@desc:  returns a random number in the range [min,max]
 	*@return: the calculated mean standard deviation
 	*/
-	function _standardDev(sampleNumber){
+	function _generateStandardDev(sampleNumber){
 		//get mean 
 		var _mean=_generateMean(sampleNumber);
 		var sd=Math.sqrt(_mean*(1-_mean));
@@ -185,14 +190,14 @@ return{
 		{
 		for(var j=_sampleStandardDev.length;j<_count;j++)
 			{
-			_sampleStandardDev[j]=_standardDev(j);
+			_sampleStandardDev[j]=_generateStandardDev(j);
 			//console.log(_sampleMean[j]);
 			}
 			return _sampleStandardDev;
 		}	
 	},
 	getStandardDevOf:function(sampleNo){
-		return _standardDev(sampleNo);
+		return _generateStandardDev(sampleNo);
 	},
 	
 	getSdOfDataset:function(){
@@ -280,6 +285,7 @@ return{
 	*@description: sets the data from the input sheet into the app model
 	*/
 	setDataset:function(input){
+		//check for input values...if its empty...then throw error
 		console.log('setDataSet() invoked!');
 		console.log('Input Data :'+input.data);
 		console.log('Input Type :'+input.type);
@@ -327,12 +333,12 @@ return{
 						}
 					}
 				}
+			console.log(_datasetValues.length);
 			_datasetKeys=_datasetValues;
 			console.log('Data is loaded now. Data :' + _datasetValues);
 		}
 	},
-    
-	/**
+    /**
 	*@method: [public] getSample()
 	*@desc:  getter and setter funtion for dataSet variable. 
 	*@dependencies: generateTrail()
@@ -343,6 +349,18 @@ return{
 	
 	getSamples:function(){
 		return bootstrapSamples;
+	},
+	/**
+	*@method: [public] getSampleValues()
+	*@desc:  getter and setter funtion for dataSet variable. 
+	*@dependencies: generateTrail()
+	*/
+	getSampleValue:function(index){
+		return bootstrapSampleValues[index];
+	},
+	
+	getSampleValues:function(){
+		return bootstrapSampleValues;
 	},
 	/*  getter and setter for variable '_stopCount'  */
 	setStopCount:function(y){
