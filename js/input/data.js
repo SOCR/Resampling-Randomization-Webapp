@@ -24,6 +24,7 @@
       });
 
        displayResponse(' Submatrix loaded <i class="icon-ok"></i>', 'success');
+    processSpreadsheet();
     /*
     if(isSelected()) {
       var response = isSelected();
@@ -38,7 +39,7 @@
       console.log(startArray + '  ' + stopArray);
       console.log($dataTable.inputtable('getDataFromCoords', start, end))
     } */
-  })
+  });
   /*
 	
 		Spreadsheet generation code, pretty much self explanatory
