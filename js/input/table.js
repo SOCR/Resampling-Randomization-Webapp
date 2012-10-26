@@ -112,7 +112,6 @@ var table = function () {
      	 }
      	 
      	 matrix[0][0] = 'Matrix mode testing';
-     	 console.log(matrix);
      	 matrix.splice(0,1);
      	 return matrix;
 	}

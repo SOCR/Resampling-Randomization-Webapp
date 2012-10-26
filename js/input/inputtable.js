@@ -2340,6 +2340,8 @@
         var coords = grid.getCornerCoords([priv.selStart, priv.selEnd]);
         return [coords.TL.row, coords.TL.col, coords.BR.row, coords.BR.col];
       }
+      else
+        return false;
     };
 
   /**
@@ -2403,21 +2405,9 @@
     console.log(start + ' ' + stop)
     var coords = [];
 
-        var startArray = start.split(',');
-        var stopArray = stop.split(',');
-        var coords = startArray.concat(stopArray);
-
-/*
-Todo: Make it easier
-        var row = startArray[0],
-            col =startArray[1],
-            endRow = stopArray[0],
-            endCol = stopArray[1];
-
-           Inputtable.selectCell(row,col,endRow,endCol)
-  
-  */
-      
+        var startArray = start.split(','),
+            stopArray = stop.split(','),
+            coords = startArray.concat(stopArray);
 
      var box = new Array(coords[2]-coords[0]+1);
     for(var iii = 0; iii < box.length; iii++) {
@@ -2581,6 +2571,10 @@ Todo: Make it easier
     this.clear = function () {
       selection.selectAll();
       selection.empty();
+    };
+
+    this.selectEntiregrid = function(){
+      selection.selectAll();
     };
 
     /**
