@@ -9,7 +9,7 @@ var table = function () {
 		matrix = [],
 		lastEdit ='',
 		parent = '#status';
-		controls = '.input-controls' // By default need to work on them later
+		controls = '.input-controls' 
 
 	var request = function ( uri,parent ){
 		
@@ -189,10 +189,15 @@ var table = function () {
    					return;
 
    				}
+   			console.log('Request Initialised');
 
+   			$('#status').html('<div class="alert alert-success">Dataset request initialised..</div>');
+   			setTimeout(function(){
+   				$('#status').slideToggle().html('');
+   			}, 2000)
 			request( url, parent );
-			//$(parent).html('')
-			$(parent).find('input:eq(1)').val( getMatrixsize )
+
+			
 		},
 		selectData :  function ( coords ){
 
