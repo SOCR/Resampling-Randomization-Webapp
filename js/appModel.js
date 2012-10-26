@@ -272,7 +272,10 @@ return{
 	*@dependencies: generateTrail()
 	*/
 	getDataset:function(){
-		return _datasetKeys;
+		if(_datasetKeys)
+			return _datasetKeys;
+		else
+			return false;
 	},
 	/**
 	*@method: setDataset
@@ -401,7 +404,7 @@ return{
 		//setting the global random sample count to 0
 		this.setCount(0);
 		//Triggering view reset
-		view.clearAll();
+		view.reset();
 	},
 	resetVariables:function(){
 		_sampleMean=[];

@@ -443,6 +443,7 @@
 			baseUrl=url;
 		/*
 		GLOBAL VARIABLES...TO BE ACCESSED FROM {experiment}.js files.
+		** BAD practice...litering global namespace
 		*/
 		inputSliderState=0;
 		controllerSliderState=0;
@@ -465,8 +466,7 @@
 			 	/* All resources are loaded */
 			 	$('#startApp').removeAttr('disabled')
 			 					.html('Launch')
-			 	
-			 };
+				};
 		}
 		
 		
@@ -557,7 +557,7 @@
 						console.log('ballAndUrn.js file has loaded!');
 						Experiment=ballAndUrn;
 						//Initializing
-						view.clearAll();
+						view.reset();
 						Experiment.createControllerView();
 						Experiment.initialize();
 						if(inputSliderState!=0)
@@ -653,9 +653,6 @@
 		});
 		
 		$("#generate-url-button").on('click',function(){
-	
-			
-				
 			if(model.getDataset()!=''){
 				
 				$("#url").val(baseUrl+"index.html?"+"type=url&dataset="+model.getDataset()+"&countSize="+$("#countSize").val()+"&nSize="+$("#nSize").val());

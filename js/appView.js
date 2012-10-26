@@ -206,21 +206,20 @@ return{
 	},
 	
 	/**
-     *@method - clearAll()
+     *@method - reset()
 	 *@description: Clears all canvas and div. Resetting the view of the whole App
      * @dependencies : none
      */
-	clearAll:function(){
+	reset:function(){
 		$('#displayCount').html('0');	//resetting the count to 0
 		$('#sampleList').html('');		//clear the sample List dive
 		$('#dataPlot').html('');		//clear dataPlot div
-		$('#dotPlot').empty();			//clear dotPlot div
+		$('#dotplot').empty();			//clear dotPlot div
 		$('#accordion').accordion( "activate" , 0);
 		$('.pagination').html('');
 		$('#details').html('');
 		$('#dataset').html('');
 		$("#input").inputtable('clear'); 
-		//also clear the canvas
 		_currentValues=[];
 	},
 	

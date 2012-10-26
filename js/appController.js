@@ -17,6 +17,7 @@ var appController=function(appModel,view){
 	var _datapoints=model.getN();		//this can create problems...if the n value is changed after the intialization of the app
 	var _stopCount=model.stopCount;
 	var _count=model.getCount();	//Number of resamples already generated in the app...can create problems
+	var _currentMode="dataDriven";  //App starts with dataDriven mode [default value]
 
 /* PRIVATE METHODS   */
 
@@ -156,41 +157,66 @@ var appController=function(appModel,view){
 		});
 		 
 		$('#dataDriven-tab').unbind('click');
-		$('#dataDriven-tab').on('click',function(){
-		  //WARNING PROMPT
-			$("#accordion").accordion( "activate" , 0);
-			$(this).update({to:'dataDriven'});
-		});
-			
 		$('#simulationDriven-tab').unbind('click');
-		$('#simulationDriven-tab').on('click',function(){
-			//WARNING PROMPT
-			var self=this;
-			$('<div></div>').appendTo('body')
-                    .html('<div><h6>Moving from Data drive to Simulation Drive will reset the app!You want to continue?</h6></div>')
-                    .dialog({
-                        modal: true, 
-						title: 'Reset Data?', 
-						zIndex: 10000, 
-						autoOpen: true,
-                        width: 'auto', 
-						resizable: false,
-                        buttons: {
-                            Yes: function () {
-							$(this).update({to:'simulationDriven'});
-							$(this).dialog("close");					//close the confirmation window
-                            },
-                            No: function () {
-							$('#myTab li:eq(0) a').tab('show');
-                                $(this).dialog("close");
-                            }
-                        },
-                        close: function (event, ui) {
-                            $(this).remove();
-                        }
-                    });
+
+		$('#dataDriven-tab, #simulationDriven-tab').on('click',function(e){
+			console.log("current:"+_currentMode);
+			console.log("future:"+e.target.id.split("-")[0]);
+			if(e.target.id.split("-")[0] !== _currentMode)
+					{
+						console.log("mode being changed!");
+						console.log("getdataset:"+model.getDataset());
+					//check if model.getDataset() is true
+						if(model.getDataset()!='')
+							{console.log("Entered the loop");
+								$('<div></div>').appendTo('body')
+			                    .html('<div><h6>Moving from Data drive to Simulation Drive will reset the app!You want to continue?</h6></div>')
+			                    .dialog({
+			                        modal: true, 
+									title: 'Reset Data?', 
+									zIndex: 10000, 
+									autoOpen: true,
+			                        width: 'auto', 
+									resizable: false,
+			                        buttons: {
+			                            Yes: function () {
+			                            	_currentMode=e.target.id.split("-")[0];
+			                            	if(e.target.id==="dataDriven-tab")
+										  		{
+
+										  			$("#accordion").accordion( "activate" , 0);
+													$(this).update({to:'dataDriven'});		
+										  		}
+											else
+												$(this).update({to:'simulationDriven'});
+										$(this).dialog("close");					//close the confirmation window
+			                            },
+			                            No: function () {
+										$('#myTab li:eq(0) a').tab('show');
+			                                $(this).dialog("close");
+			                            }
+			                        },
+			                        close: function (event, ui) {
+			                            $(this).remove();
+			                        }
+                   				 });					
+							}
+						else
+							{
+								_currentMode=e.target.id.split("-")[0];
+								if(e.target.id==="dataDriven-tab")
+									{
+							  			$("#accordion").accordion( "activate" , 0);
+										$(this).update({to:'dataDriven'});		
+									}
+								else
+									$(this).update({to:'simulationDriven'});
+							}
+							
+					}
+
 		});
-		console.log('initialization done');
+		
 	},
 	
 	/**
@@ -287,7 +313,7 @@ var appController=function(appModel,view){
 							model.bootstrapSamples.splice(0, model.bootstrapSamples.length);	//empty the bootstrap samples
 							model.bootstrapSampleValues.splice(0, model.bootstrapSampleValues.length);	//empty the bootstrap samples
 							model.resetVariables();
-							view.clearAll();		//clearing all the canvas
+							view.reset();		//clearing all the canvas
 							$('#showCount').html('');
                             $(this).dialog("close");					//close the confirmation window
                             },
@@ -317,7 +343,7 @@ var appController=function(appModel,view){
 	loadController:function(x){
 		if(x=='simulationDriven')
 			{
-				Experiment.createControllerView(x);
+				Experiment.createControllerView();
 				Experiment.initialize();
 				
 			}
