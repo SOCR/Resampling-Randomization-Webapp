@@ -40,7 +40,7 @@ var appController=function(appModel,view){
 	else
 		{
 		console.log(model.bootstrapSamples);
-		view.updateSimulationInfo();
+		//view.updateSimulationInfo();
 		_this.stop();
 		}
 	}
@@ -78,7 +78,7 @@ var appController=function(appModel,view){
 		$("#infer").on('click',function(){
 		/*^^^^^create loading gif ^^^^^^^^*/
 			if(model.bootstrapSamples.length==0)
-				$("#controller-content").append('<div class="alert alert-error"><a class="close" data-dismiss="alert" href="#">x</a><h4 class="alert-heading">No Random samples to infer From!</h4>Please generate some random samples. Click "back" button on the controller to go to the "Generate Random Samples!" button.</div>');
+				view.handleResponse('<h4 class="alert-heading">No Random samples to infer From!</h4>Please generate some random samples. Click "back" button on the controller to go to the "Generate Random Samples!" button.','error','controller-content');
 			else
 			_this.setDotplot();
 		});
@@ -151,15 +151,17 @@ var appController=function(appModel,view){
 		view.createShowSlider();	
 		
 		/*  Adding tab feature to the input tile   */
-		$('#myTab a').click(function (e) {
-			e.preventDefault();
-			$(this).tab('show');
+		/*$('#myTab a').click(function (e) {
+			
+			
 		});
-		 
-		$('#dataDriven-tab').unbind('click');
-		$('#simulationDriven-tab').unbind('click');
+		 */
+		//$('#dataDriven-tab').unbind('click');
+		//$('#simulationDriven-tab').unbind('click');
 
 		$('#dataDriven-tab, #simulationDriven-tab').on('click',function(e){
+			e.preventDefault();
+			$(this).tab('show');
 			console.log("current:"+_currentMode);
 			console.log("future:"+e.target.id.split("-")[0]);
 			if(e.target.id.split("-")[0] !== _currentMode)
@@ -367,6 +369,8 @@ var appController=function(appModel,view){
 						}	
 						
 					}
+				else
+					console.log("Experiment object not defined!");
 				//set the input
 				
 			}

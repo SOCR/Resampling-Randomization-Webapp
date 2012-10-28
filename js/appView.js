@@ -93,14 +93,14 @@ var appView = function(appModel){
 		$('.contribution').on('click',function(){
 			console.log("Mean of this sample:"+model.getMeanOf($(this).attr('id')));
 			$("#accordion").accordion( "activate" , 2);
-			console.log("dataset mean:"+model.getMeanOfDataset());
+			console.log("dataset mean:"+model.getMeanOfDataset(1));
 			console.log("standard deviation:"+ model.getStandardDevOf($(this).attr('id')));
 			$('#dotplot').html('');
 			createDotplot({
 				variable : 'mean',
 				sample : {
 					mean : model.getMeanOf($(this).attr('id')),
-					meanDataset : model.getMeanOfDataset(),
+					meanDataset : model.getMeanOfDataset(1),
 					standardDev : model.getStandardDevOf($(this).attr('id'))
 				}
 			});
@@ -113,13 +113,13 @@ var appView = function(appModel){
 				if(setting.variable=='mean')
 					{
 						var values = model.getMean();
-						var datum = model.getMeanOfDataset();
+						var datum = model.getMeanOfDataset(1);
 						console.log("Mean Values:"+ values );
 					}
 				else if (setting.variable=='standardDev')
 					{
 						var values = model.getStandardDev();
-						var datum=model.getSdOfDataset();
+						var datum=model.getSdOfDataset(1);
 						console.log("SD Values:"+ values );
 					}
 				else
@@ -138,7 +138,7 @@ var appView = function(appModel){
 				})();
 			}
 			
-			var html = '<div> Mean of Sample :'+ model.getMeanOf($(this).attr('id')) +' Mean of DataSet : '+ model.getMeanOfDataset() +' Standard Deviation :'+ model.getStandardDevOf($(this).attr('id')) +'</div>';
+			var html = '<div> Mean of Sample :'+ model.getMeanOf($(this).attr('id')) +' Mean of DataSet : '+ model.getMeanOfDataset(1) +' Standard Deviation :'+ model.getStandardDevOf($(this).attr('id')) +'</div>';
 				
 			var table =['<table class="table table-striped>"'];
 			table.push('<tr><td>Mean Of Sample</td><td></td></tr>')
@@ -450,19 +450,19 @@ return{
 		if(setting.variable=='mean')
 			{
 			var values = model.getMean();			//Mean values of all the generated random samples
-			var datum = model.getMeanOfDataset();	//datum is the dataset mean value
+			var datum = model.getMeanOfDataset(1);	//datum is the dataset mean value
 			console.log("Mean Values:"+ values );	
 			}
 		else if (setting.variable=='standardDev')
 			{
 			var values = model.getStandardDev();	//Standard deviation values of all the generated random samples
-			var datum=model.getSdOfDataset();		//datum is the dataset SD value
+			var datum=model.getSdOfDataset(1);		//datum is the dataset SD value
 			console.log("SD Values:"+ values );
 			}
 		else if (setting.variable=='count')
 			{
 			var values = model.getCounts();	//Standard deviation values of all the generated random samples
-			var datum=model.getCountOfDataset();		//datum is the dataset SD value
+			var datum=model.getCountOfDataset(1);		//datum is the dataset SD value
 			console.log("Count Values:"+ values );
 			}
 		else
@@ -504,8 +504,8 @@ return{
 		array.push('<tr><td>Experiment Name</td><td><strong>'+Experiment.name+'</strong></td></tr>');
 		array.push('<tr><td>DataSet Size </td><td><strong>'+Experiment.getDatasetSize()+'</strong></td></tr>');
 		array.push('<tr><td>Number of Random Samples : </td><td><strong>'+model.bootstrapSamples.length+'</strong></td></tr>');
-		array.push('<tr><td>DataSet Mean : </td><td><strong>'+model.getMeanOfDataset()+'</strong></td></tr>');
-		array.push('<tr><td>DataSet Standard Deviation: </td><td><strong>'+model.getSdOfDataset()+'</strong></td></tr>');
+		//array.push('<tr><td>DataSet Mean : </td><td><strong>'+model.getMeanOfDataset(1)+'</strong></td></tr>');
+		//array.push('<tr><td>DataSet Standard Deviation: </td><td><strong>'+model.getSdOfDataset(1)+'</strong></td></tr>');
 		array.push('</table>');
 		$('#details').html(array.join(''));
 	},
@@ -536,6 +536,37 @@ return{
 		*/
 		//$('#input').inputtable('loadData',data);
 	},
+	handleResponse:function(content,type,id){
+		console.log('handleResponse');
+		console.log($("#"+id+"-message"));
+	if($("#"+id+"-message").length==0)
+		{
+		console.log($("#"+id));	
+			$("#"+id).append("<div id='"+id+"-message'></div>");
+			$response=$("#"+id+"-message") ;
+		}
+
+	//$response=$("#"+id+"-message") || $("#"+id).append("<div id='"+id+"-message'></div>");
+	console.log($response);
+	$response.html('').slideUp(300);
+    $response.append(
+    $('<div></div>')
+      .addClass('alert')
+      .html(content)
+      ).slideDown(300);
+
+    var $alertbox = $response.children('div');
+	    switch(type) {
+	  	  case "success":
+	        $alertbox.addClass('alert-success');
+	        $alertbox.append(' <i class="icon-ok"></i> ');
+	        break;
+
+	      case "error":
+	        $alertbox.addClass('alert-error');
+	        break;
+	    }
+ 	}
 	/*
 	setPercentile:function(x){
 		var N=_currentValues.length;

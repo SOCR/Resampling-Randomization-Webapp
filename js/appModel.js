@@ -9,9 +9,10 @@
 var appModel=function(){
 //::::::: PRIVATE PROPERTIES :::::::::::::::
 	var _stopCount = 1000;			//Number of runs to be made when 'run' button is pressed 
-	var _count=0;				//keeps count of number of samples generated from start
-	var _dataset=['1','2','3','4','5','6','7','8','9','10'];			// All the input datapoints from wich bootstrap sample is generated
-	var _n=50;				//Number of datapoints in a bootstrap sample or Sample Size
+	var _count=0;					//keeps count of number of samples generated from start
+	var _dataset=['1','2','3'];				// All the input datapoints from wich bootstrap sample is generated
+	var _n=50;						//Number of datapoints in a bootstrap sample or Sample Size
+	var _K=1;					//contains the number of datasets
 	var bootstrapSamples=new Array();	//Contains all the bootstrap samples generated E,g., H,T,T,T,H,H,T.
 	var bootstrapSampleValues=new Array(); //Contains all the bootstrap sample's value generated E,g., 1,0,0,0,1,1,0.
 	//var variables;				//number of variables
@@ -92,9 +93,10 @@ return{
 	*/
 	generateTrail:function(){
 		randomIndex=_getRandomInt(0, _datasetValues.length);	//generating a random number between 0 and dataSet size 
+		datasetIndex=_getRandomInt(0, this.getK());
 		return {
-			key:_datasetKeys[randomIndex],
-			value:_datasetValues[randomIndex],
+			key:_datasetKeys[datasetIndex][randomIndex],
+			value:_datasetValues[datasetIndex][randomIndex],
 			index:randomIndex
 			};			//returning the generated trail into a bootstrap sample array
 	},
@@ -105,8 +107,7 @@ return{
 	*/
 	generateSample:function(){
 		var j=$('#nSize').val();				
-		var sample=[];
-		var values=[];
+		var sample=[],values=[];
 		while(j--)
 			{
 			var temp=this.generateTrail();
@@ -170,12 +171,18 @@ return{
 	getMeanOf:function(sampleNumber){
 		return _generateMean(sampleNumber);
 	},
-	getMeanOfDataset:function(){
+	
+	/**
+	*@method: [public] getMeanOfDataset()
+	*@param: K 
+	*@desc: gets the mean of the intially created dataset/sample.
+	*@dependencies: generateTrail()
+	*/	
+	getMeanOfDataset:function(K){
 		var total=0;
-		for(var i=0;i<_datasetValues.length;i++) 
-			{ total += parseInt(_datasetValues[i]); }
-		//console.log("total :"+total);	
-		return total/_datasetValues.length;
+		for(var i=0;i<_datasetValues[K].length;i++) 
+			{ total += parseInt(_datasetValues[K][i]); }
+		return total/_datasetValues[K].length;
 	},
 	
 	getStandardDev:function(){
@@ -195,9 +202,8 @@ return{
 		return _generateStandardDev(sampleNo);
 	},
 	
-	getSdOfDataset:function(){
-		var _mean=this.getMeanOfDataset();
-		//var total=0;
+	getSdOfDataset:function(K){
+		var _mean=this.getMeanOfDataset(K);
 		var _sd=_mean*(1-_mean);
 		console.log("dataset SD:"+_sd);
 		return _sd;
@@ -271,9 +277,9 @@ return{
 	*@desc:  getter and setter funtion for dataSet variable. 
 	*@dependencies: generateTrail()
 	*/
-	getDataset:function(){
-		if(_datasetKeys)
-			return _datasetKeys;
+	getDataset:function(K){
+		if(_datasetKeys[K])
+			return _datasetKeys[K];
 		else
 			return false;
 	},
@@ -411,6 +417,12 @@ return{
 		_sampleStandardDev=[];
 		_samplePercentile=[];
 		_sampleCount=[];
+	},
+	getK:function(){
+		if(Experiment)
+			{Experiment.getK();}
+		else
+			return 0;
 	}
 	
 }//return
