@@ -538,6 +538,7 @@
 			
 			$('#binomialCoin').click(function(){
 				$('.current-experiment').html('Binomial Coin Toss<i class="icon-question-sign popups" rel="popover" data-content="The random experiment consists of tossing n coins, each with probability of heads p. Random variable Y gives the number of heads, and random variable M gives the proportion of heads. These are recorded on each update in the data table. Either Y or M can be selected with the list box. The probability density function and moments of the selected variable are shown in blue in the distribution graph blue and are recorded in the distribution table. On each update, the empirical density function and moments of the selected variable are shown in red in the distribution graph and are recorded in the distribution table. The parameters n and p can be varied with scroll bars." data-original-title="Description"></i>');
+				model.reset();
 				Experiment=binomialCoin;
 				Experiment.createControllerView();
 				Experiment.initialize();
@@ -555,9 +556,9 @@
 				{
 					$.getScript(baseUrl+"js/exp/ballAndUrn.js",function(){
 						console.log('ballAndUrn.js file has loaded!');
+						model.reset();
 						Experiment=ballAndUrn;
 						//Initializing
-						view.reset();
 						Experiment.createControllerView();
 						Experiment.initialize();
 						if(inputSliderState!=0)
@@ -584,6 +585,7 @@
 				{
 					$.getScript(baseUrl+"js/exp/cardExp.js",function(){
 						console.log('cardExp.js file is loaded!');
+						model.reset();
 						Experiment=cardExp;
 						//Initializing
 						Experiment.createControllerView();

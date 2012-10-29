@@ -266,7 +266,7 @@ var appController=function(appModel,view){
 	*@param: X - gets it dynamically using DOM.
 	*/
 	run:function(){
-        	view.disableButtons();					//disabling buttons
+        view.disableButtons();					//disabling buttons
 		model.setStopCount($("#countSize").val());	//save the stopcount provided by user
 		model.setN($("#nSize").val());				// save the datapoints size
 		//generate samples

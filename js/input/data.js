@@ -48,7 +48,7 @@ var spreadSheet = {
   },
 
   validate : function(dataset){
-    console.log(dataset.length);
+    console.log(dataset);
     if(dataset.length != 0){
       if(dataset[0][0] === '' && dataset[1][0] === '' && dataset[2][0] === ''){
         view.displayResponse('Dataset appears to be empty','error');
@@ -64,10 +64,12 @@ var spreadSheet = {
   },
 
   parseAll : function(){
-
-
-    $("#dataDriven-tab").trigger('click');
     var dataset = $dataTable.inputtable('getNonEmptyData');
+    model.reset();
+     $("#accordion").accordion( "activate" , 0);
+      $(this).update({to:'dataDriven'});    
+      if(controllerSliderState!=0)
+          $(".controller-handle").trigger("click");
     if(spreadSheet.validate(dataset)){
         model.setDataset({
           data: dataset,
@@ -77,15 +79,13 @@ var spreadSheet = {
         });
      
       view.displayResponse(' Entire dataset is selected ', 'success');
-      $(".controller-handle").trigger('click');
-       select.selectAll();
+      select.selectAll();
     }
      select.selectAll();
   },
 
   parseSelected :  function(){
-
-     $("#dataDriven-tab").trigger('click');
+     
      if(select.isSelected()) {
         var selectedCoords = select.isSelected();
         /*
@@ -95,10 +95,12 @@ var spreadSheet = {
       }
       if(selectedCoords) {
 
-         
           console.log(' Select Data request with  '+ selectedCoords )  
           var dataset = $dataTable.inputtable('getSelectedData');
-
+          $("#accordion").accordion( "activate" , 0);
+          $(this).update({to:'dataDriven'});    
+         if(controllerSliderState!=0)
+          $(".controller-handle").trigger("click");
           if(spreadSheet.validate(dataset)){
            model.setDataset({
 
@@ -110,7 +112,8 @@ var spreadSheet = {
             });
           
           view.displayResponse('Data loaded successfully', 'success');
-          $(".controller-handle").trigger('click');
+         // if(controllerSliderState!=0)
+         // $(".controller-handle").trigger("click");
            select.selectCells(selectedCoords);
           
 
@@ -187,8 +190,6 @@ var select = {
 
 }
 
- 
-
   $controls.find('input[value="Done"]').on('click', spreadSheet.parseAll );
   $controls.find('input[value="Reset"]').on('click', spreadSheet.reset );
   $controls.find('#submatrix_spreadsheet').on('click',spreadSheet.parseSelected );
@@ -209,51 +210,6 @@ var select = {
     return this;
   };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
  var processSpreadsheet = function (e) {
     /*
     
@@ -262,7 +218,7 @@ var select = {
       2. Entire Dataset
     
     */
-    $("#dataDriven-tab").trigger('click');
+    //$("#dataDriven-tab").trigger('click');
     if(select.isSelected()) {
       console.log('Coordinates are selected ' + select.isSelected())
       var selectedCoords = select.isSelected();
@@ -274,8 +230,7 @@ var select = {
     if(selectedCoords) {
       /* 
           Data is selected, go ahead with extracting submatrix
-          
-        */
+      */
           model.setDataset({
           data: $dataTable.inputtable('getSelectedData'),
         //range:selected,
@@ -288,8 +243,7 @@ var select = {
       */
         select.selectCells(selectedCoords);
         view.displayResponse('Data loaded successfully', 'success');
-        $(".controller-handle").trigger('click');
-    } 
+      } 
       else {
       console.log('No coordinates are selected')
       /*

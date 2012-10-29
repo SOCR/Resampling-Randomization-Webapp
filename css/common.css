@@ -189,12 +189,12 @@
 	  	margin: 10px auto;
 	  }
 
-	#speedSlider{
+	#speed-controller,#percentile-controller{
 	padding-top:5%;
 	padding-bottom:10%;
 	}
 	
-	#speed{
+	#speed-selector,#percentile-selector{
 		float: right;
 		width:60%;
 	}

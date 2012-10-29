@@ -71,7 +71,9 @@ var appModel=function(){
 	*/
 	function _generateStandardDev(sampleNumber){
 		var _mean=_generateMean(sampleNumber);
+		console.log(_mean);
 		var sd=Math.sqrt(_mean*(1-_mean));
+		
 		return sd;
 	}
 	
@@ -186,7 +188,7 @@ return{
 		for(var j=_sampleStandardDev.length;j<_count;j++)
 			{
 			_sampleStandardDev[j]=_generateStandardDev(j);
-			//console.log(_sampleStandardDev[j]);
+			console.log(_sampleStandardDev[j]);
 			}
 			return _sampleStandardDev;
 		}	
@@ -197,8 +199,8 @@ return{
 	
 	getSdOfDataset:function(){
 		var _mean=this.getMeanOfDataset();
-		//var total=0;
-		var _sd=_mean*(1-_mean);
+		console.log(_mean);
+		var _sd=Math.sqrt(_mean*(1-_mean));
 		console.log("dataset SD:"+_sd);
 		return _sd;
 	},
@@ -223,30 +225,37 @@ return{
 		//console.log("total :"+total);	
 		return total;
 	},
-	getPercentile:function(){
+
+	/**
+	*@method:getPercentile ()
+	*@param: pvalue - what is the percentile value that is to be calculated.
+	*/
+	getPercentile:function(pvalue){
 	console.log("getPercentile() invoked");
-	if(_samplePercentile.length==bootstrapSampleValues.length)
-			return _samplePercentile;
-	else
-		{
+	//if(_samplePercentile.length==bootstrapSampleValues.length)
+	//		return _samplePercentile;
+	//else
+	//	{
 		for(var j=0;j<_count;j++)
 			{
-			_samplePercentile[j]=this.getPercentileOf(j);
+			_samplePercentile[j]=this.getPercentileOf(j,pvalue);
 			//console.log(_samplePercentile[j]);
 			}
 			return _samplePercentile;
-		}
+	//	}
 		
 	},
-	getPercentileOf:function(sampleNumber){
+	getPercentileOf:function(sampleNumber,pvalue){
 	var temp=bootstrapSampleValues[sampleNumber].sort(function(a,b){return a-b});
-		var position=bootstrapSampleValues[sampleNumber].length/2;
-		//console.log(bootstrapSampleValues[sampleNumber]);
+		var position=Math.floor(bootstrapSampleValues[sampleNumber].length*(pvalue/100));
+		//console.log(pvalue);
+		//console.log(bootstrapSampleValues[sampleNumber]+"---"+position);
+		
 		return temp[position];
 	},
-	getPercentileOfDataset:function(){
+	getPercentileOfDataset:function(pvalue){
 		var temp=_datasetValues.sort(function(a,b){return a-b});
-		var position=_datasetValues.length/2;
+		var position=Math.floor(_datasetValues.length*(pvalue/100));
 		return temp[position];
 	},
 	
@@ -398,7 +407,8 @@ return{
 		//dataset values deleted
 		_datasetKeys=[];
 		_datasetValues=[];
-		//random samples delted
+		this.resetVariables();
+		//random samples deleted
 		//this.bootstrapSamples=[];
 		this.bootstrapSampleValues=[];
 		//setting the global random sample count to 0
