@@ -5,7 +5,120 @@
   $parent = $('div.spreadsheet');
   $response = $('#status');
 
+// Drag and Drop site
+  $drop = $('#drop');
 
+var dragdrop = {
+    init : function(){
+      $drop.on('dragover', cancel);
+      $drop.on('dragenter', dragdrop.enter);
+      $drop.on('drop', dragdrop.drop);
+    },
+    enter : function(e){
+      $(drop).addClass('active');
+    },
+    drop : function(e){
+       if (e.preventDefault) e.preventDefault(); // stops the browser from redirecting off to the text.  
+          drop.innerHTML = e.dataTransfer.getData('Text') ;
+       var a =e.dataTransfer.getData('Text');
+          tableparse.init(a);   
+    }
+};
+
+var tableparse = {
+    init : function(url){
+      if( tableparse.checkRefer(url) ){
+         tableparse.notify();
+         tableparse.request(url)
+         return true;
+      }
+       return false;
+    },
+    notify : function(){
+      view.displayResponse('Dataset Request Initialized','success');
+      setTimeout(function(){
+        $status.slideToggle().html('');
+      }, 2000);
+    },
+    checkRefer : function(url){
+      var requestHost = document.createElement("a");
+          requestHost.href = url;
+
+          if(window.location.hostname !== requestHost.hostname){
+            view.displayResponse('Datasets should be on the same server with a same URL prefix','error');
+            return false;
+          } else
+            return true;
+    },
+    request : function(uri){
+      // Fix for FF 
+      if( uri.substr(0,7) !== 'http://'){
+         uri = 'http://' + uri;
+      }
+      $.get(uri, function(d){
+
+      var tableCount = $(d).is('table') ? $(d).length : $(d).find('table').length,
+        tables = $(d).is('table') ? $(d) : $(d).find('table'),
+        table = table.filterBySize(tables),
+        titles = table.parseHeadings (table);
+        matrix = table.htmlToArray(table);  
+        $dataTable.inputtable('loadData',matrix);
+      });
+    },
+
+    filterBySize : function(arrayOfTables){
+        var sizes = [];
+      $(arrayOfTables).each(function(i){
+        sizes.push([ $(this).find('tr:last').index() , i] )
+      })
+      var maxIndex = 0;
+      for(k=0; k < sizes.length - 2 ; k++){
+        if(sizes[k][0] < sizes [k+1][0])
+          maxIndex = sizes[k+1][1];
+      }
+      return arrayOfTables[maxIndex];
+    },
+
+    parseHeadings : function(html){
+      var title = [];
+      $stats = $(html);
+      $stats.find('tr').filter(':first').find('th').each(function(){
+        title.push( $(this).text() );
+      });
+      return title;
+    },
+
+    htmlToArray : function(html){
+      var matrix = [];
+    $stats = $(html);
+      $stats.find('tr').each(function(){
+          var row = [];
+          $(this).find('td').each(function(){
+            row.push( $(this).text() );
+          })
+          matrix.push(row);
+       });
+
+      /*
+      Check if the table has th elements instead
+      @Todo
+      */
+       if(matrix[0][0] === ''){
+        var row = [];
+        $stats.find('tr').filter(':eq(0)').find('th').each(function(i,v){
+          matrix[0][i -1] = $(this).text();
+        });
+       }   
+       //Removed the first row by default
+       matrix.splice(0,1);
+       return matrix;
+    }
+
+
+};
+/*
+  Ideally should serve as one-stop object for all visual element changes
+*/
 var view = {
   displayResponse : function(content, type){
     $response.html('').slideUp(300);
@@ -200,6 +313,8 @@ var select = {
   })
   
   spreadSheet.init();
+  dragdrop.init();
+  
   Array.prototype.clean = function (deleteValue) {
     for(var i = 0; i < this.length; i++) {
       if(this[i] == deleteValue) {
