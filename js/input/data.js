@@ -84,7 +84,7 @@ var tableparse = {
           cols : 2,
           minSpareCols: 0
         })
-        $dataTable.inputtable('loadData',matrix);
+        $dataTable.inputtable('loadDataSwift',matrix);
       });
     },
 
