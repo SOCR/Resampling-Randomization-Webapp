@@ -61,7 +61,7 @@
 							<!--<a data-toggle="modal" href="#help"><button class='btn btn-danger' >Need Help!</button></a>-->
 							<li><a data-toggle="modal" href="#faq">FAQ</a></li>
 							<a data-toggle="modal" href="#share"><button class='btn btn-success' >Buzz</button></a>
-							<a data-toggle="modal" href="#generate-url"><button class='btn btn-success' id='share-instance-button'>Share Instance!</button></a>
+							<a data-toggle="modal" href="#generate-url"><button class='btn btn-success' id='share-instance-button'>Share Instance</button></a>
 						</ul>
 		  			</div><!--/.nav-collapse -->
 					<a href="#" class=" brand" style='margin-left:10%' >Statistical Online Computational Resource - Resampling WebApp</a> 
@@ -95,7 +95,7 @@
 							<section class = "datadriven-wrap copy">
 							
 									<section class = "controls">
-										<input class="btn" type='button' value='Done'>
+										<input class="btn" type='button' value='Use Entire Dataset'>
 										<input class="btn btn-danger" type='button' value='Reset'>
 										<span class="response"></span>
 										<!--
@@ -107,6 +107,12 @@
 
 									<div class = "spreadsheet">
 
+										<section id="fetchURL">
+											<form class="form-inline">	
+											<input type="url" name="urlbox">
+											<input type="submit" value="Submit" name="submit">
+											</form>
+										</section>
 										<section id="drop"> Drag and Drop your URL here </section>
 										<div id="status"></div>	
 									 	<div class="dataTable spreadsheet_copy" id="input"></div>

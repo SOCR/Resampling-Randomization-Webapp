@@ -7,27 +7,45 @@
 
 // Drag and Drop site
   $drop = $('#drop');
+  $boxsection = $('#fetchURL');
+  $urlbox = $boxsection.find('input[name="urlbox"]');
+  $urlsubmit = $boxsection.find('input[name="submit"]');
 
 var dragdrop = {
     init : function(){
-      $drop.on('dragover', cancel);
+     // $drop.on('dragover', dragdrop.cancel);
       $drop.on('dragenter', dragdrop.enter);
       $drop.on('drop', dragdrop.drop);
+      $urlsubmit.on('click',dragdrop.urlboxsubmit);
+      $boxsection.submit(dragdrop.urlboxsubmit);
     },
     enter : function(e){
       $(drop).addClass('active');
     },
     drop : function(e){
+      console.log(e);
        if (e.preventDefault) e.preventDefault(); // stops the browser from redirecting off to the text.  
           drop.innerHTML = e.dataTransfer.getData('Text') ;
        var a =e.dataTransfer.getData('Text');
           tableparse.init(a);   
+    },
+    cancel : function(e){
+       if (e.preventDefault) e.preventDefault(); // required by FF + Safari
+      e.dataTransfer.dropEffect = 'copy'; // tells the browser what drop effect is allowed here
+      return false; // required by IE
+    },
+    urlboxsubmit : function(e){
+      e.preventDefault();
+      tableparse.init( $urlbox.val() );
     }
 };
 
 var tableparse = {
     init : function(url){
-      if( tableparse.checkRefer(url) ){
+       if( url.substr(0,7) !== 'http://'){
+         url = 'http://' + url;
+      }
+      if( tableparse.checkRefer(url) === true)  {
          tableparse.notify();
          tableparse.request(url)
          return true;
@@ -37,7 +55,7 @@ var tableparse = {
     notify : function(){
       view.displayResponse('Dataset Request Initialized','success');
       setTimeout(function(){
-        $status.slideToggle().html('');
+        $response.slideToggle().html('');
       }, 2000);
     },
     checkRefer : function(url){
@@ -45,23 +63,23 @@ var tableparse = {
           requestHost.href = url;
 
           if(window.location.hostname !== requestHost.hostname){
-            view.displayResponse('Datasets should be on the same server with a same URL prefix','error');
+            view.displayResponse('Datasets should be on the same server with the same URL hostname','error');
             return false;
-          } else
+          } else{
+            console.log('Dataset Server test passed')
             return true;
+          }
     },
     request : function(uri){
       // Fix for FF 
-      if( uri.substr(0,7) !== 'http://'){
-         uri = 'http://' + uri;
-      }
+     
       $.get(uri, function(d){
 
       var tableCount = $(d).is('table') ? $(d).length : $(d).find('table').length,
         tables = $(d).is('table') ? $(d) : $(d).find('table'),
-        table = table.filterBySize(tables),
-        titles = table.parseHeadings (table);
-        matrix = table.htmlToArray(table);  
+        table = tableparse.filterBySize(tables),
+        titles = tableparse.parseHeadings (table);
+        matrix = tableparse.htmlToArray(table);  
         $dataTable.inputtable('loadData',matrix);
       });
     },
@@ -309,7 +327,7 @@ var select = {
 
   $dataTable.parent().on('mouseup', select.checkSelected );
     $('a.dragdrop').on('click', function(){
-      $('#drop').slideToggle();
+      $('#fetchURL').slideToggle();
   })
   
   spreadSheet.init();

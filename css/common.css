@@ -258,3 +258,7 @@
 	a.dragdrop{
 		color: #fff;
 	}
+	section#fetchURL{
+		display:none;
+		margin-top: 10px;
+	}
