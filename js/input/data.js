@@ -80,6 +80,10 @@ var tableparse = {
         table = tableparse.filterBySize(tables),
         titles = tableparse.parseHeadings (table);
         matrix = tableparse.htmlToArray(table);  
+        $dataTable.inputtable({
+          cols : 2,
+          minSpareCols: 0
+        })
         $dataTable.inputtable('loadData',matrix);
       });
     },
@@ -100,9 +104,15 @@ var tableparse = {
     parseHeadings : function(html){
       var title = [];
       $stats = $(html);
-      $stats.find('tr').filter(':first').find('th').each(function(){
+      var firstrow = $stats.find('tr').filter(':first');
+      
+      var element = firstrow.find('th').length > 0 ?'th':'td';
+
+      firstrow.find(element).each(function(){
         title.push( $(this).text() );
       });
+      spreadSheet.addColHeaders(title);
+      console.log(title + ' '+ element);
       return title;
     },
 
@@ -170,12 +180,13 @@ var spreadSheet = {
     Spreadsheet generation code, pretty much self explanatory
     */ 
     $dataTable.inputtable({
-      rows: 10,
-      cols: 4,
+      cols : 8,
+      rows : 8,
       minSpareCols: 1,
       minSpareRows: 1,
-      fillHandle: true  
+      fillHandle: true
     });
+
   },
 
   validate : function(dataset){
@@ -193,6 +204,10 @@ var spreadSheet = {
 
     
   },
+
+   addColHeaders : function(arr){
+      $dataTable.inputtable({colHeaders : arr});
+    },
 
   parseAll : function(){
     var dataset = $dataTable.inputtable('getNonEmptyData');
@@ -274,6 +289,8 @@ var spreadSheet = {
           $dataTable.inputtable('clear');
           $response.html('<div class="alert"><a class="close" data-dismiss="alert" href="#">x</a>Clear! Enter some value to get started!</div>'); //display the message in the status div below the done and reset buttons
           $(this).dialog("close"); //close the confirmation window
+          $dataTable.inputtable({'colHeaders' : false});
+
         },
         No: function () {
           $(this).dialog("close");
@@ -374,7 +391,9 @@ var select = {
       /*
         Uses selectCell property to highlight cells
       */
-        select.selectCells(selectedCoords);
+        setTimeout(function(){
+          select.selectCells(selectedCoords);
+        },500);
         view.displayResponse('Data loaded successfully', 'success');
       } 
       else {
