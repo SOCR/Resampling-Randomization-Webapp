@@ -10,14 +10,17 @@
   $boxsection = $('#fetchURL');
   $urlbox = $boxsection.find('input[name="urlbox"]');
   $urlsubmit = $boxsection.find('input[name="submit"]');
+  method = 'sync'
 
 var dragdrop = {
     init : function(){
+
      // $drop.on('dragover', dragdrop.cancel);
       $drop.on('dragenter', dragdrop.enter);
       $drop.on('drop', dragdrop.drop);
       $urlsubmit.on('click',dragdrop.urlboxsubmit);
       $boxsection.submit(dragdrop.urlboxsubmit);
+      tableparse.switchMode();
     },
     enter : function(e){
       $(drop).addClass('active');
@@ -42,6 +45,7 @@ var dragdrop = {
 
 var tableparse = {
     init : function(url){
+      
        if( url.substr(0,7) !== 'http://'){
          url = 'http://' + url;
       }
@@ -84,7 +88,10 @@ var tableparse = {
           cols : 2,
           minSpareCols: 0
         })
-        $dataTable.inputtable('loadDataSwift',matrix);
+
+        var inputMethod = tableparse.mode() === 'sync' ? 'loadDataSwift' : 'loadData';
+        console.log(inputMethod);
+        $dataTable.inputtable(inputMethod,matrix);
       });
     },
 
@@ -140,6 +147,25 @@ var tableparse = {
        //Removed the first row by default
        matrix.splice(0,1);
        return matrix;
+    },
+    /*
+    Setter-Getter for mode toggling
+    */
+    mode : function(option){
+      if(arguments.length){
+        method = option;
+      }
+      return method;
+    },
+
+    switchMode : function(){
+      $('#fetchinstant').click(function(){
+        tableparse.mode('sync');
+      })
+      $('#fetchasync').click(function(){
+        tableparse.mode('async');
+        console.log('Fetch Async option')
+      })
     }
 
 
@@ -211,11 +237,12 @@ var spreadSheet = {
 
   parseAll : function(){
     var dataset = $dataTable.inputtable('getNonEmptyData');
-    model.reset();
+      model.reset();
      $("#accordion").accordion( "activate" , 0);
       $(this).update({to:'dataDriven'});    
       if(controllerSliderState!=0)
           $(".controller-handle").trigger("click");
+    
     if(spreadSheet.validate(dataset)){
         model.setDataset({
           data: dataset,
@@ -226,8 +253,10 @@ var spreadSheet = {
      
       view.displayResponse(' Entire dataset is selected ', 'success');
       select.selectAll();
+    } else {
+      view.displayResponse(' There is some error in the dataset ', 'error');
     }
-     select.selectAll();
+     
   },
 
   parseSelected :  function(){
@@ -338,7 +367,7 @@ var select = {
 
 }
 
-  $controls.find('input[value="Done"]').on('click', spreadSheet.parseAll );
+  $controls.find('input[value="Use Entire Dataset"]').on('click', spreadSheet.parseAll );
   $controls.find('input[value="Reset"]').on('click', spreadSheet.reset );
   $controls.find('#submatrix_spreadsheet').on('click',spreadSheet.parseSelected );
 
