@@ -91,10 +91,12 @@ function vis(config){
         .attr("height", function(d) { return y.range()[0] - y(d.y); })
         ;
 
-        /*
+        console.log(settings.datum)
+
+        
     if(settings.datum){
         
-        var meanbar = gEnter.append('rect')
+        var meanbar = g.append('rect')
         .attr('x',function(){ return x(settings.datum) })
         .attr('y',function(){ return 0;})
         .attr('width', function(){ return 10;})
@@ -114,7 +116,7 @@ function vis(config){
             viswrap.tooltip.cleanup();
        });   
     }
-    */
+    
     // Update the x-axis.
     g.select(".x.axis")
         .attr("transform", "translate(0," + y.range()[0] + ")")
