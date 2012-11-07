@@ -3,13 +3,13 @@ svg {
      font-family:sans-serif;
     }
 
-    .bar rect {
+    .bars rect {
 	  fill: #1f77b4;
 	  stroke: #1f77b4;
 	  shape-rendering: crispEdges;
 	}
 
-	.bar text {
+	.bars text {
 	  fill: #fff;
 	}
 
