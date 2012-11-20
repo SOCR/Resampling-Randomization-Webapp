@@ -33,6 +33,7 @@ var appModel=function(){
 	/**
 	*@method: [private] _getRandomInt()
 	*@desc:  returns a random number in the range [min,max]
+	*@return: Random number
 	*/
 	function _getRandomInt(min, max) {
 		return Math.floor(Math.random() * (max - min )) + min;
@@ -66,15 +67,22 @@ var appModel=function(){
 	/**
 	*@method: [private] _generateStandardDev()
 	*@param:  sampleNumber - the random sample number for which the mean is to be calculated
-	*@desc:  returns a random number in the range [min,max]
+	@dependencies: _generateMean()
 	*@return: the calculated mean standard deviation
 	*/
 	function _generateStandardDev(sampleNumber){
-		var _mean=_generateMean(sampleNumber);
-		console.log(_mean);
-		var sd=Math.sqrt(_mean*(1-_mean));
-		
-		return sd;
+		//formula used here is SD= ( E(x^2) - (E(x))^2 ) ^ 1/2
+		var _mean=_generateMean(sampleNumber) ;			//E(x)
+		var _squaredSum=null;							//stores E(x^2)
+		var _sample=bootstrapSampleValues[sampleNumber];
+		for(var i=0;i<_sample.length;i++)
+			{
+				_squaredSum+=_sample[i]*_sample[i];
+			}
+		_squaredSum=_squaredSum/_sample.length;
+		//console.log("_squaredSum"+_squaredSum+"--- _mean:"+_mean);
+		var _SD=Math.sqrt(_squaredSum-(_mean)*(_mean));
+		return _SD;
 	}
 	
 return{
@@ -176,33 +184,42 @@ return{
 		var total=0;
 		for(var i=0;i<_datasetValues.length;i++) 
 			{ total += parseInt(_datasetValues[i]); }
-		//console.log("total :"+total);	
-		return total/_datasetValues.length;
+		total=total/_datasetValues.length;
+		if(isNaN(total)){return false;}else{return total;}
+
+
+
 	},
 	
 	getStandardDev:function(){
-	if(_sampleStandardDev.length==bootstrapSampleValues.length)
+		//if the _sampleStandardDev already has the values
+		if(_sampleStandardDev.length==bootstrapSampleValues.length)
 			return _sampleStandardDev;
-	else
+		else
 		{
 		for(var j=_sampleStandardDev.length;j<_count;j++)
 			{
 			_sampleStandardDev[j]=_generateStandardDev(j);
-			console.log(_sampleStandardDev[j]);
+			//console.log(_sampleStandardDev[j]);
 			}
 			return _sampleStandardDev;
 		}	
 	},
-	getStandardDevOf:function(sampleNo){
-		return _generateStandardDev(sampleNo);
+	getStandardDevOf:function(sampleNumber){
+		return _generateStandardDev(sampleNumber);
 	},
 	
 	getSdOfDataset:function(){
 		var _mean=this.getMeanOfDataset();
-		console.log(_mean);
-		var _sd=Math.sqrt(_mean*(1-_mean));
-		console.log("dataset SD:"+_sd);
-		return _sd;
+		var _squaredSum=null;
+		for(var i=0;i<_datasetValues.length;i++)
+			{
+				_squaredSum+=_datasetValues[i]*_datasetValues[i];
+			}
+		_squaredSum=_squaredSum/_datasetValues.length;
+		var _SD=Math.sqrt(_squaredSum-(_mean)*(_mean));
+		console.log("SD of Dataset:"+_SD);
+		return _SD;
 	},
 	getCounts:function(){
 		console.log("getCount() invoked");

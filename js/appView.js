@@ -534,13 +534,22 @@ return{
 	*/
 	updateSimulationInfo:function(){
 		console.log('updateSimulationInfo() invoked');
-		var array=['<table class="table table-striped">'];
-		array.push('<tr><td>Experiment Name</td><td><strong>'+Experiment.name+'</strong></td></tr>');
-		array.push('<tr><td>DataSet Size </td><td><strong>'+Experiment.getDatasetSize()+'</strong></td></tr>');
-		array.push('<tr><td>Number of Random Samples : </td><td><strong>'+model.bootstrapSamples.length+'</strong></td></tr>');
-		array.push('<tr><td>DataSet Mean : </td><td><strong>'+model.getMeanOfDataset()+'</strong></td></tr>');
-		array.push('<tr><td>DataSet Standard Deviation: </td><td><strong>'+model.getSdOfDataset()+'</strong></td></tr>');
-		array.push('</table>');
+		try{
+			var array=['<table class="table table-striped">'];
+			array.push('<tr><td>Experiment Name</td><td><strong>'+Experiment.name+'</strong></td></tr>');
+			array.push('<tr><td>DataSet Size </td><td><strong>'+Experiment.getDatasetSize()+'</strong></td></tr>');
+			array.push('<tr><td>Number of Random Samples : </td><td><strong>'+model.bootstrapSamples.length+'</strong></td></tr>');
+			//dont show mean and standard deviation in info tab when there is no mean or sd.
+			if(model.getMeanOfDataset()!=false)
+				{
+					array.push('<tr><td>DataSet Mean : </td><td><strong>'+model.getMeanOfDataset()+'</strong></td></tr>');
+					array.push('<tr><td>DataSet Standard Deviation: </td><td><strong>'+model.getSdOfDataset()+'</strong></td></tr>');
+				}
+			array.push('</table>');
+		}
+		catch(err){
+			console.log("error:"+err.message);
+		}
 		$('#details').html(array.join(''));
 	},
 	
@@ -550,7 +559,7 @@ return{
 	*@return : none
 	*/
 	CoverPage:function(){
-		console.log('CoverPage() invoked!');
+		//console.log('CoverPage() invoked!');
 		var height = $(window).height(),
 			width = $(window).width();
 		$('#welcome').css('height', height );
