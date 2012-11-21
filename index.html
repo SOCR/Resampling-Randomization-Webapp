@@ -103,6 +103,16 @@
 										-->
 										<input type="button" class="btn" value="Use Selected" id="submatrix_spreadsheet" disabled = "disabled"> 
 										<a class = "dragdrop btn btn-info" > Fetch from URL </a>
+										<div class="btn-group">
+											<a class ="btn dropdown-toggle" data-toggle="dropdown" href="#">
+											 Settings <i class="icon-wrench"></i>
+											 <span class="caret"></span>
+											</a>
+											<ul class="dropdown-menu">
+												<li><a class="edittitles" data-toggle="modal" href="#input-modal"> Edit titles </a></li>
+											</ul>
+											</a>
+										</div>
 									</section>
 
 									<div class = "spreadsheet">
@@ -291,6 +301,14 @@
 				<div class="modal-body">
 					<div>Please feel free to drop a mail at xyz@gmail.com</div>
 				</div>
+			</div>
+			<div id="input-modal" class="modal hide fade">
+				<div class="modal-header">
+					<a class="close" data-dismiss="modal">X</a>
+					<h3>Input Content</h3>
+				<div class="modal-body">
+				 &lt; Content &gt;
+				</div>	
 			</div>
 			<div id="share" class="modal hide fade">  
 				<div class="modal-header">

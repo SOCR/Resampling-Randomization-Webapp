@@ -1,4 +1,4 @@
-(function () {
+var input = (function () {
   
   $dataTable = $('#input');
   $controls = $('section.controls');
@@ -10,7 +10,10 @@
   $boxsection = $('#fetchURL');
   $urlbox = $boxsection.find('input[name="urlbox"]');
   $urlsubmit = $boxsection.find('input[name="submit"]');
-  method = 'sync'
+  method = 'sync';
+
+  //Settings
+
 
 var dragdrop = {
     init : function(){
@@ -194,7 +197,30 @@ var view = {
         $alertbox.addClass('alert-error');
         break;
     }
+  },
+  editTitles : function(){
+  
+    var content = '<form class="form form-horizontal" id="input-titles"><fieldset><legend>Add titles to Spreadsheet</legend><div class="control-group"><label class="control-label">Title</label><div class="controls"><input type="text" placeholder="Input field1"></div></div><div class="control-group"><label class="control-label">Title</label>\
+    <div class="controls"><input type="text" placeholder="Input Title"></div></div><div class="control-group"><label class="control-label">Title</label>\
+    <div class="controls"><input type="text" placeholder="Input Title"></div></div>\
+    <div class="control-group"><label class="control-label">Title</label><div class="controls"><input type="text" placeholder="Input Title"></div></div>\
+    <div class="pagination-centered"><input type="submit" class="btn btn-large btn-block"></div></form>';
+
+    $('#input-modal .modal-body').html(content);
+  },
+  parseTitles : function(e){
+    e.preventDefault();
+    console.log('Call for parse Titles');
+    var titles = [];
+    $('#input-titles').find('input[type="text"]').each(function(){
+      if($(this).val() !== '')
+      titles.push($(this).val());
+    })
+    spreadSheet.addColHeaders(titles);
+    $('#input-modal').modal('toggle');
+    view.displayResponse('Titles altered successfully','success');
   }
+
 }
 /*
   Hookups for spreadsheet opterations
@@ -234,6 +260,15 @@ var spreadSheet = {
    addColHeaders : function(arr){
       $dataTable.inputtable({colHeaders : arr});
     },
+
+  addTitles : function(){
+
+    $('<div></div>').appendTo('body')
+      .addClass('modal hide fade')
+      .html('<div class="modal-header"><div>')
+      
+
+  },
 
   parseAll : function(){
     var dataset = $dataTable.inputtable('getNonEmptyData');
@@ -375,6 +410,9 @@ var select = {
     $('a.dragdrop').on('click', function(){
       $('#fetchURL').slideToggle();
   })
+
+  $controls.find('.edittitles').on('click',view.editTitles);  
+  $('#input-modal').on('submit', '#input-titles',view.parseTitles);
   
   spreadSheet.init();
   dragdrop.init();
