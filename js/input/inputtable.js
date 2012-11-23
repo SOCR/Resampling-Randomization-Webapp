@@ -756,6 +756,61 @@
         return endTd || grid.getCellAtCoords(start);
       },
 
+      populateFromArraySwift: function (start, input, end, allowHtml, source) {
+        var r, rlen, c, clen, td, endTd, changes = [], current = {};
+        rlen = input.length;
+        if (rlen === 0) {
+          return false;
+        }
+        current.row = start.row;
+        current.col = start.col;
+        for (r = 0; r < rlen; r++) {
+          if ((end && current.row > end.row) || (!priv.settings.minSpareRows && current.row > self.rowCount - 1)) {
+            break;
+          }
+          current.col = start.col;
+          clen = input[r] ? input[r].length : 0;
+          for (c = 0; c < clen; c++) {
+            if ((end && current.col > end.col) || (!priv.settings.minSpareCols && current.col > self.colCount - 1)) {
+              break;
+            }
+            td = grid.getCellAtCoords(current);
+            if (grid.isCellWritable($(td))) {
+              changes.push([current.row, current.col, datamap.get(current.row, current.col), input[r][c]]);
+            }
+            current.col++;
+            if (end && c === clen - 1) {
+              c = -1;
+            }
+          }
+          current.row++;
+          if (end && r === rlen - 1) {
+            r = -1;
+          }
+        }
+        if (priv.settings.onBeforeChange && changes.length) {
+          var result = priv.settings.onBeforeChange(changes);
+          if (result === false) {
+            return grid.getCellAtCoords(start);
+          }
+        }
+        var setData = [];
+        for (var i = 0, ilen = changes.length; i < ilen; i++) {
+          if (end && (changes[i][0] > end.row || changes[i][1] > end.col)) {
+            continue;
+          }
+          if (changes[i][3] === false) {
+            continue;
+          }
+          setData.push([changes[i][0], changes[i][1], changes[i][3]]);
+        }
+        endTd = self.setDataAtCellSwift(0, 0, setData, allowHtml);
+        if (changes.length) {
+          self.container.triggerHandler("datachange.inputtable", [changes, source || 'populateFromArray']);
+        }
+        return endTd || grid.getCellAtCoords(start);
+      },
+
       /**
        * Clears all cells in the grid
        */
@@ -2330,6 +2385,86 @@
       return td;
     }; 
 
+    this.setDataAtCellSwift = function(row, col, values, allowHtml){
+      var refreshRows = false, refreshCols = false, escaped, value, td;
+
+      if (typeof values !== "object") { //is stringish
+        values = [
+          [row, col, values]
+        ];
+      }
+
+
+      for (var i = 0, ilen = values.length; i < ilen; i++) {
+        row = values[i][0];
+        col = values[i][1];
+        value = values[i][2];
+
+        if (priv.settings.minSpareRows) {
+          while (row > self.rowCount - 1) {
+            datamap.createRow();
+            grid.createRow();
+            refreshRows = true;
+          }
+        }
+        if (priv.settings.minSpareCols) {
+          while (col > self.colCount - 1) {
+            datamap.createCol();
+            grid.createCol();
+            refreshCols = true;
+          }
+        }
+        var td = grid.getCellAtCoords({row: row, col: col});
+        switch (typeof value) {
+          case 'string':
+            break;
+
+          case 'number':
+            value += '';
+            break;
+
+          default:
+            value = '';
+        }
+        
+        if (!allowHtml) {
+          escaped = value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;"); 
+        }
+        td.innerHTML = (escaped || value).replace(/\n/g, '<br/>');
+        self.minWidthFix(td);
+        datamap.set(row, col, value);
+      
+       
+        grid.updateLegend({row: row, col: col});
+      } 
+
+
+
+      if (refreshRows) {
+        self.blockedCols.refresh();
+      }
+      if (refreshCols) {
+        self.blockedRows.refresh();
+      }
+
+      var recreated = grid.keepEmptyRows();
+      if (!recreated) {
+        selection.refreshBorders();
+      }
+
+      setTimeout(function () {
+        if (!refreshRows) {
+          self.blockedRows.dimensions(values);
+        }
+        if (!refreshCols) {
+          self.blockedCols.dimensions(values);
+        }
+      }, 10);
+
+      return td;
+
+    }
+
     /**
      * Returns current selection. Returns undefined if there is no selection.
      * @public
@@ -2435,6 +2570,17 @@
       datamap.clear();
       grid.clear();
       grid.populateFromArray({
+        row: 0,
+        col: 0
+      }, data, null, allowHtml, 'loadData');
+      priv.isPopulated = true;
+    };
+
+    this.loadDataSwift = function(data, allowHtml){
+      priv.isPopulated = false;
+      datamap.clear();
+      grid.clear();
+      grid.populateFromArraySwift({
         row: 0,
         col: 0
       }, data, null, allowHtml, 'loadData');

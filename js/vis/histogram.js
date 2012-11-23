@@ -11,7 +11,8 @@ function vis(config){
     var defaults = {
       'range' : rangeDefault,
       'height' : $(config.parent).height(),
-      'width' : $(config.parent).innerWidth()
+      'width' : $(config.parent).innerWidth(),
+      'bins' : 20
     };
 
     var settings = $.extend({}, defaults, config);
@@ -19,168 +20,161 @@ function vis(config){
     //removing the padding from the parent
     $(config.parent).css('padding','0px');
 
-   /*
-
-    function returnInt(element){
-       return parseInt(element,10);
-    }
- 
-    settings.range.map(returnInt);
-    console.log(settings.range);
-
-  */
   function chart(){
 
    // A formatter for counts.
-    var formatCount = d3.format(",.0f");
+   // var formatCount = d3.format(",.0f");
 
     var margin = {top: 50, right: 30, bottom: 30, left: 50};
     /*
         h = config.height ? config.height :  $(config.parent).height(),
         w = config.width ? config.width : $(config.parent).width() ;
     */
+
+    /*
     var width = settings.width - margin.left - margin.right,
         height = settings.height - margin.top - margin.bottom;
+    */
+    var width = settings.width,
+        height = settings.height;
 
-    var x = d3.scale.linear()
-        .domain( settings.range )
-        .range([0, width]);
-
-    // chart a histogram using twenty uniformly-spaced bins.
     var data = d3.layout.histogram()
-        .bins(x.ticks(20))
-        .range( settings.range )
-        (settings.data);
+              //  .bins(d3.scale.linear().ticks(20))
+                .bins(d3.scale.linear().ticks(settings.bins))
+                (settings.data);    
 
+    var x = d3.scale.ordinal()
+            .domain(data.map(function(d) { return d.x; }))
+            .rangeRoundBands([0, width - margin.left - margin.right], .1);
+    
     var y = d3.scale.linear()
         .domain([0, d3.max(data, function(d) { return d.y; })])
-        .range([height, 0]);
+          .range([height - margin.top - margin.bottom, 0]);
 
-    var xAxis = d3.svg.axis()
-        .scale(x)
-        .orient("bottom")
-        .tickSize(6,3,0);
+    xAxis = d3.svg.axis().scale(x).orient("bottom").tickSize(6, 0);
+    yAxis = d3.svg.axis().scale(y).orient("left");
+    
+    // Select the svg element, if it exists.
+    var svg = d3.select(settings.parent).selectAll("svg").data([data]);
 
-    var yAxis = d3.svg.axis()
-        .scale(y)
-        .orient("left");
+    // Otherwise, create the skeletal chart.
+    var gEnter = svg.enter().append("svg").append("g");
+    gEnter.append("g").attr("class", "bars");
+    gEnter.append("g").attr("class", "x axis");
+    gEnter.append("g").attr("class","y axis");
 
-    var svg = d3.select(settings.parent).append("svg")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
-      .append("g")
+    // Update the outer dimensions.
+    svg .attr("width", width)
+        .attr("height", height);
+
+    // Update the inner dimensions.
+    var g = svg.select("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-    var bar = svg.selectAll(".bar")
-        .data(data)
-      .enter().append("g")
-
-        .attr("class", "bar");
-
-    bar.append("rect")
-        .attr("x", function(d,i){ return x(d.x); })
-        .attr("width", x(data[0].dx) - 1)
-        .attr('y',height)    
+    // Update the bars.
+    var bar = svg.select(".bars").selectAll(".bar").data(data);
+    bar.enter().append("rect");
+    bar.exit().remove();
+    bar .attr("width", x.rangeBand())
+        .attr("x", function(d) { return x(d.x); })
+        .attr("y", height - margin.top - margin.bottom) 
+        .order()
         .on('mouseover', function(d){ 
           d3.select(this).classed('hover', true) 
-
         })
         .on('mouseout', function(){ 
           d3.select(this).classed('hover', false) 
         })
-      .transition()
-      .delay( function(d,i){ return i*50; } )
-        .attr('y',function(d){  return y(d.y) })
-        .attr("height", function(d) { return height - y(d.y); })
+        .transition()
+         .delay( function(d,i){ return i*50; } )
+        .attr("y", function(d) { return y(d.y); })
+        .attr("height", function(d) { return y.range()[0] - y(d.y); })
+        ;
+
+        console.log(settings.datum)
+
         
-        //.on('mouseover',function(d){ console.log(this) } );
-
-        //console.log(x(data[0].dx))
-
-        if(settings.datum){
-
-       // console.log('DataSet Mean '+ settings.datum);
-
-          var meanbar = svg.append('rect')
-                .attr('x',function(){ return x(settings.datum) })
-                .attr('y',function(){ return 0;})
-                .attr('width', function(){ return 10;})
-                .attr('height',function(){ return height ;})
-                .attr('class','meanBar')
-                .on('mouseover', function(d){ 
-                  d3.select(this).classed('hover', true) 
-                  var left = $(this).position().left,
-                      top = $(this).position().top;
-
-                  var content = '<h3> '+ settings.variable +' : ' + settings.datum + '</h3>';
-                 // console.log(viswrap.tooltip)
-                  viswrap.tooltip.show([left, top], content, 's');
-
-                })
-                .on('mouseout', function(){ 
-                    d3.select(this).classed('hover', false) 
-                    viswrap.tooltip.cleanup();
-
-              });
-       
-        }
-
-        if(settings.sample){
-
-            
-        }
-
-
-        /*
-    bar.append("text")
-        .attr("dy", ".75em")
-        .attr("y", 6)
-        .attr("x", x(data[0].dx) / 2)
-        .attr("text-anchor", "middle")
-        .text(function(d) { return formatCount(d.y); });
-        Removed the text on top functionality as of now
-        */
-
-
-/* For plotting of the location of the current sample 
-      var sample = settings.data
-        var sum =0;
-        for (i=0;i<sample.length;i++){
-            sum += parseInt(sample[i]);
-        }
-       
-       var avg = sum / (sample.length);
-       var meanArray = [];
-       for(i=0;i<5;i++){
-        meanArray.push(avg)
-       }
-
-      var mean = svg.selectAll('.mean')
-                .data(d3.layout.histogram()([3,4,5,5,5,5,8,8,8,8,8,8,8]))
-                .enter()
-              //  
-                .append('rect')
-                .attr('class','mean')
-                .attr("x", function(d,i){ return x(d.x); })
-                .attr("width", x(data[0].dx) - 1)
-                .attr('y',height)    
-              .transition()
-              .delay( function(d,i){ return i*50; } )
-                .attr('y',function(d){  return y(d.y) })
-                .attr("height", function(d) { return height - y(d.y); });
-
-*/
-    svg.append("g")
-        .attr("class", "x axis")
-        .attr("transform", "translate(0," + height + ")")
-        .call(xAxis); 
-
-    svg.append("g")
-        .attr("class","y axis")
+    if(settings.datum){
+        
+        var meanbar = g.append('rect')
+        .attr('x',function(){ return x(settings.datum) })
+        .attr('y',function(){ return 0;})
+        .attr('width', function(){ return 10;})
+        .attr('height',function(){ return height - margin.top - margin.bottom ;})
+        .attr('class','meanBar')
+        .on('mouseover', function(d){ 
+          d3.select(this).classed('hover', true) 
+          var left = $(this).position().left,
+              top = $(this).position().top;
+    
+          var content = '<h3> '+ settings.variable +' : ' + settings.datum + '</h3>';
+    
+          viswrap.tooltip.show([left, top], content, 's');
+        })
+        .on('mouseout', function(){ 
+            d3.select(this).classed('hover', false) 
+            viswrap.tooltip.cleanup();
+       });   
+    }
+    
+    // Update the x-axis.
+    g.select(".x.axis")
+        .attr("transform", "translate(0," + y.range()[0] + ")")
+        .call(xAxis);
+    //Update the y-axis
+    g.select(".y.axis")
         .call(yAxis);
-   
-  }
 
+
+
+/*
+    var svg = d3.select(settings.parent).append("svg");
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+      .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");    
+  
+  */
+    /*
+        
+    var x = d3.scale.linear()
+        .domain( [0,settings.range[1]] )
+        .range([0, width]);
+
+
+    */
+
+   
+
+   /*
+    var data = d3.layout.histogram()
+          .bins(x.ticks(20))
+          .range( settings.range )
+        (settings.data);
+
+    */
+  
+    
+
+/*
+    var xAxis = d3.svg.axis()
+        .scale(x)
+        .orient("bottom")
+        //.tickSize(6,3,0);
+
+    var xAxis = d3.svg.axis()
+        .orient("bottom")
+        .scale(x)
+        .ticks(4);
+*/
+    
+
+    
+
+  
+     
+   
+   }
   //Default methods
   chart.width = function(value) {
     if (!arguments.length) return width;

@@ -10,7 +10,6 @@ var appView = function(appModel){
 
 /* private properties */
 	var model=appModel;					// [OBJECT] Reference to the App's model object.
-	var _datapoints=$('#nSize').val();	// Reference to the number of datapoints in each random sample
 	var _currentVariable;				// [ARRAY] Reference to current inference varaible [mean , SD , count , percentile]
 	var _currentValues;					// [ARRAY] Reference to current inference variable's value of each random sample.
 
@@ -53,9 +52,11 @@ var appView = function(appModel){
 		$('.tooltips').tooltip();
 		
 		/*plot icon is present on each child of the sampleList Div . It basically opens a popup and plots a bar chart of that particular sample.*/
-		$('.plot').on('click',function(){
+		$('.plot').on('click',function(e){
 			$('.chart').html('');
 			var sampleID=$(this).attr('id');
+			//var sampleID=e.target.id;
+			console.log("test"+sampleID);
 			var values=model.getSampleValue(sampleID);
 			//console.log("values for plot click:"+values);
 			var temp=values.sort(function(a,b){return a-b});
@@ -154,7 +155,7 @@ var appView = function(appModel){
 	*/
 	function _createPagination(x,y){
 	console.log("_createPagination() invoked");
-		var count=Math.ceil((y-x)/500);		//number of pages
+		var count=Math.ceil((y-x)/500);		//count=number of pages. 500 samples per page.
 		$(".pagination").paginate({
 				count 				: count,
 				start 				: 1,
@@ -311,20 +312,43 @@ return{
 	*/
 	createControllerView:function(){
 		$( "#amount" ).val( "$" + $( "#slider" ).slider( "value" ) );
-		var html='<div id="buttonPanel"><a href="#" class="tooltips" rel="tooltip" title="Step"><button class="btn" type="button" id="stepButton" tabindex="1" title="Step"><i class="icon-step-forward"></i></button></a> <a href="#" class="tooltips" rel="tooltip" title="Run"><button class="btn btn-success" type="button" id="runButton" tabindex="2" title="Run" ><i class="icon-fast-forward"></i></button></a><a href="#" class="tooltips" rel="tooltip" title="Stop"><button class="btn btn-danger" type="button" id="stopButton" tabindex="3" title="Stop" ><i class="icon-stop" ></i></button></a><a href="#" class="tooltips" rel="tooltip" title="Reset"><button class="btn" type="button" id="resetButton" tabindex="4" title="Reset" ><i class="icon-refresh" ></i></button></a><span><i class="icon-question-sign popups" rel="popover" data-content="<ul><li>Step Button : generates 1 sample</li><li>Run Button : generates X sample..X can be set from the option below</li><li>Stop Button :Stops the sample generation</li><li>Reset Button : Resets all values</li></ul>" data-original-title="Controls"></i></span>&nbsp;&nbsp;<a href="#" class="tooltips" rel="tooltip" title="Back to generate Dataset!"><button class="btn controller-back"><i class="icon-arrow-left" ></i></button></a></div><div id="speedSlider"><div><span class="badge badge-warning" style="float:left;">Animation Time: <span id="speedCount">200</span>ms</span></div><div id="speed"></div></div><div class="tool"><span>Generate</span><input type="text" id="countSize" class="input-mini" value="1000"> <span>Samples with </span><input type="text" id="nSize" class="input-mini" value="50"><span>Datapoint per sample.</span></div><div><select id="variable" style="width:100px;margin-top:10px"><option value="mean">Mean</option><option value="count">Count</option><option value="standardDev">Standard Dev.</option><option value="Percentile">Percentile</option></select><span><a href="#" class="btn btn-danger popups" rel="popover" data-content="This will create a plot of the variable for each generated sample. Click this once you have generated some samples!" data-original-title="Inference" id="infer">Infer!</a></span></div>';
+		var html='<div id="buttonPanel"><a href="#" class="tooltips" rel="tooltip" title="Step"><button class="btn" type="button" id="stepButton" tabindex="1" title="Step"><i class="icon-step-forward"></i></button></a> <a href="#" class="tooltips" rel="tooltip" title="Run"><button class="btn btn-success" type="button" id="runButton" tabindex="2" title="Run" ><i class="icon-fast-forward"></i></button></a><a href="#" class="tooltips" rel="tooltip" title="Stop"><button class="btn btn-danger" type="button" id="stopButton" tabindex="3" title="Stop" ><i class="icon-stop" ></i></button></a><a href="#" class="tooltips" rel="tooltip" title="Reset"><button class="btn" type="button" id="resetButton" tabindex="4" title="Reset" ><i class="icon-refresh" ></i></button></a><span><i class="icon-question-sign popups" rel="popover" data-content="<ul><li>Step Button : generates 1 sample</li><li>Run Button : generates X sample..X can be set from the option below</li><li>Stop Button :Stops the sample generation</li><li>Reset Button : Resets all values</li></ul>" data-original-title="Controls"></i></span>&nbsp;&nbsp;<a href="#"><button class="btn controller-back"><i class="icon-arrow-left" ></i></button></a></div><div id="speed-controller"><div><span class="badge badge-warning" style="float:left;">Animation Time: <span id="speed-value">200</span>ms</span></div><div id="speed-selector"></div></div><div class="tool"><span>Generate</span><input type="text" id="countSize" class="input-mini" value="1000"> <span>Samples with </span><input type="text" id="nSize" class="input-mini" value="50"><span>Datapoint per sample.</span></div><div><form class="form form-inline"><select id="variable" style="width:30%"><option value="mean">Mean</option><option value="count">Count</option><option value="standardDev">Standard Dev.</option><option value="Percentile">Percentile</option></select><input type="text" placeholder="binsize" name="binsize" class="input-mini"><span><a href="#" class="btn btn-danger popups" rel="popover" data-content="This will create a plot of the variable for each generated sample. Click this once you have generated some samples!" data-original-title="Inference" id="infer">Infer!</a></span></form></div>';
 		$('#controller-content').html(html);
-		$( "#speed" ).slider({
+		$( "#speed-selector" ).slider({
 			value:400,
 			min: 100,
 			max: 2000,
 			step: 50,
 			slide: function( event, ui ) {
-			$( "#speedCount" ).html( ui.value );
+			$( "#speed-value" ).html( ui.value );
 			}
 		});
 		$('.controller-back').on('click',function(){
 			Experiment.createControllerView();
 			Experiment.initialize();
+		});
+
+		$('#variable').on('click',function(){
+			var _percentile=$('#percentile-control');
+			if($(this).val()=='Percentile')
+			{
+				if(_percentile.length)
+					_percentile.show();
+				else
+					$('#controller-content').append('<div id="percentile-control"><div><span class="badge badge-warning" style="float:left;">Percentile: <span id="percentile-value">10</span>%</span></div><div id="percentile-selector"></div></div>');
+				//create a slider
+				$('#percentile-selector').slider({
+				value:20,
+				min: 10,
+				max: 90,
+				step: 5,
+				slide: function( event, ui ) {
+					$( "#percentile-value" ).html( ui.value );
+					}
+				});
+			}
+			else
+				_percentile.hide();
 		});
 	},
 	
@@ -358,7 +382,7 @@ return{
 		setTimeout(animation);					//first call
 				
 		function animation(){
-			var speed=$('#speedCount').html();	//calculate the speed currently set from the browser itself
+			var speed=$('#speed-value').html();	//calculate the speed currently set from the browser itself
 			var sampleNumber=keys[i];			
 			var count=i;
 			var self = $("#device"+sampleNumber);	//reference to the device (i.e. coin , card, dice) canvas
@@ -467,8 +491,17 @@ return{
 			}
 		else
 			{
-			var values = model.getPercentile();
-			var datum=model.getPercentileOfDataset();
+			try{
+				var pvalue=parseInt($('#percentile-value').html());
+				//console.log(pvalue);
+			}
+			catch(err)
+			{
+				console.log("unable to read the percentile value from DOM. setting default value to 50%");
+				var pvalue=50;
+			}
+			var values = model.getPercentile(pvalue);
+			var datum=model.getPercentileOfDataset(pvalue);
 			//var datum=model.getSdOfDataset();
 			console.log("Percentile Values:"+ values );
 			}
@@ -481,13 +514,18 @@ return{
 		var stop=Math.ceil(temp[values.length-1]);
 		console.log("start"+start+"stop"+stop);
 		console.log(values);
+
+
+		var binSize = $('input[name="binsize"]').val() != '' ? $('input[name="binsize"]').val() : 20;
+
 		_currentValues=values;
 		var histogram = vis({
 			parent : '#dotplot',
 			data : values,
 			height:390,
-			//range: [start,stop],
+			range: [start,stop],
 			datum :datum,
+			bins : binSize,
 			variable: setting.variable				
 		})();
 		
@@ -500,6 +538,7 @@ return{
 	*/
 	updateSimulationInfo:function(){
 		console.log('updateSimulationInfo() invoked');
+<<<<<<< HEAD
 		var array=['<table class="table table-striped">'];
 		array.push('<tr><td>Experiment Name</td><td><strong>'+Experiment.name+'</strong></td></tr>');
 		array.push('<tr><td>DataSet Size </td><td><strong>'+Experiment.getDatasetSize()+'</strong></td></tr>');
@@ -507,6 +546,24 @@ return{
 		//array.push('<tr><td>DataSet Mean : </td><td><strong>'+model.getMeanOfDataset(1)+'</strong></td></tr>');
 		//array.push('<tr><td>DataSet Standard Deviation: </td><td><strong>'+model.getSdOfDataset(1)+'</strong></td></tr>');
 		array.push('</table>');
+=======
+		try{
+			var array=['<table class="table table-striped">'];
+			array.push('<tr><td>Experiment Name</td><td><strong>'+Experiment.name+'</strong></td></tr>');
+			array.push('<tr><td>DataSet Size </td><td><strong>'+Experiment.getDatasetSize()+'</strong></td></tr>');
+			array.push('<tr><td>Number of Random Samples : </td><td><strong>'+model.bootstrapSamples.length+'</strong></td></tr>');
+			//dont show mean and standard deviation in info tab when there is no mean or sd.
+			if(model.getMeanOfDataset()!=false)
+				{
+					array.push('<tr><td>DataSet Mean : </td><td><strong>'+model.getMeanOfDataset()+'</strong></td></tr>');
+					array.push('<tr><td>DataSet Standard Deviation: </td><td><strong>'+model.getSdOfDataset()+'</strong></td></tr>');
+				}
+			array.push('</table>');
+		}
+		catch(err){
+			console.log("error:"+err.message);
+		}
+>>>>>>> origin/master
 		$('#details').html(array.join(''));
 	},
 	
@@ -516,7 +573,7 @@ return{
 	*@return : none
 	*/
 	CoverPage:function(){
-		console.log('CoverPage() invoked!');
+		//console.log('CoverPage() invoked!');
 		var height = $(window).height(),
 			width = $(window).width();
 		$('#welcome').css('height', height );
@@ -570,7 +627,7 @@ return{
 	/*
 	setPercentile:function(x){
 		var N=_currentValues.length;
-		//console.log("N"+N);
+		console.log("N"+N);
 		_currentValues=_currentValues.sort(function(a,b){return a-b});
 		//console.log("_currentValues"+_currentValues);
 		var index=((x)/100)*N;
