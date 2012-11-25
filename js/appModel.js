@@ -10,7 +10,7 @@ var appModel=function(){
 //::::::: PRIVATE PROPERTIES :::::::::::::::
 	var _stopCount = 1000;			//Number of runs to be made when 'run' button is pressed 
 	var _count=0;					//keeps count of number of samples generated from start
-	var _dataset=['1','2','3'];				// All the input datapoints from wich bootstrap sample is generated
+	var _dataset={};				// All the input datapoints from wich bootstrap sample is generated
 	var _n=50;						//Number of datapoints in a bootstrap sample or Sample Size
 	var _K=1;					//contains the number of datasets
 	var bootstrapSamples=new Array();	//Contains all the bootstrap samples generated E,g., H,T,T,T,H,H,T.
@@ -18,13 +18,17 @@ var appModel=function(){
 	//var variables;				//number of variables
 	/*TODO: make the datasetKeys and datasetValues multidimensional to account for [Issue #4].
 	*/
+	
 	var _datasetKeys=[];
 	var _datasetValues=[];
-	var _sampleMean=[];
-	var _sampleCount=[];
-	var _sampleStandardDev=[];
-	var _samplePercentile=[];
 	
+	var _sample={
+		Mean:[],
+		Count:[],
+		StandardDev:[],
+		Percentile:[]
+	};
+		
 /*
  IF EVENT DISPATCH MODEL IS TO BE IMPLEMENTED
 	subject = new LIB_makeSubject(['generateSamples','generateSample']); //list of all the events with observer pattern
@@ -104,9 +108,11 @@ return{
 	generateTrail:function(){
 		randomIndex=_getRandomInt(0, _datasetValues.length);	//generating a random number between 0 and dataSet size 
 		datasetIndex=_getRandomInt(0, this.getK());
+		var _temp=_dataset[datasetIndex];
+		//console.log(_temp);
 		return {
-			key:_datasetKeys[datasetIndex][randomIndex],
-			value:_datasetValues[datasetIndex][randomIndex],
+			key:_temp.keys[randomIndex],
+			value:_temp.values[randomIndex],
 			index:randomIndex
 			};			//returning the generated trail into a bootstrap sample array
 	},
@@ -162,14 +168,14 @@ return{
 	*@dependencies: generateTrail()
 	*/
 	getMean:function(){
-		if(_sampleMean.length==bootstrapSampleValues.length)
-			return _sampleMean;
+		if(_sample.Mean.length==bootstrapSampleValues.length)
+			return _sample.Mean;
 		else{
-			for(var j=_sampleMean.length;j<_count;j++)
+			for(var j=_sample.Mean.length;j<_count;j++)
 				{
-				_sampleMean[j]=_generateMean(j);
+				_sample.Mean[j]=_generateMean(j);
 				}
-				return _sampleMean;
+				return _sample.Mean;
 			}
 		},
 	
@@ -190,46 +196,33 @@ return{
 	*/	
 	getMeanOfDataset:function(K){
 		var total=0;
-<<<<<<< HEAD
-		for(var i=0;i<_datasetValues[K].length;i++) 
-			{ total += parseInt(_datasetValues[K][i]); }
-		return total/_datasetValues[K].length;
-=======
 		for(var i=0;i<_datasetValues.length;i++) 
 			{ total += parseInt(_datasetValues[i]); }
 		total=total/_datasetValues.length;
 		if(isNaN(total)){return false;}else{return total;}
 
-
-
->>>>>>> origin/master
 	},
 	
 	getStandardDev:function(){
 		//if the _sampleStandardDev already has the values
-		if(_sampleStandardDev.length==bootstrapSampleValues.length)
-			return _sampleStandardDev;
+		var _temp=_sample.StandardDev;
+		if(_temp.length==bootstrapSampleValues.length)
+			return _temp;
 		else
 		{
-		for(var j=_sampleStandardDev.length;j<_count;j++)
+		for(var j=_temp.length;j<_count;j++)
 			{
-			_sampleStandardDev[j]=_generateStandardDev(j);
+			_temp[j]=_generateStandardDev(j);
 			//console.log(_sampleStandardDev[j]);
 			}
-			return _sampleStandardDev;
+			_sample.StandardDev=_temp;
+			return _sample.StandardDev;
 		}	
 	},
 	getStandardDevOf:function(sampleNumber){
 		return _generateStandardDev(sampleNumber);
 	},
-	
-<<<<<<< HEAD
-	getSdOfDataset:function(K){
-		var _mean=this.getMeanOfDataset(K);
-		var _sd=_mean*(1-_mean);
-		console.log("dataset SD:"+_sd);
-		return _sd;
-=======
+
 	getSdOfDataset:function(){
 		var _mean=this.getMeanOfDataset();
 		var _squaredSum=null;
@@ -241,17 +234,16 @@ return{
 		var _SD=Math.sqrt(_squaredSum-(_mean)*(_mean));
 		console.log("SD of Dataset:"+_SD);
 		return _SD;
->>>>>>> origin/master
 	},
+
 	getCounts:function(){
 		console.log("getCount() invoked");
 		for(var j=0;j<_count;j++)
 			{
-			_sampleCount[j]=_generateCount(j);
-			console.log(_sampleCount[j]);
+			_sample.Count[j]=_generateCount(j);
+			console.log(_sample.Count[j]);
 			}
-			return _sampleCount;
-		
+			return _sample.Count;
 	},
 	
 	getCountOf:function(sampleNumber){
@@ -277,10 +269,10 @@ return{
 	//	{
 		for(var j=0;j<_count;j++)
 			{
-			_samplePercentile[j]=this.getPercentileOf(j,pvalue);
+			_sample.Percentile[j]=this.getPercentileOf(j,pvalue);
 			//console.log(_samplePercentile[j]);
 			}
-			return _samplePercentile;
+			return _sample.Percentile;
 	//	}
 		
 	},
@@ -333,13 +325,19 @@ return{
 	setDataset:function(input){
 		//check for input values...if its empty...then throw error
 		console.log('setDataSet() invoked!');
-		console.log('Input Data :'+input.data);
-		console.log('Input Type :'+input.type);
-		console.log('Input Range :'+input.range);
-		console.log('Input Values :'+input.values);
+		console.log('Input Data :'+input.data+' Input Type :'+input.type+' Input Range :'+input.range+' Input Values :'+input.values);
 	//input.processed is true incase of a simulation -> data mode switch
 		if(input.processed)
 			{
+				for(var i=0;i<input.data.length;i++)
+				{
+					_dataset[i]={
+						values:input.values[i],
+						keys:input.data[i],
+						name:null,
+						index:i
+					};
+				}
 				_datasetKeys=input.data;
 				_datasetValues=input.values;
 				console.log('Simulation data is loaded now.');
@@ -459,11 +457,13 @@ return{
 		_sampleMean=[];
 		_sampleStandardDev=[];
 		_samplePercentile=[];
-		_sampleCount=[];
+		_sample.Count=[];
 	},
 	getK:function(){
 		if(Experiment)
-			{Experiment.getK();}
+			{
+				return Experiment.getK();
+			}
 		else
 			return 0;
 	}

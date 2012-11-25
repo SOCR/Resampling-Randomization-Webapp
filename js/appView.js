@@ -538,15 +538,6 @@ return{
 	*/
 	updateSimulationInfo:function(){
 		console.log('updateSimulationInfo() invoked');
-<<<<<<< HEAD
-		var array=['<table class="table table-striped">'];
-		array.push('<tr><td>Experiment Name</td><td><strong>'+Experiment.name+'</strong></td></tr>');
-		array.push('<tr><td>DataSet Size </td><td><strong>'+Experiment.getDatasetSize()+'</strong></td></tr>');
-		array.push('<tr><td>Number of Random Samples : </td><td><strong>'+model.bootstrapSamples.length+'</strong></td></tr>');
-		//array.push('<tr><td>DataSet Mean : </td><td><strong>'+model.getMeanOfDataset(1)+'</strong></td></tr>');
-		//array.push('<tr><td>DataSet Standard Deviation: </td><td><strong>'+model.getSdOfDataset(1)+'</strong></td></tr>');
-		array.push('</table>');
-=======
 		try{
 			var array=['<table class="table table-striped">'];
 			array.push('<tr><td>Experiment Name</td><td><strong>'+Experiment.name+'</strong></td></tr>');
@@ -563,7 +554,6 @@ return{
 		catch(err){
 			console.log("error:"+err.message);
 		}
->>>>>>> origin/master
 		$('#details').html(array.join(''));
 	},
 	

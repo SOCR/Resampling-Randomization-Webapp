@@ -38,7 +38,6 @@ function _tossCoin(){
 					_keys[_count]='H';
 				else
 					_keys[_count]='T';
-				console.log('value'+_count+"--"+_values[_count]);
 				_tempValues[_count]=_values[_count];
 				_tempKeys[_count]=_keys[_count];
 				_count++;
@@ -46,27 +45,26 @@ function _tossCoin(){
 			}
 	else{
 		//view.loadInputSheet(_values);
-		console.log(_tempKeys);
+		//console.log(_tempKeys);
 		for(var i=0;i<_K;i++)
 			{
 				var _start=i*_n;
 				var _stop=_start+_n;
-				if(i+1===_K)
-					_stop=_stop-1;
-				console.log("_values are"+_start+"..._keys are "+_stop);
-				_datasetValues.push(_tempValues.splice(_start,_stop));
-				_datasetKeys.push(_tempKeys.splice(_start,_stop));	
+				_datasetValues.push(_tempValues.slice(_start,_stop));
+				_datasetKeys.push(_tempKeys.slice(_start,_stop));	
 			}
-		console.log(_datasetKeys); 
-		console.log(_datasetValues); 
+		//console.log(_datasetKeys); 
+		//console.log(_datasetValues); 
 		self.reset();
 	}
 }
 
 //:::::::::::: PUBLIC METHODS :::::::::::::
 return{
-	name:'Binomial Coin Toss',
-	type:'coin',
+	name:"Binomial Coin Toss",
+	type:"coin",
+	description:"The random experiment consists of tossing n coins, each with probability of heads p. Random variable Y gives the number of heads, and random variable M gives the proportion of heads. These are recorded on each update in the data table. Either Y or M can be selected with the list box. The probability density function and moments of the selected variable are shown in blue in the distribution graph blue and are recorded in the distribution table. On each update, the empirical density function and moments of the selected variable are shown in red in the distribution graph and are recorded in the distribution table. The parameters n and p can be varied with scroll bars.",
+    
     initialize: function(){
 		//if u dont use var while defining a variable it is global!!
 		self=this;
@@ -75,21 +73,20 @@ return{
 		_pParam = new Parameter(document.getElementById("pInput"), document.getElementById("pLabel"));
 		_pParam.setProperties(0, 1, 0.01, _p, "<var>p</var>");
 		this.reset();
-		
 		// BINDING BUTTONS OF THE CONTROLLER
 		$("#sdbutton").on('click',function(){
 			//***clicking this button only generates the dataset...doesnt load it into the appModel. Clicking the grsbutton does that.
-			Experiment.generate();		
+			self.generate();		
 			$("#accordion").accordion( "activate" , 1);
 			if(inputSliderState==1)
 				{
-				console.log("inputSliderState:"+inputSliderState);
+				//console.log("inputSliderState:"+inputSliderState);
 				$('.input-handle').trigger('click');
 				}
 			});
 
 		$('#nInput,#pInput').on('change',function(){
-			Experiment.setVariable();
+			self.setVariable();
 			});
 
 		$('#grsbutton').on('click',function(){
@@ -99,7 +96,7 @@ return{
 					view.updateSimulationInfo();		//updates experiment info into third tile in the accordion
 				}
 			else
-				$('#controller-content').append('<div class="alert alert-error"><a class="close" data-dismiss="alert" href="#">x</a><h4 class="alert-heading">Dataset NOT generated!</h4>Please click the adjacent "Generate Dataset!" button first.</div>');
+				$('.controller-warning').html('<div class="alert alert-error"><a class="close" data-dismiss="alert" href="#">x</a><h4 class="alert-heading">Dataset NOT generated!</h4>Please click the adjacent "Generate Dataset!" button first.</div>');
 			});
 	},
 
@@ -116,7 +113,7 @@ return{
 					_coin[_arrCount] = new Coin(document.getElementById("device"+i+j));		
 					_coin[_arrCount].prob = _p;
 					_coin[_arrCount].setValue(-1);
-					console.log(i+"---"+j+_coin[_arrCount]);	
+					//console.log(i+"---"+j+_coin[_arrCount]);	
 					_arrCount++;	
 				}	
 			}
@@ -129,7 +126,7 @@ return{
  	},
 	createControllerView:function(){
 	console.log("createControllerView for binomialCoin executed!");
-		var html='<p class="toolbar"><p class="tool"><span id="nLabel" class="badge badge-warning" for="nInput">N = </span><span id="nvalue"></span><input id="nInput" type="range" tabindex="7" class="parameter"/><i class="icon-question-sign popups" rel="popover" data-content=" n = number of coins to be tossed!" data-original-title="n"></i></p><p class="tool"><span id="pLabel" class="badge badge-warning" for="pInput">P = </span><span id="pvalue"></span><input id="pInput" type="range" tabindex="8" class="parameter"/><i class="icon-question-sign popups" rel="popover" data-content=" p = probability of getting a Head!" data-original-title="p"></i></p><select id="rvSelect" tabindex="9" title="Random variable" ><option value="0" selected="true">Y: Number of heads</option><option value="1">M: Proportion of heads</option></select><div><span class="badge badge-warning"> K=<span id="kValue">1</span></span><div id="kValue-slider" style="display:inline-block;width:50%;margin-left:5%"></div></div></p><button class="btn popups" id="sdbutton"  rel="popover" data-content="To generate random samples, first you need a dataset to start with. Once you generate it, go ahead and generate random samples!" data-original-title="Dataset">Generate DataSet!</button>&nbsp;<button class="btn btn-danger" id="grsbutton" >Generate Random Samples!</button>';
+		var html='<p class="toolbar"><p class="tool"><span id="nLabel" class="badge badge-warning" for="nInput">N = </span><span id="nvalue"></span><input id="nInput" type="range" tabindex="7" class="parameter"/><i class="icon-question-sign popups" rel="popover" data-content=" n = number of coins to be tossed!" data-original-title="n"></i></p><p class="tool"><span id="pLabel" class="badge badge-warning" for="pInput">P = </span><span id="pvalue"></span><input id="pInput" type="range" tabindex="8" class="parameter"/><i class="icon-question-sign popups" rel="popover" data-content=" p = probability of getting a Head!" data-original-title="p"></i></p><select id="rvSelect" tabindex="9" title="Random variable" ><option value="0" selected="true">Y: Number of heads</option><option value="1">M: Proportion of heads</option></select><div><span class="badge badge-warning"> K=<span id="kValue">1</span></span><div id="kValue-slider" style="display:inline-block;width:50%;margin-left:5%"></div></div></p><button class="btn popups" id="sdbutton"  rel="popover" data-content="To generate random samples, first you need a dataset to start with. Once you generate it, go ahead and generate random samples!" data-original-title="Dataset">Generate DataSet!</button>&nbsp;<button class="btn btn-danger" id="grsbutton" >Generate Random Samples!</button><div class="controller-warning"></div>';
 		$('#controller-content').delay(1000).html(html);
 		$('.popups').popover();
 		$('.tooltips').tooltip('destroy');	// destroy first and bind tooltips again. UI bug: the "back to generateDataset" (back button) tooltip doesnt vanish after mouse click.
@@ -195,7 +192,7 @@ return{
 	},
 	getDatasetKeys:function(){
 		console.log("getDatasetKeyscalled:"+ _datasetKeys);
-		return _datasetKeys[0];
+		return _datasetKeys;
 	},
 	getDatasetValues:function(){
 		console.log("getDatasetValues called:"+ _datasetValues);
