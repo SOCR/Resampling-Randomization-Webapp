@@ -120,13 +120,13 @@ var appView = function(appModel){
 				else if (setting.variable=='standardDev')
 					{
 						var values = model.getStandardDev();
-						var datum=model.getSdOfDataset(1);
+						var datum=model.getStandardDevOfDataset(1);
 						console.log("SD Values:"+ values );
 					}
 				else
 					{
 						var values = model.getPercentile();
-						//var datum=model.getSdOfDataset();
+						//var datum=model.getStandardDevOfDataset();
 					}
 				
 				var histogram = vis({
@@ -270,7 +270,7 @@ return{
      */
 	updateCounter:function(){
 		//count value changed on top
-		$('#displayCount').text(model.getCount());
+		$('#displayCount').text(model.getRSampleCount());
 		return true;
 	},
 	/**
@@ -280,7 +280,7 @@ return{
      */
 	updateSlider:function(){
 		//get the count and set it as the maximum value
-		$( "#range" ).slider( "option", "max", model.getCount());
+		$( "#range" ).slider( "option", "max", model.getRSampleCount());
 		$( "#range" ).slider( "option", "min", 0);
 		//$( "#showCount" ).html($( "#range" ).slider( "values",0 )+" - " + $( "#range" ).slider( "values", 1 ) );
 	},
@@ -359,6 +359,7 @@ return{
 	*@return : none
 	*/
 	animate:function(setting){
+		console.log(setting);
 		this.disableButtons();
 		// Add the class ui-state-disabled to the headers that you want disabled
 		$( ".ui-accordion-header").addClass("ui-state-disabled");
@@ -376,7 +377,7 @@ return{
 		var data=Experiment.getDatasetValues();		// data is in the form of an array!
 		var datakeys=Experiment.getDatasetKeys();		// data is in the form of an array!
 		var stopCount=setting.stopCount;		// Number of datapoints in a generated random sample
-		var keys=setting.keys;					// keys=array indexs of the datapoints in the dataset which are present in the current random sample 
+		var keys=setting.indexes;					// keys=array indexs of the datapoints in the dataset which are present in the current random sample 
 		var i=0;
 		var _dimensions=Experiment.getSampleHW();
 		setTimeout(animation);					//first call
@@ -480,12 +481,12 @@ return{
 		else if (setting.variable=='standardDev')
 			{
 			var values = model.getStandardDev();	//Standard deviation values of all the generated random samples
-			var datum=model.getSdOfDataset(1);		//datum is the dataset SD value
+			var datum=model.getStandardDevOfDataset(1);		//datum is the dataset SD value
 			console.log("SD Values:"+ values );
 			}
 		else if (setting.variable=='count')
 			{
-			var values = model.getCounts();	//Standard deviation values of all the generated random samples
+			var values = model.getCount();	//Standard deviation values of all the generated random samples
 			var datum=model.getCountOfDataset(1);		//datum is the dataset SD value
 			console.log("Count Values:"+ values );
 			}
@@ -502,7 +503,7 @@ return{
 			}
 			var values = model.getPercentile(pvalue);
 			var datum=model.getPercentileOfDataset(pvalue);
-			//var datum=model.getSdOfDataset();
+			//var datum=model.getStandardDevOfDataset();
 			console.log("Percentile Values:"+ values );
 			}
 			
@@ -547,7 +548,7 @@ return{
 			if(model.getMeanOfDataset()!=false)
 				{
 					array.push('<tr><td>DataSet Mean : </td><td><strong>'+model.getMeanOfDataset()+'</strong></td></tr>');
-					array.push('<tr><td>DataSet Standard Deviation: </td><td><strong>'+model.getSdOfDataset()+'</strong></td></tr>');
+					array.push('<tr><td>DataSet Standard Deviation: </td><td><strong>'+model.getStandardDevOfDataset()+'</strong></td></tr>');
 				}
 			array.push('</table>');
 		}

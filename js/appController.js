@@ -251,12 +251,13 @@ var appController=function(appModel,view){
 		view.disableButtons();					//disabling buttons
 		model.setN(nSize.val());				// save the datapoints size
 	    var keys=model.generateStep();			//generate one sample
-		view.updateCounter();					//update counter
+	    view.updateCounter();					//update counter
 		$(".removable").remove();				//remove the previously generated canvas during animation
 		view.animate({
 			stopCount:$('#nSize').val(),
 			speed:$('#speed').val(),
-			keys:keys
+			indexes:keys.indexes,
+			datasetIndexes:keys.datasetIndexes
 		});										//show sample generation animation
 		view.updateSlider();					//update slider count
 		view.updateSimulationInfo();
@@ -311,7 +312,7 @@ var appController=function(appModel,view){
                         buttons: {
                             Yes: function () {
 							_this.stop();
-							model.setCount(0);		//reset the total count
+							model.setRSampleCount(0);		//reset the total count
 							model.bootstrapSamples.splice(0, model.bootstrapSamples.length);	//empty the bootstrap samples
 							model.bootstrapSampleValues.splice(0, model.bootstrapSampleValues.length);	//empty the bootstrap samples
 							model.resetVariables();

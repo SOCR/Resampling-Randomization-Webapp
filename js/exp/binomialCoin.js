@@ -12,7 +12,7 @@ var _p = 0.5;	  		//Probability of heads (default value = 0.5)
 var _N = 100;			//Maximum number of trials 
 var _count;				//keeps count of number of coins tossed
 var _n = 10; 			//Number of coin tossed for each step 
-var _K=1;
+var _K=null;
 var _keys=[];
 var _values=[];
 var _tempKeys=[];
@@ -182,7 +182,7 @@ return{
 			catch(err)
 			{
 				console.log(err.message);
-				_K=1;
+				_K=null;
 			}
 	},
 	
@@ -208,7 +208,10 @@ return{
 	},
 
 	getK:function(){
-		return _K;
+		if(_K === null)
+			return false;
+		else
+			return _K;
 	}
 }//return
 }());

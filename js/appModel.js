@@ -12,23 +12,20 @@ var appModel=function(){
 	var _count=0;					//keeps count of number of samples generated from start
 	var _dataset={};				// All the input datapoints from wich bootstrap sample is generated
 	var _n=50;						//Number of datapoints in a bootstrap sample or Sample Size
-	var _K=1;					//contains the number of datasets
-	var bootstrapSamples=new Array();	//Contains all the bootstrap samples generated E,g., H,T,T,T,H,H,T.
-	var bootstrapSampleValues=new Array(); //Contains all the bootstrap sample's value generated E,g., 1,0,0,0,1,1,0.
-	//var variables;				//number of variables
-	/*TODO: make the datasetKeys and datasetValues multidimensional to account for [Issue #4].
+	var _K=1;						//contains the number of datasets
+	var bootstrapSamples=[];		//Contains all the bootstrap samples generated E,g., H,T,T,T,H,H,T.
+	var bootstrapSampleValues=[]; 	//Contains all the bootstrap sample's value generated E,g., 1,0,0,0,1,1,0.
+	/*
+	TODO: make the datasetKeys and datasetValues multidimensional to account for [Issue #4].
 	*/
-	
 	var _datasetKeys=[];
 	var _datasetValues=[];
-	
 	var _sample={
 		Mean:[],
 		Count:[],
 		StandardDev:[],
 		Percentile:[]
 	};
-		
 /*
  IF EVENT DISPATCH MODEL IS TO BE IMPLEMENTED
 	subject = new LIB_makeSubject(['generateSamples','generateSample']); //list of all the events with observer pattern
@@ -81,9 +78,7 @@ var appModel=function(){
 		var _squaredSum=null;							//stores E(x^2)
 		var _sample=bootstrapSampleValues[sampleNumber];
 		for(var i=0;i<_sample.length;i++)
-			{
-				_squaredSum+=_sample[i]*_sample[i];
-			}
+			{_squaredSum+=_sample[i]*_sample[i];}
 		_squaredSum=_squaredSum/_sample.length;
 		//console.log("_squaredSum"+_squaredSum+"--- _mean:"+_mean);
 		var _SD=Math.sqrt(_squaredSum-(_mean)*(_mean));
@@ -106,15 +101,26 @@ return{
 	*@desc:  Generating a random number between 0 and dataSet size {@ashwini: I think this should be a private function}
 	*/
 	generateTrail:function(){
-		randomIndex=_getRandomInt(0, _datasetValues.length);	//generating a random number between 0 and dataSet size 
-		datasetIndex=_getRandomInt(0, this.getK());
-		var _temp=_dataset[datasetIndex];
-		//console.log(_temp);
-		return {
-			key:_temp.keys[randomIndex],
-			value:_temp.values[randomIndex],
-			index:randomIndex
-			};			//returning the generated trail into a bootstrap sample array
+		if(_dataset[0] === undefined || this.getK() === false)
+		{
+			console.log("k value"+this.getK());
+			return false;
+
+		}
+			
+		else
+			{
+			randomIndex=_getRandomInt(0, _dataset[0].values.length);	//generating a random number between 0 and dataSet size 
+			datasetIndex=_getRandomInt(0, this.getK());
+			var _temp=_dataset[datasetIndex];
+			//console.log(_temp);
+			return {
+				key:_temp.keys[randomIndex],
+				value:_temp.values[randomIndex],
+				index:randomIndex,
+				datasetIndex:datasetIndex
+				};			//returning the generated trail into a bootstrap sample array	
+		}
 	},
     
 	/**
@@ -140,26 +146,29 @@ return{
 	*@method: [public] generateStep()
 	*@desc:  executed when the user presses step button in the controller tile. The click binding of the step button is done in the {experiment}.js
 	*@dependencies: generateTrail()
+	*@return: returns the indexes of the dataset for the animation to occur
 	*/
 	generateStep:function(){
 		var j=$('#nSize').val();
-		var sample=[];
-		var values=[];
-		var indexes=[];
+		var key=[];var values=[];var indexes=[];var datasetIndexes=[];
 		while(j--)
 			{
 			//bootstrapSamples[_count][j]=this.generateTrail();
 			var temp=this.generateTrail();
-			sample[j]=temp.key;	//inserting the new sample
+			key[j]=temp.key;	//inserting the new sample
 			values[j]=temp.value;
 			indexes[j]=temp.index;
+			datasetIndexes[j]=temp.datasetIndex;
 			}
-		bootstrapSamples[_count]=sample;
+		bootstrapSamples[_count]=key;
 		bootstrapSampleValues[_count]=values;
 		//bootstrapSamples[_count]= new Array(sample);
 		//console.log(_count+' random sample:'+sample);
 		_count++;
-		return indexes;
+		return {
+			indexes:indexes,
+			datasetIndexes:datasetIndexes
+				};
 	},
 	
 	/**
@@ -195,15 +204,19 @@ return{
 	*@dependencies: generateTrail()
 	*/	
 	getMeanOfDataset:function(K){
+		if(K===undefined)
+			K=0;
+		var _val=_dataset[K].values;
 		var total=0;
-		for(var i=0;i<_datasetValues.length;i++) 
-			{ total += parseInt(_datasetValues[i]); }
-		total=total/_datasetValues.length;
+		for(var i=0;i<_val.length;i++) 
+			{ total += parseInt(_val[i]); }
+		total=total/_val.length;
 		if(isNaN(total)){return false;}else{return total;}
 
 	},
 	
-	getStandardDev:function(){
+	/** STANDARD DEVIATION METHODS STARTS **/
+	getStandardDev:function(K){
 		//if the _sampleStandardDev already has the values
 		var _temp=_sample.StandardDev;
 		if(_temp.length==bootstrapSampleValues.length)
@@ -223,25 +236,29 @@ return{
 		return _generateStandardDev(sampleNumber);
 	},
 
-	getSdOfDataset:function(){
-		var _mean=this.getMeanOfDataset();
+	getStandardDevOfDataset:function(K){
+		if(K===undefined)
+			K=0;
+		var _val=_dataset[K].values;
+		var _mean=this.getMeanOfDataset(K);
 		var _squaredSum=null;
-		for(var i=0;i<_datasetValues.length;i++)
+		for(var i=0;i<_val.length;i++)
 			{
-				_squaredSum+=_datasetValues[i]*_datasetValues[i];
+				_squaredSum+=_val[i]*_val[i];
 			}
-		_squaredSum=_squaredSum/_datasetValues.length;
+		_squaredSum=_squaredSum/_val.length;
 		var _SD=Math.sqrt(_squaredSum-(_mean)*(_mean));
 		console.log("SD of Dataset:"+_SD);
 		return _SD;
 	},
+	/** STANDARD DEVIATION METHODS ENDS **/
 
-	getCounts:function(){
-		console.log("getCount() invoked");
+	/** COUNT METHODS STARTS **/
+	getCount:function(){
 		for(var j=0;j<_count;j++)
 			{
 			_sample.Count[j]=_generateCount(j);
-			console.log(_sample.Count[j]);
+			//console.log(_sample.Count[j]);
 			}
 			return _sample.Count;
 	},
@@ -249,13 +266,17 @@ return{
 	getCountOf:function(sampleNumber){
 		return _generateCount(sampleNumber);
 	},
-	getCountOfDataset:function(){
+
+	getCountOfDataset:function(K){
+		if(K===undefined)
+			K=0;
+		var _val=_dataset[K].values;
 		var total=0;
-		for(var i=0;i<_datasetValues.length;i++) 
-			{ total += parseInt(_datasetValues[i]); }
-		//console.log("total :"+total);	
+		for(var i=0;i<_val.length;i++) 
+			{ total += parseInt(_val[i]); }
 		return total;
 	},
+	/** COUNT METHODS ENDS **/
 
 	/**
 	*@method:getPercentile ()
@@ -274,22 +295,21 @@ return{
 			}
 			return _sample.Percentile;
 	//	}
-		
 	},
+
 	getPercentileOf:function(sampleNumber,pvalue){
-	var temp=bootstrapSampleValues[sampleNumber].sort(function(a,b){return a-b});
+		var temp=bootstrapSampleValues[sampleNumber].sort(function(a,b){return a-b});
 		var position=Math.floor(bootstrapSampleValues[sampleNumber].length*(pvalue/100));
 		//console.log(pvalue);
 		//console.log(bootstrapSampleValues[sampleNumber]+"---"+position);
-		
 		return temp[position];
 	},
+
 	getPercentileOfDataset:function(pvalue){
 		var temp=_datasetValues.sort(function(a,b){return a-b});
 		var position=Math.floor(_datasetValues.length*(pvalue/100));
 		return temp[position];
 	},
-	
 	
 	/**
 	*   NOT USED ANYWHERE ....TODO: REMOVE
@@ -308,14 +328,19 @@ return{
 	
 	/**
 	*@method: [public] getDataset()
-	*@desc:  getter and setter funtion for dataSet variable. 
+	*@desc:  getter funtion for dataSet variable. 
+	*@param: K - dataset number , field - what value to return i.e values or keys or name
 	*@dependencies: generateTrail()
 	*/
-	getDataset:function(K){
-		if(_datasetKeys[K])
-			return _datasetKeys[K];
-		else
+	getDataset:function(K,field){
+		if(K===undefined)
+				K=0;
+		if(field ===undefined)
+			field='keys';
+		if(_dataset[K]===undefined)
 			return false;
+		else
+			return _dataset[K][field];
 	},
 	/**
 	*@method: setDataset
@@ -434,29 +459,31 @@ return{
 		return _n;
 	},
 	/*  getter and setter for variable '_count'  */
-	setCount:function(v){
+	setRSampleCount:function(v){
 		_count=v;
+		return true;
 	},
-	getCount:function(){
+	getRSampleCount:function(){
 		return _count;
 	},
 	reset:function(){
 		//dataset values deleted
 		_datasetKeys=[];
 		_datasetValues=[];
+		_dataset={};
 		this.resetVariables();
 		//random samples deleted
 		//this.bootstrapSamples=[];
 		this.bootstrapSampleValues=[];
 		//setting the global random sample count to 0
-		this.setCount(0);
+		this.setRSampleCount(0);
 		//Triggering view reset
 		view.reset();
 	},
 	resetVariables:function(){
-		_sampleMean=[];
-		_sampleStandardDev=[];
-		_samplePercentile=[];
+		_sample.Mean=[];
+		_sample.StandardDev=[];
+		_sample.Percentile=[];
 		_sample.Count=[];
 	},
 	getK:function(){
