@@ -539,10 +539,6 @@ return{
 	*/
 	updateSimulationInfo:function(){
 		console.log('updateSimulationInfo() invoked');
-<<<<<<< HEAD
-=======
-
->>>>>>> fixing commit mismatch
 		try{
 			var array=['<table class="table table-striped">'];
 			array.push('<tr><td>Experiment Name</td><td><strong>'+Experiment.name+'</strong></td></tr>');
@@ -559,10 +555,6 @@ return{
 		catch(err){
 			console.log("error:"+err.message);
 		}
-<<<<<<< HEAD
-=======
-
->>>>>>> fixing commit mismatch
 		$('#details').html(array.join(''));
 	},
 	
