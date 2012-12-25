@@ -10,6 +10,7 @@ var appModel=function(){
 //::::::: PRIVATE PROPERTIES :::::::::::::::
 	var _stopCount = 1000;			//Number of runs to be made when 'run' button is pressed 
 	var _count=0;					//keeps count of number of samples generated from start
+<<<<<<< HEAD
 	var _dataset={};				// All the input datapoints from wich bootstrap sample is generated
 	var _n=50;						//Number of datapoints in a bootstrap sample or Sample Size
 	var _K=1;						//contains the number of datasets
@@ -17,6 +18,15 @@ var appModel=function(){
 	var bootstrapSampleValues=[]; 	//Contains all the bootstrap sample's value generated E,g., 1,0,0,0,1,1,0.
 	/*
 	TODO: make the datasetKeys and datasetValues multidimensional to account for [Issue #4].
+=======
+	var _dataset=[];				// All the input datapoints from wich bootstrap sample is generated
+	var _n=50;						//Number of datapoints in a bootstrap sample or Sample Size
+	var _K=null;					//contains the number of datasets
+	var bootstrapSamples=[];	//Contains all the bootstrap samples generated E,g., H,T,T,T,H,H,T.
+	var bootstrapSampleValues=[]; //Contains all the bootstrap sample's value generated E,g., 1,0,0,0,1,1,0.
+	
+	/*TODO: make the datasetKeys and datasetValues multidimensional to account for [Issue #4].
+>>>>>>> fixing commit mismatch
 	*/
 	var _datasetKeys=[];
 	var _datasetValues=[];
@@ -208,11 +218,18 @@ return{
 			K=0;
 		var _val=_dataset[K].values;
 		var total=0;
+<<<<<<< HEAD
 		for(var i=0;i<_val.length;i++) 
 			{ total += parseInt(_val[i]); }
 		total=total/_val.length;
 		if(isNaN(total)){return false;}else{return total;}
 
+=======
+		for(var i=0;i<_datasetValues.length;i++) 
+			{ total += parseInt(_datasetValues[i]); }
+		total=total/_datasetValues.length;
+		if(isNaN(total)){return false;}else{return total;}
+>>>>>>> fixing commit mismatch
 	},
 	
 	/** STANDARD DEVIATION METHODS STARTS **/
@@ -235,12 +252,19 @@ return{
 	getStandardDevOf:function(sampleNumber){
 		return _generateStandardDev(sampleNumber);
 	},
+<<<<<<< HEAD
 
 	getStandardDevOfDataset:function(K){
 		if(K===undefined)
 			K=0;
 		var _val=_dataset[K].values;
 		var _mean=this.getMeanOfDataset(K);
+=======
+	
+
+	getSdOfDataset:function(){
+		var _mean=this.getMeanOfDataset();
+>>>>>>> fixing commit mismatch
 		var _squaredSum=null;
 		for(var i=0;i<_val.length;i++)
 			{
