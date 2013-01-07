@@ -1,9 +1,18 @@
-/**Ball and Urn Experiment
- *Dependencies on view.js
- *
+/*
+
+	Ball and Urn Experiment
+ 	Revised from Distributome Ball And Urn Experiment by Selvam into a separate module
+
+ 	Notes:
+ 		1. Avoid using this in private/public methods.There is only a single instance and its methods can be accessed using the name,ie, ballAndUrn
+ 		2. No need to immediately invoke it
+ 		
+ 	@dependencies:
+ 		1. Uses methods of core.js,appController.js,appModel.js,appView.js
+ 		2. Uses intrinsic names of Element Ids mentioned in index.html
 */
 
-var ballAndUrn=(function(){
+var ballAndUrn = function(){
 
 //::::::: PRIVATE PROPERTIES :::::::::::::::	
 var _stepID;
@@ -47,7 +56,7 @@ function _selectBall(){
 	else{
 		//view.loadInputSheet(_values);
 		//process the _dataset and convert it into a human readable sample space (example instead of 0 and 1 show tail and head)
-		_self.reset();
+		ballAndUrn.reset();
 	}
 }
 
@@ -57,7 +66,7 @@ return{
 	name:'Ball and Urn',
 	type:'ball',
 	initialize: function(){
-		_self=this;
+		//_self=this;
 		_mParam = new Parameter(document.getElementById("mInput"), document.getElementById("mLabel"));
 		_mParam.setProperties(1, 100, 1, _m, "<var>Total M Balls </var>");
 		_nParam = new Parameter(document.getElementById("nInput"), document.getElementById("nLabel"));
@@ -66,9 +75,10 @@ return{
 		_rParam.setProperties(1, _m, 1, _r, "<var>Red Balls </var>");
 		
 		//if u dont use var while defining a variable it is global!!
-		    self=this;
+		  //  self=this;
 		console.log('Experiment Ball and Urn initialized');
-		this.reset();
+		//this.reset(); Avoid using 'this' in module pattern
+		ballAndUrn.reset();
 		$("#sdbutton").on('click',function(){
 			Experiment.generate();
 			$("#accordion").accordion( "activate" , 1);
@@ -88,8 +98,8 @@ return{
 	
 	generate:function(){
 		view.updateSimulationInfo();		//updates experiment info into third tile in the accordion
-		this.setVariable();
-		this.createDataPlot(_n);
+		ballAndUrn.setVariable();
+		ballAndUrn.createDataPlot(_n);
 		$(".device-container").width(_width);
 		$(".device-container").height(_height);
 		for (var i = 0; i < _n; i++)
@@ -107,7 +117,7 @@ return{
 
 	reset:function(){
 		clearInterval(_stepID);
-		this.setVariable();
+		ballAndUrn.setVariable();
 	},
 	setPopulation:function() {
 		_m = _mParam.getValue();
@@ -121,7 +131,7 @@ return{
 		_n = _nParam.getValue();	
 		_rParam.setProperties(1, _m, 1, Math.round(_m / 2), "<var>r</var>");
 		_r = _rParam.getValue();
-		//this.reset();	
+		//ballAndUrn.reset();	
 	},
 	setType:function(){
 		if (document.getElementById('type').checked) 
@@ -195,5 +205,5 @@ return{
 
 
 
-}//return
-}());
+	}//return
+}();
