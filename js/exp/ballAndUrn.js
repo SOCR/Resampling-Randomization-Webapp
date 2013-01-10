@@ -82,7 +82,7 @@ return{
 		$("#sdbutton").on('click',function(){
 			Experiment.generate();
 			$("#accordion").accordion( "activate" , 1);
-			if(inputSliderState==1)
+			if(inputSliderState == 1)
 				{
 				console.log("inputSliderState:"+inputSliderState);
 				$('.input-handle').trigger('click');
@@ -93,7 +93,7 @@ return{
 		$('#type').on('click',function(){Experiment.setType()});
 		$('#grsbutton').on('click',function(){
 			$('#dataDriven-tab').update({to:'dataDriven'});
-			});
+		});
 	},
 	
 	generate:function(){

@@ -1,5 +1,5 @@
 /**
-*  appView.js is the view object for the SOCR app.
+* appView.js is the view object for the SOCR app.
 *
 *@author: selvam , ashwini 
 *

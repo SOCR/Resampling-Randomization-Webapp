@@ -3,7 +3,7 @@
  *
 */
 
-var cardExp=(function(){
+var cardExp = function(){
 //::::::: PRIVATE PROPERTIES :::::::::::::::
 var _stepID;
 var _nParam;		//User defined Parameters..bound to the buttons on the controller tile
@@ -26,7 +26,7 @@ function _dealCard(){
 	else{
 		console.log("Card Generated Dataset : "+_values + "-- cardExp.js");
 		//view.loadInputSheet(_values);
-		_self.reset();
+		cardExp.reset();
 	}
 }
 
@@ -36,11 +36,11 @@ return{
 	name:'Card Experiment',
 	type:'card',
 	initialize: function(){
-		_self=this;
+		//cardExp=cardExp;
 		
 		_nParam = new Parameter(document.getElementById("nInput"), document.getElementById("nLabel"));
 		_nParam.setProperties(1, 10, 1, _n, "<var>n</var>");
-		this.reset();
+		cardExp.reset();
 		$("#sdbutton").on('click',function(){
 			Experiment.generate();
 			$("#accordion").accordion( "activate" , 1);
@@ -60,8 +60,8 @@ return{
 	generate: function(){
 		view.updateSimulationInfo();		//updates experiment info into third tile in the accordion
 		//_n=$("#nInput").val();
-		this.setVariable();
-		this.createDataPlot(_n);			//create the canvas fro the dataset
+		cardExp.setVariable();
+		cardExp.createDataPlot(_n);			//create the canvas fro the dataset
 		$(".device-container").width(_width);
 		$(".device-container").height(_height);
 		_hand = new Array(_n);
@@ -77,7 +77,7 @@ return{
 
 	reset:function(){
 		clearInterval(_stepID);
-		this.setVariable();
+		cardExp.setVariable();
 		/*
 		for (var i = 0; i < 14; i++){
 			if (i < n) 
@@ -130,5 +130,5 @@ return{
 	getSampleHW:function(){
 	return {"height":_height,"width":_width};
 	}
-}//return	
-}());
+  }//return	
+}();

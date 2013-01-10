@@ -1,8 +1,17 @@
-/**Binomial Coin Experiment
- *Dependencies on view.js
- *
+/*
+
+	Ball and Urn Experiment
+ 	Revised from Distributome Ball And Urn Experiment by Selvam into a separate module
+
+ 	Notes:
+ 		1. Avoid using this in private/public methods.There is only a single instance and its methods can be accessed using the name,ie, ballAndUrn
+ 		2. No need to immediately invoke it
+ 		
+ 	@dependencies:
+ 		1. Uses methods of core.js,appController.js,appModel.js,appView.js
+ 		2. Uses intrinsic names of Element Ids mentioned in index.html
 */
-var binomialCoin=(function(){
+var binomialCoin=function(){
 
 
 //::::::: PRIVATE PROPERTIES :::::::::::::::
@@ -32,7 +41,7 @@ function _tossCoin(){
 	}
 	else{
 		//view.loadInputSheet(_values);
-		self.reset();
+		binomialCoin.reset();
 	}
 }
 
@@ -42,12 +51,12 @@ return{
 	type:'coin',
     initialize: function(){
 		//if u dont use var while defining a variable it is global!!
-		self=this;
+		//self binomialCoin;
 		_nParam = new Parameter(document.getElementById("nInput"), document.getElementById("nLabel"));
 		_nParam.setProperties(1, _N, 1, _n, "<var>n</var>");
 		_pParam = new Parameter(document.getElementById("pInput"), document.getElementById("pLabel"));
 		_pParam.setProperties(0, 1, 0.01, _p, "<var>p</var>");
-		this.reset();
+		 binomialCoin.reset();
 		
 		// BINDING BUTTONS OF THE CONTROLLER
 		$("#sdbutton").on('click',function(){
@@ -74,8 +83,8 @@ return{
 			
 		view.updateSimulationInfo();		//updates experiment info into third tile in the accordion
 		//_n=$("#nInput").val();
-		this.setVariable();
-        this.createDataPlot(_n);			//create the canvas fro the dataset
+	 	binomialCoin.setVariable();
+        binomialCoin.createDataPlot(_n);			//create the canvas fro the dataset
 		//assign a coin object to each
 		for (var i = 0; i < _n; i++)
 		_coin[i] = new Coin(document.getElementById("device" + i));
@@ -96,7 +105,7 @@ return{
 	},
 	reset: function(){
 		clearInterval(_stepID);
-		this.setVariable();
+	 	binomialCoin.setVariable();
  	},
 	createControllerView:function(){
 	console.log("createControllerView for binomialCoin executed!");
@@ -151,7 +160,7 @@ return{
 	getSampleHW:function(){
 	return {"height":_height,"width":_width};
 	}
-}//return
-}());
+  }//return
+}();
 
 
