@@ -44,13 +44,26 @@ var appView = function(appModel){
 			temp.push(i);
 			temp.push('</span> &nbsp;&nbsp;  Datapoints:<span class="values">');
 			temp.push(_datapoints);
-			temp.push('</span>&nbsp;&nbsp;<a data-toggle="modal" href="#plot" class="tooltips" rel="tooltip" data-original-title="plot"><i class="icon-fullscreen plot" id="'+i+'"></i></a> &nbsp; <a href="#" class="tooltips" rel="tooltip" data-original-title="contribution"><i class="icon-filter contribution" id="'+i+'"></i></a>&nbsp; <a href="#" class="tooltips" rel="tooltip" data-original-title="toggle"><i class="icon-retweet toggle-sample" data-type="sample" id="'+i+'"></i></a></span><pre>');
-			temp.push(model.bootstrapSamples[i]);
-			temp.push('</pre></div>');
+			temp.push('</span>&nbsp;&nbsp;<a data-toggle="modal" href="#plot" class="tooltips" rel="tooltip" data-original-title="plot"><i class="icon-fullscreen plot" id="'+i+'"></i></a> &nbsp; <a href="#" class="tooltips" rel="tooltip" data-original-title="contribution"><i class="icon-filter contribution" id="'+i+'"></i></a>&nbsp; <a href="#" class="tooltips" rel="tooltip" data-original-title="toggle"><i class="icon-retweet toggle-sample" data-type="sample" id="'+i+'"></i></a></span>');
+			temp.push('<ul class="nav nav-tabs" id="sample-tabs'+i+'" ><li class="active"><a href="#sample-'+i+'1">1</a></li>');
+  			var j=2;
+  			while(j<=model.getK())
+  				{
+  					temp.push('<li><a href="#sample-'+i+j+'">'+j+'</a></li>');	
+  					j++;
+  				}
+		  	temp.push('</ul><div class="tab-content"><div class="tab-pane active" id="sample-1"><pre>'+model.bootstrapGroupKeys[i][0]+'</pre></div>');
+ 			var j=2;
+ 			while(j<=model.getK())
+  				{
+  					temp.push('<div class="tab-pane" id="sample-'+i+j+'"><pre>'+model.bootstrapGroupKeys[i][j-1]+'</pre></div>');
+  					j++;
+  				}
+		  	temp.push("</div>");
 			$('#sampleList').append(temp.join(''));
 			}
 		$('.tooltips').tooltip();
-		
+		$('#sample-tabs75').tab('show');
 		/*plot icon is present on each child of the sampleList Div . It basically opens a popup and plots a bar chart of that particular sample.*/
 		$('.plot').on('click',function(e){
 			$('.chart').html('');
@@ -246,7 +259,7 @@ return{
      */
 	createList:function(start,end){
 		console.log('createList('+start+','+end+') invoked ');
-		if(model.bootstrapSamples.length==0)
+		if(model.bootstrapGroupKeys.length==0)
 			{ 
 			// if no random samples have been generated, display a alert message!
 			$("#sampleList").html('<div class="alert alert-error"><a class="close" data-dismiss="alert" href="#">x</a><h4 class="alert-heading">No Random samples to show!</h4>Please generate a dataset using the list of experiments or manually enter the data. Then generate some random samples from the controller tile before click "show"</div>');

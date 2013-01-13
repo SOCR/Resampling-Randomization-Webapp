@@ -39,7 +39,7 @@ var appController=function(appModel,view){
 		}
 	else
 		{
-		console.log(model.bootstrapSamples);
+		console.log(model.bootstrapGroupKeys);
 		//view.updateSimulationInfo();
 		_this.stop();
 		}
@@ -361,11 +361,11 @@ var appController=function(appModel,view){
 						{	console.log('simulation drive has some data');
 						//alert(Experiment.getDataset());
 							model.setDataset({
-								data:Experiment.getDatasetKeys(),
+								keys:Experiment.getDatasetKeys(),
 								values:Experiment.getDatasetValues(),
 								processed:true
 								});	
-							console.log(model.getDataset());
+							//console.log(model.getDataset());
 							//call to loadInputSheet to input the generated simulation data if any
 						}	
 						

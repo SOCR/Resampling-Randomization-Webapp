@@ -13,6 +13,8 @@ var appModel=function(){
 	var _dataset={};				// All the input datapoints from wich bootstrap sample is generated
 	var _n=50;						//Number of datapoints in a bootstrap sample or Sample Size
 	var _K=1;						//contains the number of datasets
+	var bootstrapGroupKeys={};
+	var bootstrapGroupValues={};
 	var bootstrapSamples=[];		//Contains all the bootstrap samples generated E,g., H,T,T,T,H,H,T.
 	var bootstrapSampleValues=[]; 	//Contains all the bootstrap sample's value generated E,g., 1,0,0,0,1,1,0.
 	/*
@@ -89,6 +91,9 @@ return{
 	/* PUBLIC PROPERTIES   */
 	bootstrapSamples:bootstrapSamples,
 	bootstrapSampleValues:bootstrapSampleValues,
+	bootstrapGroupKeys:bootstrapGroupKeys,
+	bootstrapGroupValues:bootstrapGroupValues,
+
 	
 	/* PUBLIC METHODS   */
 	/*
@@ -100,26 +105,23 @@ return{
 	*@method: [public] generateTrail()
 	*@desc:  Generating a random number between 0 and dataSet size {@ashwini: I think this should be a private function}
 	*/
-	generateTrail:function(){
+	generateTrail:function(datasetIndex){
 		if(_dataset[0] === undefined || this.getK() === false)
 		{
 			console.log("k value"+this.getK());
 			return false;
 
 		}
-			
 		else
-			{
-			randomIndex=_getRandomInt(0, _dataset[0].values.length);	//generating a random number between 0 and dataSet size 
-			datasetIndex=_getRandomInt(0, this.getK());
-			var _temp=_dataset[datasetIndex];
-			//console.log(_temp);
-			return {
-				key:_temp.keys[randomIndex],
-				value:_temp.values[randomIndex],
-				index:randomIndex,
-				datasetIndex:datasetIndex
-				};			//returning the generated trail into a bootstrap sample array	
+		{
+		//get a random index for all 5 datasets
+		var randomIndex=_getRandomInt(0, _dataset[datasetIndex].values.length);	//generating a random number between 0 and dataSet size 
+		var _temp=_dataset[datasetIndex];
+		//console.log(_temp);
+		return {
+			key:_temp.keys[randomIndex],
+			value:_temp.values[randomIndex]
+			};			//returning the generated trail into a bootstrap sample array	
 		}
 	},
     
@@ -128,16 +130,24 @@ return{
 	*@desc:  rgenerating a random number between 0 and dataSet size 
 	*/
 	generateSample:function(){
-		var j=$('#nSize').val();				
-		var sample=[],values=[];
-		while(j--)
+		var i=this.getK();	var keyEl=[],valEl=[];
+		while(i--)
 			{
-			var temp=this.generateTrail();
-			sample[j]=temp.key;	//inserting the new sample
-			values[j]=temp.value;
+			var j=$('#nSize').val();
+			var sample=[],values=[];
+			while(j--)
+				{
+				var temp=this.generateTrail(i);
+				sample[j]=temp.key;	//inserting the new sample
+				values[j]=temp.value;
+				}
+			keyEl.push(sample);
+			valEl.push(values);
 			}
-		bootstrapSamples[_count]=sample;
-		bootstrapSampleValues[_count]=values;
+		//bootstrapSamples[_count]=sample;
+		//bootstrapSampleValues[_count]=values;
+		bootstrapGroupKeys[_count]=keyEl;
+		bootstrapGroupValues[_count]=valEl;
 		//console.log(_count+':'+bootstrapSamples[_count]);
 		_count++;		//incrementing the total count - number of samples generated from start of simulation
 	},
@@ -350,28 +360,29 @@ return{
 	setDataset:function(input){
 		//check for input values...if its empty...then throw error
 		console.log('setDataSet() invoked!');
-		console.log('Input Data :'+input.data+' Input Type :'+input.type+' Input Range :'+input.range+' Input Values :'+input.values);
+		console.log('Input Data :'+input.keys+' Input Type :'+input.type+' Input Range :'+input.range+' Input Values :'+input.values);
 	//input.processed is true incase of a simulation -> data mode switch
 		if(input.processed)
 			{
-				for(var i=0;i<input.data.length;i++)
+				for(var i=0;i<input.keys.length;i++)
 				{
 					_dataset[i]={
 						values:input.values[i],
-						keys:input.data[i],
+						keys:input.keys[i],
 						name:null,
 						index:i
 					};
 				}
-				_datasetKeys=input.data;
-				_datasetValues=input.values;
+				//^^^^^ _datasetKeys and _datasetValues are decrepted ^^^^^^^
+				_datasetKeys=input.keys[0];
+				_datasetValues=input.values[0];
 				console.log('Simulation data is loaded now.');
 				return false;
 			}
 		else if(input.type=='url')
 			{
 			//both _datasetValues and _datasetKeys will have the same values
-				_datasetValues=input.data.split(",");
+				_datasetValues=input.keys.split(",");
 				console.log('Simulation data is loaded now.');
 				return false;
 			}
@@ -391,11 +402,11 @@ return{
 						}
 				}
 			*/
-			for (var i = 0; i < input.data.length; i++)
+			for (var i = 0; i < input.keys.length; i++)
 				{
-				for(var j = 0; j < input.data[i].length; j++)
+				for(var j = 0; j < input.keys[i].length; j++)
 					{
-						if (input.data[i][j] != '')
+						if (input.keys[i][j] != '')
 						{         
 							_datasetValues.push(input.data[i][j]);
 							

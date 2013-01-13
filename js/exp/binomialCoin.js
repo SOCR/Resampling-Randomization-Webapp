@@ -1,5 +1,6 @@
-/**Binomial Coin Experiment
- *Dependencies on view.js
+/**
+ *Binomial Coin Experiment
+ *Dependency on view.js
  *
 */
 var binomialCoin=(function(){
@@ -66,7 +67,6 @@ return{
 	description:"The random experiment consists of tossing n coins, each with probability of heads p. Random variable Y gives the number of heads, and random variable M gives the proportion of heads. These are recorded on each update in the data table. Either Y or M can be selected with the list box. The probability density function and moments of the selected variable are shown in blue in the distribution graph blue and are recorded in the distribution table. On each update, the empirical density function and moments of the selected variable are shown in red in the distribution graph and are recorded in the distribution table. The parameters n and p can be varied with scroll bars.",
     
     initialize: function(){
-		//if u dont use var while defining a variable it is global!!
 		self=this;
 		_nParam = new Parameter(document.getElementById("nInput"), document.getElementById("nLabel"));
 		_nParam.setProperties(1, _N, 1, _n, "<var>n</var>");
@@ -187,15 +187,15 @@ return{
 	},
 	
 	getDataset:function(){
-		console.log("getDataset called:"+ _datasetKeys);
-		return _datasetKeys;
+		//console.log("getDataset called:"+ _datasetKeys);
+		return {"keys":_datasetKeys,"values":_datasetValues,"processed":true};
 	},
 	getDatasetKeys:function(){
-		console.log("getDatasetKeyscalled:"+ _datasetKeys);
+		//console.log("getDatasetKeyscalled:"+ _datasetKeys);
 		return _datasetKeys;
 	},
 	getDatasetValues:function(){
-		console.log("getDatasetValues called:"+ _datasetValues);
+		//console.log("getDatasetValues called:"+ _datasetValues);
 		return _datasetValues;
 	},
 	
