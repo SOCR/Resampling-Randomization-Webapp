@@ -10,8 +10,8 @@
  	@dependencies:
  		1. Uses methods of core.js,appController.js,appModel.js,appView.js
  		2. Uses intrinsic names of Element Ids mentioned in index.html
-*/
-var binomialCoin=function(){
+ 		*/
+socr.exp.binomialDist=function(){
 
 
 //::::::: PRIVATE PROPERTIES :::::::::::::::
@@ -41,7 +41,7 @@ function _tossCoin(){
 	}
 	else{
 		//view.loadInputSheet(_values);
-		binomialCoin.reset();
+		socr.exp.binomialDist.reset();
 	}
 }
 
@@ -51,12 +51,12 @@ return{
 	type:'coin',
     initialize: function(){
 		//if u dont use var while defining a variable it is global!!
-		//self binomialCoin;
+		//self socr.exp.binomialDist;
 		_nParam = new Parameter(document.getElementById("nInput"), document.getElementById("nLabel"));
 		_nParam.setProperties(1, _N, 1, _n, "<var>n</var>");
 		_pParam = new Parameter(document.getElementById("pInput"), document.getElementById("pLabel"));
 		_pParam.setProperties(0, 1, 0.01, _p, "<var>p</var>");
-		 binomialCoin.reset();
+		 socr.exp.binomialDist.reset();
 		
 		// BINDING BUTTONS OF THE CONTROLLER
 		$("#sdbutton").on('click',function(){
@@ -83,8 +83,8 @@ return{
 			
 		view.updateSimulationInfo();		//updates experiment info into third tile in the accordion
 		//_n=$("#nInput").val();
-	 	binomialCoin.setVariable();
-        binomialCoin.createDataPlot(_n);			//create the canvas fro the dataset
+	 	socr.exp.binomialDist.setVariable();
+        socr.exp.binomialDist.createDataPlot(_n);			//create the canvas fro the dataset
 		//assign a coin object to each
 		for (var i = 0; i < _n; i++)
 		_coin[i] = new Coin(document.getElementById("device" + i));
@@ -105,10 +105,10 @@ return{
 	},
 	reset: function(){
 		clearInterval(_stepID);
-	 	binomialCoin.setVariable();
+	 	socr.exp.binomialDist.setVariable();
  	},
 	createControllerView:function(){
-	console.log("createControllerView for binomialCoin executed!");
+	console.log("createControllerView for socr.exp.binomialDist executed!");
 		var html='<p class="toolbar"><p class="tool"><span id="nLabel" class="badge badge-warning" for="nInput">N = </span><span id="nvalue"></span><input id="nInput" type="range" tabindex="7" class="parameter"/><i class="icon-question-sign popups" rel="popover" data-content=" n = number of coins to be tossed!" data-original-title="n"></i></p><p class="tool"><span id="pLabel" class="badge badge-warning" for="pInput">P = </span><span id="pvalue"></span><input id="pInput" type="range" tabindex="8" class="parameter"/><i class="icon-question-sign popups" rel="popover" data-content=" p = probability of getting a Head!" data-original-title="p"></i></p><select id="rvSelect" tabindex="9" title="Random variable" ><option value="0" selected="true">Y: Number of heads</option><option value="1">M: Proportion of heads</option></select></p><button class="btn popups" id="sdbutton"  rel="popover" data-content="To generate random samples, first you need a dataset to start with. Once you generate it, go ahead and generate random samples!" data-original-title="Dataset">Generate DataSet!</button>&nbsp;<button class="btn btn-danger" id="grsbutton" >Generate Random Samples!</button>';
 		$('#controller-content').delay(1000).html(html);
 		$('.popups').popover();

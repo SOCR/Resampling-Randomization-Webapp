@@ -4,7 +4,7 @@
  	Revised from Distributome Ball And Urn Experiment by Selvam into a separate module
 
  	Notes:
- 		1. Avoid using this in private/public methods.There is only a single instance and its methods can be accessed using the name,ie, ballAndUrn
+ 		1. Avoid using this in private/public methods.There is only a single instance and its methods can be accessed using the name,ie, socr.expbaallAndUrn
  		2. No need to immediately invoke it
  		
  	@dependencies:
@@ -12,7 +12,7 @@
  		2. Uses intrinsic names of Element Ids mentioned in index.html
 */
 
-var ballAndUrn = function(){
+socr.exp.ballAndUrn = function(){
 
 //::::::: PRIVATE PROPERTIES :::::::::::::::	
 var _stepID;
@@ -56,7 +56,7 @@ function _selectBall(){
 	else{
 		//view.loadInputSheet(_values);
 		//process the _dataset and convert it into a human readable sample space (example instead of 0 and 1 show tail and head)
-		ballAndUrn.reset();
+		socr.expbaallAndUrn.reset();
 	}
 }
 
@@ -78,7 +78,7 @@ return{
 		  //  self=this;
 		console.log('Experiment Ball and Urn initialized');
 		//this.reset(); Avoid using 'this' in module pattern
-		ballAndUrn.reset();
+		socr.expbaallAndUrn.reset();
 		$("#sdbutton").on('click',function(){
 			Experiment.generate();
 			$("#accordion").accordion( "activate" , 1);
@@ -98,8 +98,8 @@ return{
 	
 	generate:function(){
 		view.updateSimulationInfo();		//updates experiment info into third tile in the accordion
-		ballAndUrn.setVariable();
-		ballAndUrn.createDataPlot(_n);
+		socr.expbaallAndUrn.setVariable();
+		socr.expbaallAndUrn.createDataPlot(_n);
 		$(".device-container").width(_width);
 		$(".device-container").height(_height);
 		for (var i = 0; i < _n; i++)
@@ -117,7 +117,7 @@ return{
 
 	reset:function(){
 		clearInterval(_stepID);
-		ballAndUrn.setVariable();
+		socr.expbaallAndUrn.setVariable();
 	},
 	setPopulation:function() {
 		_m = _mParam.getValue();
@@ -131,7 +131,7 @@ return{
 		_n = _nParam.getValue();	
 		_rParam.setProperties(1, _m, 1, Math.round(_m / 2), "<var>r</var>");
 		_r = _rParam.getValue();
-		//ballAndUrn.reset();	
+		//socr.expbaallAndUrn.reset();	
 	},
 	setType:function(){
 		if (document.getElementById('type').checked) 
@@ -200,10 +200,6 @@ return{
 	getSampleHW:function(){
 	return {"height":_height,"width":_width};
 	}
-
-
-
-
-
+	
 	}//return
 }();

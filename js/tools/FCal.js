@@ -10,7 +10,7 @@ Required elements
 
 */
 
-var FCal = function(){
+socr.tools.fCal = function(){
 	// Private variables
 	var dist, distGraph, nParam, dParam;
 	var xParam, pParam, graphSelect;
