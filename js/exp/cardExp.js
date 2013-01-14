@@ -42,15 +42,14 @@ return{
 		_nParam.setProperties(1, 10, 1, _n, "<var>n</var>");
 		socr.exp.cardExp.reset();
 		$("#sdbutton").on('click',function(){
-			Experiment.generate();
+			socr.exp.current.generate();
 			$("#accordion").accordion( "activate" , 1);
-			if(inputSliderState==1)
-				{
+			if(socr.exp.inputSliderState==1){
 				$('.input-handle').trigger('click');
 				}
 		});
 		$('#nInput').on('change',function(){
-			Experiment.setVariable();
+			socr.exp.current.setVariable();
 		});
 		$('#grsbutton').on('click',function(){
 			$('#dataDriven-tab').update({to:'dataDriven'});

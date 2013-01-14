@@ -6,7 +6,7 @@
 *SOCR - Statistical Online Computational Resource
 */
 
-var appModel=function(){
+socr.model = function(){
 //::::::: PRIVATE PROPERTIES :::::::::::::::
 	var _stopCount = 1000;			//Number of runs to be made when 'run' button is pressed 
 	var _count=0;				//keeps count of number of samples generated from start

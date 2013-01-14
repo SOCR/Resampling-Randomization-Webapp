@@ -6,10 +6,10 @@
 *SOCR - Statistical Online Computational Resource
 */
 
-var appController=function(appModel,view){
+socr.controller = function( model,view ){
 /* PRIVATE PROPERTIES   */
-	model=appModel;
-	view=view || new appView();		// [OBJECT] Reference to the Global App view object.
+	model =  model;
+	view = view || new view();		// [OBJECT] Reference to the Global App view object.
 	var _id=0;						// Stores the id for setInterval in run mode
 	var _runsElasped=0;				// Keeps count of number of resamples generated
 	var _this;						// [OBJECT] contains reference to this obect.				
@@ -242,7 +242,7 @@ var appController=function(appModel,view){
 	*/
 	step: function(){
 		$("#accordion").accordion( "activate" , 1);
-		if(controllerSliderState==1)
+		if(socr.exp.controllerSliderState==1)
 				{
 				$('.controller-handle').trigger('click');
 				}
@@ -343,8 +343,8 @@ var appController=function(appModel,view){
 	loadController:function(x){
 		if(x=='simulationDriven')
 			{
-				Experiment.createControllerView();
-				Experiment.initialize();
+				socr.exp.current.createControllerView();
+				socr.exp.current.initialize();
 				
 			}
 		else
@@ -352,14 +352,14 @@ var appController=function(appModel,view){
 				view.createControllerView();
 				this.initialize();
 				//check for input
-				if(Experiment)
+				if(socr.exp.current)
 					{
-					if(Experiment.getDataset()!='')
+					if(socr.exp.current.getDataset()!='')
 						{	console.log('simulation drive has some data');
-						//alert(Experiment.getDataset());
+						//alert(socr.exp.current.getDataset());
 							model.setDataset({
-								data:Experiment.getDatasetKeys(),
-								values:Experiment.getDatasetValues(),
+								data:socr.exp.current.getDatasetKeys(),
+								values:socr.exp.current.getDatasetValues(),
 								processed:true
 								});	
 							console.log(model.getDataset());

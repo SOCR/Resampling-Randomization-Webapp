@@ -4,7 +4,7 @@
  	Revised from Distributome Ball And Urn Experiment by Selvam into a separate module
 
  	Notes:
- 		1. Avoid using this in private/public methods.There is only a single instance and its methods can be accessed using the name,ie, socr.expbaallAndUrn
+ 		1. Avoid using this in private/public methods.There is only a single instance and its methods can be accessed using the name,ie, socr.exp.ballAndUrn
  		2. No need to immediately invoke it
  		
  	@dependencies:
@@ -56,7 +56,7 @@ function _selectBall(){
 	else{
 		//view.loadInputSheet(_values);
 		//process the _dataset and convert it into a human readable sample space (example instead of 0 and 1 show tail and head)
-		socr.expbaallAndUrn.reset();
+		socr.exp.ballAndUrn.reset();
 	}
 }
 
@@ -78,19 +78,19 @@ return{
 		  //  self=this;
 		console.log('Experiment Ball and Urn initialized');
 		//this.reset(); Avoid using 'this' in module pattern
-		socr.expbaallAndUrn.reset();
+		socr.exp.ballAndUrn.reset();
 		$("#sdbutton").on('click',function(){
-			Experiment.generate();
+			socr.exp.current.generate();
 			$("#accordion").accordion( "activate" , 1);
-			if(inputSliderState == 1)
+			if(socr.exp.inputSliderState == 1)
 				{
-				console.log("inputSliderState:"+inputSliderState);
+				console.log("inputSliderState:"+socr.exp.inputSliderState);
 				$('.input-handle').trigger('click');
 				}
 			});
-		$("#rInput,#nInput").on('change',function(){Experiment.setVariable()});
-		$('#mInput').on('change',function(){Experiment.setPopulation()});
-		$('#type').on('click',function(){Experiment.setType()});
+		$("#rInput,#nInput").on('change',function(){socr.exp.current.setVariable()});
+		$('#mInput').on('change',function(){socr.exp.current.setPopulation()});
+		$('#type').on('click',function(){socr.exp.current.setType()});
 		$('#grsbutton').on('click',function(){
 			$('#dataDriven-tab').update({to:'dataDriven'});
 		});
@@ -98,8 +98,8 @@ return{
 	
 	generate:function(){
 		view.updateSimulationInfo();		//updates experiment info into third tile in the accordion
-		socr.expbaallAndUrn.setVariable();
-		socr.expbaallAndUrn.createDataPlot(_n);
+		socr.exp.ballAndUrn.setVariable();
+		socr.exp.ballAndUrn.createDataPlot(_n);
 		$(".device-container").width(_width);
 		$(".device-container").height(_height);
 		for (var i = 0; i < _n; i++)
@@ -117,7 +117,7 @@ return{
 
 	reset:function(){
 		clearInterval(_stepID);
-		socr.expbaallAndUrn.setVariable();
+		socr.exp.ballAndUrn.setVariable();
 	},
 	setPopulation:function() {
 		_m = _mParam.getValue();
@@ -131,7 +131,7 @@ return{
 		_n = _nParam.getValue();	
 		_rParam.setProperties(1, _m, 1, Math.round(_m / 2), "<var>r</var>");
 		_r = _rParam.getValue();
-		//socr.expbaallAndUrn.reset();	
+		//socr.exp.ballAndUrn.reset();	
 	},
 	setType:function(){
 		if (document.getElementById('type').checked) 
