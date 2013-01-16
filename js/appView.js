@@ -312,7 +312,7 @@ return{
 	*/
 	createControllerView:function(){
 		$( "#amount" ).val( "$" + $( "#slider" ).slider( "value" ) );
-		var html='<div id="buttonPanel"><a href="#" class="tooltips" rel="tooltip" title="Step"><button class="btn" type="button" id="stepButton" tabindex="1" title="Step"><i class="icon-step-forward"></i></button></a> <a href="#" class="tooltips" rel="tooltip" title="Run"><button class="btn btn-success" type="button" id="runButton" tabindex="2" title="Run" ><i class="icon-fast-forward"></i></button></a><a href="#" class="tooltips" rel="tooltip" title="Stop"><button class="btn btn-danger" type="button" id="stopButton" tabindex="3" title="Stop" ><i class="icon-stop" ></i></button></a><a href="#" class="tooltips" rel="tooltip" title="Reset"><button class="btn" type="button" id="resetButton" tabindex="4" title="Reset" ><i class="icon-refresh" ></i></button></a><span><i class="icon-question-sign popups" rel="popover" data-content="<ul><li>Step Button : generates 1 sample</li><li>Run Button : generates X sample..X can be set from the option below</li><li>Stop Button :Stops the sample generation</li><li>Reset Button : Resets all values</li></ul>" data-original-title="Controls"></i></span>&nbsp;&nbsp;<a href="#"><button class="btn controller-back"><i class="icon-arrow-left" ></i></button></a></div><div id="speed-controller"><div><span class="badge badge-warning" style="float:left;">Animation Time: <span id="speed-value">200</span>ms</span></div><div id="speed-selector"></div></div><div class="tool"><span>Generate</span><input type="text" id="countSize" class="input-mini" value="1000"> <span>Samples with </span><input type="text" id="nSize" class="input-mini" value="50"><span>Datapoint per sample.</span></div><div><form class="form form-inline"><select id="variable" style="width:30%"><option value="mean">Mean</option><option value="count">Count</option><option value="standardDev">Standard Dev.</option><option value="Percentile">Percentile</option></select><input type="text" placeholder="binsize" name="binsize" class="input-mini"><span><a href="#" class="btn btn-danger popups" rel="popover" data-content="This will create a plot of the variable for each generated sample. Click this once you have generated some samples!" data-original-title="Inference" id="infer">Infer!</a></span></form></div>';
+		var html='<div id="buttonPanel"><a href="#" class="tooltips" rel="tooltip" title="Step"><button class="btn" type="button" id="stepButton" tabindex="1" title="Step"><i class="icon-step-forward"></i></button></a> <a href="#" class="tooltips" rel="tooltip" title="Run"><button class="btn btn-success" type="button" id="runButton" tabindex="2" title="Run" ><i class="icon-fast-forward"></i></button></a><a href="#" class="tooltips" rel="tooltip" title="Stop"><button class="btn btn-danger" type="button" id="stopButton" tabindex="3" title="Stop" ><i class="icon-stop" ></i></button></a><a href="#" class="tooltips" rel="tooltip" title="Reset"><button class="btn" type="button" id="resetButton" tabindex="4" title="Reset" ><i class="icon-refresh" ></i></button></a><span><i class="icon-question-sign popups" rel="popover" data-content="<ul><li>Step Button : generates 1 sample</li><li>Run Button : generates X sample..X can be set from the option below</li><li>Stop Button :Stops the sample generation</li><li>Reset Button : Resets all values</li></ul>" data-original-title="Controls"></i></span>&nbsp;&nbsp;<a href="#"><button class="btn controller-back"><i class="icon-arrow-left" ></i></button></a></div><div id="speed-controller"><div><span class="badge badge-warning" style="float:left;">Animation Time: <span id="speed-value">200</span>ms</span></div><div id="speed-selector"></div></div><div class="tool"><span>Generate</span><input type="text" id="countSize" class="input-mini" value="1000"> <span>Samples with </span><input type="text" id="nSize" class="input-mini" value="50"><span>Datapoint per sample.</span></div><div><form class="form form-inline"><select id="variable" style="width:30%"><option value="mean">Mean</option><option value="count">Count</option><option value="standardDev">Standard Dev.</option><option value="Percentile">Percentile</option></select><input type="text" placeholder="no. of bins" name="binno" class="input-mini"><span><a href="#" class="btn btn-danger popups" rel="popover" data-content="This will create a plot of the variable for each generated sample. Click this once you have generated some samples!" data-original-title="Inference" id="infer">Infer!</a></span></form></div>';
 		$('#controller-content').html(html);
 		$( "#speed-selector" ).slider({
 			value:400,
@@ -516,7 +516,7 @@ return{
 		console.log(values);
 
 
-		var binSize = $('input[name="binsize"]').val() != '' ? $('input[name="binsize"]').val() : 20;
+		var binNo = $('input[name="binno"]').val() != '' ? $('input[name="binno"]').val() : 20;
 
 		_currentValues=values;
 		var histogram = vis({
@@ -525,7 +525,7 @@ return{
 			height:390,
 			range: [start,stop],
 			datum :datum,
-			bins : binSize,
+			bins : binNo,
 			variable: setting.variable				
 		})();
 		
