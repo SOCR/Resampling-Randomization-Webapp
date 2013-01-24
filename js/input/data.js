@@ -1,406 +1,406 @@
-var input = (function () {
+socr.dataTable= function () {
   
-  $dataTable = $('#input');
-  $controls = $('section.controls');
-  $parent = $('div.spreadsheet');
-  $response = $('#status');
+    $dataTable = $('#input');
+    $controls = $('section.controls');
+    $parent = $('div.spreadsheet');
+    $response = $('#status');
 
-// Drag and Drop site
-  $drop = $('#drop');
-  $boxsection = $('#fetchURL');
-  $urlbox = $boxsection.find('input[name="urlbox"]');
-  $urlsubmit = $boxsection.find('input[name="submit"]');
-  method = 'sync';
+  // Drag and Drop site
+    $drop = $('#drop');
+    $boxsection = $('#fetchURL');
+    $urlbox = $boxsection.find('input[name="urlbox"]');
+    $urlsubmit = $boxsection.find('input[name="submit"]');
+    method = 'sync';
 
-  //Settings
-
-
-var dragdrop = {
-    init : function(){
-
-     // $drop.on('dragover', dragdrop.cancel);
-      $drop.on('dragenter', dragdrop.enter);
-      $drop.on('drop', dragdrop.drop);
-      $urlsubmit.on('click',dragdrop.urlboxsubmit);
-      $boxsection.submit(dragdrop.urlboxsubmit);
-      tableparse.switchMode();
-    },
-    enter : function(e){
-      $(drop).addClass('active');
-    },
-    drop : function(e){
-      console.log(e);
-       if (e.preventDefault) e.preventDefault(); // stops the browser from redirecting off to the text.  
-          drop.innerHTML = e.dataTransfer.getData('Text') ;
-       var a =e.dataTransfer.getData('Text');
-          tableparse.init(a);   
-    },
-    cancel : function(e){
-       if (e.preventDefault) e.preventDefault(); // required by FF + Safari
-      e.dataTransfer.dropEffect = 'copy'; // tells the browser what drop effect is allowed here
-      return false; // required by IE
-    },
-    urlboxsubmit : function(e){
-      e.preventDefault();
-      tableparse.init( $urlbox.val() );
-    }
-};
-
-var tableparse = {
-    init : function(url){
-      
-       if( url.substr(0,7) !== 'http://'){
-         url = 'http://' + url;
-      }
-      if( tableparse.checkRefer(url) === true)  {
-         tableparse.notify();
-         tableparse.request(url)
-         return true;
-      }
-       return false;
-    },
-    notify : function(){
-      view.displayResponse('Dataset Request Initialized','success');
-      setTimeout(function(){
-        $response.slideToggle().html('');
-      }, 2000);
-    },
-    checkRefer : function(url){
-      var requestHost = document.createElement("a");
-          requestHost.href = url;
-
-          if(window.location.hostname !== requestHost.hostname){
-            view.displayResponse('Datasets should be on the same server with the same URL hostname','error');
-            return false;
-          } else{
-            console.log('Dataset Server test passed')
-            return true;
-          }
-    },
-    request : function(uri){
-      // Fix for FF 
-     
-      $.get(uri, function(d){
-
-      var tableCount = $(d).is('table') ? $(d).length : $(d).find('table').length,
-        tables = $(d).is('table') ? $(d) : $(d).find('table'),
-        table = tableparse.filterBySize(tables),
-        titles = tableparse.parseHeadings (table);
-        matrix = tableparse.htmlToArray(table);  
-        $dataTable.inputtable({
-          cols : 2,
-          minSpareCols: 0
-        })
-
-        var inputMethod = tableparse.mode() === 'sync' ? 'loadDataSwift' : 'loadData';
-        console.log(inputMethod);
-        $dataTable.inputtable(inputMethod,matrix);
-      });
-    },
-
-    filterBySize : function(arrayOfTables){
-        var sizes = [];
-      $(arrayOfTables).each(function(i){
-        sizes.push([ $(this).find('tr:last').index() , i] )
-      })
-      var maxIndex = 0;
-      for(k=0; k < sizes.length - 2 ; k++){
-        if(sizes[k][0] < sizes [k+1][0])
-          maxIndex = sizes[k+1][1];
-      }
-      return arrayOfTables[maxIndex];
-    },
-
-    parseHeadings : function(html){
-      var title = [];
-      $stats = $(html);
-      var firstrow = $stats.find('tr').filter(':first');
-      
-      var element = firstrow.find('th').length > 0 ?'th':'td';
-
-      firstrow.find(element).each(function(){
-        title.push( $(this).text() );
-      });
-      spreadSheet.addColHeaders(title);
-      console.log(title + ' '+ element);
-      return title;
-    },
-
-    htmlToArray : function(html){
-      var matrix = [];
-    $stats = $(html);
-      $stats.find('tr').each(function(){
-          var row = [];
-          $(this).find('td').each(function(){
-            row.push( $(this).text() );
-          })
-          matrix.push(row);
-       });
-
-      /*
-      Check if the table has th elements instead
-      @Todo
-      */
-       if(matrix[0][0] === ''){
-        var row = [];
-        $stats.find('tr').filter(':eq(0)').find('th').each(function(i,v){
-          matrix[0][i -1] = $(this).text();
-        });
-       }   
-       //Removed the first row by default
-       matrix.splice(0,1);
-       return matrix;
-    },
-    /*
-    Setter-Getter for mode toggling
-    */
-    mode : function(option){
-      if(arguments.length){
-        method = option;
-      }
-      return method;
-    },
-
-    switchMode : function(){
-      $('#fetchinstant').click(function(){
-        tableparse.mode('sync');
-      })
-      $('#fetchasync').click(function(){
-        tableparse.mode('async');
-        console.log('Fetch Async option')
-      })
-    }
+    //Settings
 
 
-};
-/*
-  Ideally should serve as one-stop object for all visual element changes
-*/
-var view = {
-  displayResponse : function(content, type){
-    $response.html('').slideUp(300);
-    $response.append(
-    $('<div></div>')
-      .addClass('alert')
-      .html(content)
-      ).slideDown(300);
+  var dragdrop = {
+      init : function(){
 
-    var $alertbox = $response.children('div');
-    switch(type) {
-      
-      case "success":
-        $alertbox.addClass('alert-success');
-        $alertbox.append(' <i class="icon-ok"></i> ');
-        break;
-
-      case "error":
-        $alertbox.addClass('alert-error');
-        break;
-    }
-  },
-  editTitles : function(){
-  
-    var content = '<form class="form form-horizontal" id="input-titles"><fieldset><legend>Add titles to Spreadsheet</legend><div class="control-group"><label class="control-label">Title</label><div class="controls"><input type="text" placeholder="Input field1"></div></div><div class="control-group"><label class="control-label">Title</label>\
-    <div class="controls"><input type="text" placeholder="Input Title"></div></div><div class="control-group"><label class="control-label">Title</label>\
-    <div class="controls"><input type="text" placeholder="Input Title"></div></div>\
-    <div class="control-group"><label class="control-label">Title</label><div class="controls"><input type="text" placeholder="Input Title"></div></div>\
-    <div class="pagination-centered"><input type="submit" class="btn btn-large btn-block"></div></form>';
-
-    $('#input-modal .modal-body').html(content);
-  },
-  parseTitles : function(e){
-    e.preventDefault();
-    console.log('Call for parse Titles');
-    var titles = [];
-    $('#input-titles').find('input[type="text"]').each(function(){
-      if($(this).val() !== '')
-      titles.push($(this).val());
-    })
-    spreadSheet.addColHeaders(titles);
-    $('#input-modal').modal('toggle');
-    view.displayResponse('Titles altered successfully','success');
-  }
-
-}
-/*
-  Hookups for spreadsheet opterations
-*/
-var spreadSheet = {
-
-  init : function() {
-    /*
-    Spreadsheet generation code, pretty much self explanatory
-    */ 
-    $dataTable.inputtable({
-      cols : 8,
-      rows : 8,
-      minSpareCols: 1,
-      minSpareRows: 1,
-      fillHandle: true
-    });
-
-  },
-
-  validate : function(dataset){
-    console.log(dataset);
-    if(dataset.length != 0){
-      if(dataset[0][0] === '' && dataset[1][0] === '' && dataset[2][0] === ''){
-        view.displayResponse('Dataset appears to be empty','error');
-        return false;
-      }
-      return true;
-    } else {
-      view.displayResponse('Empty Dataset, Please fill in from the first column ','error');
-      return false;
-    }
-
-    
-  },
-
-   addColHeaders : function(arr){
-      $dataTable.inputtable({colHeaders : arr});
-    },
-
-  addTitles : function(){
-
-    $('<div></div>').appendTo('body')
-      .addClass('modal hide fade')
-      .html('<div class="modal-header"><div>')
-      
-
-  },
-
-  parseAll : function(){
-    var dataset = $dataTable.inputtable('getNonEmptyData');
-      model.reset();
-     $("#accordion").accordion( "activate" , 0);
-      $(this).update({to:'dataDriven'});    
-      if(controllerSliderState!=0)
-          $(".controller-handle").trigger("click");
-    
-    if(spreadSheet.validate(dataset)){
-        model.setDataset({
-          data: dataset,
-          range: 1,
-          type: 'getData',
-          processed: false,
-        });
-     
-      view.displayResponse(' Entire dataset is selected ', 'success');
-      select.selectAll();
-    } else {
-      view.displayResponse(' There is some error in the dataset ', 'error');
-    }
-     
-  },
-
-  parseSelected :  function(){
-     
-     if(select.isSelected()) {
-        var selectedCoords = select.isSelected();
-        /*
-          Selected Cells:
-         [ startrow , startCol, endRow, endCol ]
-        */
-      }
-      if(selectedCoords) {
-
-          console.log(' Select Data request with  '+ selectedCoords )  
-          var dataset = $dataTable.inputtable('getSelectedData');
-          $("#accordion").accordion( "activate" , 0);
-          $(this).update({to:'dataDriven'});    
-         if(controllerSliderState!=0)
-          $(".controller-handle").trigger("click");
-          if(spreadSheet.validate(dataset)){
-           model.setDataset({
-
-            data: dataset ,
-          //range:selected,
-            type: 'getSelected',
-            processed: false
-          
-            });
-          
-          view.displayResponse('Data loaded successfully', 'success');
-         // if(controllerSliderState!=0)
-         // $(".controller-handle").trigger("click");
-           select.selectCells(selectedCoords);
-          
-
-         }
-
-     } 
-      else {
-
-       view.displayResponse(' No coordinates are selected ', 'error');
-      }
-
-  },
-
-  reset : function(){
-     $('<div></div>').appendTo('body')
-      .html('<div><h6>Are you sure you want to reset the data?</h6></div>')
-      .dialog({
-      modal: true,
-      title: 'Reset Data?',
-      zIndex: 10000,
-      autoOpen: true,
-      width: 'auto',
-      resizable: false,
-      buttons: {
-        Yes: function () {
-          //clear the input sheet 
-          $dataTable.inputtable('clear');
-          $response.html('<div class="alert"><a class="close" data-dismiss="alert" href="#">x</a>Clear! Enter some value to get started!</div>'); //display the message in the status div below the done and reset buttons
-          $(this).dialog("close"); //close the confirmation window
-          $dataTable.inputtable({'colHeaders' : false});
-
-        },
-        No: function () {
-          $(this).dialog("close");
-        }
+       // $drop.on('dragover', dragdrop.cancel);
+        $drop.on('dragenter', dragdrop.enter);
+        $drop.on('drop', dragdrop.drop);
+        $urlsubmit.on('click',dragdrop.urlboxsubmit);
+        $boxsection.submit(dragdrop.urlboxsubmit);
+        tableparse.switchMode();
       },
-      close: function (event, ui) {
-        $(this).remove();
+      enter : function(e){
+        $(drop).addClass('active');
+      },
+      drop : function(e){
+        console.log(e);
+         if (e.preventDefault) e.preventDefault(); // stops the browser from redirecting off to the text.  
+            drop.innerHTML = e.dataTransfer.getData('Text') ;
+         var a =e.dataTransfer.getData('Text');
+            tableparse.init(a);   
+      },
+      cancel : function(e){
+         if (e.preventDefault) e.preventDefault(); // required by FF + Safari
+        e.dataTransfer.dropEffect = 'copy'; // tells the browser what drop effect is allowed here
+        return false; // required by IE
+      },
+      urlboxsubmit : function(e){
+        e.preventDefault();
+        tableparse.init( $urlbox.val() );
       }
-    });
-  }
+  };
 
-}
+  var tableparse = {
+      init : function(url){
+        
+         if( url.substr(0,7) !== 'http://'){
+           url = 'http://' + url;
+        }
+        if( tableparse.checkRefer(url) === true)  {
+           tableparse.notify();
+           tableparse.request(url)
+           return true;
+        }
+         return false;
+      },
+      notify : function(){
+        view.displayResponse('Dataset Request Initialized','success');
+        setTimeout(function(){
+          $response.slideToggle().html('');
+        }, 2000);
+      },
+      checkRefer : function(url){
+        var requestHost = document.createElement("a");
+            requestHost.href = url;
 
-/*
-  All member functions that involve selecting / highlighting
-*/   
-var select = {
+            if(window.location.hostname !== requestHost.hostname){
+              view.displayResponse('Datasets should be on the same server with the same URL hostname','error');
+              return false;
+            } else{
+              console.log('Dataset Server test passed')
+              return true;
+            }
+      },
+      request : function(uri){
+        // Fix for FF 
+       
+        $.get(uri, function(d){
 
-  selectCells : function(coords){
-      $dataTable.inputtable('selectCell', coords[0], coords[1], coords[2], coords[3]);
-  },
-  isSelected : function(){
-    var coords = $dataTable.inputtable('getSelected');
-    if(coords) {
+        var tableCount = $(d).is('table') ? $(d).length : $(d).find('table').length,
+          tables = $(d).is('table') ? $(d) : $(d).find('table'),
+          table = tableparse.filterBySize(tables),
+          titles = tableparse.parseHeadings (table);
+          matrix = tableparse.htmlToArray(table);  
+          $dataTable.inputtable({
+            cols : 2,
+            minSpareCols: 0
+          })
+
+          var inputMethod = tableparse.mode() === 'sync' ? 'loadDataSwift' : 'loadData';
+          console.log(inputMethod);
+          $dataTable.inputtable(inputMethod,matrix);
+        });
+      },
+
+      filterBySize : function(arrayOfTables){
+          var sizes = [];
+        $(arrayOfTables).each(function(i){
+          sizes.push([ $(this).find('tr:last').index() , i] )
+        })
+        var maxIndex = 0;
+        for(k=0; k < sizes.length - 2 ; k++){
+          if(sizes[k][0] < sizes [k+1][0])
+            maxIndex = sizes[k+1][1];
+        }
+        return arrayOfTables[maxIndex];
+      },
+
+      parseHeadings : function(html){
+        var title = [];
+        $stats = $(html);
+        var firstrow = $stats.find('tr').filter(':first');
+        
+        var element = firstrow.find('th').length > 0 ?'th':'td';
+
+        firstrow.find(element).each(function(){
+          title.push( $(this).text() );
+        });
+        spreadSheet.addColHeaders(title);
+        console.log(title + ' '+ element);
+        return title;
+      },
+
+      htmlToArray : function(html){
+        var matrix = [];
+      $stats = $(html);
+        $stats.find('tr').each(function(){
+            var row = [];
+            $(this).find('td').each(function(){
+              row.push( $(this).text() );
+            })
+            matrix.push(row);
+         });
+
+        /*
+        Check if the table has th elements instead
+        @Todo
+        */
+         if(matrix[0][0] === ''){
+          var row = [];
+          $stats.find('tr').filter(':eq(0)').find('th').each(function(i,v){
+            matrix[0][i -1] = $(this).text();
+          });
+         }   
+         //Removed the first row by default
+         matrix.splice(0,1);
+         return matrix;
+      },
       /*
-        Simple check for deselected members as the getSelected method returns the coordinates of last cell worked on
+      Setter-Getter for mode toggling
       */
-      if(coords[0] === coords[2] && coords[1] === coords[3]) {
-        return false;
-      } else {
-        return coords;
+      mode : function(option){
+        if(arguments.length){
+          method = option;
+        }
+        return method;
+      },
+
+      switchMode : function(){
+        $('#fetchinstant').click(function(){
+          tableparse.mode('sync');
+        })
+        $('#fetchasync').click(function(){
+          tableparse.mode('async');
+          console.log('Fetch Async option')
+        })
       }
+
+
+  };
+/*
+  Ideally should serve as one-stop object for all visual element changes involving datasets
+*/
+  var view = {
+    displayResponse : function(content, type){
+      $response.html('').slideUp(300);
+      $response.append(
+      $('<div></div>')
+        .addClass('alert')
+        .html(content)
+        ).slideDown(300);
+
+      var $alertbox = $response.children('div');
+      switch(type) {
+        
+        case "success":
+          $alertbox.addClass('alert-success');
+          $alertbox.append(' <i class="icon-ok"></i> ');
+          break;
+
+        case "error":
+          $alertbox.addClass('alert-error');
+          break;
+      }
+    },
+    editTitles : function(){
+    
+      var content = '<form class="form form-horizontal" id="input-titles"><fieldset><legend>Add titles to Spreadsheet</legend><div class="control-group"><label class="control-label">Title</label><div class="controls"><input type="text" placeholder="Input field1"></div></div><div class="control-group"><label class="control-label">Title</label>\
+      <div class="controls"><input type="text" placeholder="Input Title"></div></div><div class="control-group"><label class="control-label">Title</label>\
+      <div class="controls"><input type="text" placeholder="Input Title"></div></div>\
+      <div class="control-group"><label class="control-label">Title</label><div class="controls"><input type="text" placeholder="Input Title"></div></div>\
+      <div class="pagination-centered"><input type="submit" class="btn btn-large btn-block"></div></form>';
+
+      $('#input-modal .modal-body').html(content);
+    },
+    parseTitles : function(e){
+      e.preventDefault();
+      console.log('Call for parse Titles');
+      var titles = [];
+      $('#input-titles').find('input[type="text"]').each(function(){
+        if($(this).val() !== '')
+        titles.push($(this).val());
+      })
+      spreadSheet.addColHeaders(titles);
+      $('#input-modal').modal('toggle');
+      view.displayResponse('Titles altered successfully','success');
     }
-    return false;
-  },
-  checkSelected : function() {
-     if( select.isSelected() ){
-      $('#submatrix_spreadsheet').removeAttr('disabled');
+
+  }
+  /*
+    Hookups for spreadsheet opterations
+  */
+  var spreadSheet = {
+
+    init : function() {
+      /*
+      Spreadsheet generation code, pretty much self explanatory
+      */ 
+      $dataTable.inputtable({
+        cols : 8,
+        rows : 8,
+        minSpareCols: 1,
+        minSpareRows: 1,
+        fillHandle: true
+      });
+
+    },
+
+    validate : function(dataset){
+      console.log(dataset);
+      if(dataset.length != 0){
+        if(dataset[0][0] === '' && dataset[1][0] === '' && dataset[2][0] === ''){
+          view.displayResponse('Dataset appears to be empty','error');
+          return false;
+        }
+        return true;
+      } else {
+        view.displayResponse('Empty Dataset, Please fill in from the first column ','error');
+        return false;
+      }
+
+      
+    },
+
+     addColHeaders : function(arr){
+        $dataTable.inputtable({colHeaders : arr});
+      },
+
+    addTitles : function(){
+
+      $('<div></div>').appendTo('body')
+        .addClass('modal hide fade')
+        .html('<div class="modal-header"><div>')
+        
+
+    },
+
+    parseAll : function(){
+      var dataset = $dataTable.inputtable('getNonEmptyData');
+        model.reset();
+       $("#accordion").accordion( "activate" , 0);
+        $(this).update({to:'dataDriven'});    
+        if(controllerSliderState!=0)
+            $(".controller-handle").trigger("click");
+      
+      if(spreadSheet.validate(dataset)){
+          model.setDataset({
+            data: dataset,
+            range: 1,
+            type: 'getData',
+            processed: false,
+          });
+       
+        view.displayResponse(' Entire dataset is selected ', 'success');
+        select.selectAll();
+      } else {
+        view.displayResponse(' There is some error in the dataset ', 'error');
+      }
+       
+    },
+
+    parseSelected :  function(){
+       
+       if(select.isSelected()) {
+          var selectedCoords = select.isSelected();
+          /*
+            Selected Cells:
+           [ startrow , startCol, endRow, endCol ]
+          */
+        }
+        if(selectedCoords) {
+
+            console.log(' Select Data request with  '+ selectedCoords )  
+            var dataset = $dataTable.inputtable('getSelectedData');
+            $("#accordion").accordion( "activate" , 0);
+            $(this).update({to:'dataDriven'});    
+           if(controllerSliderState!=0)
+            $(".controller-handle").trigger("click");
+            if(spreadSheet.validate(dataset)){
+             model.setDataset({
+
+              data: dataset ,
+            //range:selected,
+              type: 'getSelected',
+              processed: false
+            
+              });
+            
+            view.displayResponse('Data loaded successfully', 'success');
+           // if(controllerSliderState!=0)
+           // $(".controller-handle").trigger("click");
+             select.selectCells(selectedCoords);
+            
+
+           }
+
+       } 
+        else {
+
+         view.displayResponse(' No coordinates are selected ', 'error');
+        }
+
+    },
+
+    reset : function(){
+       $('<div></div>').appendTo('body')
+        .html('<div><h6>Are you sure you want to reset the data?</h6></div>')
+        .dialog({
+        modal: true,
+        title: 'Reset Data?',
+        zIndex: 10000,
+        autoOpen: true,
+        width: 'auto',
+        resizable: false,
+        buttons: {
+          Yes: function () {
+            //clear the input sheet 
+            $dataTable.inputtable('clear');
+            $response.html('<div class="alert"><a class="close" data-dismiss="alert" href="#">x</a>Clear! Enter some value to get started!</div>'); //display the message in the status div below the done and reset buttons
+            $(this).dialog("close"); //close the confirmation window
+            $dataTable.inputtable({'colHeaders' : false});
+
+          },
+          No: function () {
+            $(this).dialog("close");
+          }
+        },
+        close: function (event, ui) {
+          $(this).remove();
+        }
+      });
     }
-  },
-  selectAll : function(){
-    console.log('SelectAll member function');
-    $dataTable.inputtable('selectEntiregrid');
+
   }
 
-}
+  /*
+    All member functions that involve selecting / highlighting
+  */   
+  var select = {
+
+    selectCells : function(coords){
+        $dataTable.inputtable('selectCell', coords[0], coords[1], coords[2], coords[3]);
+    },
+    isSelected : function(){
+      var coords = $dataTable.inputtable('getSelected');
+      if(coords) {
+        /*
+          Simple check for deselected members as the getSelected method returns the coordinates of last cell worked on
+        */
+        if(coords[0] === coords[2] && coords[1] === coords[3]) {
+          return false;
+        } else {
+          return coords;
+        }
+      }
+      return false;
+    },
+    checkSelected : function() {
+       if( select.isSelected() ){
+        $('#submatrix_spreadsheet').removeAttr('disabled');
+      }
+    },
+    selectAll : function(){
+      console.log('SelectAll member function');
+      $dataTable.inputtable('selectEntiregrid');
+    }
+
+  };
 
   $controls.find('input[value="Use Entire Dataset"]').on('click', spreadSheet.parseAll );
   $controls.find('input[value="Reset"]').on('click', spreadSheet.reset );
@@ -522,4 +522,4 @@ var select = {
 
        */
 
-})();
+}();

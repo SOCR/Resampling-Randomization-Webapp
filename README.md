@@ -6,3 +6,18 @@ For more information regarding this project see [SOCR Wiki](http://wiki.stat.ucl
 
 # Deploy URL #
 [SOCR Deploy](http://socr.ucla.edu/htmls/HTML5/SOCR_Resampling_Webapp/)
+
+# App Structure #
+The appliction earlier written in a pseudo - MV* pattern, in latest revision(s) is incorporated the *SOCR* namespace.
+Current Organisation
+### socr.model
+### socr.view
+### socr.controller
+### socr.input
+### socr.exp
+	_ballAndUrn_
+	_cardExp_
+	_binomialCoin_
+### socr.vis
+### socr.tools
+	_FCal_

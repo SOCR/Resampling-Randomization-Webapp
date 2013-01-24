@@ -15,7 +15,7 @@
     <!--<link rel="stylesheet" href='http://fonts.googleapis.com/css?family=Lato:400,900'  type='text/css'>-->
     <link rel="stylesheet" href="css/bootstrap.css" >
     <link rel="stylesheet"href="css/stylePagination.css" >
-    <link rel="stylesheet" media="screen" href="css/jquery-ui.css">
+   <link rel="stylesheet" media="screen" href="css/jquery-ui.css"> 
     <link rel="stylesheet" media="screen" href="css/input/table.css">
 	<link rel="stylesheet" type="text/css" href="css/jquery.jtweetsanywhere-1.3.1.css" />
    	<link rel="stylesheet" href="css/common.css" >
@@ -64,7 +64,7 @@
 							<a data-toggle="modal" href="#generate-url"><button class='btn btn-success' id='share-instance-button'>Share Instance</button></a>
 						</ul>
 		  			</div><!--/.nav-collapse -->
-					<a href="#" class=" brand" style='margin-left:10%' >Statistical Online Computational Resource - Resampling WebApp</a> 
+					<a href="#" class=" brand" style='margin-left:10%' >SOCR - Resampling WebApp</a> 
 				</div>
 			</div>
 		</div>
@@ -432,8 +432,8 @@
     <!--<script type='text/javascript' src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>-->
 <script type='text/javascript'>
     
-    head.js("js/lib/jquery.min.js",
-    		//"js/input/table.js",
+    head.js("js/init.js",
+    		"js/lib/jquery.min.js",
             "js/bootstrap/bootstrap-transition.js",
             "js/bootstrap/bootstrap-alert.js",
             "js/bootstrap/bootstrap-tab.js",
@@ -451,7 +451,6 @@
 			{ballAndUrn:"js/exp/ballAndUrn.js"},
 			{cardExp:"js/exp/cardExp.js"},
             {inputTile:"js/input/inputtable.js"},
-            //{InputTile:"js/input/script.js"},
 			{Model:"js/appModel.js"},
 			{View:"js/appView.js"},
 			{Controller:"js/appController.js"},
@@ -459,35 +458,36 @@
 			{D3:"js/vis/d3.v2.min.js"},
 			"js/vis/histogram.js",
 			"js/jquery.paginate.js",
-			//"js/exp/socr.js",
 			"js/update.js",
 			"js/lib/jtweet/jquery.jtweetsanywhere-1.3.1.min.js",
 			"js/lib/jquery.transit.min.js",
 			"js/lib/jquery.easing.1.3.js",
-			//"js/input/dragdrop.js",
 			"js/input/data.js",
-			"js/vis/tooltip.js"
+			"js/vis/tooltip.js",
+			"js/tools/FCal.js"
 	    	);
     
 	head.ready(function () {
 		
 		var url = window.location.href;
 		var baseUrl = url.substring(0, url.indexOf('index.html'));
-		if(baseUrl=='')
+		if(baseUrl =='')
 			baseUrl=url;
 		/*
 		GLOBAL VARIABLES...TO BE ACCESSED FROM {experiment}.js files.
-		** BAD practice...litering global namespace
+		** BAD practice.litering global namespace
+
+		@Latest Revision: Segregrating all global variables to the necessary SOCR sub-object
 		*/
-		inputSliderState=0;
-		controllerSliderState=0;
+		socr.exp.inputSliderState = 0;
+		socr.exp.controllerSliderState = 0;
 		
 		/*
 		*Loading MVC
 		*/
-		model = new appModel();
-		view = new appView(model);
-		controller = new appController(model,view);
+		model = new socr.model();
+		view = new socr.view(model);
+		controller = new socr.controller(model,view);
 		
 		/*
 		*  CoverPage rendering
@@ -526,7 +526,7 @@
 				{
 					$target.addClass('active').show().css({left:-425}).animate({left: 0}, 500);
 					$(this).css({left:-20}).animate({left: 410}, 500);
-					inputSliderState=1;
+					socr.exp.inputSliderState=1;
 				}
 				else
 				{
@@ -534,7 +534,7 @@
 							left: -425
 						}, 500);
 					$(this).css({left:400}).animate({left: -20}, 500);
-					inputSliderState=0;
+					socr.exp.inputSliderState=0;
 				}
 			}); //input-handle click
 			
@@ -545,7 +545,7 @@
 				{
 					$target.addClass('active').show().css({left:-425}).animate({left: 0}, 500);
 					$(this).css({left:-30}).animate({left: 394}, 500);
-					controllerSliderState=1;
+					socr.exp.controllerSliderState=1;
 				}
 				else
 				{
@@ -553,7 +553,7 @@
 							left: -425
 						}, 500);
 					$(this).css({left:400}).animate({left: -30}, 500);
-					controllerSliderState=0;
+					socr.exp.controllerSliderState=0;
 				}
 			});//controller-handle click		
 		
@@ -568,17 +568,20 @@
 			});
 			/* Array while holds the list of exp.js files already loaded*/    
 			var expLoaded=['binomialCoin'];
-			Experiment=binomialCoin;
+
+			socr.exp.current = socr.exp.binomialCoin; //The default Experiment
 			
 			$('#binomialCoin').click(function(){
 				$('.current-experiment').html('Binomial Coin Toss<i class="icon-question-sign popups" rel="popover" data-content="The random experiment consists of tossing n coins, each with probability of heads p. Random variable Y gives the number of heads, and random variable M gives the proportion of heads. These are recorded on each update in the data table. Either Y or M can be selected with the list box. The probability density function and moments of the selected variable are shown in blue in the distribution graph blue and are recorded in the distribution table. On each update, the empirical density function and moments of the selected variable are shown in red in the distribution graph and are recorded in the distribution table. The parameters n and p can be varied with scroll bars." data-original-title="Description"></i>');
+
 				model.reset();
-				Experiment=binomialCoin;
-				Experiment.createControllerView();
-				Experiment.initialize();
-				if(inputSliderState!=0)
+
+				socr.exp.current=socr.exp.binomialCoin;
+				socr.exp.current.createControllerView();
+				socr.exp.current.initialize();
+				if(socr.exp.inputSliderState!=0)
 					$(".input-handle").trigger("click");
-				if(controllerSliderState==0)
+				if(socr.exp.controllerSliderState==0)
 					$(".controller-handle").trigger("click");
 			});
 			
@@ -591,13 +594,14 @@
 					$.getScript(baseUrl+"js/exp/ballAndUrn.js",function(){
 						console.log('ballAndUrn.js file has loaded!');
 						model.reset();
-						Experiment=ballAndUrn;
+
+						socr.exp.current=socr.exp.ballAndUrn;
 						//Initializing
-						Experiment.createControllerView();
-						Experiment.initialize();
-						if(inputSliderState!=0)
+						socr.exp.current.createControllerView();
+						socr.exp.current.initialize();
+						if(socr.exp.inputSliderState!=0)
 							$(".input-handle").trigger("click");
-						if(controllerSliderState==0)
+						if(socr.exp.controllerSliderState==0)
 							$(".controller-handle").trigger("click");
 					});
 					  //head.js("js/exp/ballAndUrn.js");          //loading the Ball and Urn Script
@@ -605,11 +609,13 @@
 				}
 				else
 				{
-					Experiment=ballAndUrn;
+					 socr.exp.current=socr.exp.ballAndUrn;
 						//Initializing
-					Experiment.createControllerView();
-					Experiment.initialize();
+					socr.exp.current.createControllerView();
+					socr.exp.current.initialize();
 				}
+
+				console.log(socr.exp.current)
 			});
 			
 			/* Card Experiment   */
@@ -620,13 +626,13 @@
 					$.getScript(baseUrl+"js/exp/cardExp.js",function(){
 						console.log('cardExp.js file is loaded!');
 						model.reset();
-						Experiment=cardExp;
+						socr.exp.current =socr.exp.cardExp;
 						//Initializing
-						Experiment.createControllerView();
-						Experiment.initialize();
-						if(inputSliderState!=0)
+						socr.exp.current.createControllerView();
+						socr.exp.current.initialize();
+						if(socr.exp.inputSliderState!=0)
 							$(".input-handle").trigger("click");
-						if(controllerSliderState==0)
+						if(socr.exp.controllerSliderState==0)
 							$(".controller-handle").trigger("click");
 					});
 					  //head.js("js/exp/ballAndUrn.js");          //loading the Ball and Urn Script
@@ -634,10 +640,10 @@
 				}
 				else
 				{
-					Experiment=cardExp;
+					socr.exp.current=socr.exp.cardExp;
 						//Initializing
-					Experiment.createControllerView();
-					Experiment.initialize();
+					socr.exp.current.createControllerView();
+					socr.exp.current.initialize();
 				}
 			});
 

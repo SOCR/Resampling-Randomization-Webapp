@@ -1,4 +1,4 @@
-
+/* Functions imported from Distributome Resource */
 //A six-sided die
 function Die(canvas){
 	//Properties

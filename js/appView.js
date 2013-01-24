@@ -6,10 +6,10 @@
 *SOCR - Statistical Online Computational Resource
 */
 
-var appView = function(appModel){
+var socr.view = function(model){
 
 /* private properties */
-	var model=appModel;					// [OBJECT] Reference to the App's model object.
+	var model=model;					// [OBJECT] Reference to the App's model object.
 	var _currentVariable;				// [ARRAY] Reference to current inference varaible [mean , SD , count , percentile]
 	var _currentValues;					// [ARRAY] Reference to current inference variable's value of each random sample.
 
@@ -337,8 +337,8 @@ return{
 			}
 		});
 		$('.controller-back').on('click',function(){
-			Experiment.createControllerView();
-			Experiment.initialize();
+			socr.exp.current.createControllerView();
+			socr.exp.current.initialize();
 		});
 
 		$('#variable').on('click',function(){
@@ -387,12 +387,12 @@ return{
 	    	}
 		};
 		//disable the back button in the controller tile
-		var data=Experiment.getDatasetValues();		// data is in the form of an array!
-		var datakeys=Experiment.getDatasetKeys();		// data is in the form of an array!
+		var data=socr.exp.current.getDatasetValues();		// data is in the form of an array!
+		var datakeys=socr.exp.current.getDatasetKeys();		// data is in the form of an array!
 		var stopCount=setting.stopCount;		// Number of datapoints in a generated random sample
 		var keys=setting.indexes;					// keys=array indexs of the datapoints in the dataset which are present in the current random sample 
 		var i=0;
-		var _dimensions=Experiment.getSampleHW();
+		var _dimensions=socr.exp.current.getSampleHW();
 		setTimeout(animation);					//first call
 				
 		function animation(){
@@ -436,12 +436,12 @@ return{
 					content.appendTo("#device"+sampleNumber+'-container');
 					self.removeAttr('id');					//remove the id on the moved coin
 					
-				if(Experiment.type=='coin')
+				if(socr.exp.current.type=='coin')
 					{
 					var k = new Coin(document.getElementById("device"+sampleNumber));
 					k.setValue(data[sampleNumber]);
 					}
-				else if(Experiment.type=='card')
+				else if(socr.exp.current.type=='card')
 					{
 					var k = new Card(document.getElementById("device"+sampleNumber));
 					k.setValue(data[sampleNumber]);
@@ -554,8 +554,8 @@ return{
 		console.log('updateSimulationInfo() invoked');
 		try{
 			var array=['<table class="table table-striped">'];
-			array.push('<tr><td>Experiment Name</td><td><strong>'+Experiment.name+'</strong></td></tr>');
-			array.push('<tr><td>DataSet Size </td><td><strong>'+Experiment.getDatasetSize()+'</strong></td></tr>');
+			array.push('<tr><td>Experiment Name</td><td><strong>'+socr.exp.current.name+'</strong></td></tr>');
+			array.push('<tr><td>DataSet Size </td><td><strong>'+socr.exp.current.getDatasetSize()+'</strong></td></tr>');
 			array.push('<tr><td>Number of Random Samples : </td><td><strong>'+model.bootstrapSamples.length+'</strong></td></tr>');
 			//dont show mean and standard deviation in info tab when there is no mean or sd.
 			if(model.getMeanOfDataset()!=false)

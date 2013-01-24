@@ -1,14 +1,22 @@
-/**
- *Binomial Coin Experiment
- *Dependency on view.js
- *
-*/
-var binomialCoin=(function(){
+/*
+
+	Binomial Coin Experiment
+ 	Revised from Distributome BinomialCoin Experiment by Selvam into a separate module
+
+ 	Notes:
+ 		1. Avoid using this in private/public methods.There is only a single instance and its methods can be accessed using the name,ie, ballAndUrn
+ 		2. No need to immediately invoke it
+ 		
+ 	@dependencies:
+ 		1. Uses methods of core.js,appController.js,appModel.js,appView.js
+ 		2. Uses intrinsic names of Element Ids mentioned in index.html
+ 		*/
+socr.exp.binomialCoin=function(){
 
 
 //::::::: PRIVATE PROPERTIES :::::::::::::::
 var _stepID;
-var _pParam, _nParam; // binomialDist is the distribution object
+var _pParam, _nParam; // binomialCoin is the distribution object
 var _p = 0.5;	  		//Probability of heads (default value = 0.5)
 var _N = 100;			//Maximum number of trials 
 var _count;				//keeps count of number of coins tossed
@@ -215,5 +223,3 @@ return{
 	}
 }//return
 }());
-
-

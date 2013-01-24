@@ -3,7 +3,7 @@
  *
 */
 
-var cardExp=(function(){
+socr.exp.cardExp = function(){
 //::::::: PRIVATE PROPERTIES :::::::::::::::
 var _stepID;
 var _nParam;		//User defined Parameters..bound to the buttons on the controller tile
@@ -24,9 +24,9 @@ function _dealCard(){
 		_count++;
 	}
 	else{
-		console.log("Card Generated Dataset : "+_values + "-- cardExp.js");
+		console.log("Card Generated Dataset : "+_values + "-- socr.exp.cardExp.js");
 		//view.loadInputSheet(_values);
-		_self.reset();
+		socr.exp.cardExp.reset();
 	}
 }
 
@@ -36,21 +36,20 @@ return{
 	name:'Card Experiment',
 	type:'card',
 	initialize: function(){
-		_self=this;
+		//socr.exp.cardExp=socr.exp.cardExp;
 		
 		_nParam = new Parameter(document.getElementById("nInput"), document.getElementById("nLabel"));
 		_nParam.setProperties(1, 10, 1, _n, "<var>n</var>");
-		this.reset();
+		socr.exp.cardExp.reset();
 		$("#sdbutton").on('click',function(){
-			Experiment.generate();
+			socr.exp.current.generate();
 			$("#accordion").accordion( "activate" , 1);
-			if(inputSliderState==1)
-				{
+			if(socr.exp.inputSliderState==1){
 				$('.input-handle').trigger('click');
 				}
 		});
 		$('#nInput').on('change',function(){
-			Experiment.setVariable();
+			socr.exp.current.setVariable();
 		});
 		$('#grsbutton').on('click',function(){
 			$('#dataDriven-tab').update({to:'dataDriven'});
@@ -60,8 +59,8 @@ return{
 	generate: function(){
 		view.updateSimulationInfo();		//updates experiment info into third tile in the accordion
 		//_n=$("#nInput").val();
-		this.setVariable();
-		this.createDataPlot(_n);			//create the canvas fro the dataset
+		socr.exp.cardExp.setVariable();
+		socr.exp.cardExp.createDataPlot(_n);			//create the canvas fro the dataset
 		$(".device-container").width(_width);
 		$(".device-container").height(_height);
 		_hand = new Array(_n);
@@ -77,7 +76,7 @@ return{
 
 	reset:function(){
 		clearInterval(_stepID);
-		this.setVariable();
+		socr.exp.cardExp.setVariable();
 		/*
 		for (var i = 0; i < 14; i++){
 			if (i < n) 
@@ -88,7 +87,7 @@ return{
 		*/
 	},
 	createControllerView:function(){
-	console.log("createControllerView for CardExp executed!");
+	console.log("createControllerView for socr.exp.cardExp executed!");
 	var html='<p class="toolbar"></p><p class="tool"><span id="nLabel" class="badge badge-warning" for="nInput"><var><var>n</var></var> = 10</span><span id="nvalue"></span><input id="nInput" type="range" tabindex="7" class="parameter" min="1" max="100" step="1"></p><button class="btn" id="sdbutton">Generate DataSet!</button><button class="btn btn-danger" id="grsbutton">Generate Random Samples!</button></div>';
 	$('#controller-content').html(html);
 	},
@@ -130,5 +129,5 @@ return{
 	getSampleHW:function(){
 	return {"height":_height,"width":_width};
 	}
-}//return	
-}());
+  }//return	
+}();
