@@ -275,7 +275,7 @@ socr.dataTable= function () {
         model.reset();
        $("#accordion").accordion( "activate" , 0);
         $(this).update({to:'dataDriven'});    
-        if(controllerSliderState!=0)
+        if(socr.exp.controllerSliderState!=0)
             $(".controller-handle").trigger("click");
       
       if(spreadSheet.validate(dataset)){
@@ -309,7 +309,7 @@ socr.dataTable= function () {
             var dataset = $dataTable.inputtable('getSelectedData');
             $("#accordion").accordion( "activate" , 0);
             $(this).update({to:'dataDriven'});    
-           if(controllerSliderState!=0)
+           if(socr.exp.controllerSliderState!=0)
             $(".controller-handle").trigger("click");
             if(spreadSheet.validate(dataset)){
              model.setDataset({

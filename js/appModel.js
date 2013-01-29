@@ -6,7 +6,7 @@
 *SOCR - Statistical Online Computational Resource
 */
 
-var socr.model=function(){
+socr.model=function(){
 //::::::: PRIVATE PROPERTIES :::::::::::::::
 	var _stopCount = 1000;			//Number of runs to be made when 'run' button is pressed 
 	var _count=0;					//keeps count of number of samples generated from start
@@ -108,7 +108,7 @@ return{
 	generateTrail:function(datasetIndex){
 		if(_dataset[0] === undefined || this.getK() === false)
 		{
-			console.log("k value"+this.getK());
+			//console.log("k value"+this.getK());
 			return false;
 
 		}
@@ -498,13 +498,13 @@ return{
 		_sample.Count=[];
 	},
 	getK:function(){
-		if(Experiment)
+		if(socr.exp.current)
 			{
-				return Experiment.getK();
+				return socr.exp.current.getK();
 			}
 		else
 			return 0;
 	}
 	
 }//return
-};
+}

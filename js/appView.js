@@ -6,7 +6,7 @@
 *SOCR - Statistical Online Computational Resource
 */
 
-var socr.view = function(model){
+socr.view = function(model){
 
 /* private properties */
 	var model=model;					// [OBJECT] Reference to the App's model object.
@@ -641,4 +641,4 @@ return{
 	}
 	*/
 	}//return
-};
+}

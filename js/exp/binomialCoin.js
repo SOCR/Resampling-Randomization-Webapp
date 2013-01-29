@@ -86,7 +86,7 @@ return{
 			//***clicking this button only generates the dataset...doesnt load it into the appModel. Clicking the grsbutton does that.
 			self.generate();		
 			$("#accordion").accordion( "activate" , 1);
-			if(inputSliderState==1)
+			if(socr.controller.inputSliderState==1)
 				{
 				//console.log("inputSliderState:"+inputSliderState);
 				$('.input-handle').trigger('click');
@@ -222,4 +222,4 @@ return{
 			return _K;
 	}
 }//return
-}());
+}();
