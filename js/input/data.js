@@ -12,6 +12,45 @@ socr.dataTable= function () {
     $urlsubmit = $boxsection.find('input[name="submit"]');
     method = 'sync';
 
+    var splashScreen = $('section#datadriven-splash');
+    var excelScreen = $('section#datadriven-import');
+    var importScreen = $('section#fetchURL');
+    var backSplash = $('a.splash-datadriven');
+    var worldbankContainer = $('section#worldbank');
+
+    splashScreen.find('ul li a').on('click',function(){
+      console.log( $(this).attr('data-rel'));
+      switch( $(this).attr('data-rel') ){
+        case 'spreadsheet' : 
+          splashScreen.hide();
+          excelScreen.show();
+          importScreen.hide();
+          worldbankContainer.hide();
+          break;
+        case 'fetch' :
+            splashScreen.hide();
+            excelScreen.show();
+            importScreen.show();
+            worldbankContainer.hide()
+            $urlbox.focus();
+          break;
+        case 'worldbank' : 
+          splashScreen.hide();
+          excelScreen.hide();
+          importScreen.hide();
+          worldbankContainer.show();
+          break;
+
+      }
+    });
+
+    backSplash.on('click', function(){
+      splashScreen.show();
+      excelScreen.hide();
+      importScreen.hide();
+      worldbankContainer.hide();
+    })
+
     //Settings
 
 
@@ -272,26 +311,30 @@ socr.dataTable= function () {
 
     parseAll : function(){
       var dataset = $dataTable.inputtable('getNonEmptyData');
+   
         model.reset();
-       $("#accordion").accordion( "activate" , 0);
-        $(this).update({to:'dataDriven'});    
-        if(controllerSliderState!=0)
+      
+      $("#accordion").accordion( "activate" , 0);
+      $(this).update({to:'dataDriven'});    
+           
+      if(socr.exp.controllerSliderState!=0)
             $(".controller-handle").trigger("click");
       
       if(spreadSheet.validate(dataset)){
-          model.setDataset({
-            data: dataset,
-            range: 1,
-            type: 'getData',
-            processed: false,
-          });
+        model.setDataset({
+          data: dataset,
+          range: 1,
+          type: 'getData',
+          processed: false,
+        });
        
         view.displayResponse(' Entire dataset is selected ', 'success');
-        select.selectAll();
-      } else {
-        view.displayResponse(' There is some error in the dataset ', 'error');
-      }
-       
+        //select.selectAll();
+       } else{
+        view.displayResponse(' There is some error in the dataset ', 'error');  
+      }      
+      
+      console.log(dataset);
     },
 
     parseSelected :  function(){
@@ -309,7 +352,7 @@ socr.dataTable= function () {
             var dataset = $dataTable.inputtable('getSelectedData');
             $("#accordion").accordion( "activate" , 0);
             $(this).update({to:'dataDriven'});    
-           if(controllerSliderState!=0)
+           if(socr.exp.controllerSliderState!=0)
             $(".controller-handle").trigger("click");
             if(spreadSheet.validate(dataset)){
              model.setDataset({
@@ -324,9 +367,7 @@ socr.dataTable= function () {
             view.displayResponse('Data loaded successfully', 'success');
            // if(controllerSliderState!=0)
            // $(".controller-handle").trigger("click");
-             select.selectCells(selectedCoords);
-            
-
+             select.selectCells(selectedCoords);       
            }
 
        } 

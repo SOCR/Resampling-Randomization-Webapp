@@ -1,6 +1,7 @@
-/**Card Experiment
- *Dependencies on view.js
- *
+/*
+*Card Experiment
+*Dependencies on appview.js
+*
 */
 
 socr.exp.cardExp = function(){

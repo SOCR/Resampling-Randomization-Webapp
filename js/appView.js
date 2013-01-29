@@ -220,7 +220,7 @@ return{
 		$('.pagination').html('');
 		$('#details').html('');
 		$('#dataset').html('');
-		$("#input").inputtable('clear'); 
+		//$("#input").inputtable('clear'); 
 		_currentValues=[];
 	},
 	
@@ -519,7 +519,7 @@ return{
 		var binNo = $('input[name="binno"]').val() != '' ? $('input[name="binno"]').val() : 20;
 
 		_currentValues=values;
-		var histogram = vis({
+		socr.vis.generate({
 			parent : '#dotplot',
 			data : values,
 			height:390,
