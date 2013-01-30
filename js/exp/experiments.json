@@ -1,0 +1,22 @@
+{
+	"experiments" : [
+		{
+			"id" : "binomialCoin",
+			"name" : "Binomial Coin Toss",
+			"url" : "js/exp/binomailCoin.js",
+			"description" : "The random experiment consists of tossing n coins, each with probability of heads p. Random variable Y gives the number of heads, and random variable M gives the proportion of heads. These are recorded on each update in the data table. Either Y or M can be selected with the list box. The probability density function and moments of the selected variable are shown in blue in the distribution graph blue and are recorded in the distribution table. On each update, the empirical density function and moments of the selected variable are shown in red in the distribution graph and are recorded in the distribution table. The parameters n and p can be varied with scroll bars."
+		},
+		{
+			"id" : "ballAndUrn",
+			"name" : "Ball And Urn",
+			"url" : "js/exp/ballAndUrn.js",
+			"description" : "The experiment consists of selecting n balls at random from an urn with m balls, r of which are red and the other m-r green. Random variable Y gives the number of red balls in the sample, and is recorded on each update in the data table. Random variable U=(m/n)Y is the standard estimate of r with m known, and random variable V=(nr)/Y is the standard estimate of m with r known. These are also recorded on each update. The probability density function and moments of Y are shown in blue in the distribution graph and are recorded in the distribution table. On each update, the empirical density function and moments of Y are shown in red in the distribution graph and are recorded in the distribution table. Either of two sampling models can be selected with the list box: with replacement and without replacement. In the first case, Y has a binomial distribution and in the second case Y has a hypergeometric distribution. The parameters m, r, and n can be varied with the input controls."
+		},
+		{
+			"id" : "cardExp",
+			"name" : "The Card Experiment",
+			"url" : "js/exp/CardExp.js",
+			"description" : "The card experiment consists of dealing n cards at random (and without replacement) from a standard deck of 52 cards. The cards (X1,X2,…,Xn) are recorded on each run. The parameter n can be varied from 1 to 12 with the input control."
+		}
+	]
+}

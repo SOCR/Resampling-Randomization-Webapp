@@ -109,9 +109,9 @@
 								<div class = "menu-simulationdriven">
 									 	<li class="nav-header">Simulation Driven : Current Experiments</li>
 									<ul class="nav nav-pills nav-stacked">
-										<li> <a data-rel="exp_binomial">Binomial Coin Toss</a> </li>
-										<li> <a data-rel="exp_ballandurn">Ball and Urn</a> </li>
-										<li> <a data-rel="exp_cardexp">Card Experiment</a> </li>
+										<li> <a data-rel="exp_binomialCoin">Binomial Coin Toss</a> </li>
+										<li> <a data-rel="exp_ballAndUrn">Ball and Urn</a> </li>
+										<li> <a data-rel="exp_cardExp">Card Experiment</a> </li>
 									</ul>
 								</div> 
 							</section>
@@ -189,6 +189,15 @@
 									<h3> Worldbank API </h3>
 								</div>
 								<!--<div style="width:300px; font-family:'Helvetica Neue', Helvetica, Arial, sans-serif; line-height:20px"><div style="background-color:#333; padding:0px 5px; font-weight:bold"><div style="color:#fff; font-size:12px; line-height:20px;"><a href="http://data.worldbank.org/indicator/AG.LND.AGRI.ZS" style="color:#fff;text-decoration:none;" class="active">Agricultural land (% of land area)</a></div></div><script type="text/javascript">widgetContext = { "url": "http://data.worldbank.org/widgets/indicator/0/web_widgets_2/AG.LND.AGRI.ZS/countries", "width": 300, "height": 225, "widgetid": "web_widget_iframe_6b35281e4a873f0fb6537769f2473197" };</script><div id="web_widget_iframe_6b35281e4a873f0fb6537769f2473197"></div><script src="http://data.worldbank.org/profiles/datafinder/modules/contrib/web_widgets/iframe/web_widgets_iframe.js"></script><div style="font-size: 10px; color:#000">Data from <a href="http://data.worldbank.org/indicator/AG.LND.AGRI.ZS" style="color:#CCC;">World Bank</a></div></div>-->
+							</section>
+							<section id="simulationdriven-details">
+								<a class="btn splash-datadriven" href="#"><i class =" icon-circle-arrow-left"></i></a>
+								<div class ="page-header">
+									<h3> Experiment Title </h3>
+								</div>
+								<div class="exp-dscp">
+								Experiment Description
+							</div>
 							</section>
 									
 						</div>	
@@ -518,43 +527,9 @@
 			 */
 			controller.initialize();   
 					
-			$('.input-handle').on('click',function(){
-				$target = $('#slide-out-input');
-				//console.log($(this).attr('href'));
-				if(!$target.hasClass('active'))
-				{
-					$target.addClass('active').show().css({left:-425}).animate({left: 0}, 500);
-					$(this).css({left:-20}).animate({left: 410}, 500);
-					socr.exp.inputSliderState=1;
-				}
-				else
-				{
-					$target.removeClass('active').animate({
-							left: -425
-						}, 500);
-					$(this).css({left:400}).animate({left: -20}, 500);
-					socr.exp.inputSliderState=0;
-				}
-			}); //input-handle click
+			$('.input-handle').on('click', view.toggleInputHandle); //input-handle click
 			
-			$('.controller-handle').on('click',function(){
-				$target = $('#slide-out-controller');
-				//console.log($(this).attr('href'));
-				if(!$target.hasClass('active'))
-				{
-					$target.addClass('active').show().css({left:-425}).animate({left: 0}, 500);
-					$(this).css({left:-30}).animate({left: 394}, 500);
-					socr.exp.controllerSliderState=1;
-				}
-				else
-				{
-					$target.removeClass('active').animate({
-							left: -425
-						}, 500);
-					$(this).css({left:400}).animate({left: -30}, 500);
-					socr.exp.controllerSliderState=0;
-				}
-			});//controller-handle click		
+			$('.controller-handle').on('click',view.toggleControllerHandle);//controller-handle click		
 		
 			$( "#speed" ).slider({
 				value:400,
@@ -574,7 +549,6 @@
 				$('.current-experiment').html('Binomial Coin Toss<i class="icon-question-sign popups" rel="popover" data-content="The random experiment consists of tossing n coins, each with probability of heads p. Random variable Y gives the number of heads, and random variable M gives the proportion of heads. These are recorded on each update in the data table. Either Y or M can be selected with the list box. The probability density function and moments of the selected variable are shown in blue in the distribution graph blue and are recorded in the distribution table. On each update, the empirical density function and moments of the selected variable are shown in red in the distribution graph and are recorded in the distribution table. The parameters n and p can be varied with scroll bars." data-original-title="Description"></i>');
 
 				model.reset();
-
 				socr.exp.current=socr.exp.binomialCoin;
 				socr.exp.current.createControllerView();
 				socr.exp.current.initialize();

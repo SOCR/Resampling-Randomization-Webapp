@@ -24,6 +24,12 @@ socr.view = function( model ){
 	dotPlot=$("#dotPlot"),
 	countSize=$("#countSize"),
 	nSize=$('#nSize');
+
+	var inputHandle = $('.input-handle'),controllerHandle = $('.controller-handle') ;
+
+	/**
+
+
 	
 	/**
 	*@method: [private] _create
@@ -184,6 +190,49 @@ socr.view = function( model ){
 	}
 
 return{
+	/** 
+	*	@method - toggleInputHandle
+	*	@description - Method to toggle the input slider
+	*
+	**/
+	toggleInputHandle: function(){
+		$target = $('#slide-out-input');
+		//console.log($(this).attr('href'));
+		if(!$target.hasClass('active'))	{
+			$target.addClass('active').show().css({left:-425}).animate({left: 0}, 500);
+			$(this).css({left:-20}).animate({left: 410}, 500);
+			socr.exp.inputSliderState=1;
+		}
+		else{
+			$target.removeClass('active').animate({
+				left: -425}, 500);
+			$(this).css({left:400}).animate({left: -20}, 500);
+			socr.exp.inputSliderState=0;
+		}
+	},
+		/** 
+	*	@method - toggleInputHandle
+	*	@description - Method to toggle the input slider
+	*
+	**/
+	toggleControllerHandle: function(){
+		$target = $('#slide-out-controller');
+		//console.log($(this).attr('href'));
+		if(!$target.hasClass('active'))
+		{
+			$target.addClass('active').show().css({left:-425}).animate({left: 0}, 500);
+			$(this).css({left:-30}).animate({left: 394}, 500);
+			socr.exp.controllerSliderState=1;
+		}
+		else{
+		$target.removeClass('active').animate({
+					left: -425
+				}, 500);
+			$(this).css({left:400}).animate({left: -30}, 500);
+			socr.exp.controllerSliderState=0;
+		}
+	},
+
  	/**
      *@method - disableButtons()
 	 *@description: Disables step,run and show buttons

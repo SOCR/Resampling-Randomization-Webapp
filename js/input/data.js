@@ -17,21 +17,16 @@ socr.dataTable= function () {
     var importScreen = $('section#fetchURL');
     var backSplash = $('a.splash-datadriven');
     var worldbankContainer = $('section#worldbank');
+    var simulationDetails = $('section#simulationdriven-details');
 
     splashScreen.find('ul li a').on('click',function(){
-      console.log( $(this).attr('data-rel'));
+    
       switch( $(this).attr('data-rel') ){
         case 'spreadsheet' : 
-          splashScreen.hide();
-          excelScreen.show();
-          importScreen.hide();
-          worldbankContainer.hide();
+          view.toggleScreens({ visible: excelScreen})
           break;
         case 'fetch' :
-            splashScreen.hide();
-            excelScreen.show();
-            importScreen.show();
-            worldbankContainer.hide()
+          view.toggleScreens({ visible: [excelScreen,importScreen] })
             $urlbox.focus();
           break;
         case 'worldbank' : 
@@ -39,18 +34,69 @@ socr.dataTable= function () {
           excelScreen.hide();
           importScreen.hide();
           worldbankContainer.show();
+           simulationDetails.hide();
           break;
-
+         default : 
+          simulationDriven.init($(this).attr('data-rel'));
       }
     });
 
     backSplash.on('click', function(){
-      splashScreen.show();
-      excelScreen.hide();
-      importScreen.hide();
-      worldbankContainer.hide();
+      view.toggleScreens({ visible: splashScreen});
     })
 
+   var simulationDriven = {
+      init : function(arg){
+        var expId = arg.substr(4);
+        if($.inArray( expId, simulationDriven.expLoaded))
+          simulationDriven.loadData(expId);
+        else
+          simulationDriven.loadScript(expId);
+      },
+      expLoaded : [],
+      loadScript: function(id){
+        $.getScript( 'js/exp/'+id, function(){
+          simulationDriven.loadData(id)
+        } )
+      },
+      loadData : function(id){
+        console.log('loadData called '+id)
+        $.getJSON('js/exp/experiments.json', function(res){
+          console.log(res.experiments);
+          for(i in res.experiments){
+            
+            if(id == res.experiments[i].id){
+              simulationDriven.displayText({
+                title: res.experiments[i].name,
+                description: res.experiments[i].description
+              });
+              break;
+            }
+          }
+         simulationDriven.adjustModel(id) 
+        })
+      },
+      adjustModel : function(id){
+          socr.exp.current=socr.exp[id];
+          socr.exp.current.createControllerView();
+          socr.exp.current.initialize();
+          simulationDriven.expLoaded.push(id);
+         if(socr.exp.inputSliderState!=0)
+          $(".input-handle").trigger("click");
+         if(socr.exp.controllerSliderState==0)
+          $(".controller-handle").trigger("click");
+      },
+      displayText : function(details){
+          console.log(details);
+          splashScreen.hide();
+          excelScreen.hide();
+          importScreen.hide();
+          worldbankContainer.hide();
+          simulationDetails.show().find('h3').text(details.title).parent().parent().find('.exp-dscp').html(details.description);
+        // simulationDriven.
+      }
+
+   } ;
     //Settings
 
 
@@ -258,6 +304,18 @@ socr.dataTable= function () {
       spreadSheet.addColHeaders(titles);
       $('#input-modal').modal('toggle');
       view.displayResponse('Titles altered successfully','success');
+    },
+
+    toggleScreens : function(options){
+      var dataScreens = [splashScreen, excelScreen, importScreen, worldbankContainer, simulationDetails];
+      $.each(dataScreens, function(k,v){
+        v.hide();
+      });
+      $.each(options.visible, function(k,v){
+        console.log(v);
+        $(v).show();
+      });
+      
     }
 
   }
