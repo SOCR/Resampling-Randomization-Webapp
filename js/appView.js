@@ -63,11 +63,12 @@ socr.view = function( model ){
 			var start=Math.floor(temp[0]);
 			var stop=Math.ceil(temp[values.length-1])+1;
 			$('#plot').find('h3').text(' Sample : ' + sampleID );
-			vis({
+			socr.vis.generate({
 				parent : '.chart',
 			    data : values,
 			    height: 380,
 			    width: 500,
+			    nature: 'discreete'
 				//range:[start,stop]
 	        	})();
 		});//click binding for .plot
@@ -129,13 +130,14 @@ socr.view = function( model ){
 						//var datum=model.getSdOfDataset();
 					}
 				
-				var histogram = vis({
+				var histogram = socr.vis.generate({
 					parent : '#dotplot',
 					data : values,
 					height:390,
 					range: [0,10],
 					dataSetMean :datum,
-					sample : setting.sample
+					sample : setting.sample,
+					nature: 'continuous'
 				})();
 			}
 			
@@ -230,7 +232,7 @@ return{
      */
 	createDatasetPlot:function(){
 		var values=[0.1,0.5];
-		var histogram = vis({
+		var histogram = socr.vis.generate({
 			parent : '#dataPlot',
 			data : values,
 			range: [0,1]
@@ -516,7 +518,7 @@ return{
 		console.log(values);
 
 
-		var binNo = $('input[name="binno"]').val() != '' ? $('input[name="binno"]').val() : 20;
+		var binNo = $('input[name="binno"]').val() != '' ? $('input[name="binno"]').val() : 10;
 
 		_currentValues=values;
 		socr.vis.generate({
@@ -526,7 +528,8 @@ return{
 			range: [start,stop],
 			datum :datum,
 			bins : binNo,
-			variable: setting.variable				
+			variable: setting.variable	,
+			nature: 'continuous'			
 		})();
 		
 	},

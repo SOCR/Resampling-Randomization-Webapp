@@ -45,7 +45,7 @@
 
 <body>
   <div id='header'>
-		<div class="navbar navbar-fixed-top">
+		<div class="navbar navbar-fixed-top navbar-inverse">
 			<div class="navbar-inner">
 				<div class="container-fluid">
 					<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
@@ -91,10 +91,45 @@
 					<div id='accordion'>
 						<h3><a href="#">Data Driven</a></h3>
 						<div>
+
+							<section id = "datadriven-splash">
+								<div class="page-header">
+									<h3>Getting Started <small> Select dataset</small></h3>
+								</div>
+								<div class = "menu-datadriven">
+									
+									<ul class="nav nav-pills nav-stacked">
+										<li class="nav-header"> Start by DataDriven : </li>
+										<li> <a data-rel="spreadsheet">Use a Excel Sheet</a> </li>
+										<li> <a data-rel="fetch">Fetch table from URL</a> </li>
+										<li> <a data-rel="worldbank">Use WorldBank API</a></li>
+									</ul>
+
+								</div>
+								<div class = "menu-simulationdriven">
+									 	<li class="nav-header">Simulation Driven : Current Experiments</li>
+									<ul class="nav nav-pills nav-stacked">
+										<li> <a data-rel="exp_binomial">Binomial Coin Toss</a> </li>
+										<li> <a data-rel="exp_ballandurn">Ball and Urn</a> </li>
+										<li> <a data-rel="exp_cardexp">Card Experiment</a> </li>
+									</ul>
+								</div> 
+							</section>
 							<!-- Abandoning the old tab based switch mode for drag and drop -->
-							<section class = "datadriven-wrap copy">
+							<section class = "datadriven-wrap copy" id="datadriven-import">
 							
 									<section class = "controls">
+										<a class="btn splash-datadriven" href="#"><i class =" icon-circle-arrow-left"></i></a>
+										<div class="btn-group">
+											<a class ="btn dropdown-toggle" data-toggle="dropdown" href="#">
+											 <i class="icon-wrench"></i>
+											 <span class="caret"></span>
+											</a>
+											<ul class="dropdown-menu">
+												<li><a class="edittitles" data-toggle="modal" href="#input-modal"> Edit titles </a></li>
+											</ul>
+											</a>
+										</div>
 										<input class="btn" type='button' value='Use Entire Dataset'>
 										<input class="btn btn-danger" type='button' value='Reset'>
 										<span class="response"></span>
@@ -103,16 +138,7 @@
 										-->
 										<input type="button" class="btn" value="Use Selected" id="submatrix_spreadsheet" disabled = "disabled"> 
 										<a class = "dragdrop btn btn-info" > Fetch from URL </a>
-										<div class="btn-group">
-											<a class ="btn dropdown-toggle" data-toggle="dropdown" href="#">
-											 Settings <i class="icon-wrench"></i>
-											 <span class="caret"></span>
-											</a>
-											<ul class="dropdown-menu">
-												<li><a class="edittitles" data-toggle="modal" href="#input-modal"> Edit titles </a></li>
-											</ul>
-											</a>
-										</div>
+										
 									</section>
 
 									<div class = "spreadsheet">
@@ -121,14 +147,13 @@
 											<form class="form-inline">	
 											<input type="url" name="urlbox" class="input-xlarge" placeholder="Enter URL">
 											<input type="submit" value="Submit" name="submit">
-											<div class="btn-group" style='float:left;margin-right:10px'>
-												<button class="btn btn-success">Choose</button>
-												<button class="btn btn-success dropdown-toggle"><span class="caret"></span></button>
+											<div class="btn-group" style="float:left;">
+												<a class="btn dropdown-toggle" data-toggle="dropdown" href="#" >Method<span class="caret"></span></a>
 												<ul class="dropdown-menu">
 													<li><a href="#" id='fetchinstant'>Instantaneous</a></li>
 													<li><a href="#" id='fetchasync'>Asynchronous</a></li>
 												</ul>
-										  </div>
+										  	</div>
 											</form>
 										</section>
 										<section id="drop"> Drag and Drop your URL here </section>
@@ -138,60 +163,33 @@
 										
 									</div>
 
-							</section>
-							<!--
-							<div class="tabbable">
-										<ul class="nav nav-tabs">
-											<li class="active"><a href="#spreadsheet" data-toggle="tab">Spreadsheet</a></li>
-											<li><a href="#dragdrop" data-toggle="tab">Drag Drop</a></li>
+							</section>	
+							<section id="datadriven-fetch">
+								<a class="btn splash-datadriven" href="#"><i class =" icon-circle-arrow-left"></i></a>
+								<div class ="page-header">
+									<h3> Fetch From URL </h3>
+								</div>
+								<section id="fetchURL">
+									<form class="form-inline">	
+									<input type="url" name="urlbox" class="input-xlarge" placeholder="Enter URL">
+									<input type="submit" value="Submit" name="submit">
+									<div class="btn-group">
+										<a class="btn dropdown-toggle" data-toggle="dropdown" href="#" >Choose <span class="caret"></span></a>
+										<ul class="dropdown-menu">
+											<li><a href="#" id='fetchinstant'>Instantaneous</a></li>
+											<li><a href="#" id='fetchasync'>Asynchronous</a></li>
 										</ul>
-							</div>
-							<div class="tab-content" class="datadriven-wrap">
-								 <div class="tab-pane active" id="spreadsheet">
-									<section class = "datadriven-wrap copy">
-							
-									<section class = "controls">
-										<input class="btn" type='button' value='Done'>
-										<input class="btn btn-danger" type='button' value='Reset'>
-										<span class="response"></span>
-										Range : <input type="text" name="start" class="input-mini" placeholder="start"> - <input type="text" name="end" class="input-mini" placeholder="end">  <input type="button" class="btn" value="Generate submatrix" id="submatrix_spreadsheet"> 
-									</section>
-
-									<div class = "spreadsheet">
-
-										<div id="status"></div>	
-									 	<div class="dataTable spreadsheet_copy" id="input"></div>
-									 	
-										
-									</div>
-
-									</section>
-
-								</div>
-
-								<div class="tab-pane" id="dragdrop">
-
-								<section class = "datadriven-wrap drag">
-
-									<section class = "controls ">
-										<input class="btn" type='button' value='Done'>
-										<input class="btn btn-danger" type='button' value='Reset'>
-										<span class="response"></span>
-										Range : <input type="text" name="start" class="input-mini" placeholder="start"> - <input type="text" name="end" class="input-mini" placeholder="end">  <input type="button" class="btn" value="Generate submatrix" id="submatrix_spreadsheet"> 
-									</section>
-
-								  <div class="spreadsheet">
-
-								  	
-								  	<div class="alert-response"><div>
-								  	<div id="dropmatrix" class="dataTable spreadsheet_drag"></div>
-								  </div>
-								
-
+								  	</div>
+									</form>
 								</section>
+							</section>
+							<section id="worldbank">
+								<a class="btn splash-datadriven" href="#"><i class =" icon-circle-arrow-left"></i></a>
+								<div class ="page-header">
+									<h3> Worldbank API </h3>
 								</div>
-
-							</div> -->		
+								<!--<div style="width:300px; font-family:'Helvetica Neue', Helvetica, Arial, sans-serif; line-height:20px"><div style="background-color:#333; padding:0px 5px; font-weight:bold"><div style="color:#fff; font-size:12px; line-height:20px;"><a href="http://data.worldbank.org/indicator/AG.LND.AGRI.ZS" style="color:#fff;text-decoration:none;" class="active">Agricultural land (% of land area)</a></div></div><script type="text/javascript">widgetContext = { "url": "http://data.worldbank.org/widgets/indicator/0/web_widgets_2/AG.LND.AGRI.ZS/countries", "width": 300, "height": 225, "widgetid": "web_widget_iframe_6b35281e4a873f0fb6537769f2473197" };</script><div id="web_widget_iframe_6b35281e4a873f0fb6537769f2473197"></div><script src="http://data.worldbank.org/profiles/datafinder/modules/contrib/web_widgets/iframe/web_widgets_iframe.js"></script><div style="font-size: 10px; color:#000">Data from <a href="http://data.worldbank.org/indicator/AG.LND.AGRI.ZS" style="color:#CCC;">World Bank</a></div></div>-->
+							</section>
 									
 						</div>	
 								
