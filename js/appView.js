@@ -39,7 +39,6 @@ socr.view = function( model ){
 	*/ 
 	function _create(start,size){
 		console.log("_create("+start+","+size+") funtion started");
-		//console.log(model.bootstrapSamples);
 		y=parseInt(start)+size;
 		$('#sampleList').html('');		//first empty the sample list
 		_datapoints=$('#nSize').val();
@@ -99,7 +98,6 @@ socr.view = function( model ){
 				var id=$(this).attr('id');
 				if($(this).attr('data-type')==='value')
 					{
-						//console.log(model.bootstrapSamples[id]);
 						$(this).parent().parent().find('pre').text(model.getSample(id));
 						$(this).attr('data-type','sample');
 					}

@@ -38,7 +38,7 @@ socr.controller=function(model,view){
 		}
 	else
 		{
-		console.log(model.bootstrapGroupKeys);
+		//console.log(model.bootstrapGroupKeys);
 		//view.updateSimulationInfo();
 		_this.stop();
 		}
@@ -76,7 +76,7 @@ socr.controller=function(model,view){
 		
 		$("#infer").on('click',function(){
 		/*^^^^^create loading gif ^^^^^^^^*/
-			if(model.bootstrapSamples.length==0)
+			if(model.bootstrapGroupKeys.length==0)
 				view.handleResponse('<h4 class="alert-heading">No Random samples to infer From!</h4>Please generate some random samples. Click "back" button on the controller to go to the "Generate Random Samples!" button.','error','controller-content');
 			else
 			_this.setDotplot();
@@ -311,8 +311,8 @@ socr.controller=function(model,view){
                             Yes: function () {
 							_this.stop();
 							model.setRSampleCount(0);		//reset the total count
-							model.bootstrapSamples.splice(0, model.bootstrapSamples.length);	//empty the bootstrap samples
-							model.bootstrapSampleValues.splice(0, model.bootstrapSampleValues.length);	//empty the bootstrap samples
+							model.bootstrapGroupKeys={};
+							model.bootstrapGroupValues={};
 							model.resetVariables();
 							view.reset();		//clearing all the canvas
 							$('#showCount').html('');

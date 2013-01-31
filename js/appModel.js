@@ -13,17 +13,32 @@ socr.model=function(){
 	var _dataset={};				// All the input datapoints from wich bootstrap sample is generated
 	var _n=50;						//Number of datapoints in a bootstrap sample or Sample Size
 	var _K=1;						//contains the number of datasets
+	/*
+	Why there are keys and values? Its because in some form of data input (like coin toss), the "key" contains the symbolic meaningful reference whereas the "value" contains the mathematical equivalent value.
+	*/
+
+	/* Structure of both bootstrapGroupKeys and Values
+		{
+			"0": [ [..],[..],[..],..] ,
+			"1": [ [..],[..],[..],..] ,
+			 ..
+		}
+	*/
 	var bootstrapGroupKeys={};
 	var bootstrapGroupValues={};
+	
+	//"bootstrapSamples" and "bootstrapSampleValues" variables have been REPLACED with "bootstrapGroupKeys" and "bootstrapSampleValues"
+	//THEY ARE OBSOLETE
 	var bootstrapSamples=[];		//Contains all the bootstrap samples generated E,g., H,T,T,T,H,H,T.
 	var bootstrapSampleValues=[]; 	//Contains all the bootstrap sample's value generated E,g., 1,0,0,0,1,1,0.
+	
 	/*
-	TODO: make the datasetKeys and datasetValues multidimensional to account for [Issue #4].
+	TODO: make the datasetKeys and datasetValues multidimensional to account for [Issue #4].  OBSOLETE
 	*/
 	var _datasetKeys=[];
 	var _datasetValues=[];
 	var _sample={
-		Mean:[],
+		Mean:{},
 		Count:[],
 		StandardDev:[],
 		Percentile:[]
@@ -49,9 +64,9 @@ socr.model=function(){
 	*@desc: 
 	*@return: the calculated mean value
 	*/
-	function _generateMean(sampleNumber){
-		var total=_generateCount(sampleNumber);
-		return total/bootstrapSampleValues[sampleNumber].length;
+	function _generateMean(sampleNumber,groupNumber){
+		var total=_generateCount(sampleNumber,groupNumber);
+		return total/bootstrapGroupValues[sampleNumber][groupNumber].length;
 	}
 	
 	/**
@@ -60,8 +75,8 @@ socr.model=function(){
 	*@desc: 
 	*@return: the calculated total count value for the sample
 	*/
-	function _generateCount(sampleNumber){
-		var x=bootstrapSampleValues[sampleNumber];
+	function _generateCount(sampleNumber,groupNumber){
+		var x=bootstrapGroupValues[sampleNumber][groupNumber];
 		var total=0;
 		for(var i=0;i<x.length;i++) 
 			{ total += parseInt(x[i]); }
@@ -89,8 +104,6 @@ socr.model=function(){
 	
 return{
 	/* PUBLIC PROPERTIES   */
-	bootstrapSamples:bootstrapSamples,
-	bootstrapSampleValues:bootstrapSampleValues,
 	bootstrapGroupKeys:bootstrapGroupKeys,
 	bootstrapGroupValues:bootstrapGroupValues,
 
@@ -108,16 +121,12 @@ return{
 	generateTrail:function(datasetIndex){
 		if(_dataset[0] === undefined || this.getK() === false)
 		{
-			//console.log("k value"+this.getK());
 			return false;
-
 		}
 		else
 		{
-		//get a random index for all 5 datasets
 		var randomIndex=_getRandomInt(0, _dataset[datasetIndex].values.length);	//generating a random number between 0 and dataSet size 
 		var _temp=_dataset[datasetIndex];
-		//console.log(_temp);
 		return {
 			key:_temp.keys[randomIndex],
 			value:_temp.values[randomIndex]
@@ -127,7 +136,7 @@ return{
     
 	/**
 	*@method: [public] generateSample()
-	*@desc:  rgenerating a random number between 0 and dataSet size 
+	*@desc:  generating a random number between 0 and dataSet size 
 	*/
 	generateSample:function(){
 		var i=this.getK();	var keyEl=[],valEl=[];
@@ -144,11 +153,8 @@ return{
 			keyEl.push(sample);
 			valEl.push(values);
 			}
-		//bootstrapSamples[_count]=sample;
-		//bootstrapSampleValues[_count]=values;
 		bootstrapGroupKeys[_count]=keyEl;
 		bootstrapGroupValues[_count]=valEl;
-		//console.log(_count+':'+bootstrapSamples[_count]);
 		_count++;		//incrementing the total count - number of samples generated from start of simulation
 	},
 	
@@ -184,17 +190,23 @@ return{
 	/**
 	*@method: [public] getMean()
 	*@desc:  executed when the user presses "infer" button in the controller tile. The click binding of the step button is done in the {experiment}.js
+	*@param: groupNumber 
 	*@dependencies: generateTrail()
 	*/
-	getMean:function(){
-		if(_sample.Mean.length==bootstrapSampleValues.length)
-			return _sample.Mean;
+	getMean:function(groupNumber){
+		var	groupNumber = groupNumber || 0 ;    // 0 is default value - meaning the first dataset
+		if(_sample.Mean[groupNumber] === undefined){
+			_sample.Mean[groupNumber]=[];
+		}
+		
+		if(_sample.Mean[groupNumber].length==bootstrapGroupValues.length )
+			return _sample.Mean[groupNumber];
 		else{
-			for(var j=_sample.Mean.length;j<_count;j++)
+			for(var j=_sample.Mean[groupNumber].length;j<_count;j++)
 				{
-				_sample.Mean[j]=_generateMean(j);
+				_sample.Mean[groupNumber][j]=_generateMean(j,groupNumber);
 				}
-				return _sample.Mean;
+				return _sample.Mean[groupNumber];
 			}
 		},
 	
