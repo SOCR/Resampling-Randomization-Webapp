@@ -37,6 +37,8 @@ svg {
 		fill-opacity:1;
 	}
 
+   .y.axis line.tick { opacity: .15; }
+
 	/*
 		******************
 		  TOOLTIP CSS 

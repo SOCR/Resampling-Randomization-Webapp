@@ -12,6 +12,91 @@ socr.dataTable= function () {
     $urlsubmit = $boxsection.find('input[name="submit"]');
     method = 'sync';
 
+    var splashScreen = $('section#datadriven-splash');
+    var excelScreen = $('section#datadriven-import');
+    var importScreen = $('section#fetchURL');
+    var backSplash = $('a.splash-datadriven');
+    var worldbankContainer = $('section#worldbank');
+    var simulationDetails = $('section#simulationdriven-details');
+
+    splashScreen.find('ul li a').on('click',function(){
+    
+      switch( $(this).attr('data-rel') ){
+        case 'spreadsheet' : 
+          view.toggleScreens({ visible: excelScreen})
+          break;
+        case 'fetch' :
+          view.toggleScreens({ visible: [excelScreen,importScreen] })
+            $urlbox.focus();
+          break;
+        case 'worldbank' : 
+          splashScreen.hide();
+          excelScreen.hide();
+          importScreen.hide();
+          worldbankContainer.show();
+           simulationDetails.hide();
+          break;
+         default : 
+          simulationDriven.init($(this).attr('data-rel'));
+      }
+    });
+
+    backSplash.on('click', function(){
+      view.toggleScreens({ visible: splashScreen});
+    })
+
+   var simulationDriven = {
+      init : function(arg){
+        var expId = arg.substr(4);
+        if($.inArray( expId, simulationDriven.expLoaded))
+          simulationDriven.loadData(expId);
+        else
+          simulationDriven.loadScript(expId);
+      },
+      expLoaded : [],
+      loadScript: function(id){
+        $.getScript( 'js/exp/'+id, function(){
+          simulationDriven.loadData(id)
+        } )
+      },
+      loadData : function(id){
+        console.log('loadData called '+id)
+        $.getJSON('js/exp/experiments.json', function(res){
+          console.log(res.experiments);
+          for(i in res.experiments){
+            
+            if(id == res.experiments[i].id){
+              simulationDriven.displayText({
+                title: res.experiments[i].name,
+                description: res.experiments[i].description
+              });
+              break;
+            }
+          }
+         simulationDriven.adjustModel(id) 
+        })
+      },
+      adjustModel : function(id){
+          socr.exp.current=socr.exp[id];
+          socr.exp.current.createControllerView();
+          socr.exp.current.initialize();
+          simulationDriven.expLoaded.push(id);
+         if(socr.exp.inputSliderState!=0)
+          $(".input-handle").trigger("click");
+         if(socr.exp.controllerSliderState==0)
+          $(".controller-handle").trigger("click");
+      },
+      displayText : function(details){
+          console.log(details);
+          splashScreen.hide();
+          excelScreen.hide();
+          importScreen.hide();
+          worldbankContainer.hide();
+          simulationDetails.show().find('h3').text(details.title).parent().parent().find('.exp-dscp').html(details.description);
+        // simulationDriven.
+      }
+
+   } ;
     //Settings
 
 
@@ -219,6 +304,18 @@ socr.dataTable= function () {
       spreadSheet.addColHeaders(titles);
       $('#input-modal').modal('toggle');
       view.displayResponse('Titles altered successfully','success');
+    },
+
+    toggleScreens : function(options){
+      var dataScreens = [splashScreen, excelScreen, importScreen, worldbankContainer, simulationDetails];
+      $.each(dataScreens, function(k,v){
+        v.hide();
+      });
+      $.each(options.visible, function(k,v){
+        console.log(v);
+        $(v).show();
+      });
+      
     }
 
   }
@@ -272,26 +369,30 @@ socr.dataTable= function () {
 
     parseAll : function(){
       var dataset = $dataTable.inputtable('getNonEmptyData');
+   
         model.reset();
-       $("#accordion").accordion( "activate" , 0);
-        $(this).update({to:'dataDriven'});    
-        if(socr.exp.controllerSliderState!=0)
+      
+      $("#accordion").accordion( "activate" , 0);
+      $(this).update({to:'dataDriven'});    
+           
+      if(socr.exp.controllerSliderState!=0)
             $(".controller-handle").trigger("click");
       
       if(spreadSheet.validate(dataset)){
-          model.setDataset({
-            data: dataset,
-            range: 1,
-            type: 'getData',
-            processed: false,
-          });
+        model.setDataset({
+          data: dataset,
+          range: 1,
+          type: 'getData',
+          processed: false,
+        });
        
         view.displayResponse(' Entire dataset is selected ', 'success');
-        select.selectAll();
-      } else {
-        view.displayResponse(' There is some error in the dataset ', 'error');
-      }
-       
+        //select.selectAll();
+       } else{
+        view.displayResponse(' There is some error in the dataset ', 'error');  
+      }      
+      
+      console.log(dataset);
     },
 
     parseSelected :  function(){
@@ -324,9 +425,7 @@ socr.dataTable= function () {
             view.displayResponse('Data loaded successfully', 'success');
            // if(controllerSliderState!=0)
            // $(".controller-handle").trigger("click");
-             select.selectCells(selectedCoords);
-            
-
+             select.selectCells(selectedCoords);       
            }
 
        } 

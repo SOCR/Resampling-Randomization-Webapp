@@ -2527,7 +2527,7 @@
           break;
         }
     }
-  
+      //console.log(nonEmptyCols + ' , ' + nonEmptyRows)
       return datamap.getRange({row: nonEmptyRows, col: 0},{row: 0, col: nonEmptyCols});
     };
   /*

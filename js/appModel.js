@@ -1,5 +1,5 @@
 /**
-*  appModel.js is the model object for the SOCR app.
+*appModel.js is the model object for the SOCR app.
 *
 *@author: selvam , ashwini 
 *

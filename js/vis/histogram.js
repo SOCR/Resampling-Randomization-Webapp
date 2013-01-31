@@ -4,9 +4,9 @@ function vis(config){
  var rangeDefault = d3.extent( config.data );
        rangeDefault[0] = 0;
 
-  /*
-    Making all the histograms start from the zero number, not sure if it's the right way
-  */
+  /**
+  * Making all the histograms start from the zero number, not sure if it's the right way
+  **/
 
     var defaults = {
       'range' : rangeDefault,
@@ -15,6 +15,10 @@ function vis(config){
       'bins' : 20
     };
 
+  /*
+  * Initalized with an empty object, so that the contents of default are not replaced
+  */
+  
     var settings = $.extend({}, defaults, config);
 
     //removing the padding from the parent

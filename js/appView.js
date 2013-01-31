@@ -1,15 +1,15 @@
 /**
-*  appView.js is the view object for the SOCR app.
+* appView.js is the view object for the SOCR app.
 *
 *@author: selvam , ashwini 
 *
 *SOCR - Statistical Online Computational Resource
 */
 
-socr.view = function(model){
+socr.view = function( model ){
 
 /* private properties */
-	var model=model;					// [OBJECT] Reference to the App's model object.
+	var model = model;					// [OBJECT] Reference to the App's model object.
 	var _currentVariable;				// [ARRAY] Reference to current inference varaible [mean , SD , count , percentile]
 	var _currentValues;					// [ARRAY] Reference to current inference variable's value of each random sample.
 
@@ -24,6 +24,12 @@ socr.view = function(model){
 	dotPlot=$("#dotPlot"),
 	countSize=$("#countSize"),
 	nSize=$('#nSize');
+
+	var inputHandle = $('.input-handle'),controllerHandle = $('.controller-handle') ;
+
+	/**
+
+
 	
 	/**
 	*@method: [private] _create
@@ -63,7 +69,7 @@ socr.view = function(model){
 			$('#sampleList').append(temp.join(''));
 			}
 		$('.tooltips').tooltip();
-		$('#sample-tabs75').tab('show');
+		
 		/*plot icon is present on each child of the sampleList Div . It basically opens a popup and plots a bar chart of that particular sample.*/
 		$('.plot').on('click',function(e){
 			$('.chart').html('');
@@ -76,11 +82,12 @@ socr.view = function(model){
 			var start=Math.floor(temp[0]);
 			var stop=Math.ceil(temp[values.length-1])+1;
 			$('#plot').find('h3').text(' Sample : ' + sampleID );
-			vis({
+			socr.vis.generate({
 				parent : '.chart',
 			    data : values,
 			    height: 380,
 			    width: 500,
+			    nature: 'discreete'
 				//range:[start,stop]
 	        	})();
 		});//click binding for .plot
@@ -142,17 +149,18 @@ socr.view = function(model){
 						//var datum=model.getStandardDevOfDataset();
 					}
 				
-				var histogram = vis({
+				var histogram = socr.vis.generate({
 					parent : '#dotplot',
 					data : values,
 					height:390,
 					range: [0,10],
 					dataSetMean :datum,
-					sample : setting.sample
+					sample : setting.sample,
+					nature: 'continuous'
 				})();
 			}
 			
-			var html = '<div> Mean of Sample :'+ model.getMeanOf($(this).attr('id')) +' Mean of DataSet : '+ model.getMeanOfDataset(1) +' Standard Deviation :'+ model.getStandardDevOf($(this).attr('id')) +'</div>';
+			var html = '<div> Mean of Sample :'+ model.getMeanOf($(this).attr('id')) +' Mean of DataSet : '+ model.getMeanOfDataset() +' Standard Deviation :'+ model.getStandardDevOf($(this).attr('id')) +'</div>';
 				
 			var table =['<table class="table table-striped>"'];
 			table.push('<tr><td>Mean Of Sample</td><td></td></tr>')
@@ -195,6 +203,49 @@ socr.view = function(model){
 	}
 
 return{
+	/** 
+	*	@method - toggleInputHandle
+	*	@description - Method to toggle the input slider
+	*
+	**/
+	toggleInputHandle: function(){
+		$target = $('#slide-out-input');
+		//console.log($(this).attr('href'));
+		if(!$target.hasClass('active'))	{
+			$target.addClass('active').show().css({left:-425}).animate({left: 0}, 500);
+			$(this).css({left:-20}).animate({left: 410}, 500);
+			socr.exp.inputSliderState=1;
+		}
+		else{
+			$target.removeClass('active').animate({
+				left: -425}, 500);
+			$(this).css({left:400}).animate({left: -20}, 500);
+			socr.exp.inputSliderState=0;
+		}
+	},
+		/** 
+	*	@method - toggleInputHandle
+	*	@description - Method to toggle the input slider
+	*
+	**/
+	toggleControllerHandle: function(){
+		$target = $('#slide-out-controller');
+		//console.log($(this).attr('href'));
+		if(!$target.hasClass('active'))
+		{
+			$target.addClass('active').show().css({left:-425}).animate({left: 0}, 500);
+			$(this).css({left:-30}).animate({left: 394}, 500);
+			socr.exp.controllerSliderState=1;
+		}
+		else{
+		$target.removeClass('active').animate({
+					left: -425
+				}, 500);
+			$(this).css({left:400}).animate({left: -30}, 500);
+			socr.exp.controllerSliderState=0;
+		}
+	},
+
  	/**
      *@method - disableButtons()
 	 *@description: Disables step,run and show buttons
@@ -243,7 +294,7 @@ return{
      */
 	createDatasetPlot:function(){
 		var values=[0.1,0.5];
-		var histogram = vis({
+		var histogram = socr.vis.generate({
 			parent : '#dataPlot',
 			data : values,
 			range: [0,1]
@@ -372,7 +423,6 @@ return{
 	*@return : none
 	*/
 	animate:function(setting){
-		console.log(setting);
 		this.disableButtons();
 		// Add the class ui-state-disabled to the headers that you want disabled
 		$( ".ui-accordion-header").addClass("ui-state-disabled");
@@ -530,17 +580,18 @@ return{
 		console.log(values);
 
 
-		var binSize = $('input[name="binsize"]').val() != '' ? $('input[name="binsize"]').val() : 20;
+		var binNo = $('input[name="binno"]').val() != '' ? $('input[name="binno"]').val() : 10;
 
 		_currentValues=values;
-		var histogram = vis({
+		socr.vis.generate({
 			parent : '#dotplot',
 			data : values,
 			height:390,
 			range: [start,stop],
 			datum :datum,
-			bins : binSize,
-			variable: setting.variable				
+			bins : binNo,
+			variable: setting.variable	,
+			nature: 'continuous'			
 		})();
 		
 	},
