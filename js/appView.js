@@ -57,11 +57,11 @@ socr.view = function( model ){
   					temp.push('<li><a href="#sample-'+i+j+'">'+j+'</a></li>');	
   					j++;
   				}
-		  	temp.push('</ul><div class="tab-content"><div class="tab-pane active" id="sample-1"><pre>'+model.bootstrapGroupKeys[i][0]+'</pre></div>');
+		  	temp.push('</ul><div class="tab-content"><div class="tab-pane active" id="sample-1"><pre>'+model.bootstrapGroupKeys[i][1]+'</pre></div>');
  			var j=2;
  			while(j<=model.getK())
   				{
-  					temp.push('<div class="tab-pane" id="sample-'+i+j+'"><pre>'+model.bootstrapGroupKeys[i][j-1]+'</pre></div>');
+  					temp.push('<div class="tab-pane" id="sample-'+i+j+'"><pre>'+model.bootstrapGroupKeys[i][j]+'</pre></div>');
   					j++;
   				}
 		  	temp.push("</div>");

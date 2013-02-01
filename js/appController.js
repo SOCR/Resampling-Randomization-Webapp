@@ -38,7 +38,7 @@ socr.controller=function(model,view){
 		}
 	else
 		{
-		//console.log(model.bootstrapGroupKeys);
+		console.log(model.bootstrapGroupKeys);
 		//view.updateSimulationInfo();
 		_this.stop();
 		}
@@ -331,14 +331,11 @@ socr.controller=function(model,view){
         
     
 	setDotplot:function(){
-	$('#dotplot').html('');
-	//create dotplot
-	console.log("setdotplot started");
-	console.log("variable:"+$('#variable').val());
-	view.createDotplot({variable:$('#variable').val()});
-	//focus on dotplot
-	//$('#dotplot').addclass('ui-state-active');
-	//$('#dotplot').addclass('ui-state-active');
+		$('#dotplot').html('');
+		//create dotplot
+		console.log("setdotplot started");
+		console.log("variable:"+$('#variable').val());
+		view.createDotplot({variable:$('#variable').val()});
 	},
 	
 	loadController:function(x){
