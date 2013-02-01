@@ -41,9 +41,7 @@ socr.dataTable= function () {
       }
     });
 
-    backSplash.on('click', function(){
-      view.toggleScreens({ visible: splashScreen});
-    })
+   
 
    var simulationDriven = {
       init : function(arg){
@@ -94,6 +92,9 @@ socr.dataTable= function () {
           worldbankContainer.hide();
           simulationDetails.show().find('h3').text(details.title).parent().parent().find('.exp-dscp').html(details.description);
         // simulationDriven.
+      },
+      resetScreen : function(){
+        view.toggleScreens({ visible: splashScreen});
       }
 
    } ;
@@ -504,6 +505,7 @@ socr.dataTable= function () {
   $controls.find('input[value="Use Entire Dataset"]').on('click', spreadSheet.parseAll );
   $controls.find('input[value="Reset"]').on('click', spreadSheet.reset );
   $controls.find('#submatrix_spreadsheet').on('click',spreadSheet.parseSelected );
+   backSplash.on('click', simulationDriven.resetScreen);
 
   $dataTable.parent().on('mouseup', select.checkSelected );
     $('a.dragdrop').on('click', function(){
@@ -620,5 +622,9 @@ socr.dataTable= function () {
       }
 
        */
-
+  return {
+    simulationDriven : simulationDriven,
+    spreadSheet: spreadSheet,
+    view: view
+  }
 }();

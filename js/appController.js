@@ -315,6 +315,8 @@ socr.controller=function(model,view){
 							model.bootstrapGroupValues={};
 							model.resetVariables();
 							view.reset();		//clearing all the canvas
+							view.toggleControllerHandle();
+							socr.dataTable.simulationDriven.resetScreen();
 							$('#showCount').html('');
                             $(this).dialog("close");					//close the confirmation window
                             },

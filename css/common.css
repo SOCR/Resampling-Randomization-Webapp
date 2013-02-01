@@ -322,3 +322,6 @@ ul li a:hover{
 section#simulationdriven-details{
 	display: none;
 }
+a.input-handle{
+	display: none;
+}
