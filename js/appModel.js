@@ -403,17 +403,19 @@ return{
 						}
 				}
 			*/
-			for (var i = 0; i < input.keys.length; i++)
-				{
-				for(var j = 0; j < input.keys[i].length; j++)
-					{
-						if (input.keys[i][j] != '')
-						{         
-							_datasetValues.push(input.data[i][j]);
+		
+			// for (var i = 0; i < input.keys.length; i++)
+			// 	{
+			// 	for(var j = 0; j < input.keys[i].length; j++)
+			// 		{
+			// 			if (input.keys[i][j] != '')
+			// 			{         
+			// 				_datasetValues.push(input.data[i][j]);
 							
-						}
-					}
-				}
+			// 			}
+			// 		}
+			// 	}
+
 			console.log(_datasetValues.length);
 			if(_datasetValues.length==0)
 				{

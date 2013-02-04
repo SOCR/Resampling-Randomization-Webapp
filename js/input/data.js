@@ -275,12 +275,13 @@ socr.dataTable= function () {
       switch(type) {
         
         case "success":
-          $alertbox.addClass('alert-success');
-          $alertbox.append(' <i class="icon-ok"></i> ');
+          $alertbox.addClass('alert-success')
+                    .prepend(' <i class="icon-ok"></i> ');
           break;
 
         case "error":
-          $alertbox.addClass('alert-error');
+          $alertbox.addClass('alert-error')
+                  .prepend(' <i class="icon-warning-sign"></i> ');
           break;
       }
     },
@@ -291,7 +292,6 @@ socr.dataTable= function () {
       <div class="controls"><input type="text" placeholder="Input Title"></div></div>\
       <div class="control-group"><label class="control-label">Title</label><div class="controls"><input type="text" placeholder="Input Title"></div></div>\
       <div class="pagination-centered"><input type="submit" class="btn btn-large btn-block"></div></form>';
-
       $('#input-modal .modal-body').html(content);
     },
     parseTitles : function(e){
@@ -340,7 +340,7 @@ socr.dataTable= function () {
     },
 
     validate : function(dataset){
-      console.log(dataset);
+     // console.log(dataset);
       if(dataset.length != 0){
         if(dataset[0][0] === '' && dataset[1][0] === '' && dataset[2][0] === ''){
           view.displayResponse('Dataset appears to be empty','error');
@@ -370,13 +370,11 @@ socr.dataTable= function () {
 
     parseAll : function(){
       var dataset = $dataTable.inputtable('getNonEmptyData');
-   
-        model.reset();
-      
+        model.reset(); 
       $("#accordion").accordion( "activate" , 0);
       $(this).update({to:'dataDriven'});    
            
-      if(socr.exp.controllerSliderState!=0)
+      if(socr.exp.controllerSliderState==0)
             $(".controller-handle").trigger("click");
       
       if(spreadSheet.validate(dataset)){
@@ -386,14 +384,15 @@ socr.dataTable= function () {
           type: 'getData',
           processed: false,
         });
-       
+        console.log('Dataset is valid')
         view.displayResponse(' Entire dataset is selected ', 'success');
         //select.selectAll();
        } else{
+        console.log("Dataset isn't valid")
         view.displayResponse(' There is some error in the dataset ', 'error');  
       }      
       
-      console.log(dataset);
+      // console.log(dataset);
     },
 
     parseSelected :  function(){

@@ -282,7 +282,7 @@ return{
 		$('.pagination').html('');
 		$('#details').html('');
 		$('#dataset').html('');
-		$("#input").inputtable('clear'); 
+		// $("#input").inputtable('clear'); 
 		_currentValues=[];
 	},
 	
