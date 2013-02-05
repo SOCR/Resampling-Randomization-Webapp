@@ -260,6 +260,9 @@
 	section#worldbank{
 		display: none;
 	}
+	section#datadriven-stage{
+		display: none;
+	}
 	/*
 		Styles for the toggle button of drag and drop
 	*/

@@ -18,6 +18,9 @@ socr.dataTable= function () {
     var backSplash = $('a.splash-datadriven');
     var worldbankContainer = $('section#worldbank');
     var simulationDetails = $('section#simulationdriven-details');
+    var datastage = $('section#datadriven-stage');
+    var resetStage = $('.reset-stage');
+    var stageList = $('table.stage-list tbody');
 
     splashScreen.find('ul li a').on('click',function(){
     
@@ -30,11 +33,7 @@ socr.dataTable= function () {
             $urlbox.focus();
           break;
         case 'worldbank' : 
-          splashScreen.hide();
-          excelScreen.hide();
-          importScreen.hide();
-          worldbankContainer.show();
-           simulationDetails.hide();
+          view.toggleScreens({ visible:  worldbankContainer })
           break;
          default : 
           simulationDriven.init($(this).attr('data-rel'));
@@ -94,7 +93,7 @@ socr.dataTable= function () {
         // simulationDriven.
       },
       resetScreen : function(){
-        view.toggleScreens({ visible: splashScreen});
+        view.toggleScreens({ visible: splashScreen });
       }
 
    } ;
@@ -308,7 +307,7 @@ socr.dataTable= function () {
     },
 
     toggleScreens : function(options){
-      var dataScreens = [splashScreen, excelScreen, importScreen, worldbankContainer, simulationDetails];
+      var dataScreens = [splashScreen, excelScreen, importScreen, worldbankContainer, simulationDetails, datastage];
       $.each(dataScreens, function(k,v){
         v.hide();
       });
@@ -340,7 +339,6 @@ socr.dataTable= function () {
     },
 
     validate : function(dataset){
-      console.log(dataset);
       if(dataset.length > 0){
 
         if(dataset[0][0] === '' && dataset[1][0] === '' && dataset[2][0] === ''){
@@ -430,7 +428,13 @@ socr.dataTable= function () {
             
             //   });
             
-            view.displayResponse('Data loaded successfully', 'success');
+            var title = '';
+            if($dataTable.find('th')){
+              title = $dataTable.find('th.active').text();
+            }
+            stage.addRow(dataset, title)
+            console.log(title)
+            view.displayResponse('Data added to staging, continue adding more data or select <strong>Proceed</strong>', 'success');
            // if(controllerSliderState!=0)
            // $(".controller-handle").trigger("click");
              select.selectCells(selectedCoords);       
@@ -509,8 +513,71 @@ socr.dataTable= function () {
 
   };
 
+  var stage = {
+    content : [],
+    index : 1,
+    init : function(){
+      view.toggleScreens({ visible: datastage });
+      stage.showContent();
+    },
+    showExcel : function(){
+      view.toggleScreens({ visible: excelScreen });
+    },
+    showContent : function(){
+      if(stage.content.length > 0){
+        stageList.html('');
+        for(i in stage.content){
+        
+          var elem = stage.content[i].cells.length;
+          var name = stage.content[i].name;
+          var index = stage.content[i].id;
+          var content ='<tr><td>' + name + '</td><td> ' + elem + '</td><td>' + index + '</td></tr>';
+          stageList.append(content);
+
+        }
+      } else {
+        stageList.html('');
+        stageList.append('<tr><td>No Content Selected Yet</td><td></td><td></td></tr>')
+      }
+    },
+    addRow : function(content, name){
+      var obj = {};
+      obj.name = (name != '') ? name : content[0][0] ;
+      obj.cells = content;
+      obj.id = parseInt(stage.index);
+      stage.content.push(obj);
+      stage.index++;
+      console.log(stage.content);
+    },
+    export : function(){
+      console.log('Export the following datasets');
+      console.log(stage.content);
+    },
+    reset : function(){
+      stage.index = 1;
+      stage.content = [];
+      stage.showContent();
+    }   
+  }
+  //General Pattern
+  // stage.content = {
+
+    // id
+   //   name : '',
+  //   cells : []
+  // }
+  // stage.content.cell[0] = []
+
+  resetStage.on('click',function(e){
+    e.preventDefault();
+    stage.reset();
+  })
+
   $controls.find('input[value="Use Entire Dataset"]').on('click', spreadSheet.parseAll );
-  $controls.find('input[value="Reset"]').on('click', spreadSheet.reset );
+  $controls.find('.reset-spreadsheet').on('click', spreadSheet.reset );
+  $controls.find('input[value="Proceed"]').on('click', stage.init );
+  datastage.find('input[value="Spreadsheet"]').on('click', stage.showExcel );
+  datastage.find('input[value="Done"]').on('click', stage.export );
   $controls.find('#submatrix_spreadsheet').on('click',spreadSheet.parseSelected );
    backSplash.on('click', simulationDriven.resetScreen);
 

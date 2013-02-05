@@ -130,14 +130,18 @@
 											</ul>
 											</a>
 										</div>
-										<input class="btn" type='button' value='Use Entire Dataset'>
-										<input class="btn btn-danger" type='button' value='Reset'>
+										<!--<input class="btn" type='button' value='Use Entire Dataset'>-->
+										
+										<input type="button" class="btn" value="Use Selected" id="submatrix_spreadsheet">
+										<!--<input class="btn btn-danger" type='button' value='Reset'>-->
+										<a class = "reset-spreadsheet btn btn-danger" ><i class="icon-refresh"></i></a>
 										<span class="response"></span>
 										<!--
 										Range : <input type="text" name="start" class="input-mini" placeholder="start"> - <input type="text" name="end" class="input-mini" placeholder="end">  
 										-->
-										<input type="button" class="btn" value="Use Selected" id="submatrix_spreadsheet"> 
+										 
 										<a class = "dragdrop btn btn-info" > Fetch from URL </a>
+										<input class="btn btn-inverse" type='button' value='Proceed'>
 										
 									</section>
 
@@ -198,6 +202,28 @@
 								<div class="exp-dscp">
 								Experiment Description
 							</div>
+							</section>
+							<section id="datadriven-stage">
+								<a class="btn splash-datadriven" href="#"><i class =" icon-circle-arrow-left"></i></a>
+								<input class="btn btn-inverse" value="Spreadsheet" type="Button">
+								<a class="btn btn-danger reset-stage"><i class =" icon-refresh"></i></a>
+								<input class="btn btn-success staging-complete" value="Done" type="Button">
+								<div class ="page-header">
+									<h3> Staging<small> Selected dataset</small> </h3>
+								</div>
+								<div>
+									<table class="table table-bordered stage-list">
+										<thead>
+											<tr>
+												<th> Title </th>
+												<th> No. of Elements </th>
+												<th> K - Index </th>
+											</tr>	
+										</thead>
+										<tbody>
+										</tbody>
+									</table>
+								</div>
 							</section>
 									
 						</div>	
