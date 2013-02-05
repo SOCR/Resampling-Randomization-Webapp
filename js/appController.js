@@ -228,7 +228,7 @@ socr.controller=function(model,view){
 		return false;
 	else
 		{
-		model.setDataset(array);
+		// model.setDataset(array);
 		//enable the buttons
 		view.enableButtons();
 		return true;
@@ -315,6 +315,8 @@ socr.controller=function(model,view){
 							model.bootstrapGroupValues={};
 							model.resetVariables();
 							view.reset();		//clearing all the canvas
+							view.toggleControllerHandle();
+							socr.dataTable.simulationDriven.resetScreen();
 							$('#showCount').html('');
                             $(this).dialog("close");					//close the confirmation window
                             },
@@ -355,11 +357,12 @@ socr.controller=function(model,view){
 					if(socr.exp.current.getDataset()!='')
 						{	console.log('simulation drive has some data');
 						//alert(Experiment.getDataset());
-							model.setDataset({
-								keys:socr.exp.current.getDatasetKeys(),
-								values:socr.exp.current.getDatasetValues(),
-								processed:true
-								});	
+						//Check @ selvam, why was this being done?
+							// model.setDataset({
+							// 	keys:socr.exp.current.getDatasetKeys(),
+							// 	values:socr.exp.current.getDatasetValues(),
+							// 	processed:true
+							// 	});	
 							//console.log(model.getDataset());
 							//call to loadInputSheet to input the generated simulation data if any
 						}	

@@ -239,6 +239,7 @@
 		height: 30px;
 		border-bottom: 1px solid #e3e3e3;
 		width:100%;
+		padding-bottom: 5px;
 	}
 	section.datadriven-wrap .controls .status{
 		display:none;
@@ -321,4 +322,10 @@ ul li a:hover{
 
 section#simulationdriven-details{
 	display: none;
+}
+a.input-handle{
+	display: none;
+}
+#status{
+	margin-top:10px;
 }

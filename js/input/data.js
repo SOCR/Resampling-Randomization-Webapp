@@ -1,9 +1,9 @@
 socr.dataTable= function () {
   
     $dataTable = $('#input');
-    $controls = $('section.controls');
+    var $controls = $('section.controls');
     $parent = $('div.spreadsheet');
-    $response = $('#status');
+    var $response = $('#status');
 
   // Drag and Drop site
     $drop = $('#drop');
@@ -41,9 +41,7 @@ socr.dataTable= function () {
       }
     });
 
-    backSplash.on('click', function(){
-      view.toggleScreens({ visible: splashScreen});
-    })
+   
 
    var simulationDriven = {
       init : function(arg){
@@ -94,6 +92,9 @@ socr.dataTable= function () {
           worldbankContainer.hide();
           simulationDetails.show().find('h3').text(details.title).parent().parent().find('.exp-dscp').html(details.description);
         // simulationDriven.
+      },
+      resetScreen : function(){
+        view.toggleScreens({ visible: splashScreen});
       }
 
    } ;
@@ -274,12 +275,13 @@ socr.dataTable= function () {
       switch(type) {
         
         case "success":
-          $alertbox.addClass('alert-success');
-          $alertbox.append(' <i class="icon-ok"></i> ');
+          $alertbox.addClass('alert-success')
+                    .prepend(' <i class="icon-ok"></i> ');
           break;
 
         case "error":
-          $alertbox.addClass('alert-error');
+          $alertbox.addClass('alert-error')
+                  .prepend(' <i class="icon-warning-sign"></i> ');
           break;
       }
     },
@@ -290,7 +292,6 @@ socr.dataTable= function () {
       <div class="controls"><input type="text" placeholder="Input Title"></div></div>\
       <div class="control-group"><label class="control-label">Title</label><div class="controls"><input type="text" placeholder="Input Title"></div></div>\
       <div class="pagination-centered"><input type="submit" class="btn btn-large btn-block"></div></form>';
-
       $('#input-modal .modal-body').html(content);
     },
     parseTitles : function(e){
@@ -340,15 +341,21 @@ socr.dataTable= function () {
 
     validate : function(dataset){
       console.log(dataset);
-      if(dataset.length != 0){
+      if(dataset.length > 0){
+
         if(dataset[0][0] === '' && dataset[1][0] === '' && dataset[2][0] === ''){
+
           view.displayResponse('Dataset appears to be empty','error');
           return false;
+
         }
+
         return true;
+
       } else {
+
         view.displayResponse('Empty Dataset, Please fill in from the first column ','error');
-        return false;
+        return;
       }
 
       
@@ -369,30 +376,31 @@ socr.dataTable= function () {
 
     parseAll : function(){
       var dataset = $dataTable.inputtable('getNonEmptyData');
-   
-        model.reset();
-      
+          model.reset(); 
+
       $("#accordion").accordion( "activate" , 0);
       $(this).update({to:'dataDriven'});    
-           
-      if(socr.exp.controllerSliderState!=0)
-            $(".controller-handle").trigger("click");
       
       if(spreadSheet.validate(dataset)){
-        model.setDataset({
-          data: dataset,
-          range: 1,
-          type: 'getData',
-          processed: false,
-        });
-       
+        // model.setDataset({
+        //   data: dataset,
+        //   range: 1,
+        //   type: 'getData',
+        //   processed: false,
+        // });
+
+        console.log('Dataset is valid')
         view.displayResponse(' Entire dataset is selected ', 'success');
+
+      if(socr.exp.controllerSliderState==0)
+            $(".controller-handle").trigger("click");
         //select.selectAll();
        } else{
-        view.displayResponse(' There is some error in the dataset ', 'error');  
+        console.log("Dataset isn't valid")
+       // view.displayResponse(' There is some error in the dataset ', 'error');  
       }      
       
-      console.log(dataset);
+      // console.log(dataset);
     },
 
     parseSelected :  function(){
@@ -413,14 +421,14 @@ socr.dataTable= function () {
            if(socr.exp.controllerSliderState!=0)
             $(".controller-handle").trigger("click");
             if(spreadSheet.validate(dataset)){
-             model.setDataset({
+            //  model.setDataset({
 
-              data: dataset ,
-            //range:selected,
-              type: 'getSelected',
-              processed: false
+            //   data: dataset ,
+            // //range:selected,
+            //   type: 'getSelected',
+            //   processed: false
             
-              });
+            //   });
             
             view.displayResponse('Data loaded successfully', 'success');
            // if(controllerSliderState!=0)
@@ -452,7 +460,7 @@ socr.dataTable= function () {
             $dataTable.inputtable('clear');
             $response.html('<div class="alert"><a class="close" data-dismiss="alert" href="#">x</a>Clear! Enter some value to get started!</div>'); //display the message in the status div below the done and reset buttons
             $(this).dialog("close"); //close the confirmation window
-            $dataTable.inputtable({'colHeaders' : false});
+           // $dataTable.inputtable({'colHeaders' : false});
 
           },
           No: function () {
@@ -504,6 +512,7 @@ socr.dataTable= function () {
   $controls.find('input[value="Use Entire Dataset"]').on('click', spreadSheet.parseAll );
   $controls.find('input[value="Reset"]').on('click', spreadSheet.reset );
   $controls.find('#submatrix_spreadsheet').on('click',spreadSheet.parseSelected );
+   backSplash.on('click', simulationDriven.resetScreen);
 
   $dataTable.parent().on('mouseup', select.checkSelected );
     $('a.dragdrop').on('click', function(){
@@ -515,110 +524,10 @@ socr.dataTable= function () {
   
   spreadSheet.init();
   dragdrop.init();
-  
-  Array.prototype.clean = function (deleteValue) {
-    for(var i = 0; i < this.length; i++) {
-      if(this[i] == deleteValue) {
-        this.splice(i, 1);
-        i--;
-      }
-    }
-    return this;
-  };
 
- var processSpreadsheet = function (e) {
-    /*
-    
-      Process spreadsheet function, takes into consideration two cases
-      1. Data is selected, getSelectedData
-      2. Entire Dataset
-    
-    */
-    //$("#dataDriven-tab").trigger('click');
-    if(select.isSelected()) {
-      console.log('Coordinates are selected ' + select.isSelected())
-      var selectedCoords = select.isSelected();
-      /*
-        Selected Cells:
-       [ startrow , startCol, endRow, endCol ]
-      */
-    }
-    if(selectedCoords) {
-      /* 
-          Data is selected, go ahead with extracting submatrix
-      */
-          model.setDataset({
-          data: $dataTable.inputtable('getSelectedData'),
-        //range:selected,
-          type: 'getSelected',
-          processed: false
-          });
-        console.log('Selected Data is now loaded with '+ selectedCoords)  
-      /*
-        Uses selectCell property to highlight cells
-      */
-        setTimeout(function(){
-          select.selectCells(selectedCoords);
-        },500);
-        view.displayResponse('Data loaded successfully', 'success');
-      } 
-      else {
-      console.log('No coordinates are selected')
-      /*
-          Case of no selection, entire matrix is passed
-        */
-      model.setDataset({
-        data: $dataTable.inputtable('getNonEmptyData'),
-        range: 1,
-        type: 'getData',
-        processed: false,
-      });
-      view.displayResponse('Data loaded successfully', 'success');
-      $(".controller-handle").trigger('click');
-    }
+  return {
+    simulationDriven : simulationDriven,
+    spreadSheet: spreadSheet,
+    view: view
   }
-  /*
-    
-      Commented out the earlier verison of the code,
-      @ Todo 
-      1. Check for empty dataset
-
-
-        var temp = $dataTable.inputtable('getData');
-        
-        console.log(selected);
-
-        if(temp.clean(',').length==0)
-          {
-          $('#status').html('<div class="alert alert-error">No input given <i class="icon-info-sign"></i><a class="close" data-dismiss="alert" href="#">x</a></div>');
-          }
-        else if(selected)
-          {
-          console.log("getSelected");
-
-          model.setDataset({
-            data:$dataTable.inputtable('getData'),
-            range:selected,
-            type:'getSelected',
-            processed:false,
-            });
-
-        $('section .response').html('Data loaded successfully<i class="icon-ok"></i>').show();
-          }
-        else 
-          {
-          console.log("getSelectedData : " + $dataTable.inputtable('getSelectedData'));
-
-          model.setDataset({
-            data:$dataTable.inputtable('getSelectedData'),
-            range:1,
-            type:'getData',
-            processed:false,
-          });
-          $('section .response').html('Data loaded<i class="icon-ok"></i>').show();
-          }
-      }
-
-       */
-
 }();
