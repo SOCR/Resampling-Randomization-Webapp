@@ -38,6 +38,8 @@ socr.model=function(){
 		StandardDev:{},
 		Percentile:{}
 	};
+
+	var _this=this;
 /*
  IF EVENT DISPATCH MODEL IS TO BE IMPLEMENTED
 	subject = new LIB_makeSubject(['generateSamples','generateSample']); //list of all the events with observer pattern
@@ -97,6 +99,65 @@ socr.model=function(){
 		//console.log("_squaredSum"+_squaredSum+"--- _mean:"+_mean);
 		var _SD=Math.sqrt(_squaredSum-(_mean)*(_mean));
 		return _SD;
+	}
+
+	function _generateF(sampleNumber){
+		if(sampleNumber == undefined){
+			return false;
+		}
+		else{
+			Array.prototype.mean = function() {
+				var _total=0;
+				for(var i=0;i<this.length;i++){
+					_total+=this[i];
+				}
+				return _total/this.length;
+			};
+			var _k=0,_ymean=[],_total=0,_temp=0,_sst=0,_sse=0,_mst=0,_mse=0, _data=[];
+			_k=5;
+			if (sampleNumber === "dataset"){
+				for (var i = 1; i <=_k; i++) {
+					_data[i] = _dataset[i]['values'];
+				};
+				console.log(_data);
+			}
+			else{
+				_data=bootstrapGroupValues[sampleNumber];
+			}
+			
+			//_k=_this.getK() || 5;
+			_k=5;
+			for(var i=1;i<=_k;i++){
+				_ymean[i]=_data[i].mean();
+				_total+=_ymean[i];
+			}
+			//console.log(_ymean);
+			_y = _total/_k; // grand mean
+			var _dofe=_k - 1;//calculate the dof between K - 1
+			var _dofw=_n*_k - _n; //calculate the dof within
+			//console.log("_y:"+_y+"_dofe:"+_dofe+".... +dofw:"+_dofw);
+			//SST
+			for (var i = 1; i <= _k; i++) {
+				_temp = ( _ymean[i] - _y);
+				_sst=+_n*_temp*_temp;
+			};
+			//console.log("_sst:"+_sst);
+			//SSE
+			for (var i = 1,_temp=0; i <= _k; i++) {
+				for(var j=0;j<_data[i].length;j++){
+					_temp = ( _data[i][j] - _ymean[i]);
+					_sse=+_temp*_temp;
+				}
+			};
+			//console.log("_sse:"+_sse);
+			//MST
+			var _mst = _sst/_dofe;
+			//MSE
+			var _mse = _sse/_dofw;
+
+			return _mst/_mse;
+
+		}
 	}
 	
 return{
@@ -304,6 +365,7 @@ return{
 	},
 	/** COUNT METHODS ENDS **/
 
+	/** PERCENTILE METHODS STARTS **/
 	/**
 	*@method:getPercentile ()
 	*@param: pvalue - what is the percentile value that is to be calculated.
@@ -336,7 +398,30 @@ return{
 		var position=Math.floor(_datasetValues.length*(pvalue/100));
 		return temp[position];
 	},
+	/** PERCENTILE METHODS ENDS **/
 
+	/**
+	*@method: [public] getF()
+	*@desc: returns the F value computed from the supplied group
+	*
+	*/
+	getF:function(){
+		var _data=[];
+		for(var i=0;i<_count;i++){
+			_data[i]=_generateF(i);
+		}
+		return _data;
+	},
+
+	/**
+	*@method: [public] getFof(SampleNumber)
+	*@desc: returns the F value computed from the supplied group
+	*@param: sampleNumber - Random sample Number at which the F value is to be calculated
+	*
+	*/
+	getFof:function(sampleNumber){
+		return _generateF(sampleNumber);
+	},
 	/**
 	*@method: [public] getDataset()
 	*@desc:  getter funtion for dataSet variable. 
@@ -448,7 +533,7 @@ return{
 	*@dependencies: generateTrail()
 	*/
 	getSampleValue:function(index){
-		return bootstrapSampleValues[index];
+		return bootstrapSampleGroupValues[index][1];
 	},
 	
 	getSampleValues:function(){
