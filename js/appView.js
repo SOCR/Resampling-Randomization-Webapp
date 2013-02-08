@@ -582,7 +582,7 @@ return{
 		var binNo = $('input[name="binno"]').val() != '' ? $('input[name="binno"]').val() : 10;
 
 		_currentValues=values;
-		socr.vis.generate({
+		var dotplot = socr.vis.generate({
 			parent : '#dotplot',
 			data : values,
 			height:390,
@@ -592,6 +592,12 @@ return{
 			variable: setting.variable	,
 			nature: 'continuous'			
 		})();
+
+		 socr.vis.addBar({
+		 	elem: dotplot,
+		 	variable: setting.variable,
+		 	datum: datum
+		 })
 		
 	},
 	

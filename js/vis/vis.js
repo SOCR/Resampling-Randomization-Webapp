@@ -9,10 +9,19 @@ socr.vis = (function(){
 		@Check for parent class,
 		add 'setter-getter' method for the SVG element for reusability
 	*/
-	var SVGElement;
+	var priv = {};
 
 	var histogram = function(config){
 		config = config[0];
+
+		if(typeof config.parent == 'undefined' && config.parent == null){
+			displayError('Parent Selector not specified');
+			return;
+		}
+		if(typeof config.data == 'undefined' && config.data == null){
+			displayError('Dataset for histogram not entered');
+			return;
+		}
 	try{
 		config.parent;
 		var rangeDefault = d3.extent( config.data );
@@ -22,6 +31,8 @@ socr.vis = (function(){
 		console.log(err);
 		return;
 	}
+
+	
 		  /**
 		  * Making all the histograms start from the origin, not sure if it's the right way
 		  **/
@@ -81,7 +92,7 @@ socr.vis = (function(){
 		    //         .domain(data.map(function(d) { return d.x; }))
 		    //         .rangeRoundBands([0, width - margin.left - margin.right], .1);
 
-		   var x = d3.scale.ordinal()
+		    var x = d3.scale.ordinal()
             .domain(data.map(function(d) { return d.x; }))
             .rangeRoundBands([0, width - margin.left - margin.right], .1);
 		   
@@ -141,28 +152,39 @@ socr.vis = (function(){
 		        .attr("height", function(d) { return y.range()[0] - y(d.y); });
 
 		    /* Broken in case of repeated invokation */    
+		    //Reusable components:
+		    // g,x,height,margin
+
+		    priv.GElement = g;
+		    priv.xScale = x;
+		    priv.height = height;
+		    priv.margin = margin;
 
 		     if(settings.datum){
-        
-				    var meanbar = g.append('rect')
-				    .attr('x',function(){ return x(settings.datum) })
-				    .attr('y',function(){ return 0;})
-				    .attr('width', function(){ return 10;})
-				    .attr('height',function(){ return height - margin.top - margin.bottom ;})
-				    .attr('class','meanBar')
-				    .on('mouseover', function(d){ 
-				      d3.select(this).classed('hover', true) 
-				      var left = $(this).position().left,
-				          top = $(this).position().top;
+        		
+				   //  var meanbar = g.append('rect')
+				   //  .attr('x',function(){ return x(settings.datum) })
+				   //  .attr('y',function(){ return 0;})
+				   //  .attr('width', function(){ return 10;})
+				   //  .attr('height',function(){ return height - margin.top - margin.bottom ;})
+				   //  .attr('class','meanBar')
+				   //  .on('mouseover', function(d){ 
+				   //    d3.select(this).classed('hover', true) 
+				   //    var left = $(this).position().left,
+				   //        top = $(this).position().top;
 
-				      var content = '<h3> '+ settings.variable +' : ' + settings.datum + '</h3>';
+				   //    var content = '<h3> '+ settings.variable +' : ' + settings.datum + '</h3>';
 
-				      viswrap.tooltip.show([left, top], content, 's');
-				    })
-				    .on('mouseout', function(){ 
-				        d3.select(this).classed('hover', false) 
-				        viswrap.tooltip.cleanup();
-				   });   
+				   //    if(typeof viswrap != 'undefined')
+				   //   	 viswrap.tooltip.show([left, top], content, 's');
+				   //  })
+				   //  .on('mouseout', function(){ 
+				   //      d3.select(this).classed('hover', false);
+				   //      if(typeof viswrap != 'undefined') 
+				   //      	viswrap.tooltip.cleanup();
+				   // });
+
+
 
     			}
     
@@ -176,13 +198,53 @@ socr.vis = (function(){
 
 	    SVGElement = g;
 
+
+
+	}
+
+	var addBar = function(obj){
+		console.log(obj)
+		var g = obj[0].elem.GElement,
+			x = obj[0].elem.xScale,
+			height = obj[0].elem.height,
+			margin = obj[0].elem.margin;
+			barWidth = obj[0].barWidth | 10;
+
+	    var meanbar = g.append('rect')
+		    .attr('x',function(){ return (x.rangeBand()/2)+x(obj[0].datum) - (barWidth/2)})
+		    .attr('y',function(){ return 0;})
+		    .attr('width', function(){ return barWidth;})
+		    .attr('height',function(){ return height - margin.top - margin.bottom ;})
+		    .attr('class','meanBar')
+		    .on('mouseover', function(d){ 
+		      d3.select(this).classed('hover', true) 
+		      var left = $(this).position().left,
+		          top = $(this).position().top;
+
+		      var content = '<h3> '+ obj[0].variable +' : ' + obj[0].datum + '</h3>';
+
+		      if(typeof viswrap != 'undefined')
+		     	 viswrap.tooltip.show([left, top], content, 's');
+		    })
+		    .on('mouseout', function(){ 
+		        d3.select(this).classed('hover', false);
+		        if(typeof viswrap != 'undefined') 
+		        	viswrap.tooltip.cleanup();
+		   });
+	}
+
+	var displayError = function(m){
+		console.log(m);
 	}
 
 	return {
 		generate : function(args){
 			histogram.call(this,arguments);
-			console.log(SVGElement)
-			
+			return priv;		
+		},
+		addBar : function(args){
+			addBar.call(this, arguments);
+			//return priv;
 		},
 		set : function(el, prop){
 

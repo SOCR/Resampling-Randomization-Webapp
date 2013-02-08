@@ -537,7 +537,7 @@ socr.dataTable= function () {
         }
       } else {
         stageList.html('');
-        stageList.append('<tr><td>No Content Selected Yet</td><td></td><td></td></tr>')
+        stageList.append('<tr:q:q><td>No Content Selected Yet</td><td></td><td></td></tr>')
       }
     },
     addRow : function(content, name){
