@@ -114,19 +114,15 @@ socr.model=function(){
 				return _total/this.length;
 			};
 			var _k=0,_ymean=[],_total=0,_temp=0,_sst=0,_sse=0,_mst=0,_mse=0, _data=[];
-			_k=5;
+			_k=_this.getK();
 			if (sampleNumber === "dataset"){
 				for (var i = 1; i <=_k; i++) {
 					_data[i] = _dataset[i]['values'];
 				};
-				console.log(_data);
 			}
 			else{
 				_data=bootstrapGroupValues[sampleNumber];
 			}
-			
-			//_k=_this.getK() || 5;
-			_k=5;
 			for(var i=1;i<=_k;i++){
 				_ymean[i]=_data[i].mean();
 				_total+=_ymean[i];
@@ -406,6 +402,7 @@ return{
 	*
 	*/
 	getF:function(){
+		 _this=this;
 		var _data=[];
 		for(var i=0;i<_count;i++){
 			_data[i]=_generateF(i);
@@ -420,6 +417,7 @@ return{
 	*
 	*/
 	getFof:function(sampleNumber){
+		_this=this;
 		return _generateF(sampleNumber);
 	},
 	/**
@@ -448,34 +446,48 @@ return{
 		console.log('setDataSet() invoked!');
 		console.log('Input Data :'+input.keys+' Input Type :'+input.type+' Input Range :'+input.range+' Input Values :'+input.values);
 	//input.processed is true incase of a simulation -> data mode switch
-		if(input.processed)
-			{
-				for(var i=0;i<input.keys.length;i++)
-				{
-					_dataset[i+1]={
-						values:input.values[i],
-						keys:input.keys[i],
-						name:null,
-						index:i
-					};
-				}
-				//^^^^^ _datasetKeys and _datasetValues are decrepted ^^^^^^^  OBSOLETE
-				_datasetKeys=input.keys[0];
-				_datasetValues=input.values[0];
-				console.log('Simulation data is loaded now.');
-				return false;
+		if(input.processed){
+			for(var i=0;i<input.keys.length;i++){
+				_dataset[i+1]={
+					values:input.values[i],
+					keys:input.keys[i],
+					name:null,
+					index:i
+				};
 			}
-		else if(input.type=='url')
-			{
-			//both _datasetValues and _datasetKeys will have the same values
-				_datasetValues=input.keys.split(",");
-				console.log('Simulation data is loaded now.');
-				return false;
-			}
-		else if(input.type=='getData' || input.type=='getSelected')
-			{
-			_datasetValues=[];			//emptying the array
-			_datasetKeys=[];
+			//^^^^^ _datasetKeys and _datasetValues are decrepted ^^^^^^^  OBSOLETE
+			_datasetKeys=input.keys[0];
+			_datasetValues=input.values[0];
+			console.log('Simulation data is loaded now.');
+			return false;
+		}
+		else if(input.type=='url'){
+		//both _datasetValues and _datasetKeys will have the same values
+			_datasetValues=input.keys.split(",");
+			console.log('Simulation data is loaded now.');
+			return false;
+		}
+		else if(input.type=='spreadsheet'){
+			_dataset={}; var _temp=[];
+			console.log(input.values.length);
+			for (var i = 0; i < input.values.length; i++) {
+				var _cells=input.values[i].cells;
+				var _id=input.values[i].id;
+				_dataset[_id]=[];_temp=[];
+				console.log("_cells : "+_cells);
+				for (var j = 0; j < _cells.length; j++) {
+					if (_cells[j][0] !== ""){
+						_temp[j]=_cells[j][0];
+						console.log(_temp[j]);
+					}
+					else{
+						break;
+					}
+				};
+				_dataset[_id]['values']=_temp;
+				_dataset[_id]['keys']=_temp;
+			};
+			console.log(_dataset);
 			//iterate through rows
 			/*for(var i=input.range[0];i<=input.range[2];i++)
 				{
@@ -501,17 +513,15 @@ return{
 			// 		}
 			// 	}
 
-			console.log(_datasetValues.length);
-			if(_datasetValues.length==0)
+			if(_dataset.length==0)
 				{
-					_datasetValues=0;
 					console.log("returning false");
 					return false;
 				}
 			else{
-					_datasetKeys=_datasetValues;
 					console.log("returning true");
-					console.log('Data is loaded now. Data :' + _datasetValues);
+					console.log('Data is loaded now. Data :' + _dataset);
+					view.toggleControllerHandle();
 					return true;
 				}
 
@@ -586,12 +596,18 @@ return{
 		_sample.Count=[];
 	},
 	getK:function(){
-		if(socr.exp.current)
+		/*if(socr.exp.current)
 			{
 				return socr.exp.current.getK();
 			}
-		else
-			return 0;
+		*/
+		var _count=0;
+		for (var name in _dataset) {
+    		if (_dataset.hasOwnProperty(name)) {
+        		_count++;
+        	}
+  	  	}
+		return _count;
 	}
 	
 }//return

@@ -552,6 +552,12 @@ socr.dataTable= function () {
     export : function(){
       console.log('Export the following datasets');
       console.log(stage.content);
+      model.setDataset({
+        type:"spreadsheet",
+        values:stage.content,
+        range:stage.content.length,
+        processed:false
+      });
     },
     reset : function(){
       stage.index = 1;

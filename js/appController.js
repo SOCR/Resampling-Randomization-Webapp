@@ -358,12 +358,12 @@ socr.controller=function(model,view){
 						{	console.log('simulation drive has some data');
 						//alert(Experiment.getDataset());
 						//Check @ selvam, why was this being done?
-							// model.setDataset({
-							// 	keys:socr.exp.current.getDatasetKeys(),
-							// 	values:socr.exp.current.getDatasetValues(),
-							// 	processed:true
-							// 	});	
-							//console.log(model.getDataset());
+							 model.setDataset({
+							 	keys:socr.exp.current.getDatasetKeys(),
+							 	values:socr.exp.current.getDatasetValues(),
+							 	processed:true
+							 	});	
+							console.log(model.getDataset(1));
 							//call to loadInputSheet to input the generated simulation data if any
 						}	
 						
