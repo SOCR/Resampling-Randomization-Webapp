@@ -27,11 +27,6 @@ socr.model=function(){
 	var bootstrapGroupKeys={};
 	var bootstrapGroupValues={};
 	
-	/*
-	TODO: make the datasetKeys and datasetValues multidimensional to account for [Issue #4].  OBSOLETE
-	*/
-	//var _datasetKeys=[];
-	//var _datasetValues=[];
 	var _sample={
 		Mean:{},
 		Count:{},
@@ -455,15 +450,10 @@ return{
 					index:i
 				};
 			}
-			//^^^^^ _datasetKeys and _datasetValues are decrepted ^^^^^^^  OBSOLETE
-			_datasetKeys=input.keys[0];
-			_datasetValues=input.values[0];
 			console.log('Simulation data is loaded now.');
 			return false;
 		}
 		else if(input.type=='url'){
-		//both _datasetValues and _datasetKeys will have the same values
-			_datasetValues=input.keys.split(",");
 			console.log('Simulation data is loaded now.');
 			return false;
 		}
@@ -577,8 +567,6 @@ return{
 	},
 	reset:function(){
 		//dataset values deleted
-		_datasetKeys=[];
-		_datasetValues=[];
 		_dataset={};
 		this.resetVariables();
 		//random samples deleted
