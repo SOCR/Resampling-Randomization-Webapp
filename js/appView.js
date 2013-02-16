@@ -75,7 +75,7 @@ socr.view = function( model ){
 			var sampleID=$(this).attr('id');
 			//var sampleID=e.target.id;
 			console.log("test"+sampleID);
-			var values=model.getSampleValue(sampleID);
+			var values=model.getSample(sampleID,"values");
 			//console.log("values for plot click:"+values);
 			var temp=values.sort(function(a,b){return a-b});
 			var start=Math.floor(temp[0]);
@@ -98,13 +98,12 @@ socr.view = function( model ){
 				var id=$(this).attr('id');
 				if($(this).attr('data-type')==='value')
 					{
-						$(this).parent().parent().find('pre').text(model.getSample(id));
+						$(this).parent().parent().find('pre').text(model.getSample(id,"keys"));
 						$(this).attr('data-type','sample');
 					}
 				else
 					{
-						//console.log("qwe:"+model.getSampleValue(id));
-						$(this).parent().parent().find('pre').text(model.getSampleValue(id));
+						$(this).parent().parent().find('pre').text(model.getSample(id,"values"));
 						$(this).attr('data-type','value');
 					}
 		});//click binding for .toggle-sample
@@ -308,8 +307,7 @@ return{
      */
 	createList:function(start,end){
 		console.log('createList('+start+','+end+') invoked ');
-		if(model.bootstrapGroupKeys.length==0)
-			{ 
+		if($.isEmptyObject(model.bootstrapGroupKeys)){ 
 			// if no random samples have been generated, display a alert message!
 			$("#sampleList").html('<div class="alert alert-error"><a class="close" data-dismiss="alert" href="#">x</a><h4 class="alert-heading">No Random samples to show!</h4>Please generate a dataset using the list of experiments or manually enter the data. Then generate some random samples from the controller tile before click "show"</div>');
 			}

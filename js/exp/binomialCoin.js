@@ -54,7 +54,6 @@ function _tossCoin(){
 			}
 	else{
 		//view.loadInputSheet(_values);
-		//console.log(_tempKeys);
 		for(var i=0;i<_K;i++)
 			{
 				var _start=i*_n;
@@ -63,7 +62,8 @@ function _tossCoin(){
 				_datasetKeys.push(_tempKeys.slice(_start,_stop));	
 			}
 		//console.log(_datasetKeys); 
-		//console.log(_datasetValues); 
+		//console.log(_datasetValues);
+		$("#grsbutton").removeClass("disabled"); 
 		self.reset();
 	}
 }
@@ -84,6 +84,7 @@ return{
 		// BINDING BUTTONS OF THE CONTROLLER
 		$("#sdbutton").on('click',function(){
 			//***clicking this button only generates the dataset...doesnt load it into the appModel. Clicking the grsbutton does that.
+			$("#grsbutton").addClass("disabled");	
 			self.generate();		
 			$("#accordion").accordion( "activate" , 1);
 			if(socr.controller.inputSliderState==1)

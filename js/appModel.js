@@ -518,29 +518,40 @@ return{
 		}
 	},
     /**
-	*@method: [public] getSample()
+	*@method: [public] getSample(index,type,K)
+	*@param: index - random sample index
+        *@param: K - group index
+	*@param: type - values or keys
 	*@desc:  getter and setter funtion for dataSet variable. 
 	*@dependencies: generateTrail()
 	*/
-	getSample:function(index){
-		return bootstrapSamples[index];
+	getSample:function(index,type,K){
+		K= K || 1;		//default set to 1
+		type=type || "values";	//default set to "values"
+		if(type === "values"){
+			return bootstrapGroupValues[index][K];
+		}
+		else{
+			return bootstrapGroupKeys[index][K];
+		}
 	},
 	
-	getSamples:function(){
-		return bootstrapSamples;
-	},
-	/**
-	*@method: [public] getSampleValues()
-	*@desc:  getter and setter funtion for dataSet variable. 
-	*@dependencies: generateTrail()
-	*/
-	getSampleValue:function(index){
-		return bootstrapSampleGroupValues[index][1];
+	getSamples:function(type,K){
+		type = type || "values";	
+		K=K || 1;var _temp=[];
+		if(type==="values"){
+			for(var i=0;i<_count;i++){
+			  _temp[i]=bootstrapGroupValues[i][K];
+			}
+		}
+		else{
+			for(var i=0;i<_count;i++){
+			  _temp[i]=bootstrapGroupKeys[i][K];
+			}
+		}
+		return _temp;
 	},
 	
-	getSampleValues:function(){
-		return bootstrapSampleValues;
-	},
 	/*  getter and setter for variable '_stopCount'  */
 	setStopCount:function(y){
 		//alert(y);
