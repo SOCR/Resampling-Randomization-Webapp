@@ -38,8 +38,8 @@ socr.controller=function(model,view){
 		}
 	else
 		{
-		console.log(model.bootstrapGroupKeys);
-		//view.updateSimulationInfo();
+		view.updateCtrlMessage("samples generated sucessfully.","success",2000);
+		view.updateSimulationInfo();
 		_this.stop();
 		}
 	}

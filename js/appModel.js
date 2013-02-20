@@ -203,9 +203,8 @@ return{
 			valEl.push(values);
 			k++;
 			}
-
-		bootstrapGroupKeys[_count]=keyEl;
-		bootstrapGroupValues[_count]=valEl;
+		Object.defineProperty(model.bootstrapGroupKeys,_count,{value:keyEl,writable:true,configurable : true});
+		Object.defineProperty(model.bootstrapGroupValues,_count,{value:valEl,writable:true,configurable : true});
 		_count++;		//incrementing the total count - number of samples generated from start of simulation
 	},
 	
@@ -478,31 +477,6 @@ return{
 				_dataset[_id]['keys']=_temp;
 			};
 			console.log(_dataset);
-			//iterate through rows
-			/*for(var i=input.range[0];i<=input.range[2];i++)
-				{
-					for(var j=input.range[1];j<=input.range[3];j++)
-						{
-						if (input.data[i][j] != '')
-							{         
-							_datasetValues.push(input.data[i][j]);
-							}
-						}
-				}
-			*/
-		
-			// for (var i = 0; i < input.keys.length; i++)
-			// 	{
-			// 	for(var j = 0; j < input.keys[i].length; j++)
-			// 		{
-			// 			if (input.keys[i][j] != '')
-			// 			{         
-			// 				_datasetValues.push(input.data[i][j]);
-							
-			// 			}
-			// 		}
-			// 	}
-
 			if(_dataset.length==0)
 				{
 					console.log("returning false");

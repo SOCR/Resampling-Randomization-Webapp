@@ -201,46 +201,25 @@ socr.view = function( model ){
 
 return{
 	/** 
-	*	@method - toggleInputHandle
-	*	@description - Method to toggle the input slider
+	*	@method - toggleControllerHandle
+	*	@description - Method to toggle the controller slider
 	*
-	**/
-	toggleInputHandle: function(){
-		$target = $('#slide-out-input');
-		//console.log($(this).attr('href'));
-		if(!$target.hasClass('active'))	{
-			$target.addClass('active').show().css({left:-425}).animate({left: 0}, 500);
-			$(this).css({left:-20}).animate({left: 410}, 500);
-			socr.exp.inputSliderState=1;
-		}
-		else{
-			$target.removeClass('active').animate({
-				left: -425}, 500);
-			$(this).css({left:400}).animate({left: -20}, 500);
-			socr.exp.inputSliderState=0;
-		}
-	},
-		/** 
-	*	@method - toggleInputHandle
-	*	@description - Method to toggle the input slider
-	*
-	**/
+	*/
 	toggleControllerHandle: function(){
 		$target = $('#slide-out-controller');
-		//console.log($(this).attr('href'));
-		if(!$target.hasClass('active'))
-		{
+		if(!$target.hasClass('active')){
 			$target.addClass('active').show().css({left:-425}).animate({left: 0}, 500);
-			$(this).css({left:-30}).animate({left: 394}, 500);
+			$('.controller-handle').css({left:-30}).animate({left: 394}, 500);
 			socr.exp.controllerSliderState=1;
 		}
 		else{
 		$target.removeClass('active').animate({
 					left: -425
 				}, 500);
-			$(this).css({left:400}).animate({left: -30}, 500);
+			$('.controller-handle').css({left:400}).animate({left: -30}, 500);
 			socr.exp.controllerSliderState=0;
 		}
+
 	},
 
  	/**
@@ -307,7 +286,7 @@ return{
      */
 	createList:function(start,end){
 		console.log('createList('+start+','+end+') invoked ');
-		if($.isEmptyObject(model.bootstrapGroupKeys)){ 
+		if(Object.getOwnPropertyNames(model.bootstrapGroupKeys).length === 0){ 
 			// if no random samples have been generated, display a alert message!
 			$("#sampleList").html('<div class="alert alert-error"><a class="close" data-dismiss="alert" href="#">x</a><h4 class="alert-heading">No Random samples to show!</h4>Please generate a dataset using the list of experiments or manually enter the data. Then generate some random samples from the controller tile before click "show"</div>');
 			}
@@ -384,7 +363,13 @@ return{
 			}
 		});
 		$('.controller-back').on('click',function(){
+			try{
 			socr.exp.current.createControllerView();
+			
+			}
+			catch(err){
+				console.log(err.message);
+			}
 			socr.exp.current.initialize();
 		});
 
@@ -433,8 +418,8 @@ return{
 	    	}
 		};
 		//disable the back button in the controller tile
-		var data=socr.exp.current.getDatasetValues();		// data is in the form of an array!
-		var datakeys=socr.exp.current.getDatasetKeys();		// data is in the form of an array!
+		var data=socr.exp.current.getDataset(1,"values");		// data is in the form of an array!
+		var datakeys=socr.exp.current.getDataset(1,"keys");		// data is in the form of an array!
 		var stopCount=setting.stopCount;		// Number of datapoints in a generated random sample
 		var keys=setting.indexes;					// keys=array indexs of the datapoints in the dataset which are present in the current random sample 
 		var i=0;
@@ -589,13 +574,14 @@ return{
 			bins : binNo,
 			variable: setting.variable	,
 			nature: 'continuous'			
-		})();
+		});
 
 		 socr.vis.addBar({
 		 	elem: dotplot,
 		 	variable: setting.variable,
 		 	datum: datum
-		 })
+		 });
+		 view.updateCtrlMessage("Infer plot created.","success");
 		
 	},
 	
@@ -610,9 +596,9 @@ return{
 			var array=['<table class="table table-striped">'];
 			array.push('<tr><td>Experiment Name</td><td><strong>'+socr.exp.current.name+'</strong></td></tr>');
 			array.push('<tr><td>DataSet Size </td><td><strong>'+socr.exp.current.getDatasetSize()+'</strong></td></tr>');
-			array.push('<tr><td>Number of Random Samples : </td><td><strong>'+model.bootstrapSamples.length+'</strong></td></tr>');
+			array.push('<tr><td>Number of Random Samples : </td><td><strong>'+model.getRSampleCount()+'</strong></td></tr>');
 			//dont show mean and standard deviation in info tab when there is no mean or sd.
-			if(model.getMeanOfDataset()!=false)
+			if(model.getMeanOfDataset()!==false)
 				{
 					array.push('<tr><td>DataSet Mean : </td><td><strong>'+model.getMeanOfDataset()+'</strong></td></tr>');
 					array.push('<tr><td>DataSet Standard Deviation: </td><td><strong>'+model.getStandardDevOfDataset()+'</strong></td></tr>');
@@ -681,6 +667,27 @@ return{
 	        $alertbox.addClass('alert-error');
 	        break;
 	    }
+ 	},
+
+ 	updateCtrlMessage:function(msg,type,duration){
+ 		console.log("updateCtrlMessage called()");
+ 		var duration=duration || 2000;
+ 		var type=type || "info";
+ 		if(msg === undefined){
+ 			return false;
+ 		}
+ 		else{
+ 			try{
+ 				var el = $("#ctrlMessage");
+ 				el.html('').removeClass().addClass('span8').css('display','');
+ 				el.html(msg).addClass("alert").addClass("alert"+"-"+type);
+ 				el.delay(duration).fadeOut('slow');
+ 			}
+ 			catch(err){
+ 				console.log(err.message);
+ 			}
+ 		}
+
  	}
 	/*
 	setPercentile:function(x){

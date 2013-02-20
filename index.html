@@ -39,6 +39,15 @@
 	padding:2px 0px;
 	text-align:center;
 	}
+
+	.heading{
+		font-size: 20px;
+		font-weight: 900;
+	}
+
+	#ctrlMessage{
+		margin-bottom: 0px;
+	}
     </style>
     
   </head>
@@ -291,9 +300,12 @@
 					</div><!--/slide-out-input-->
 					<a class="controller-handle" href="#"><button class='btn-primary btn-large '>Controller</button></a>
 					<div id="slide-out-controller" >
-						<h3>Controller</h3>
+						<div class="row-fluid">
+							<div class="span4 heading">Controller</div>
+							<div class="span8" id="ctrlMessage"></div>
+						</div>
 						<div id='controller-content'>
-							<div class="alert alert-error"><a class="close" data-dismiss="alert" href="#">x</a>Choose a experiment from "simulation drive" or enter data in the "data drive" first!</div>
+							<div class="alert alert-error">Choose a experiment from "simulation drive" or enter data in the "data drive" first!</div>
 						</div>
 					</div><!--/slide-out-controller-->
 		  		</div><!--span8-->
@@ -503,7 +515,8 @@
 			"js/lib/jquery.easing.1.3.js",
 			"js/input/data.js",
 			"js/vis/tooltip.js",
-			"js/tools/FCal.js"
+			"js/tools/FCal.js",
+			"js/lib/moustache.js"
 	    	);
     
 	head.ready(function () {
