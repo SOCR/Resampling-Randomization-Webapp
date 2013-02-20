@@ -14,6 +14,7 @@
     <!-- Le styles -->
     <!--<link rel="stylesheet" href='http://fonts.googleapis.com/css?family=Lato:400,900'  type='text/css'>-->
     <link rel="stylesheet" href="css/bootstrap.css" >
+    <link rel="stylesheet" href="css/bootstrap-responsive.css" >
     <link rel="stylesheet"href="css/stylePagination.css" >
    <link rel="stylesheet" media="screen" href="css/jquery-ui.css"> 
     <link rel="stylesheet" media="screen" href="css/input/table.css">
@@ -38,7 +39,6 @@
 	padding:2px 0px;
 	text-align:center;
 	}
-
     </style>
     
   </head>
@@ -53,18 +53,23 @@
 						<span class="icon-bar"></span>
 						<span class="icon-bar"></span>
 					</a>
-					<a data-toggle="modal" href="#aboutDesc" class=" brand" >SOCR</a>
+					<a data-toggle="modal" href="#aboutDesc" class=" brand" >SOCR- Resampling Randomization Webapp</a>
 					<div class="nav-collapse">
 						<ul class="nav">
 							<li><a  href="http://wiki.stat.ucla.edu/socr/index.php/SOCR_ResamplingSimulation_Activity" target='_blank'>About</a></li>
 							<li><a data-toggle="modal" href="#simulationDesc">Simulations</a></li>
 							<!--<a data-toggle="modal" href="#help"><button class='btn btn-danger' >Need Help!</button></a>-->
 							<li><a data-toggle="modal" href="#faq">FAQ</a></li>
-							<a data-toggle="modal" href="#share"><button class='btn btn-success' >Buzz</button></a>
-							<a data-toggle="modal" href="#generate-url"><button class='btn btn-success' id='share-instance-button'>Share Instance</button></a>
+							<li class="dropdown">
+								<a id="more" href="#" role="button" class="dropdown-toggle" data-toggle="dropdown">More <b class="caret"></b></a>
+								<ul class="dropdown-menu" role="menu" aria-labelledby="more">
+									<li><a tabindex="-1" href="#share" data-toggle="modal">Buzz</a></li>
+									<li><a tabindex="-1" href="#generate-url" data-toggle="modal" id='share-instance-button'>Share Instance</a></li>
+								</ul>
+						</li>
 						</ul>
 		  			</div><!--/.nav-collapse -->
-					<a href="#" class=" brand" style='margin-left:10%' >SOCR - Resampling WebApp</a> 
+				
 				</div>
 			</div>
 		</div>

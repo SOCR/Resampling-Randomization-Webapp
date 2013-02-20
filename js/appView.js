@@ -632,7 +632,7 @@ return{
 	*/
 	CoverPage:function(){
 		//console.log('CoverPage() invoked!');
-		var height = $(window).height(),
+		var height = $(document).height(),
 			width = $(window).width();
 		$('#welcome').css('height', height );
 	//	$('.welcome-container').css('padding-top',height/3).css('padding-left', height/3);
