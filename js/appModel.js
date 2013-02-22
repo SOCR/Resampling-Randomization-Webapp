@@ -107,7 +107,7 @@ socr.model=function(){
 					_total+=this[i];
 				}
 				return _total/this.length;
-			};
+			}; 
 			var _k=0,_ymean=[],_total=0,_temp=0,_sst=0,_sse=0,_mst=0,_mse=0, _data=[];
 			_k=_this.getK();
 			if (sampleNumber === "dataset"){
@@ -168,13 +168,10 @@ return{
 	*@desc:  Generating a random number between 0 and dataSet size {@ashwini: I think this should be a private function}
 	*/
 	generateTrail:function(datasetIndex){
-		if(_dataset[1] === undefined || this.getK() === false)
-		{
+		if(_dataset[1] === undefined || this.getK() === false){
 			return false;
 		}
-		else
-		{
-		
+		else{
 		var randomIndex=_getRandomInt(0, _dataset[datasetIndex].values.length);	//generating a random number between 0 and dataSet size 
 		var _temp=_dataset[datasetIndex];
 		return {
@@ -249,13 +246,15 @@ return{
 			_sample.Mean[groupNumber]=[];
 		}
 		
-		if(_sample.Mean[groupNumber].length==bootstrapGroupValues.length )
-			return _sample.Mean[groupNumber];
-		else{
+		//if(_sample.Mean[groupNumber].length==bootstrapGroupValues.length )
+		//	return _sample.Mean[groupNumber];
+		//else
+		{
 			for(var j=_sample.Mean[groupNumber].length;j<_count;j++)
 				{
 				_sample.Mean[groupNumber][j]=_generateMean(j,groupNumber);
 				}
+				console.log("sample mean "+_sample.Mean);
 				return _sample.Mean[groupNumber];
 			}
 		},
@@ -485,7 +484,6 @@ return{
 			else{
 					console.log("returning true");
 					console.log('Data is loaded now. Data :' + _dataset);
-					view.toggleControllerHandle();
 					return true;
 				}
 
@@ -553,14 +551,13 @@ return{
 	reset:function(){
 		//dataset values deleted
 		_dataset={};
+		//random samples reset
+		this.bootstrapGroupKeys={};
+		thisbootstrapGroupValues={};
+
 		this.resetVariables();
-		//random samples deleted
-		//this.bootstrapSamples=[];
-		this.bootstrapSampleValues=[];
 		//setting the global random sample count to 0
 		this.setRSampleCount(0);
-		//Triggering view reset
-		view.reset();
 	},
 	resetVariables:function(){
 		_sample.Mean=[];
@@ -582,6 +579,5 @@ return{
   	  	}
 		return _count;
 	}
-	
 }//return
 }

@@ -124,7 +124,7 @@ return{
 				}	
 			}
 		//run the Coin toss
-		_stepID = setInterval(_tossCoin, 30);
+		_stepID = setInterval(_tossCoin, 20);
 	},
 	reset: function(){
 		clearInterval(_stepID);
@@ -156,14 +156,17 @@ return{
 	
 	createDataPlot:function(size){
 		var temp=[];
-		for(var i=0;i<_K;i++)
-		{
-			temp.push('<div id="dataset-');
+		for(var i=0;i<_K;i++){
+			temp.push('<div class="dataset-container ');
+			if(i%2===0){
+				temp.push(' highlight');
+			}
+			temp.push('" id="dataset-');
 			temp.push(i);
 			temp.push('">');
-		for(var j=0;j<size;j++)
-			{
-				temp.push('<div class="device-container" id="device');
+			for(var j=0;j<size;j++){
+				temp.push('<div class="device-container ');
+				temp.push('" id="device');
 				temp.push(i);temp.push(j);
 				temp.push('-container">');
 				temp.push('<canvas id="device');
@@ -218,7 +221,6 @@ return{
 	getSampleHW:function(){
 	return {"height":_height,"width":_width};
 	},
-
 	getK:function(){
 		if(_K === null)
 			return false;

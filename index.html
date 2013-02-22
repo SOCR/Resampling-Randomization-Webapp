@@ -48,6 +48,13 @@
 	#ctrlMessage{
 		margin-bottom: 0px;
 	}
+
+	.dataset-container{
+		padding: 5px;
+	}
+	.highlight{
+		background-color: #eee;
+	}
     </style>
     
   </head>
@@ -246,9 +253,9 @@
 							<a href="#">DataSet <i class="icon-question-sign popups" rel="popover" data-content="It is graphical view of the dataset from where the random samples are generated.Goto input tab to get started!" data-original-title="Dataset"></i></a>
 						</h3>
 						<div class='q'>
-							<div id="dataset" style='height: 150px;'></div>
-							<h6>Generated Resample: <i class="icon-question-sign popups" rel="popover" data-content="This section contains all the datapoints in 1 random sample generated from the dataset. Switch to datadriven mode after the simulation. Then goto controller -> step button" data-original-title="Generated Sample"></i></h6>
-							<div id="generatedSamples"></div>
+							<div id="dataset"></div>
+							<!--<h6>Generated Resample: <i class="icon-question-sign popups" rel="popover" data-content="This section contains all the datapoints in 1 random sample generated from the dataset. Switch to datadriven mode after the simulation. Then goto controller -> step button" data-original-title="Generated Sample"></i></h6>
+							<div id="generatedSamples"></div>-->
 						</div>		
 						<h3>
 							<a href="#">Inference Plot <i class="icon-question-sign popups" rel="popover" data-content="It is graphical view of the dataset from where the random samples are generated.Goto input tab to get started!" data-original-title="Inference Plot"></i></a>

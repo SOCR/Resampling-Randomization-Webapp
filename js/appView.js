@@ -552,14 +552,11 @@ return{
 			console.log(values);
 		}
 			
-		//var values = [4,2,3,4,1,5,6,7];
-		//var start=Math.floor(Array.min(values));
-		//var stop=Math.ceil(Array.max(values));
 		var temp=values.sort(function(a,b){return a-b});
 		var start=Math.floor(temp[0]);
 		var stop=Math.ceil(temp[values.length-1]);
 		console.log("start"+start+"stop"+stop);
-		console.log(values);
+		
 
 
 		var binNo = $('input[name="binno"]').val() != '' ? $('input[name="binno"]').val() : 10;

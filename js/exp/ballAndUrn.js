@@ -23,19 +23,26 @@ var  _n = 10;					//Number of balls to be drawn in one sample
 var  _N = 50;					//Max number of balls that can be drawn in one sample --> max(_n)=_N.
 var _y;
 var _count;						//keeps count of number of balls drawn
-var _keys=[];
-var _values=[];
+
 var _userReadableDataset=[];
+
 var _width='30';
 var _height='30';
+
 var _ball = new Array(_N);
 var _pop = new Array(_m);
+
+var _K=null;
+var _keys=[];
+var _values=[];
+var _datasetValues=[];
+var _datasetKeys=[];
 
 //::::::PRIVATE METHODS:::::::::::::
 
 
 function _selectBall(){
-	if (_count < _n){
+	if (_count < _n*_K){
 		if (_s[_count] <= _r)
 			{
 			_ball[_count].ballColor = "red";
@@ -56,7 +63,15 @@ function _selectBall(){
 	else{
 		//view.loadInputSheet(_values);
 		//process the _dataset and convert it into a human readable sample space (example instead of 0 and 1 show tail and head)
-		socr.exp.ballAndUrn.reset();
+		for(var i=0;i<_K;i++){
+			var _start=i*_n;
+			var _stop=_start+_n;
+			_datasetKeys.push(_keys.slice(_start,_stop));
+			_datasetValues.push(_values.slice(_start,_stop));
+		}
+		console.log(_datasetValues);
+		$("#grsbutton").removeClass("disabled");
+		_self.reset();
 	}
 }
 
@@ -66,7 +81,7 @@ return{
 	name:'Ball and Urn',
 	type:'ball',
 	initialize: function(){
-		//_self=this;
+		_self=this;
 		_mParam = new Parameter(document.getElementById("mInput"), document.getElementById("mLabel"));
 		_mParam.setProperties(1, 100, 1, _m, "<var>Total M Balls </var>");
 		_nParam = new Parameter(document.getElementById("nInput"), document.getElementById("nLabel"));
@@ -91,6 +106,7 @@ return{
 		$("#rInput,#nInput").on('change',function(){socr.exp.current.setVariable()});
 		$('#mInput').on('change',function(){socr.exp.current.setPopulation()});
 		$('#type').on('click',function(){socr.exp.current.setType()});
+		
 		$('#grsbutton').on('click',function(){
 			$('#dataDriven-tab').update({to:'dataDriven'});
 		});
@@ -98,21 +114,26 @@ return{
 	
 	generate:function(){
 		view.updateSimulationInfo();		//updates experiment info into third tile in the accordion
+		
 		socr.exp.ballAndUrn.setVariable();
 		socr.exp.ballAndUrn.createDataPlot(_n);
+		
 		$(".device-container").width(_width);
 		$(".device-container").height(_height);
-		for (var i = 0; i < _n; i++)
-			_ball[i] = new Ball(document.getElementById("device" + i));
-		for (var i = 0; i < _m; i++)
-			{
-                _pop[i] = i+1;
-                    
+		
+		_count = 0; _arrCount=0;_values=[];_keys=[];_tempValues=[];_tempKeys=[];_datasetValues=[];_datasetKeys=[],_y=0;
+		for(var i=0;i<_K;i++){
+			for (var j=0;j< _n;j++){
+				_ball[_arrCount] = new Ball(document.getElementById("device" + i+j));
+				//console.log(i+"---"+j+_coin[_arrCount]);	
+				_arrCount++;	
+				}	
+			}
+		for (var i = 0; i < _m; i++){
+                _pop[i] = i+1;       
             }
-		_count = 0; 
-		_s = sample(_pop, _n, _type);
-		_y = 0;
-		_stepID = setInterval(_selectBall, 50);
+		_s = sample(_pop, _n*_K, _type);
+		_stepID = setInterval(_selectBall, 20);
 	},
 
 	reset:function(){
@@ -149,28 +170,56 @@ return{
 
 	createControllerView:function(){
 	console.log("createControllerView for Ball and Urn executed!");
-	var html='<p class="toolbar"><p class="tool"><span id="nLabel" class="badge badge-warning" for="nInput">Draw N Balls = </span><span id="nvalue"></span><input id="nInput" type="range" tabindex="7" class="parameter"/></p><p class="tool"><span id="mLabel" class="badge badge-warning" for="pInput">Total M Balls = </span><span id="mvalue"></span><input id="mInput" type="range" tabindex="8" class="parameter"/></p><p class="tool"><span id="rLabel" class="badge badge-warning" for="rInput">Red Balls = </span><span id="rvalue"></span><input id="rInput" type="range" tabindex="8" class="parameter"/></p><p class="tool"><input type="checkbox" tabindex="7" id="type"><span for="replaceCheck">With replacement</span></p></p><button class="btn" id="sdbutton">Generate DataSet!</button>&nbsp;<button class="btn btn-danger" id="grsbutton">Generate Random Samples!</button>';
-		$('#controller-content').html(html);
+	var html='<p class="toolbar"><p class="tool"><span id="nLabel" class="badge badge-warning" for="nInput">Draw N Balls = </span><span id="nvalue"></span><input id="nInput" type="range" tabindex="7" class="parameter"/></p><p class="tool"><span id="mLabel" class="badge badge-warning" for="pInput">Total M Balls = </span><span id="mvalue"></span><input id="mInput" type="range" tabindex="8" class="parameter"/></p><p class="tool"><span id="rLabel" class="badge badge-warning" for="rInput">Red Balls = </span><span id="rvalue"></span><input id="rInput" type="range" tabindex="8" class="parameter"/></p><p class="tool"><input type="checkbox" tabindex="7" id="type"><span for="replaceCheck">With replacement</span></p><div><span class="badge badge-warning"> K=<span id="kValue">1</span></span><div id="kValue-slider" style="display:inline-block;width:50%;margin-left:5%"></div></p><button class="btn" id="sdbutton">Generate DataSet!</button>&nbsp;<button class="btn btn-danger" id="grsbutton">Generate Random Samples!</button>';
+		$('#controller-content').delay(1000).html(html);
+		$('.popups').popover();
+		try{
+		$('.tooltips').tooltip('destroy');	// destroy first and bind tooltips again. UI bug: the "back to generateDataset" (back button) tooltip doesnt vanish after mouse click.
+		}
+		catch(err){
+			console.log(err.message);
+		}
+
+		$('.tooltips').tooltip();
+		$( "#kValue-slider" ).slider({
+			value:1,
+			min: 1,
+			max: 10,
+			step: 1,
+			slide: function( event, ui ) {
+			$( "#kValue" ).html( ui.value );
+			}
+		});
 	},
 	createDataPlot:function(size){
 	console.log("createDataPlot() invoked");
 		var temp=[];
-		for(var i=0;i<size;i++)
-			{
-				temp.push('<div class="device-container" id="device');
-				temp.push(i);
+		for(var i=0;i<_K;i++){
+			temp.push('<div class="dataset-container ');
+			if(i%2===0){
+				temp.push(' highlight');
+			}
+			temp.push('" id="dataset-');
+			temp.push(i);
+			temp.push('">');
+			for(var j=0;j<size;j++){
+				temp.push('<div class="device-container ');
+				temp.push('" id="device');
+				temp.push(i);temp.push(j);
 				temp.push('-container">');
 				temp.push('<canvas id="device');
-				temp.push(i);
+				temp.push(i);temp.push(j);
 				temp.push('" class="device panel front');
-				temp.push(i);
+				temp.push(i);temp.push(j);
 				temp.push('" width="30" height="30" title="sample');
-				temp.push(i);
-				temp.push('">Ball');
-				temp.push(i);
+				temp.push(i);temp.push(j);
+				temp.push('">Coin');
+				temp.push(i);temp.push(j);
 				temp.push('</canvas>');
 				temp.push('</div>');
-			}
+			}//for loop
+			temp.push("</div>");
+		}//for loop
 		$('#dataset').html(temp.join(''));
 		console.log("createDataPlot() invoked . Dataplot created!");
 	},
@@ -180,17 +229,27 @@ return{
 		//_m = _mParam.getValue();
 		_n = _nParam.getValue();
 		_r = _rParam.getValue();
-		
+		try{
+			_K=parseInt($("#kValue").html());
+			console.log("k value"+_K);
+		}
+		catch(err){
+			console.log(err.message);
+			_K=null;
+		}
 	},
 	
 	getDataset:function(){
-		return _keys;
+		//console.log("getDataset called:"+ _datasetKeys);
+		return {"keys":_datasetKeys,"values":_datasetValues,"processed":true};
 	},
 	getDatasetKeys:function(){
-		return _keys;
+		//console.log("getDatasetKeyscalled:"+ _datasetKeys);
+		return _datasetKeys;
 	},
 	getDatasetValues:function(){
-		return _values;
+		//console.log("getDatasetValues called:"+ _datasetValues);
+		return _datasetValues;
 	},
 	
 	getDatasetSize:function(){

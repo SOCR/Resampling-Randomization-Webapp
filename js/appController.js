@@ -218,23 +218,6 @@ socr.controller=function(model,view){
 
 		});
 	},
-	
-	/**
-	*@method: setInput()
-	*@description:not used till now....currently the input/js/script.js file calls setDataset function directly when the done button is pressed
-	*/
-	setInput:function(array){
-	if(array.length === 0)
-		return false;
-	else
-		{
-		// model.setDataset(array);
-		//enable the buttons
-		view.enableButtons();
-		return true;
-		}
-	},
-	
 	/**
 	*@method: step()
 	*@description: It generates 1 random sample with animation effect showing the generation.
@@ -242,21 +225,20 @@ socr.controller=function(model,view){
 	*/
 	step: function(){
 		$("#accordion").accordion( "activate" , 1);
-		if(socr.exp.controllerSliderState==1)
-				{
-				$('.controller-handle').trigger('click');
-				}
+		if(socr.exp.controllerSliderState==1){
+			$('.controller-handle').trigger('click');
+		}
 		view.disableButtons();					//disabling buttons
 		model.setN(nSize.val());				// save the datapoints size
 	    var keys=model.generateStep();			//generate one sample
 	    view.updateCounter();					//update counter
 		$(".removable").remove();				//remove the previously generated canvas during animation
-		view.animate({
+		/*view.animate({
 			stopCount:$('#nSize').val(),
 			speed:$('#speed').val(),
 			indexes:keys.indexes,
 			datasetIndexes:keys.datasetIndexes
-		});										//show sample generation animation
+		});	*/									//show sample generation animation
 		view.updateSlider();					//update slider count
 		view.updateSimulationInfo();
 	},
@@ -310,10 +292,7 @@ socr.controller=function(model,view){
                         buttons: {
                             Yes: function () {
 							_this.stop();
-							model.setRSampleCount(0);		//reset the total count
-							model.bootstrapGroupKeys={};
-							model.bootstrapGroupValues={};
-							model.resetVariables();
+							model.reset();
 							view.reset();		//clearing all the canvas
 							view.toggleControllerHandle();
 							socr.dataTable.simulationDriven.resetScreen();
@@ -356,13 +335,14 @@ socr.controller=function(model,view){
 					{
 					if(socr.exp.current.getDataset()!='')
 						{	console.log('simulation drive has some data');
-						//alert(Experiment.getDataset());
-						//Check @ selvam, why was this being done?
-							 model.setDataset({
+					        var result=model.setDataset({
 							 	keys:socr.exp.current.getDatasetKeys(),
 							 	values:socr.exp.current.getDatasetValues(),
 							 	processed:true
-							 	});	
+							 	});
+					        if(result === true){
+					        	view.toggleControllerHandle();
+					        }
 							console.log(model.getDataset(1));
 							//call to loadInputSheet to input the generated simulation data if any
 						}	
