@@ -1,0 +1,97 @@
+svg {
+     font-size: 13px;
+     font-family:sans-serif;
+    }
+
+    .bars rect {
+	  fill: #1f77b4;
+	  stroke: #1f77b4;
+	  shape-rendering: crispEdges;
+	}
+
+	.bars text {
+	  fill: #fff;
+	}
+
+	.axis path, .axis line {
+	  fill: none;
+	  stroke: #000;
+	  shape-rendering: crispEdges;
+	}
+
+	circle.node{
+	  cursor:pointer;
+	}
+
+	rect{
+	  fill-opacity:0.7;
+	}
+	 
+	 rect.meanBar{
+	  fill:#ff7f0e;
+	  stroke:#ff7f0e;
+	  fill-opacity:0.8;
+	}
+
+	rect.hover{
+		fill-opacity:1;
+	}
+
+  .y.axis line.tick { opacity: .15; }
+
+	/*
+		******************
+		  TOOLTIP CSS 
+	 */
+
+.viswraptooltip {
+  position: absolute;
+  background-color: rgba(255,255,255,1);
+  padding: 10px;
+  border: 1px solid #ddd;
+  z-index: 10000;
+
+  font-family: Arial;
+  font-size: 13px;
+
+  transition: opacity 500ms linear;
+  -moz-transition: opacity 500ms linear;
+  -webkit-transition: opacity 500ms linear;
+
+  transition-delay: 500ms;
+  -moz-transition-delay: 500ms;
+  -webkit-transition-delay: 500ms;
+
+  -moz-box-shadow: 4px 4px 8px rgba(0,0,0,.5);
+  -webkit-box-shadow: 4px 4px 8px rgba(0,0,0,.5);
+  box-shadow: 4px 4px 8px rgba(0,0,0,.5);
+
+  -moz-border-radius: 10px;
+  border-radius: 10px;
+
+  pointer-events: none;
+
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.viswraptooltip h3 {
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+
+.viswraptooltip p {
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+
+.viswraptooltip span {
+  display: inline-block;
+  margin: 2px 0;
+}
