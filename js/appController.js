@@ -246,7 +246,6 @@ socr.controller=function(model,view){
 	/**
 	*@method: run()
 	*@description:It generates X random sample with animation effect showing the generation.
-	*@param: X - gets it dynamically using DOM.
 	*/
 	run:function(){
         view.disableButtons();					//disabling buttons
@@ -263,8 +262,7 @@ socr.controller=function(model,view){
 	
 	/**
 	*@method: stop()
-	*@description:It generates X random sample with animation effect showing the generation.
-	*@param: X - gets it dynamically using DOM.
+	*@description:It resets the setInterval for _generate() ans halts the random sample generation immediately.
 	*/
 	stop:function(){
 		var d=Date();
@@ -277,7 +275,7 @@ socr.controller=function(model,view){
 	
 	/**
 	*@method: reset()
-	*@description:It generates X random sample with animation effect showing the generation.
+	*@description:It resets the application by clearing the appModel and appView.
 	*/
 	reset: function(){
 	$('<div></div>').appendTo('body')
