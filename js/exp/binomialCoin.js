@@ -112,17 +112,15 @@ return{
         this.createDataPlot(_n);			//create the canvas fro the dataset
 		//assign a coin object to each
 		_count = 0; _arrCount=0;_values=[];_keys=[];_tempValues=[];_tempKeys=[];_datasetValues=[];_datasetKeys=[];		
-		for(var i=0;i<_K;i++)
-			{
-				for (var j=0;j< _n;j++)
-				{
-					_coin[_arrCount] = new Coin(document.getElementById("device"+i+j));		
-					_coin[_arrCount].prob = _p;
-					_coin[_arrCount].setValue(-1);
-					//console.log(i+"---"+j+_coin[_arrCount]);	
-					_arrCount++;	
-				}	
-			}
+		for(var i=0;i<_K;i++){
+			for (var j=0;j< _n;j++){
+				_coin[_arrCount] = new Coin(document.getElementById("device"+i+j));		
+				_coin[_arrCount].prob = _p;
+				_coin[_arrCount].setValue(-1);
+				//console.log(i+"---"+j+_coin[_arrCount]);	
+				_arrCount++;	
+			}	
+		}
 		//run the Coin toss
 		_stepID = setInterval(_tossCoin, 20);
 	},
@@ -173,7 +171,11 @@ return{
 				temp.push(i);temp.push(j);
 				temp.push('" class="device panel front');
 				temp.push(i);temp.push(j);
-				temp.push('" width="30" height="30" title="sample');
+				temp.push('" width="');
+				temp.push(_width);
+				temp.push('" height="');
+				temp.push(_height);
+				temp.push('" title="sample');
 				temp.push(i);temp.push(j);
 				temp.push('">Coin');
 				temp.push(i);temp.push(j);

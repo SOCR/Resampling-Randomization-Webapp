@@ -21,10 +21,7 @@ var  _m = 50;					//Total number of balls in the urn
 var  _r = 25;					//Number of RED balls in the urn
 var  _n = 10;					//Number of balls to be drawn in one sample
 var  _N = 50;					//Max number of balls that can be drawn in one sample --> max(_n)=_N.
-var _y;
 var _count;						//keeps count of number of balls drawn
-
-var _userReadableDataset=[];
 
 var _width='30';
 var _height='30';
@@ -35,6 +32,7 @@ var _pop = new Array(_m);
 var _K=null;
 var _keys=[];
 var _values=[];
+
 var _datasetValues=[];
 var _datasetKeys=[];
 
@@ -42,34 +40,36 @@ var _datasetKeys=[];
 
 
 function _selectBall(){
-	if (_count < _n*_K){
-		if (_s[_count] <= _r)
-			{
+	if (_tempK < _K){
+		if (_s[_tempK][_tempN] <= _r){
 			_ball[_count].ballColor = "red";
-			_y++;
-			//_userReadableDataset[_count]="R";
 			_values[_count]="1";
+			_datasetValues[_tempK][_tempN]="1";
 			}
-		else 
-			{
+		else {
 			_ball[_count].ballColor = "green";
-			//_userReadableDataset[_count]="G";
 			_values[_count]="0";
+			_datasetValues[_tempK][_tempN]="0";
 			}
-		_keys[_count]=_s[_count];
-		_ball[_count].setValue(_keys[_count],_values[_count]);
+		_keys[_count]=_s[_tempK][_tempN];
+		_datasetKeys[_tempK][_tempN]=_s[_tempK][_tempN];
+		_ball[_count].setValue(_datasetKeys[_tempK][_tempN],_datasetValues[_tempK][_tempN]);
+		_tempN++;
 		_count++;
+		if (_tempN==_n) {
+			_tempK++;_tempN=0;
+			if(_tempK!=_K){
+				_datasetValues[_tempK]=[];
+				_datasetKeys[_tempK]=[];
+			}
+		}
 	}
 	else{
+		console.log("temp values "+_datasetValues);
+		console.log("temp keys "+ _datasetKeys);
 		//view.loadInputSheet(_values);
 		//process the _dataset and convert it into a human readable sample space (example instead of 0 and 1 show tail and head)
-		for(var i=0;i<_K;i++){
-			var _start=i*_n;
-			var _stop=_start+_n;
-			_datasetKeys.push(_keys.slice(_start,_stop));
-			_datasetValues.push(_values.slice(_start,_stop));
-		}
-		console.log(_datasetValues);
+		
 		$("#grsbutton").removeClass("disabled");
 		_self.reset();
 	}
@@ -108,7 +108,12 @@ return{
 		$('#type').on('click',function(){socr.exp.current.setType()});
 		
 		$('#grsbutton').on('click',function(){
-			$('#dataDriven-tab').update({to:'dataDriven'});
+			if(_values.length!=0){
+					$('#dataDriven-tab').update({to:'dataDriven'});	//Loads the data into the appModel .
+					view.updateSimulationInfo();		//updates experiment info into third tile in the accordion
+				}
+			else
+				$('.controller-warning').html('<div class="alert alert-error"><a class="close" data-dismiss="alert" href="#">x</a><h4 class="alert-heading">Dataset NOT generated!</h4>Please click the adjacent "Generate Dataset!" button first.</div>');
 		});
 	},
 	
@@ -121,18 +126,24 @@ return{
 		$(".device-container").width(_width);
 		$(".device-container").height(_height);
 		
-		_count = 0; _arrCount=0;_values=[];_keys=[];_tempValues=[];_tempKeys=[];_datasetValues=[];_datasetKeys=[],_y=0;
+		//variable initialization
+		_count = 0; _arrCount=0;_values=[];_keys=[];_datasetValues={};_datasetKeys=[];_datasetValues=[];_datasetKeys=[],_y=0,_s=[],_tempN=0,_tempK=0;
+		_datasetValues[0]=[];_datasetKeys[0]=[];
+		//initializing the bag containing all the balls 
+		for (var i = 0; i < _m; i++){
+                _pop[i] = i+1;       
+            }
+        //creating the canvas for all the devices(cards)
 		for(var i=0;i<_K;i++){
 			for (var j=0;j< _n;j++){
 				_ball[_arrCount] = new Ball(document.getElementById("device" + i+j));
 				//console.log(i+"---"+j+_coin[_arrCount]);	
 				_arrCount++;	
-				}	
+				}
+				_s[i] = sample(_pop, _n, _type);	
 			}
-		for (var i = 0; i < _m; i++){
-                _pop[i] = i+1;       
-            }
-		_s = sample(_pop, _n*_K, _type);
+		
+		
 		_stepID = setInterval(_selectBall, 20);
 	},
 
@@ -211,7 +222,11 @@ return{
 				temp.push(i);temp.push(j);
 				temp.push('" class="device panel front');
 				temp.push(i);temp.push(j);
-				temp.push('" width="30" height="30" title="sample');
+				temp.push('" width="');
+				temp.push(_width);
+				temp.push('" height="');
+				temp.push(_height);
+				temp.push('" title="sample');
 				temp.push(i);temp.push(j);
 				temp.push('">Coin');
 				temp.push(i);temp.push(j);
@@ -229,6 +244,7 @@ return{
 		//_m = _mParam.getValue();
 		_n = _nParam.getValue();
 		_r = _rParam.getValue();
+		_m = _mParam.getValue();
 		try{
 			_K=parseInt($("#kValue").html());
 			console.log("k value"+_K);
@@ -258,6 +274,10 @@ return{
 	
 	getSampleHW:function(){
 	return {"height":_height,"width":_width};
+	},
+
+	temp:function(){
+		return _datasetKeys;
 	}
 	
 	}//return

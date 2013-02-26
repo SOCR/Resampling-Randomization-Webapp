@@ -17,15 +17,15 @@ socr.model=function(){
 	Why there are keys and values? Its because in some form of data input (like coin toss), the "key" contains the symbolic meaningful reference whereas the "value" contains the mathematical equivalent value.
 	*/
 
-	/* Structure of both bootstrapGroupKeys and Values
+	/* Structure of both _bootstrapGroupKeys and Values
 		{
 			"0": [ [..],[..],[..],..] ,
 			"1": [ [..],[..],[..],..] ,
 			 ..
 		}
 	*/
-	var bootstrapGroupKeys={};
-	var bootstrapGroupValues={};
+	var _bootstrapGroupKeys={};
+	var _bootstrapGroupValues={};
 	
 	var _sample={
 		Mean:{},
@@ -58,7 +58,7 @@ socr.model=function(){
 	*/
 	function _generateMean(sampleNumber,groupNumber){
 		var total=_generateCount(sampleNumber,groupNumber);
-		return total/bootstrapGroupValues[sampleNumber][groupNumber].length;
+		return total/_bootstrapGroupValues[sampleNumber][groupNumber].length;
 	}
 	
 	/**
@@ -68,7 +68,7 @@ socr.model=function(){
 	*@return: the calculated total count value for the sample
 	*/
 	function _generateCount(sampleNumber,groupNumber){
-		var x=bootstrapGroupValues[sampleNumber][groupNumber];
+		var x=_bootstrapGroupValues[sampleNumber][groupNumber];
 		var total=0;
 		for(var i=0;i<x.length;i++) {
 		   total += parseInt(x[i]); 
@@ -86,7 +86,7 @@ socr.model=function(){
 		//formula used here is SD= ( E(x^2) - (E(x))^2 ) ^ 1/2
 		var _mean=_generateMean(sampleNumber,groupNumber) ;			//E(x)
 		var _squaredSum=null;							//stores E(x^2)
-		var _sample=bootstrapGroupValues[sampleNumber][groupNumber];
+		var _sample=_bootstrapGroupValues[sampleNumber][groupNumber];
 		for(var i=0;i<_sample.length;i++){
 			_squaredSum+=_sample[i]*_sample[i];
 		}
@@ -116,7 +116,7 @@ socr.model=function(){
 				};
 			}
 			else{
-				_data=bootstrapGroupValues[sampleNumber];
+				_data=_bootstrapGroupValues[sampleNumber];
 			}
 			for(var i=1;i<=_k;i++){
 				_ymean[i]=_data[i].mean();
@@ -153,8 +153,8 @@ socr.model=function(){
 	
 return{
 	/* PUBLIC PROPERTIES   */
-	bootstrapGroupKeys:bootstrapGroupKeys,
-	bootstrapGroupValues:bootstrapGroupValues,
+	//bootstrapGroupKeys:_bootstrapGroupKeys,
+	//bootstrapGroupValues:_bootstrapGroupValues,
 
 	
 	/* PUBLIC METHODS   */
@@ -200,8 +200,8 @@ return{
 			valEl.push(values);
 			k++;
 			}
-		Object.defineProperty(model.bootstrapGroupKeys,_count,{value:keyEl,writable:true,configurable : true});
-		Object.defineProperty(model.bootstrapGroupValues,_count,{value:valEl,writable:true,configurable : true});
+		Object.defineProperty(_bootstrapGroupKeys,_count,{value:keyEl,writable:true,configurable : true});
+		Object.defineProperty(_bootstrapGroupValues,_count,{value:valEl,writable:true,configurable : true});
 		_count++;		//incrementing the total count - number of samples generated from start of simulation
 	},
 	
@@ -246,7 +246,7 @@ return{
 			_sample.Mean[groupNumber]=[];
 		}
 		
-		//if(_sample.Mean[groupNumber].length==bootstrapGroupValues.length )
+		//if(_sample.Mean[groupNumber].length==_bootstrapGroupValues.length )
 		//	return _sample.Mean[groupNumber];
 		//else
 		{
@@ -295,7 +295,7 @@ return{
 			_sample.StandardDev[groupNumber]=[];
 		}
 		var _temp=_sample.StandardDev[groupNumber];
-		if(_temp.length==bootstrapGroupValues.length)
+		if(_temp.length==_bootstrapGroupValues.length)
 			return _temp;
 		else{
 			for(var j=_temp.length;j<_count;j++){
@@ -500,11 +500,14 @@ return{
 	getSample:function(index,type,K){
 		K= K || 1;		//default set to 1
 		type=type || "values";	//default set to "values"
+		if(typeof _bootstrapGroupKeys[1] === "undefined" || typeof _bootstrapGroupValues[1] === "undefined" || index === "undefined"){
+			return false;
+		}
 		if(type === "values"){
-			return bootstrapGroupValues[index][K];
+			return _bootstrapGroupValues[index][K];
 		}
 		else{
-			return bootstrapGroupKeys[index][K];
+			return _bootstrapGroupKeys[index][K];
 		}
 	},
 	
@@ -513,12 +516,12 @@ return{
 		K=K || 1;var _temp=[];
 		if(type==="values"){
 			for(var i=0;i<_count;i++){
-			  _temp[i]=bootstrapGroupValues[i][K];
+			  _temp[i]=_bootstrapGroupValues[i][K];
 			}
 		}
 		else{
 			for(var i=0;i<_count;i++){
-			  _temp[i]=bootstrapGroupKeys[i][K];
+			  _temp[i]=_bootstrapGroupKeys[i][K];
 			}
 		}
 		return _temp;
@@ -552,8 +555,10 @@ return{
 		//dataset values deleted
 		_dataset={};
 		//random samples reset
-		this.bootstrapGroupKeys={};
-		thisbootstrapGroupValues={};
+		_bootstrapGroupKeys={};
+		_bootstrapGroupValues={};
+		//this._bootstrapGroupKeys={};
+		//this._bootstrapGroupValues={};
 
 		this.resetVariables();
 		//setting the global random sample count to 0

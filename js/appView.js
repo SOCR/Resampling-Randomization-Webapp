@@ -57,11 +57,11 @@ socr.view = function( model ){
   					temp.push('<li><a href="#sample-'+i+j+'">'+j+'</a></li>');	
   					j++;
   				}
-		  	temp.push('</ul><div class="tab-content"><div class="tab-pane active" id="sample-1"><pre>'+model.bootstrapGroupKeys[i][1]+'</pre></div>');
+		  	temp.push('</ul><div class="tab-content"><div class="tab-pane active" id="sample-1"><pre>'+model.getSample(i,"keys",1)+'</pre></div>');
  			var j=2;
  			while(j<=model.getK())
   				{
-  					temp.push('<div class="tab-pane" id="sample-'+i+j+'"><pre>'+model.bootstrapGroupKeys[i][j]+'</pre></div>');
+  					temp.push('<div class="tab-pane" id="sample-'+i+j+'"><pre>'+model.getSample(i,"keys",j)+'</pre></div>');
   					j++;
   				}
 		  	temp.push("</div>");
@@ -286,7 +286,8 @@ return{
      */
 	createList:function(start,end){
 		console.log('createList('+start+','+end+') invoked ');
-		if(Object.getOwnPropertyNames(model.bootstrapGroupKeys).length === 0){ 
+		//if(Object.getOwnPropertyNames(model.bootstrapGroupKeys).length === 0){ 
+		if(model.getSample(1) === false){
 			// if no random samples have been generated, display a alert message!
 			$("#sampleList").html('<div class="alert alert-error"><a class="close" data-dismiss="alert" href="#">x</a><h4 class="alert-heading">No Random samples to show!</h4>Please generate a dataset using the list of experiments or manually enter the data. Then generate some random samples from the controller tile before click "show"</div>');
 			}

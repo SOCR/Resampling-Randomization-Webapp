@@ -76,7 +76,7 @@ socr.controller=function(model,view){
 		
 		$("#infer").on('click',function(){
 		/*^^^^^create loading gif ^^^^^^^^*/
-			if(model.bootstrapGroupKeys.length==0)
+			if(model.getSample(1)==false)
 				view.handleResponse('<h4 class="alert-heading">No Random samples to infer From!</h4>Please generate some random samples. Click "back" button on the controller to go to the "Generate Random Samples!" button.','error','controller-content');
 			else
 			_this.setDotplot();
