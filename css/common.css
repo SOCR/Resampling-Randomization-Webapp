@@ -205,7 +205,7 @@
       
       .welcome-container div{
 	float:left;
-	width: 600px;
+	width: 100%;
       }
 	  
 	  #startApp{

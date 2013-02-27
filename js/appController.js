@@ -82,11 +82,6 @@ socr.controller=function(model,view){
 			_this.setDotplot();
 		});
 		
-		$('#inputEditButton').on('click',function(){
-			$('#accordion').accordion( "activate" , 0);
-			$('.input-handle').trigger('click');
-		});
-		
 		$("#showButton").on('click',function(){
 			//a check to see if the sample count is 0 or not
 			view.createList($('.show-list-start').val(),$('.show-list-end').val());
@@ -103,7 +98,7 @@ socr.controller=function(model,view){
 	
 		// Twitter Feed
 		$('#tweetFeed').jTweetsAnywhere({
-				searchParams: 'q=socr,doubt',
+				searchParams: 'q=%23socrWebapp',
 				count: 10,
 				showTweetFeed: {
 					autorefresh: {
@@ -114,34 +109,10 @@ socr.controller=function(model,view){
 					mode: 'more'
 					},
 					showTimestamp: {
-					refreshInterval: 15
+					refreshInterval: 30
 					}
 				}
 			}); 
-		$('#tweetbox').jTweetsAnywhere({
-			showTweetBox:{
-				counter: true,
-				width: 380,
-				height: 65,
-				label: '<span style="color: #A4A4A4">Post your doubts here!</span>',
-				defaultContent: '#simulation #socr',
-				onTweet: function(textTweet, htmlTweet){
-					alert('You tweeted: ' + textTweet);
-				}
-			}
-		});
-
-		//REDUNDENT....AS THE INPUT AND CONTROLLER TILE WILL NEVER OVERLAP
-		//For deciding which tile should come over which one!
-		$('#slide-out-input').on('click',function(){
-			$('#slide-out-controller').css('z-index',0).css('opacity','0.8');
-			$(this).css('z-index',20).css('opacity','1');
-		});
-		
-		$('#slide-out-controller').on('click',function(){
-			$('#slide-out-input').css('z-index',0).css('opacity','0.8');
-			$(this).css('z-index',20).css('opacity','1');
-		});
 			
 		$('#accordion').accordion();
 		$('.dropdown-toggle').dropdown();

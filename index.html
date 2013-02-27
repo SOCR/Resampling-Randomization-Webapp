@@ -69,7 +69,7 @@
 						<span class="icon-bar"></span>
 						<span class="icon-bar"></span>
 					</a>
-					<a data-toggle="modal" href="#aboutDesc" class=" brand" >SOCR- Resampling Randomization Webapp</a>
+					<a data-toggle="modal" href="#aboutDesc" class=" brand" >SOCR- Resampling Webapp</a>
 					<div class="nav-collapse">
 						<ul class="nav">
 							<li><a  href="http://wiki.stat.ucla.edu/socr/index.php/SOCR_ResamplingSimulation_Activity" target='_blank'>About</a></li>
@@ -332,7 +332,7 @@
 						<div>
 							<input type='text' class='show-list-start' placeholder='start' style='width:60px'> - <input type='text' class='show-list-end' placeholder='end' style='width:60px'>
 						</div>
-						<div><button class='btn' type="button" id="showButton" tabindex="2" title="Show!" >Show!</button></div>
+						<div><button class='btn' type="button" id="showButton" data-loading-text="creating..." tabindex="2" title="Show!" >Show!</button></div>
 					</div>
 					<br>
 					<div id='sampleList'>
@@ -374,8 +374,11 @@
 					<h3>What are People Saying!</h3>
 				</div>
 				<div class="modal-body">
-					<h4>Tweet</h4>
-					<div id='tweetbox'></div>
+					<h4>Tweet (use #socrWebapp hashtags)</h4>
+					<div id='tweetbox'>
+						<a href="https://twitter.com/intent/tweet?button_hashtag=socrWebapp&text=I%20started%20using%20socr%20webApps.%20You%20should%20try%20too.%20 http://www.socr.ucla.edu/htmls/HTML5/SOCR_Resampling_Webapp/" class="twitter-hashtag-button" data-lang="en" data-related="jasoncosta">Tweet #socrWebApp</a>
+						<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+					</div>
 					<div id='tweetFeed'></div>
 				</div>
 			</div>
@@ -577,8 +580,6 @@
 			 */
 			controller.initialize();   
 					
-			$('.input-handle').on('click', view.toggleInputHandle); //input-handle click
-			
 			$('.controller-handle').on('click',view.toggleControllerHandle);//controller-handle click		
 		
 			$( "#speed" ).slider({
@@ -602,8 +603,6 @@
 				socr.exp.current=socr.exp.binomialCoin;
 				socr.exp.current.createControllerView();
 				socr.exp.current.initialize();
-				if(socr.exp.inputSliderState!=0)
-					$(".input-handle").trigger("click");
 				if(socr.exp.controllerSliderState==0)
 					$(".controller-handle").trigger("click");
 			});
@@ -622,8 +621,6 @@
 						//Initializing
 						socr.exp.current.createControllerView();
 						socr.exp.current.initialize();
-						if(socr.exp.inputSliderState!=0)
-							$(".input-handle").trigger("click");
 						if(socr.exp.controllerSliderState==0)
 							$(".controller-handle").trigger("click");
 					});
@@ -653,8 +650,6 @@
 						//Initializing
 						socr.exp.current.createControllerView();
 						socr.exp.current.initialize();
-						if(socr.exp.inputSliderState!=0)
-							$(".input-handle").trigger("click");
 						if(socr.exp.controllerSliderState==0)
 							$(".controller-handle").trigger("click");
 					});
@@ -685,8 +680,7 @@
 		})();
 
 	
-		if(urlParams.type!==undefined)
-			{
+		if(urlParams.type!==undefined){
 			//type=urlParams.type;
 			console.log("dataset:"+urlParams.dataset);
 			console.log("nSize:"+urlParams.nSize);//datapoints
@@ -701,7 +695,7 @@
 					processed:false,
 					type:'url'
 					});
-					
+			//load the dataset grid with the url values		
 			view.loadInputSheet(urlParams.dataset.split(","));
 
 		$('section .response').html('Data loaded successfully! Just go to controller tile and start generating random samples!<i class="icon-ok"></i>').show();
