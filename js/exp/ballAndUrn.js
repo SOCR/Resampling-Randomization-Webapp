@@ -71,7 +71,7 @@ function _selectBall(){
 		//process the _dataset and convert it into a human readable sample space (example instead of 0 and 1 show tail and head)
 		
 		$("#grsbutton").removeClass("disabled");
-		_self.reset();
+		socr.exp.ballAndUrn.reset();
 	}
 }
 
@@ -81,7 +81,6 @@ return{
 	name:'Ball and Urn',
 	type:'ball',
 	initialize: function(){
-		_self=this;
 		_mParam = new Parameter(document.getElementById("mInput"), document.getElementById("mLabel"));
 		_mParam.setProperties(1, 100, 1, _m, "<var>Total M Balls </var>");
 		_nParam = new Parameter(document.getElementById("nInput"), document.getElementById("nLabel"));
@@ -89,27 +88,22 @@ return{
 		_rParam = new Parameter(document.getElementById("rInput"), document.getElementById("rLabel"));
 		_rParam.setProperties(1, _m, 1, _r, "<var>Red Balls </var>");
 		
-		//if u dont use var while defining a variable it is global!!
-		  //  self=this;
 		console.log('Experiment Ball and Urn initialized');
-		//this.reset(); Avoid using 'this' in module pattern
 		socr.exp.ballAndUrn.reset();
+		
 		$("#sdbutton").on('click',function(){
 			socr.exp.current.generate();
 			$("#accordion").accordion( "activate" , 1);
-			if(socr.exp.inputSliderState == 1)
-				{
-				console.log("inputSliderState:"+socr.exp.inputSliderState);
-				$('.input-handle').trigger('click');
-				}
-			});
+		});
 		$("#rInput,#nInput").on('change',function(){socr.exp.current.setVariable()});
+		
 		$('#mInput').on('change',function(){socr.exp.current.setPopulation()});
+		
 		$('#type').on('click',function(){socr.exp.current.setType()});
 		
 		$('#grsbutton').on('click',function(){
 			if(_values.length!=0){
-					$('#dataDriven-tab').update({to:'dataDriven'});	//Loads the data into the appModel .
+					$.update({to:'dataDriven'});	//Loads the data into the appModel .
 					view.updateSimulationInfo();		//updates experiment info into third tile in the accordion
 				}
 			else
@@ -175,7 +169,6 @@ return{
 		else 
 			_nParam.setProperties(1, _N, 1, _n, "<var>Draw N Balls </var>");
 		_n = _nParam.getValue();
-		//this.reset();
 		
 	},
 
@@ -274,10 +267,6 @@ return{
 	
 	getSampleHW:function(){
 	return {"height":_height,"width":_width};
-	},
-
-	temp:function(){
-		return _datasetKeys;
 	}
 	
 	}//return

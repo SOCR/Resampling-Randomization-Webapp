@@ -1,9 +1,16 @@
 /*
-*Card Experiment
-*Dependencies on appview.js
-*
-*/
 
+	Playing Card Experiment
+ 	Revised from Distributome Card Experiment into a separate module
+
+ 	Notes:
+ 		1. Avoid using this in private/public methods.There is only a single instance and its methods can be accessed using the name,ie, cardExp
+ 		2. No need to immediately invoke it
+ 		
+ 	@dependencies:
+ 		1. Uses methods of core.js,appController.js,appModel.js,appView.js
+ 		2. Uses intrinsic names of Element Ids mentioned in index.html
+ 		*/
 socr.exp.cardExp = function(){
 //::::::: PRIVATE PROPERTIES :::::::::::::::
 var _stepID;
@@ -50,29 +57,32 @@ return{
 	description:'he card experiment consists of dealing n cards at random (and without replacement) from a standard deck of 52 cards. The cards (X1,X2,…,Xn) are recorded on each run. The parameter n can be varied from 1 to 12 with the input control.',
 	initialize: function(){
 		//socr.exp.cardExp=socr.exp.cardExp;
-		self=this;
 		_nParam = new Parameter(document.getElementById("nInput"), document.getElementById("nLabel"));
 		_nParam.setProperties(1, 10, 1, _n, "<var>n</var>");
-		self.reset();
+		
+		socr.exp.cardExp.reset();
+
 		$("#sdbutton").on('click',function(){
 			$("#grsbutton").addClass("disabled");	
 			socr.exp.current.generate();
 			$("#accordion").accordion( "activate" , 1);
 			view.updateCtrlMessage("dataset generated successfully.","success");
 		});
+
 		$('#nInput').on('change',function(){
 			socr.exp.current.setVariable();
 		});
+
 		$('#grsbutton').on('click',function(){
-			$('#dataDriven-tab').update({to:'dataDriven'});
+			$.update({to:'dataDriven'});
 			view.updateSimulationInfo();
 		});
 	},
 	
 	generate: function(){
 		view.updateSimulationInfo();		//updates experiment info into third tile in the accordion
-		self.setVariable();
-		self.createDataPlot(_n);			//create the canvas fro the dataset
+		socr.exp.cardExp.setVariable();
+		socr.exp.cardExp.createDataPlot(_n);			//create the canvas fro the dataset
 		$(".device-container").width(_width);
 		$(".device-container").height(_height);
 		

@@ -1,7 +1,6 @@
 /* Tablet to desktop
 ------------------------- */
 @media (min-width: 768px) and (max-width: 979px) {
-
 	#main{
 		padding-top: 0px;
 	}
@@ -10,94 +9,68 @@
 /* Tablet
 ------------------------- */
 @media (max-width: 767px) {
-  #main {
-    padding-top: 0px;
-  }
-  #range{
-  	display: none;
-  }
+	#main {
+    	padding-top: 0px;
+  	}
+	#range{
+  		display: none;
+  	}
 }
 
 /* Desktop
 ------------------------- */
 @media (min-width: 980px) {
-  body > #main {
-    padding-top: 50px;
-  }
+  	body > #main {
+    	padding-top: 50px;
+  	}
 }
 
-    .sidebar-nav {
-        padding: 9px 0;
-    }
-      .row-fluid{
-	padding-top:10px;
-	}
-      
-    .tab-content{
-		overflow:visible;
-	}
 	  
-/*
-    SampleList style starts here
- 	  
-*/
-     .entry{
-	      padding: 10px;
-	      border-bottom: 0; 
-	      &:last-of-type {
+/* SampleList style 
+------------------------- */
+.entry{
+	padding: 10px;
+	border-bottom: 0; 
+	&:last-of-type {
         border-bottom: 1px solid black; 
 	}
-      }
-      .header{
+}
+.header{
       background-color:#cdf;
-      }
-      .values{
+}
+
+.values{
 	color:brown;
 	font-weight:800;
-      }
+}
 	
-      .span5,.span4{
-      	/*
-		border:1px solid #666;
-		*/
-		padding:10px;
-      }
-      #sampleList{
+.span5,.span4{
+	/*
+	border:1px solid #666;
+	*/
+	padding:10px;
+}
+
+#sampleList{
 	height:400px;
 	overflow-y: auto;
-      }
+}
       
-      #range{
+#range{
 	width:50%;
 	float:left;
 	margin-right:10px;
 	margin-top:7px;
-	}
+}
+
 	
-  /*
-    SampleList style ends here
- 	  
-*/
-  /*
-  Control and input tile style starts here 	  
-*/      
-    .up{
-		z-index:1;
-      }
-      #accordion div{
-	/*
-	height:350px;
-	display:inline;
-	border:1px solid;
-	*/
-	
-      }
-      #dataPlot, #currentSample{
-      /*float:left;
-      width:45%;
-      */margin:5px;
-      }
-      .input-handle,.controller-handle{
+/*Control tile style 
+----------------------*/      
+.up{
+	z-index:1;
+}
+
+.controller-handle{
 	position:absolute;
 	left:-20px;
 	-webkit-transform: rotate(90deg);
@@ -106,15 +79,16 @@
 	-moz-transform:rotate(90deg); /* Firefox */
 	-webkit-transform:rotate(90deg); /* Safari and Chrome */
 	-o-transform:rotate(90deg); /* Opera */
-      }
+}
       
-      .controller-handle{
+.controller-handle{
 	left:-30px;
-      }
-      .controller-handle,#slide-out-controller{
+}
+.controller-handle,#slide-out-controller{
 	top:350px;
-      }
-      #slide-out-input,#slide-out-controller{
+}
+
+#slide-out-controller{
 	width:400px;
 	display:none;
 	position: absolute;
@@ -122,45 +96,55 @@
 	background-color:#eee;
 	border:1px solid ;
 	padding:10px;
-	
-      }
-       .input-handle,#slide-out-input{
-	top:150px;
-      }
-   /*
-  Control and input tile style ends here 	  
-*/       
+}
 
+.heading{
+	font-size: 20px;
+	font-weight: 900;
+	}
 
-	
+#ctrlMessage{
+	margin-bottom: 0px;
+}
+
+.dataset-container{
+	padding: 5px;
+}
+.highlight{
+	background-color: #eee;
+}
+
+     
+/* generated dataset styles
+------------------------*/	
 	#dataSet,#generatedSamples{
 	height:200px;
 	/*border:1px solid #e3e3e3;*/
 	padding:5px;
 	}
 
-    .device-container{
-      width: 30px;
-      height: 30px;
-      position: relative;
-      display:inline-block;
-      }
+.device-container{
+    width: 30px;
+    height: 30px;
+    position: relative;
+    display:inline-block;
+}
       
-      .device{
+.device{
 	width: 100%;
 	height: 100%;
 	position: absolute;
-        top: 0;
-        left: 0;
-      }
+    top: 0;
+    left: 0;
+}
 
-      .q{
+.q{
 	height: 400px;
-	
-      }
-     /*
-		Start styling for accordion menu
-     */
+}
+
+
+/* Start styling for accordion menu
+-----------------------------------*/
     .ui-accordion-header{
 		background-color:#F5F5F5;
 		color:#666;
@@ -172,10 +156,10 @@
 		/*border:1px solid;*/
       }
       
-      /*
-		Start definitions for the welcome splash screen
-      */
-      #welcome{
+
+/* Welcome splash screen
+-------------------------------------------------*/
+#welcome{
 	width: 100%;
 	height: 100%;
 	z-index: 9999;
@@ -184,46 +168,38 @@
 	top:0px;
 	left: 0px;
 	text-align:center;
-      }
+}
       
-      .font{
+.font{
 	font-size: 20px;
 	color: white;
 	font-family: 'Lato', sans-serif;
-      }
+}
 
-      div.welcome-container{
-      	width:600px;
-      	margin:120px auto;
-      }
+div.welcome-container{
+    width:600px;
+    margin:120px auto;
+}
       
-      .welcome-title{
+.welcome-title{
 	color:#1DC4F9;
 	font-size: 150px;
 	line-height: 150px;
-      }
+}
       
-      .welcome-container div{
+.welcome-container div{
 	float:left;
 	width: 100%;
-      }
+}
 	  
-	  #startApp{
-	  	margin: 10px auto;
-	  }
+#startApp{
+	margin: 10px auto;
+}
 
-	#speed-controller,#percentile-controller{
-	padding-top:5%;
-	padding-bottom:10%;
-	}
-	
-	#speed-selector,#percentile-selector{
-		float: right;
-		width:60%;
-	}
-/*
-	Styling for the input module
-*/
+
+
+/* Styling for the input module
+-------------------------------*/
 	.main-wrap{
 		display:none;
 	}
@@ -354,4 +330,40 @@ a.input-handle{
 }
 #status{
 	margin-top:10px;
+}
+
+
+
+
+#speed-controller,#percentile-controller{
+	padding-top:5%;
+	padding-bottom:10%;
+}
+	
+#speed-selector,#percentile-selector{
+	float: right;
+	width:60%;
+}
+
+.sidebar-nav {
+    padding: 9px 0;
+}
+.row-fluid{
+	padding-top:10px;
+}
+      
+.tab-content{
+	overflow:visible;
+}
+#accordion div{
+	/*
+	height:350px;
+	display:inline;
+	border:1px solid;
+	*/
+}
+#dataPlot, #currentSample{
+    /*float:left;
+    width:45%;
+    */margin:5px;
 }

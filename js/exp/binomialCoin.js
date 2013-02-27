@@ -4,7 +4,7 @@
  	Revised from Distributome BinomialCoin Experiment by Selvam into a separate module
 
  	Notes:
- 		1. Avoid using this in private/public methods.There is only a single instance and its methods can be accessed using the name,ie, ballAndUrn
+ 		1. Avoid using this in private/public methods.There is only a single instance and its methods can be accessed using the name,ie, binomialCoin
  		2. No need to immediately invoke it
  		
  	@dependencies:
@@ -64,7 +64,7 @@ function _tossCoin(){
 		//console.log(_datasetKeys); 
 		//console.log(_datasetValues);
 		$("#grsbutton").removeClass("disabled"); 
-		self.reset();
+		socr.exp.binomialCoin.reset();
 	}
 }
 
@@ -75,30 +75,29 @@ return{
 	description:"The random experiment consists of tossing n coins, each with probability of heads p. Random variable Y gives the number of heads, and random variable M gives the proportion of heads. These are recorded on each update in the data table. Either Y or M can be selected with the list box. The probability density function and moments of the selected variable are shown in blue in the distribution graph blue and are recorded in the distribution table. On each update, the empirical density function and moments of the selected variable are shown in red in the distribution graph and are recorded in the distribution table. The parameters n and p can be varied with scroll bars.",
     
     initialize: function(){
-		self=this;
 		_nParam = new Parameter(document.getElementById("nInput"), document.getElementById("nLabel"));
 		_nParam.setProperties(1, _N, 1, _n, "<var>n</var>");
 		_pParam = new Parameter(document.getElementById("pInput"), document.getElementById("pLabel"));
 		_pParam.setProperties(0, 1, 0.01, _p, "<var>p</var>");
-		this.reset();
+		socr.exp.binomialCoin.reset();
 		// BINDING BUTTONS OF THE CONTROLLER
 		$("#sdbutton").on('click',function(){
 			//***clicking this button only generates the dataset...doesnt load it into the appModel. Clicking the grsbutton does that.
 			$("#grsbutton").addClass("disabled");	
-			self.generate();		
+			socr.exp.binomialCoin.generate();		
 			$("#accordion").accordion( "activate" , 1);
 			view.updateCtrlMessage("dataset generated successfully.","success");
 			
 		});
 
 		$('#nInput,#pInput').on('change',function(){
-			self.setVariable();
+			socr.exp.binomialCoin.setVariable();
 			});
 
 		$('#grsbutton').on('click',function(){
 			if(_values.length!=0)
 				{
-					$('#dataDriven-tab').update({to:'dataDriven'});	//Loads the data into the appModel .
+					$.update({to:'dataDriven'});	//Loads the data into the appModel .
 					view.updateSimulationInfo();		//updates experiment info into third tile in the accordion
 				}
 			else
@@ -108,8 +107,8 @@ return{
 
 	generate: function(){
 		
-		this.setVariable();
-        this.createDataPlot(_n);			//create the canvas fro the dataset
+		socr.exp.binomialCoin.setVariable();
+        socr.exp.binomialCoin.createDataPlot(_n);			//create the canvas fro the dataset
 		//assign a coin object to each
 		_count = 0; _arrCount=0;_values=[];_keys=[];_tempValues=[];_tempKeys=[];_datasetValues=[];_datasetKeys=[];		
 		for(var i=0;i<_K;i++){
@@ -126,7 +125,7 @@ return{
 	},
 	reset: function(){
 		clearInterval(_stepID);
-		this.setVariable();
+		socr.exp.binomialCoin.setVariable();
  	},
 	createControllerView:function(){
 	console.log("createControllerView for binomialCoin executed!");

@@ -16,7 +16,7 @@
     <link rel="stylesheet" href="css/bootstrap.css" >
     <link rel="stylesheet" href="css/bootstrap-responsive.css" >
     <link rel="stylesheet"href="css/stylePagination.css" >
-   <link rel="stylesheet" media="screen" href="css/jquery-ui.css"> 
+    <link rel="stylesheet" media="screen" href="css/jquery-ui.css"> 
     <link rel="stylesheet" media="screen" href="css/input/table.css">
 	<link rel="stylesheet" type="text/css" href="css/jquery.jtweetsanywhere-1.3.1.css" />
    	<link rel="stylesheet" href="css/common.css" >
@@ -40,21 +40,6 @@
 	text-align:center;
 	}
 
-	.heading{
-		font-size: 20px;
-		font-weight: 900;
-	}
-
-	#ctrlMessage{
-		margin-bottom: 0px;
-	}
-
-	.dataset-container{
-		padding: 5px;
-	}
-	.highlight{
-		background-color: #eee;
-	}
     </style>
     
   </head>
@@ -92,7 +77,6 @@
 	</div><!--/.header -->
 	<div id='main'>
 		<!-- The Welcome Splash Screen -->
-
 		<div id='welcome'>
 			<div class="welcome-container">
 			<div>
@@ -100,7 +84,6 @@
 			</div>
 			<div>
 				<span class="font" >Statistical Online Computational Resource - Resampling WebApp &nbsp;</span> 
-				
 				<div><button id="startApp" class="btn btn-primary btn-large" disabled> Initialising ... </button></div>
 			</div>
 			</div>
@@ -112,7 +95,6 @@
 					<div id='accordion'>
 						<h3><a href="#">Data Driven</a></h3>
 						<div>
-
 							<section id = "datadriven-splash">
 								<div class="page-header">
 									<h3>Getting Started <small> Select dataset</small></h3>
@@ -266,45 +248,7 @@
 							</h3>
 						<div id='details'></div><div id="contribution-details"></div>
 					</div>
-					<a class="input-handle" href='#'>
-						<button class='btn-primary btn-large'>Input</button>
-					</a>	
-					<div id="slide-out-input" >
-						<h3> Input 
-							<i class="icon-question-sign popups" rel="popover" data-content="There are two ways to generate a dataset (from which we will draw random samples). <b>Data Driven :</b> Choose this if you want to enter your custom data. <b>Simulation Driven:</b> Choose this if you want to use a pre-defined experiment to generate a dataset for you!" data-original-title="What is Input Data?">
-							</i>
-						</h3>
-						<!-- Add data-toggle="buttons-radio" for radio style toggling on btn-group -->
-						<ul id='myTab' class="nav nav-tabs">
-							<li class="active"><a href="#dataDriven-content" id='dataDriven-tab' data-toggle="tab" >Data Driven</a></li>
-							<li ><a href="#simulationDriven-content" id='simulationDriven-tab' data-toggle="tab" >Simulation Driven</a></li>
-						</ul>
-						<div id="myTabContent" class="tab-content">
-							<div class="tab-pane fade active in" id="dataDriven-content">
-								<div style='width:415px'>
-									<p>
-									<a data-toggle="modal" href="#"><button class='btn' id='inputEditButton' >Input/Edit Data</button></a>
-										<i class="icon-question-sign popups" rel="popover" data-content="If you have run the simulation once, then the data is already loaded into the app OR Input/Drag and Drop a URL to fetch data from it OR manually enter data by clicking on the Edit/Input button." data-original-title="How to input data?"></i>
-									</p>
-									
-								</div>
-							</div>
-							<div class="tab-pane fade" id="simulationDriven-content">
-								<p style='width:400px'>There are many experiments available which generate samples and dont require the user to enter the sample set/data.<span><i class="icon-question-sign popups" rel="popover" data-content="Choose a experiment from the list to start generating samples!" data-original-title="Simulation Driven"></i></span>
-								</p>
-								<div class="btn-group" style='float:left'>
-									<button class="btn btn-success">Choose</button>
-									<button class="btn btn-success dropdown-toggle"><span class="caret"></span></button>
-									<ul class="dropdown-menu">
-										<li><a href="#" id='binomialCoin'>Binomial Coin Toss</a></li>
-										<li><a href="#" id='ballAndUrn'>Ball And Urn</a></li>
-										<li><a href="#" id='card'>Card Experiment</a></li>
-									</ul>
-							  </div>
-							  <div style='float:right'><strong>Current Experiment:</strong><h6 class='current-experiment'>Binomial Coin Toss<i class="icon-question-sign popups" rel="popover" data-content="The random experiment consists of tossing n coins, each with probability of heads p. Random variable Y gives the number of heads, and random variable M gives the proportion of heads. These are recorded on each update in the data table. Either Y or M can be selected with the list box. The probability density function and moments of the selected variable are shown in blue in the distribution graph blue and are recorded in the distribution table. On each update, the empirical density function and moments of the selected variable are shown in red in the distribution graph and are recorded in the distribution table. The parameters n and p can be varied with scroll bars." data-original-title="Description"></i></h6> </div>
-							</div>
-						 </div><!--/myTabContent-->
-					</div><!--/slide-out-input-->
+					
 					<a class="controller-handle" href="#"><button class='btn-primary btn-large '>Controller</button></a>
 					<div id="slide-out-controller" >
 						<div class="row-fluid">
@@ -575,97 +519,10 @@
 		
 		$(document).ready(function(){
 					
-			/*
-			 * Initialize the controller 
-			 */
-			controller.initialize();   
-					
-			$('.controller-handle').on('click',view.toggleControllerHandle);//controller-handle click		
-		
-			$( "#speed" ).slider({
-				value:400,
-				min: 200,
-				max: 2000,
-				step: 50,
-				slide: function( event, ui ) {
-				$( "#speedCount" ).html( ui.value );
-				}
-			});
-			/* Array while holds the list of exp.js files already loaded*/    
-			var expLoaded=['binomialCoin'];
-
-			socr.exp.current = socr.exp.binomialCoin; //The default Experiment
-			
-			$('#binomialCoin').click(function(){
-				$('.current-experiment').html('Binomial Coin Toss<i class="icon-question-sign popups" rel="popover" data-content="The random experiment consists of tossing n coins, each with probability of heads p. Random variable Y gives the number of heads, and random variable M gives the proportion of heads. These are recorded on each update in the data table. Either Y or M can be selected with the list box. The probability density function and moments of the selected variable are shown in blue in the distribution graph blue and are recorded in the distribution table. On each update, the empirical density function and moments of the selected variable are shown in red in the distribution graph and are recorded in the distribution table. The parameters n and p can be varied with scroll bars." data-original-title="Description"></i>');
-
-				model.reset();
-				socr.exp.current=socr.exp.binomialCoin;
-				socr.exp.current.createControllerView();
-				socr.exp.current.initialize();
-				if(socr.exp.controllerSliderState==0)
-					$(".controller-handle").trigger("click");
-			});
-			
-			/* Ball and Urn Experiment   */
-			$('#ballAndUrn').click(function(){
-				$('.current-experiment').html('Ball and Urn <i class="icon-question-sign popups" rel="popover" data-content="The experiment consists of selecting n balls at random from an urn with m balls, r of which are red and the other m-r green. Random variable Y gives the number of red balls in the sample, and is recorded on each update in the data table. Random variable U=(m/n)Y is the standard estimate of r with m known, and random variable V=(nr)/Y is the standard estimate of m with r known. These are also recorded on each update. The probability density function and moments of Y are shown in blue in the distribution graph and are recorded in the distribution table. On each update, the empirical density function and moments of Y are shown in red in the distribution graph and are recorded in the distribution table. Either of two sampling models can be selected with the list box: with replacement and without replacement. In the first case, Y has a binomial distribution and in the second case Y has a hypergeometric distribution. The parameters m, r, and n can be varied with the input controls." data-original-title="Description"></i>');
-				
-				if($.inArray('ballAndUrn', expLoaded)==-1)      //check whether the experiment script is already loaded
-				{
-					$.getScript(baseUrl+"js/exp/ballAndUrn.js",function(){
-						console.log('ballAndUrn.js file has loaded!');
-						model.reset();
-
-						socr.exp.current=socr.exp.ballAndUrn;
-						//Initializing
-						socr.exp.current.createControllerView();
-						socr.exp.current.initialize();
-						if(socr.exp.controllerSliderState==0)
-							$(".controller-handle").trigger("click");
-					});
-					  //head.js("js/exp/ballAndUrn.js");          //loading the Ball and Urn Script
-					expLoaded.push('ballAndUrn');   //Making a entry in the array of loaded experiment scripts
-				}
-				else
-				{
-					 socr.exp.current=socr.exp.ballAndUrn;
-						//Initializing
-					socr.exp.current.createControllerView();
-					socr.exp.current.initialize();
-				}
-
-				console.log(socr.exp.current)
-			});
-			
-			/* Card Experiment   */
-			$('#card').click(function(){
-				$('.current-experiment').html('Card Experiment <i class="icon-question-sign popups" rel="popover" data-content="The card experiment consists of dealing n cards at random (and without replacement) from a standard deck of 52 cards. The cards (X1,X2,…,Xn) are recorded on each run. The parameter n can be varied from 1 to 12 with the input control." data-original-title="Description"></i>');
-				if($.inArray('cardExp', expLoaded)==-1)      //check whether the experiment script is already loaded
-				{
-					$.getScript(baseUrl+"js/exp/cardExp.js",function(){
-						console.log('cardExp.js file is loaded!');
-						model.reset();
-						socr.exp.current =socr.exp.cardExp;
-						//Initializing
-						socr.exp.current.createControllerView();
-						socr.exp.current.initialize();
-						if(socr.exp.controllerSliderState==0)
-							$(".controller-handle").trigger("click");
-					});
-					  //head.js("js/exp/ballAndUrn.js");          //loading the Ball and Urn Script
-					expLoaded.push('cardExp');   //Making a entry in the array of loaded experiment scripts
-				}
-				else
-				{
-					socr.exp.current=socr.exp.cardExp;
-						//Initializing
-					socr.exp.current.createControllerView();
-					socr.exp.current.initialize();
-				}
-			});
-
-			
+		/*
+		* Initialize the controller 
+		*/
+		controller.initialize();   
 		
 		var urlParams = {};
 		(function () {
@@ -679,7 +536,6 @@
 			   urlParams[decode(match[1])] = decode(match[2]);
 		})();
 
-	
 		if(urlParams.type!==undefined){
 			//type=urlParams.type;
 			console.log("dataset:"+urlParams.dataset);
@@ -697,48 +553,11 @@
 					});
 			//load the dataset grid with the url values		
 			view.loadInputSheet(urlParams.dataset.split(","));
+			//view.updateSimulationInfo()
 
 		$('section .response').html('Data loaded successfully! Just go to controller tile and start generating random samples!<i class="icon-ok"></i>').show();
 			//$("#countSize").val(urlParams.variable);
-			}
-			
-		$("#share-instance-button").on('click',function(){
-			$('.generate-response').html('');
-			var html="<p>Dataset:<strong>"+model.getDataset()+"</strong></p>";
-			html+="<p>Count Size:<strong>"+$("#countSize").val()+"</strong></p>";
-			html+="<p>datapoints:<strong>"+$("#nSize").val()+"</strong></p>";
-			$("#settings").html(html);
-			
-		});
-		
-		$("#generate-url-button").on('click',function(){
-			if(model.getDataset()!=''){
-				
-				$("#url").val(baseUrl+"index.html?"+"type=url&dataset="+model.getDataset()+"&countSize="+$("#countSize").val()+"&nSize="+$("#nSize").val());
-				}
-			else{
-				
-				console.log('Dataset not initialised');
-				var alertblock = '<div class="alert alert-block">Dataset not initialised</div>';
-				$('.generate-response').html(alertblock);
-
-				}
-		});
-		 $('.input-controls').delegate('td','mousedown',function(){
-  					table.startEdit( $(this) );
-  					//console.log('Logging function called')
-				 });
-			 $('.input-controls').delegate('input#generateMatrix','click',function(){
-			 	console.log('Table Generated');
-			 	console.log(table.getMatrix());
-			 	//console.log(table.getMatrix)
-			 })
-			 $('.input-controls').delegate('input#submatrix','click',function(){
-			 	var start = $('.input-controls').find('input[name="start"]').val(),
-			 		end =   $('.input-controls').find('input[name="end"]').val();
-
-			 	 table.generateSub(start, end);
-			 })
+		}
 
 		}); //document ready function
 	}); //head.js ready function

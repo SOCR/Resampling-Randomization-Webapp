@@ -53,7 +53,95 @@ socr.controller=function(model,view){
 	initialize:function(){
 		_this=this;
 		console.log('initialize() invoked ');
-		/*ADDING EVENT LISTENERS STARTS*/
+		
+		/*ADDING EVENT LISTENERS STARTS
+		--------------------------------*/
+		
+		$('.controller-handle').on('click',view.toggleControllerHandle);
+
+		
+		
+		$("#showButton").on('click',function(){
+			//a check to see if the sample count is 0 or not
+			view.createList($('.show-list-start').val(),$('.show-list-end').val());
+		});
+		
+		$('#startApp').on('click',function(){
+			console.log('Launch button clicked');
+			$('#welcome').animate({
+				left:-2999},
+				1000,
+				'easeInCubic');
+		});
+
+		$("#share-instance-button").on('click',function(){
+			$('.generate-response').html('');
+			var html="<p>Dataset:<strong>"+model.getDataset()+"</strong></p>";
+			html+="<p>Count Size:<strong>"+$("#countSize").val()+"</strong></p>";
+			html+="<p>datapoints:<strong>"+$("#nSize").val()+"</strong></p>";
+			$("#settings").html(html);
+			
+		});
+		
+		$("#generate-url-button").on('click',function(){
+			if(model.getDataset()!=''){
+				
+				$("#url").val(baseUrl+"index.html?"+"type=url&dataset="+model.getDataset()+"&countSize="+$("#countSize").val()+"&nSize="+$("#nSize").val());
+				}
+			else{
+				
+				console.log('Dataset not initialised');
+				var alertblock = '<div class="alert alert-block">Dataset not initialised</div>';
+				$('.generate-response').html(alertblock);
+
+				}
+		});
+
+		$('.input-controls').delegate('td','mousedown',function(){
+  				table.startEdit( $(this) );
+  				//console.log('Logging function called')
+		});
+		$('.input-controls').delegate('input#generateMatrix','click',function(){
+			 console.log('Table Generated');
+			 console.log(table.getMatrix());
+			 //console.log(table.getMatrix)
+		});
+		$('.input-controls').delegate('input#submatrix','click',function(){
+			var start = $('.input-controls').find('input[name="start"]').val(),
+			end =   $('.input-controls').find('input[name="end"]').val();
+			table.generateSub(start, end);
+		});
+
+		/*ADDING EVENT LISTENERS ENDS*/
+	
+		// Twitter Feed
+		$('#tweetFeed').jTweetsAnywhere({
+				searchParams: 'q=%23socrWebapp',
+				count: 10,
+				showTweetFeed: {
+					autorefresh: {
+						mode: 'trigger-insert',
+						interval: 60
+					},
+					paging: {
+					mode: 'more'
+					},
+					showTimestamp: {
+					refreshInterval: 30
+					}
+				}
+			}); 
+			
+		$('#accordion').accordion();
+		$('.dropdown-toggle').dropdown();
+		$('.popups').popover();
+		$('.tooltips').tooltip();
+		
+		view.createShowSlider();	
+
+	},
+
+	initController:function(){
 		$("#runButton").on('click',function(){
 			console.log('Run Started');
 			_this.run();
@@ -81,114 +169,8 @@ socr.controller=function(model,view){
 			else
 			_this.setDotplot();
 		});
-		
-		$("#showButton").on('click',function(){
-			//a check to see if the sample count is 0 or not
-			view.createList($('.show-list-start').val(),$('.show-list-end').val());
-		});
-		
-		$('#startApp').on('click',function(){
-			console.log('Launch button clicked');
-			$('#welcome').animate({
-				left:-2999},
-				1000,
-				'easeInCubic');
-		});
-		/*ADDING EVENT LISTENERS ENDS*/
-	
-		// Twitter Feed
-		$('#tweetFeed').jTweetsAnywhere({
-				searchParams: 'q=%23socrWebapp',
-				count: 10,
-				showTweetFeed: {
-					autorefresh: {
-						mode: 'trigger-insert',
-						interval: 60
-					},
-					paging: {
-					mode: 'more'
-					},
-					showTimestamp: {
-					refreshInterval: 30
-					}
-				}
-			}); 
-			
-		$('#accordion').accordion();
-		$('.dropdown-toggle').dropdown();
-		$('.popups').popover();
-		$('.tooltips').tooltip();
-		view.createShowSlider();	
-		
-		/*  Adding tab feature to the input tile   */
-		/*$('#myTab a').click(function (e) {
-			
-			
-		});
-		 */
-		//$('#dataDriven-tab').unbind('click');
-		//$('#simulationDriven-tab').unbind('click');
-
-		$('#dataDriven-tab, #simulationDriven-tab').on('click',function(e){
-			e.preventDefault();
-			$(this).tab('show');
-			console.log("current:"+_currentMode);
-			console.log("future:"+e.target.id.split("-")[0]);
-			if(e.target.id.split("-")[0] !== _currentMode)
-					{
-						console.log("mode being changed!");
-						console.log("getdataset:"+model.getDataset());
-					//check if model.getDataset() is true
-						if(model.getDataset()!='')
-							{console.log("Entered the loop");
-								$('<div></div>').appendTo('body')
-			                    .html('<div><h6>Moving from Data drive to Simulation Drive will reset the app!You want to continue?</h6></div>')
-			                    .dialog({
-			                        modal: true, 
-									title: 'Reset Data?', 
-									zIndex: 10000, 
-									autoOpen: true,
-			                        width: 'auto', 
-									resizable: false,
-			                        buttons: {
-			                            Yes: function () {
-			                            	_currentMode=e.target.id.split("-")[0];
-			                            	if(e.target.id==="dataDriven-tab")
-										  		{
-
-										  			$("#accordion").accordion( "activate" , 0);
-													$(this).update({to:'dataDriven'});		
-										  		}
-											else
-												$(this).update({to:'simulationDriven'});
-										$(this).dialog("close");					//close the confirmation window
-			                            },
-			                            No: function () {
-										$('#myTab li:eq(0) a').tab('show');
-			                                $(this).dialog("close");
-			                            }
-			                        },
-			                        close: function (event, ui) {
-			                            $(this).remove();
-			                        }
-                   				 });					
-							}
-						else
-							{
-								_currentMode=e.target.id.split("-")[0];
-								if(e.target.id==="dataDriven-tab")
-									{
-							  			$("#accordion").accordion( "activate" , 0);
-										$(this).update({to:'dataDriven'});		
-									}
-								else
-									$(this).update({to:'simulationDriven'});
-							}
-							
-					}
-
-		});
 	},
+
 	/**
 	*@method: step()
 	*@description: It generates 1 random sample with animation effect showing the generation.
@@ -289,40 +271,33 @@ socr.controller=function(model,view){
 	},
 	
 	loadController:function(x){
-		if(x=='simulationDriven')
-			{
-				socr.exp.current.createControllerView();
-				socr.exp.current.initialize();
-				
-			}
-		else
-			{
-				view.createControllerView();
-				this.initialize();
-				//check for input
-				if(socr.exp.current)
-					{
-					if(socr.exp.current.getDataset()!='')
-						{	console.log('simulation drive has some data');
-					        var result=model.setDataset({
-							 	keys:socr.exp.current.getDatasetKeys(),
-							 	values:socr.exp.current.getDatasetValues(),
-							 	processed:true
-							 	});
-					        if(result === true){
-					        	view.toggleControllerHandle();
-					        }
-							console.log(model.getDataset(1));
-							//call to loadInputSheet to input the generated simulation data if any
-						}	
-						
+		if(x=='simulationDriven'){
+			socr.exp.current.createControllerView();
+			socr.exp.current.initialize();
+		}
+		else{
+			view.createControllerView();
+			this.initController();
+			//check for input
+			if(socr.exp.current){
+				if(socr.exp.current.getDataset()!=''){	
+					console.log('simulation drive has some data');
+					var result=model.setDataset({
+							keys:socr.exp.current.getDatasetKeys(),
+							values:socr.exp.current.getDatasetValues(),
+							processed:true
+						});
+					if(result === true){
+					    view.toggleControllerHandle();
 					}
-				else
-					console.log("Experiment object not defined!");
-				//set the input
-				
+					console.log(model.getDataset(1));
+					//call to loadInputSheet to input the generated simulation data if any
+				}	
 			}
-	
+			else
+				console.log("Experiment object not defined!");
+				//set the input
+		}
 	}
  
     }//return
