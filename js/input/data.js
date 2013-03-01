@@ -45,6 +45,8 @@ socr.dataTable= function () {
    var simulationDriven = {
       init : function(arg){
         var expId = arg.substr(4);
+        console.log(expId);
+        console.log(simulationDriven.expLoaded);
         if($.inArray( expId, simulationDriven.expLoaded))
           simulationDriven.loadData(expId);
         else
@@ -78,8 +80,6 @@ socr.dataTable= function () {
           socr.exp.current.createControllerView();
           socr.exp.current.initialize();
           simulationDriven.expLoaded.push(id);
-         if(socr.exp.inputSliderState!=0)
-          $(".input-handle").trigger("click");
          if(socr.exp.controllerSliderState==0)
           $(".controller-handle").trigger("click");
       },

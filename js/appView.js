@@ -262,6 +262,7 @@ return{
 		$('#dataset').html('');
 		// $("#input").inputtable('clear'); 
 		_currentValues=[];
+		$("#controller-content").html('<div class="alert alert-error">Choose a experiment from "simulation drive" or enter data in the "data drive" first!</div>');
 	},
 	
 	/**
@@ -686,7 +687,45 @@ return{
  			}
  		}
 
- 	}
+ 	},
+
+ 	updateStatus:function(action,percent){
+ 		console.log("updateStatus");
+ 		if(action === undefined){
+ 			return false;
+ 		}
+
+ 		switch(action){
+
+ 			case "started":
+ 			console.log("started");
+ 			var html='<div class="progress progress-info progress-striped active"><div class="bar" style="width:0%"></div></div>';
+ 			var el=$("#progressBar");
+ 			el.html('').removeClass().addClass('span8').css('display','').html(html);
+
+
+ 			case "update":
+ 			if(percent === undefined){
+	 			return false;
+	 		}
+	 		var el=$("div#progressBar > div > div");
+	 		var current=el.css("width");
+	 		console.log("percent= "+percent);
+	 		
+	 		if(percent%10 === 0){
+	 			console.log("change");
+	 			el.css("width",percent+"%");
+	 			el.style
+	 		}
+	 		break;
+
+	 		case "finished":
+ 			console.log("finished");
+	 		var el=$("#progressBar").html('').css("display","none");
+	 		break;
+ 		}
+ 	}		
+ 	
 	/*
 	setPercentile:function(x){
 		var N=_currentValues.length;

@@ -33,12 +33,15 @@ socr.controller=function(model,view){
 			{			
 			model.generateSample();
 			}
-		view.updateCounter();	
+		view.updateCounter();
 		_runsElasped++;
+		var percent=Math.ceil((_runsElasped/_noOfSteps)*100);
+		view.updateStatus("update",percent);	
 		}
 	else
 		{
 		view.updateCtrlMessage("samples generated sucessfully.","success",2000);
+		view.updateStatus("finished");
 		view.updateSimulationInfo();
 		_this.stop();
 		}
@@ -95,6 +98,10 @@ socr.controller=function(model,view){
 				$('.generate-response').html(alertblock);
 
 				}
+		});
+
+		$("#reset-button").on("click",function() {
+			_this.reset();
 		});
 
 		$('.input-controls').delegate('td','mousedown',function(){
@@ -202,6 +209,7 @@ socr.controller=function(model,view){
 	*/
 	run:function(){
         view.disableButtons();					//disabling buttons
+        view.updateStatus("started");
 		model.setStopCount($("#countSize").val());	//save the stopcount provided by user
 		model.setN($("#nSize").val());				// save the datapoints size
 		//generate samples
