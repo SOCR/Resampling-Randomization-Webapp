@@ -86,9 +86,9 @@ socr.view = function( model ){
 			    data : values,
 			    height: 380,
 			    width: 500,
-			    nature: 'discreete'
+			    //nature: 'discreete'
 				//range:[start,stop]
-	        	})();
+	        	});
 		});//click binding for .plot
 
 		/**toggle-sample icon is present on each child of the sampleList Div . It basically toggles the data if the sample and sampleValue are different.
@@ -152,9 +152,8 @@ socr.view = function( model ){
 					height:390,
 					range: [0,10],
 					dataSetMean :datum,
-					sample : setting.sample,
-					nature: 'continuous'
-				})();
+					sample : setting.sample
+				});
 			}
 			
 			var html = '<div> Mean of Sample :'+ model.getMeanOf($(this).attr('id')) +' Mean of DataSet : '+ model.getMeanOfDataset() +' Standard Deviation :'+ model.getStandardDevOf($(this).attr('id')) +'</div>';
@@ -275,7 +274,7 @@ return{
 			parent : '#dataPlot',
 			data : values,
 			range: [0,1]
-			})();
+			});
 	},
 		
 	/**
@@ -572,14 +571,14 @@ return{
 			datum :datum,
 			bins : binNo,
 			variable: setting.variable	,
-			nature: 'continuous'			
+			// nature: 'continuous'			
 		});
 
-		 socr.vis.addBar({
-		 	elem: dotplot,
-		 	variable: setting.variable,
-		 	datum: datum
-		 });
+		 // socr.vis.addBar({
+		 // 	elem: dotplot,
+		 // 	variable: setting.variable,
+		 // 	datum: datum
+		 // });
 		 view.updateCtrlMessage("Infer plot created.","success");
 		
 	},

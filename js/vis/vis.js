@@ -22,6 +22,10 @@ socr.vis = (function(){
 			displayError('Dataset for histogram not entered');
 			return;
 		}
+		if(typeof config.data[0] != 'number'){
+			displayError('Only numeric entries accepted');
+			return;
+		}
 	try{
 		config.parent;
 		var rangeDefault = d3.extent( config.data );
@@ -62,39 +66,53 @@ socr.vis = (function(){
             var width = settings.width,
         		height = settings.height;
 
-        	/* This does all the good work of the construction of bins, most likely to break the execution of code */
-		    
-       
-     //    	var bins = [];
-		  	// for(var ii = settings.range[0], jj = 0; ii <= settings.range[1] + 1; ii++, jj++)
-			  //     bins[jj] = ii;
-			  console.log(settings);
-			if(settings.nature == 'continuous'){  
-			  	var data = d3.layout.histogram()
-			  				 .bins(d3.scale.linear().ticks(settings.bins))
-	                		(settings.data);
-             } else {
-             	var bins = [];
-		  		for(var ii = settings.range[0], jj = 0; ii <= settings.range[1] + 1; ii++, jj++)
-			      bins[jj] = ii;
-             	var data = d3.layout.histogram()
-             				.bins(bins)(settings.data);
-             }
-			           //  .bins(bins)(settings.data);
-		    // var data = d3.layout.histogram()
-		    // 			.bins(settings.range[1])
-		    //           //  .bins(d3.scale.linear().ticks(20))
-		    //             //.bins(d3.scale.linear().ticks(100))
-		    //             (settings.data);
+      /* This does all the good work of the construction of bins, most likely to break the execution of code */
+		
+      switch(settings.method){
 
-		                // console.log(settings.data)
-		    // var x = d3.scale.ordinal()
-		    //         .domain(data.map(function(d) { return d.x; }))
-		    //         .rangeRoundBands([0, width - margin.left - margin.right], .1);
+      	case 'decimal' : 
+      			var data = d3.layout.histogram().bins(d3.scale.linear().ticks(settings.bins))	
+	                (settings.data);
+	          break;
 
-		    var x = d3.scale.ordinal()
+	      case 'discrete' : 
+	      		var bins = [];
+		  		  for(var ii = settings.range[0], jj = 0; ii <= settings.range[1] + 1; ii++, jj++)
+			      bins[jj] = ii;         
+            var data = d3.layout.histogram().bins(bins)(settings.data);
+            break;
+
+        case 'thumbRule' : 
+        		var data = d3.layout.histogram().bins(Math.floor(Math.sqrt(settings.data.length)))(settings.data);
+            break;
+
+        default : 
+        		//Uses Sturges Formula as a default
+        		var data = d3.layout.histogram()(settings.data);
+
+      }
+
+			// if(settings.nature == 'continuous'){  
+
+			//   	var data = d3.layout.histogram().bins(d3.scale.linear().ticks(settings.bins))	
+	  //               (settings.data);
+   //       } else if(settings.nature == 'discrete') {
+
+   //          var bins = [];
+		 //  		  for(var ii = settings.range[0], jj = 0; ii <= settings.range[1] + 1; ii++, jj++)
+			//       bins[jj] = ii;         
+   //          var data = d3.layout.histogram().bins(bins)(settings.data);
+         
+   //       } else {
+   //       		var data = d3.layout.histogram()
+   //       		//.bins(Math.floor(Math.sqrt(settings.data.length)))	
+	  //               (settings.data);
+   //       }
+
+			          
+		  x = d3.scale.ordinal()
             .domain(data.map(function(d) { return d.x; }))
-            .rangeRoundBands([0, width - margin.left - margin.right], .1);
+            .rangeRoundBands([0, width - margin.left - margin.right], 0);
 		   
 		    var y = d3.scale.linear()
 		       	    .domain([0, d3.max(data, function(d) { return d.y; })])
@@ -103,8 +121,7 @@ socr.vis = (function(){
 		    xAxis = d3.svg.axis()
 		    		.scale(x)
 		    		.orient("bottom")
-		    		//.tickFormat(d3.format(",.0f"))
-		    		.tickSize([5]).tickSubdivide(true); 
+		    		.tickFormat(d3.format(',.2f'));
 
 		    yAxis = d3.svg.axis()
 		    		.scale(y)
@@ -203,7 +220,8 @@ socr.vis = (function(){
 	}
 
 	var addBar = function(obj){
-		console.log(obj)
+		if(typeof obj[0].elem.GElement=='undefined')
+			return;
 		var g = obj[0].elem.GElement,
 			x = obj[0].elem.xScale,
 			height = obj[0].elem.height,
