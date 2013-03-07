@@ -620,7 +620,7 @@ return{
 			width = $(window).width();
 		$('#welcome').css('height', height );
 	//	$('.welcome-container').css('padding-top',height/3).css('padding-left', height/3);
-		$('div.main-wrap').show();
+		// $('#main').show();
 	},
 	
 	/**

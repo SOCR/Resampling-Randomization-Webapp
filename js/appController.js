@@ -75,6 +75,7 @@ socr.controller=function(model,view){
 				left:-2999},
 				1000,
 				'easeInCubic');
+			$('#main').css('visibility', 'visible')
 		});
 
 		$("#share-instance-button").on('click',function(){

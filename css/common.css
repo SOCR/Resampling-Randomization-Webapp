@@ -200,8 +200,8 @@ div.welcome-container{
 
 /* Styling for the input module
 -------------------------------*/
-	.main-wrap{
-		display:none;
+	#main{
+		visibility: hidden;
 	}
 	#drop{
 	  	padding: 10px;
