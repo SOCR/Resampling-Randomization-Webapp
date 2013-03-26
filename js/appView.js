@@ -352,7 +352,7 @@ return{
 	*/
 	createControllerView:function(){
 		$( "#amount" ).val( "$" + $( "#slider" ).slider( "value" ) );
-		var html='<div id="buttonPanel"><a href="#" class="tooltips" rel="tooltip" title="Step"><button class="btn" type="button" id="stepButton" tabindex="1" title="Step"><i class="icon-step-forward"></i></button></a> <a href="#" class="tooltips" rel="tooltip" title="Run"><button class="btn btn-success" type="button" id="runButton" tabindex="2" title="Run" ><i class="icon-fast-forward"></i></button></a><a href="#" class="tooltips" rel="tooltip" title="Stop"><button class="btn btn-danger" type="button" id="stopButton" tabindex="3" title="Stop" ><i class="icon-stop" ></i></button></a><a href="#" class="tooltips" rel="tooltip" title="Reset"><button class="btn" type="button" id="resetButton" tabindex="4" title="Reset" ><i class="icon-refresh" ></i></button></a><span><i class="icon-question-sign popups" rel="popover" data-content="<ul><li>Step Button : generates 1 sample</li><li>Run Button : generates X sample..X can be set from the option below</li><li>Stop Button :Stops the sample generation</li><li>Reset Button : Resets all values</li></ul>" data-original-title="Controls"></i></span>&nbsp;&nbsp;<a href="#"><button class="btn controller-back"><i class="icon-arrow-left" ></i></button></a></div><div id="speed-controller"><div><span class="badge badge-warning" style="float:left;">Animation Time: <span id="speed-value">200</span>ms</span></div><div id="speed-selector"></div></div><div class="tool"><span>Generate</span><input type="text" id="countSize" class="input-mini" value="1000"> <span>Samples with </span><input type="text" id="nSize" class="input-mini" value="50"><span>Datapoint per sample.</span></div><div><form class="form form-inline"><select id="variable" style="width:30%"><option value="f-value">F-Value</option><option value="mean">Mean</option><option value="count">Count</option><option value="standardDev">Standard Dev.</option><option value="Percentile">Percentile</option></select><input type="text" placeholder="binsize" name="binsize" class="input-mini"><span><a href="#" class="btn btn-danger popups" rel="popover" data-content="This will create a plot of the variable for each generated sample. Click this once you have generated some samples!" data-original-title="Inference" id="infer">Infer!</a></span></form></div>';
+		var html='<div id="buttonPanel"><a href="#" class="tooltips" rel="tooltip" title="Step"><button class="btn" type="button" id="stepButton" tabindex="1" title="Step"><i class="icon-step-forward"></i></button></a> <a href="#" class="tooltips" rel="tooltip" title="Run"><button class="btn btn-success" type="button" id="runButton" tabindex="2" title="Run" ><i class="icon-fast-forward"></i></button></a><a href="#" class="tooltips" rel="tooltip" title="Stop"><button class="btn btn-danger" type="button" id="stopButton" tabindex="3" title="Stop" ><i class="icon-stop" ></i></button></a><a href="#" class="tooltips" rel="tooltip" title="Reset"><button class="btn" type="button" id="resetButton" tabindex="4" title="Reset" ><i class="icon-refresh" ></i></button></a><span><i class="icon-question-sign popups" rel="popover" data-content="<ul><li>Step Button : generates 1 sample</li><li>Run Button : generates X sample..X can be set from the option below</li><li>Stop Button :Stops the sample generation</li><li>Reset Button : Resets all values</li></ul>" data-original-title="Controls"></i></span>&nbsp;&nbsp;<a href="#"><button class="btn controller-back"><i class="icon-arrow-left" ></i></button></a></div><div id="speed-controller"><div><span class="badge badge-warning" style="float:left;">Animation Time: <span id="speed-value">200</span>ms</span></div><div id="speed-selector"></div></div><div class="tool"><span>Generate</span><input type="text" id="countSize" class="input-mini" value="1000"> <span>Samples with </span><input type="text" id="nSize" class="input-mini" value="50"><span>Datapoint per sample.</span></div><div><form class="form form-inline"><select id="variable" style="width:30%"><option value="f-value">F-Value</option><option value="p-value">P-Value</option><option value="mean">Mean</option><option value="count">Count</option><option value="standardDev">Standard Dev.</option><option value="Percentile">Percentile</option></select><input type="text" placeholder="binsize" name="binsize" class="input-mini"><span><a href="#" class="btn btn-danger popups" rel="popover" data-content="This will create a plot of the variable for each generated sample. Click this once you have generated some samples!" data-original-title="Inference" id="infer">Infer!</a></span></form></div>';
 		$('#controller-content').html(html);
 		$( "#speed-selector" ).slider({
 			value:400,
@@ -500,11 +500,14 @@ return{
 	
 	/**
 	*@method: createDotPlot
-	*@description: Dot plot tab in the accordion is populated by this call. call invoked when "infer" button pressed in the controller tile.
-	*@return : none
+	*@description: Dot plot tab in the accordion is populated by this call.
+     * Call invoked when "infer" button pressed in the controller tile.
+	*@return : {boolean}
 	*/
 	createDotplot:function(setting){
-	
+	    if(setting.variable == null){
+            return false
+        }
 		_currentVariable=setting.variable;
 		$("#accordion").accordion( "activate" , 2);
 
@@ -518,16 +521,19 @@ return{
 		};
 		//setting.variable;
         switch(setting.variable){
+
             case 'mean':
                 var values = model.getMean();			//Mean values of all the generated random samples
                 var datum = model.getMeanOfDataset(1);	//datum is the dataset mean value
                 console.log("Mean Values:"+ values );
                 break
+
             case 'standardDev':
                 var values = model.getStandardDev();	//Standard deviation values of all the generated random samples
                 var datum=model.getStandardDevOfDataset(1);		//datum is the dataset SD value
                 console.log("SD Values:"+ values );
                 break
+
             case 'percentile':
                 try{
                     var pvalue=parseInt($('#percentile-value').html());
@@ -543,21 +549,30 @@ return{
                 //var datum=model.getStandardDevOfDataset();
                 console.log("Percentile Values:"+ values );
                 break
+
             case 'count':
                 var values = model.getCount();	//Standard deviation values of all the generated random samples
                 var datum=model.getCountOfDataset(1);		//datum is the dataset SD value
                 console.log("Count Values:"+ values );
                 break
 
-            case 'FValue':
+            case 'f-value':
                 var values=model.getF();
                 var datum=model.getFof("dataset");
-                console.log(values);
+                console.log("F-values"+values);
+                break
+
+            case 'p-value':
+                var values=model.getP();
+                var datum=model.getFof("dataset");
+                console.log("P values"+values);
+                break
 
             default :
-                var values=model.getF();
-                var datum=model.getFof("dataset");
+                var values=model.getMean();
+                var datum=model.getMeanOfDataset(1);
                 console.log(values);
+                break
 
         }
 			
@@ -586,11 +601,13 @@ return{
 		 // 	datum: datum
 		 // });
 		 view.updateCtrlMessage("Infer plot created.","success");
+        return true;
 	},
 	
 	/**
 	*@method: updateSimulationInfo
-	*@description: Called when the 'step button' or 'run button' is pressed in the controller tile. Call is made in appController.js
+	*@description: Called when the 'step button' or 'run button' is pressed in the controller tile.
+     * Call is made in appController.js
 	*@return : none
 	*/
 	updateSimulationInfo:function(){

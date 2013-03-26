@@ -150,6 +150,15 @@ socr.model=function(){
 
 		}
 	}
+
+    function _generateP(sampleNumber){
+        var x = _generateF(sampleNumber);
+        var _k = _this.getK();
+        var _ndf = _k -1 ;
+        var _ddf = _n*_k - _n ;
+        return socr.tools.fCal.computeP(x,_ndf,_ddf);
+
+    }
 	
 return{
 	/* PUBLIC PROPERTIES   */
@@ -392,9 +401,9 @@ return{
 	/**
 	*@method: [public] getF()
 	*@desc: returns the F value computed from the supplied group
-	*
-	*/
-	getF:function(){
+	*@return {Object}
+    */
+    getF:function(){
 		 _this=this;
 		var _data=[];
 		for(var i=0;i<_count;i++){
@@ -402,6 +411,24 @@ return{
 		}
 		return _data;
 	},
+    /**
+     *
+     * @return {Object}
+     */
+
+    getP:function(){
+        _this = this;
+        var _data=[];
+        for(var i=0;i<_count;i++){
+            _data[i]=_generateP(i);
+        }
+        return _data;
+    },
+
+    getPof:function(){
+        _this=this;
+        return _generateP(sampleNumber);
+    },
 
 	/**
 	*@method: [public] getFof(SampleNumber)
