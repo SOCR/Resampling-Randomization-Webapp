@@ -517,49 +517,55 @@ return{
 			return Math.min.apply( Math, array );
 		};
 		//setting.variable;
-		if(setting.variable=='mean'){
-			var values = model.getMean();			//Mean values of all the generated random samples
-			var datum = model.getMeanOfDataset(1);	//datum is the dataset mean value
-			console.log("Mean Values:"+ values );	
-		}
-		else if (setting.variable=='standardDev'){
-			var values = model.getStandardDev();	//Standard deviation values of all the generated random samples
-			var datum=model.getStandardDevOfDataset(1);		//datum is the dataset SD value
-			console.log("SD Values:"+ values );
-		}
-		else if (setting.variable=='count'){
-			var values = model.getCount();	//Standard deviation values of all the generated random samples
-			var datum=model.getCountOfDataset(1);		//datum is the dataset SD value
-			console.log("Count Values:"+ values );
-		}
-		else if(setting.variable == 'percentile'){
-			try{
-				var pvalue=parseInt($('#percentile-value').html());
-				//console.log(pvalue);
-			}
-			catch(err)
-			{
-				console.log("unable to read the percentile value from DOM. setting default value to 50%");
-				var pvalue=50;
-			}
-			var values = model.getPercentile(pvalue);
-			var datum=model.getPercentileOfDataset(pvalue);
-			//var datum=model.getStandardDevOfDataset();
-			console.log("Percentile Values:"+ values );
-		}
-		else{
-			var values=model.getF();
-			var datum=model.getFof("dataset");
-			console.log(values);
-		}
+        switch(setting.variable){
+            case 'mean':
+                var values = model.getMean();			//Mean values of all the generated random samples
+                var datum = model.getMeanOfDataset(1);	//datum is the dataset mean value
+                console.log("Mean Values:"+ values );
+                break
+            case 'standardDev':
+                var values = model.getStandardDev();	//Standard deviation values of all the generated random samples
+                var datum=model.getStandardDevOfDataset(1);		//datum is the dataset SD value
+                console.log("SD Values:"+ values );
+                break
+            case 'percentile':
+                try{
+                    var pvalue=parseInt($('#percentile-value').html());
+                    //console.log(pvalue);
+                }
+                catch(err)
+                {
+                    console.log("unable to read the percentile value from DOM. setting default value to 50%");
+                    var pvalue=50;
+                }
+                var values = model.getPercentile(pvalue);
+                var datum=model.getPercentileOfDataset(pvalue);
+                //var datum=model.getStandardDevOfDataset();
+                console.log("Percentile Values:"+ values );
+                break
+            case 'count':
+                var values = model.getCount();	//Standard deviation values of all the generated random samples
+                var datum=model.getCountOfDataset(1);		//datum is the dataset SD value
+                console.log("Count Values:"+ values );
+                break
+
+            case 'FValue':
+                var values=model.getF();
+                var datum=model.getFof("dataset");
+                console.log(values);
+
+            default :
+                var values=model.getF();
+                var datum=model.getFof("dataset");
+                console.log(values);
+
+        }
 			
 		var temp=values.sort(function(a,b){return a-b});
 		var start=Math.floor(temp[0]);
 		var stop=Math.ceil(temp[values.length-1]);
 		console.log("start"+start+"stop"+stop);
 		
-
-
 		var binNo = $('input[name="binno"]').val() != '' ? $('input[name="binno"]').val() : 10;
 
 		_currentValues=values;
@@ -580,7 +586,6 @@ return{
 		 // 	datum: datum
 		 // });
 		 view.updateCtrlMessage("Infer plot created.","success");
-		
 	},
 	
 	/**
