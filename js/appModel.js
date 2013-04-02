@@ -463,9 +463,26 @@ return{
 	*/
 	setDataset:function(input){
 		//check for input values...if its empty...then throw error
+        if(input === undefined){
+            return false;
+        }
 		console.log('setDataSet() invoked!');
 		console.log('Input Data :'+input.keys+' Input Type :'+input.type+' Input Range :'+input.range+' Input Values :'+input.values);
-	//input.processed is true incase of a simulation -> data mode switch
+        console.log(typeof input.values);
+	//input.processed is true in case of a simulation -> data mode switch
+        switch(input.type){
+            case ("processed") :
+                break
+
+            case ("url") :
+                break
+
+            case ("spreadsheet") :
+                break
+
+            default:
+                break
+        }
 		if(input.processed){
 			for(var i=0;i<input.keys.length;i++){
 				_dataset[i+1]={
@@ -476,7 +493,7 @@ return{
 				};
 			}
 			console.log('Simulation data is loaded now.');
-			return false;
+			return true;
 		}
 		else if(input.type=='url'){
 			console.log('Simulation data is loaded now.');
