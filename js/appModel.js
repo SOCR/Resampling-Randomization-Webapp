@@ -2,7 +2,7 @@
 *appModel.js is the model object for the SOCR app.
 *
 *@author: selvam , ashwini 
-*
+*@return: {object}
 *SOCR - Statistical Online Computational Resource
 */
 
@@ -195,7 +195,7 @@ return{
 	*@desc:  generating a random number between 0 and dataSet size 
 	*/
 	generateSample:function(){
-		var i=this.getK();	var keyEl=['0 is taken'],valEl=['0 is taken'],k=1;
+		var i=this.getK(),keyEl=['0 is taken'],valEl=['0 is taken'],k=1;
 		while(k<=i){
 			var j=$('#nSize').val();
 			var sample=[],values=[];
@@ -218,13 +218,12 @@ return{
 	*@method: [public] generateStep()
 	*@desc:  executed when the user presses step button in the controller tile. The click binding of the step button is done in the {experiment}.js
 	*@dependencies: generateTrail()
-	*@return: returns the indexes of the dataset for the animation to occur
+	*@return: {Object} returns the indexes of the dataset for the animation to occur
 	*/
 	generateStep:function(){
 		var j=$('#nSize').val();
 		var key=[];var values=[];var indexes=[];var datasetIndexes=[];
-		while(j--)
-			{
+		while(j--){
 			//bootstrapSamples[_count][j]=this.generateTrail();
 			var temp=this.generateTrail();
 			key[j]=temp.key;	//inserting the new sample
@@ -240,7 +239,7 @@ return{
 		return {
 			indexes:indexes,
 			datasetIndexes:datasetIndexes
-				};
+		}
 	},
 	
 	/**
@@ -259,12 +258,11 @@ return{
 		//	return _sample.Mean[groupNumber];
 		//else
 		{
-			for(var j=_sample.Mean[groupNumber].length;j<_count;j++)
-				{
+			for(var j=_sample.Mean[groupNumber].length;j<_count;j++){
 				_sample.Mean[groupNumber][j]=_generateMean(j,groupNumber);
-				}
-				console.log("sample mean "+_sample.Mean);
-				return _sample.Mean[groupNumber];
+			}
+			console.log("sample mean "+_sample.Mean);
+			return _sample.Mean[groupNumber];
 			}
 		},
 	
@@ -458,8 +456,8 @@ return{
 	},
 	/**
 	*@method: setDataset
-	*@param: input 
 	*@description: sets the data from the input sheet into the app model
+ * @param input
 	*/
 	setDataset:function(input){
 		//check for input values...if its empty...then throw error
@@ -467,22 +465,8 @@ return{
             return false;
         }
 		console.log('setDataSet() invoked!');
-		console.log('Input Data :'+input.keys+' Input Type :'+input.type+' Input Range :'+input.range+' Input Values :'+input.values);
-        console.log(typeof input.values);
+        console.log(input);
 	//input.processed is true in case of a simulation -> data mode switch
-        switch(input.type){
-            case ("processed") :
-                break
-
-            case ("url") :
-                break
-
-            case ("spreadsheet") :
-                break
-
-            default:
-                break
-        }
 		if(input.processed){
 			for(var i=0;i<input.keys.length;i++){
 				_dataset[i+1]={

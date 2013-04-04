@@ -2,7 +2,7 @@
 * appView.js is the view object for the SOCR app.
 *
 *@author: selvam , ashwini 
-*
+*@return: {object}
 *SOCR - Statistical Online Computational Resource
 */
 
@@ -13,24 +13,9 @@ socr.view = function( model ){
 	var _currentVariable;				// [ARRAY] Reference to current inference varaible [mean , SD , count , percentile]
 	var _currentValues;					// [ARRAY] Reference to current inference variable's value of each random sample.
 
-/* public properties */	
-	runButton = $("#runButton"),
-	stepButton =$("#stepButton"),
-	stopButton =$("#stopButton"),
-	resetButton =$("#resetButton"),
-	stopSelect =$("#stopSelect"),
-	animationSpeed=$("#animationSpeed"),
-	datasetCanvas = $("#distCanvas"),
-	dotPlot=$("#dotPlot"),
-	countSize=$("#countSize"),
-	nSize=$('#nSize');
 
 	var inputHandle = $('.input-handle'),controllerHandle = $('.controller-handle') ;
 
-	/**
-
-
-	
 	/**
 	*@method: [private] _create
 	*@param :  start: the first sample number to be displayed
@@ -352,50 +337,62 @@ return{
 	*/
 	createControllerView:function(){
 		$( "#amount" ).val( "$" + $( "#slider" ).slider( "value" ) );
-		var html='<div id="buttonPanel"><a href="#" class="tooltips" rel="tooltip" title="Step"><button class="btn" type="button" id="stepButton" tabindex="1" title="Step"><i class="icon-step-forward"></i></button></a> <a href="#" class="tooltips" rel="tooltip" title="Run"><button class="btn btn-success" type="button" id="runButton" tabindex="2" title="Run" ><i class="icon-fast-forward"></i></button></a><a href="#" class="tooltips" rel="tooltip" title="Stop"><button class="btn btn-danger" type="button" id="stopButton" tabindex="3" title="Stop" ><i class="icon-stop" ></i></button></a><a href="#" class="tooltips" rel="tooltip" title="Reset"><button class="btn" type="button" id="resetButton" tabindex="4" title="Reset" ><i class="icon-refresh" ></i></button></a><span><i class="icon-question-sign popups" rel="popover" data-content="<ul><li>Step Button : generates 1 sample</li><li>Run Button : generates X sample..X can be set from the option below</li><li>Stop Button :Stops the sample generation</li><li>Reset Button : Resets all values</li></ul>" data-original-title="Controls"></i></span>&nbsp;&nbsp;<a href="#"><button class="btn controller-back"><i class="icon-arrow-left" ></i></button></a></div><div id="speed-controller"><div><span class="badge badge-warning" style="float:left;">Animation Time: <span id="speed-value">200</span>ms</span></div><div id="speed-selector"></div></div><div class="tool"><span>Generate</span><input type="text" id="countSize" class="input-mini" value="1000"> <span>Samples with </span><input type="text" id="nSize" class="input-mini" value="50"><span>Datapoint per sample.</span></div><div><form class="form form-inline"><select id="variable" style="width:30%"><option value="f-value">F-Value</option><option value="p-value">P-Value</option><option value="mean">Mean</option><option value="count">Count</option><option value="standardDev">Standard Dev.</option><option value="Percentile">Percentile</option></select><input type="text" placeholder="binsize" name="binsize" class="input-mini"><span><a href="#" class="btn btn-danger popups" rel="popover" data-content="This will create a plot of the variable for each generated sample. Click this once you have generated some samples!" data-original-title="Inference" id="infer">Infer!</a></span></form></div>';
-		$('#controller-content').html(html);
-		$( "#speed-selector" ).slider({
-			value:400,
-			min: 100,
-			max: 2000,
-			step: 50,
-			slide: function( event, ui ) {
-			$( "#speed-value" ).html( ui.value );
-			}
-		});
-		$('.controller-back').on('click',function(){
-			try{
-			socr.exp.current.createControllerView();
-			
-			}
-			catch(err){
-				console.log(err.message);
-			}
-			socr.exp.current.initialize();
-		});
+        //define the configuration json file
+        var view = {
+            title: "Joe",
+            animationSpeed:false,
+            calc: function () {
+                return 2 + 4;
+            }
+        };
+        $.get('partials/controller.tmpl',function(data){
+            var _output = Mustache.render(data, view);
+            $('#controller-content').html(_output);
+            console.log(5);
+            controller.initController();
+//            $( "#speed-selector" ).slider({
+//                value:400,
+//                min: 100,
+//                max: 2000,
+//                step: 50,
+//                slide: function( event, ui ) {
+//                    $( "#speed-value" ).html( ui.value );
+//                }
+//            });
+            $('.controller-back').on('click',function(){
+                try{
+                    socr.exp.current.createControllerView();
 
-		$('#variable').on('click',function(){
-			var _percentile=$('#percentile-control');
-			if($(this).val()=='Percentile')
-			{
-				if(_percentile.length)
-					_percentile.show();
-				else
-					$('#controller-content').append('<div id="percentile-control"><div><span class="badge badge-warning" style="float:left;">Percentile: <span id="percentile-value">10</span>%</span></div><div id="percentile-selector"></div></div>');
-				//create a slider
-				$('#percentile-selector').slider({
-				value:20,
-				min: 10,
-				max: 90,
-				step: 5,
-				slide: function( event, ui ) {
-					$( "#percentile-value" ).html( ui.value );
-					}
-				});
-			}
-			else
-				_percentile.hide();
-		});
+                }
+                catch(err){
+                    console.log(err.message);
+                }
+                socr.exp.current.initialize();
+            });
+            $('#variable').on('click',function(){
+                var _percentile=$('#percentile-control');
+                if($(this).val()=='Percentile'){
+                    if(_percentile.length)
+                        _percentile.show();
+                    else
+                        $('#controller-content').append('<div id="percentile-control"><div><span class="badge badge-warning" style="float:left;">Percentile: <span id="percentile-value">10</span>%</span></div><div id="percentile-selector"></div></div>');
+                    //create a slider
+                    $('#percentile-selector').slider({
+                        value:20,
+                        min: 10,
+                        max: 90,
+                        step: 5,
+                        slide: function( event, ui ) {
+                            $( "#percentile-value" ).html( ui.value );
+                        }
+                    });
+                }
+                else
+                    _percentile.hide();
+            });
+
+        });
+        console.log(2);
 	},
 	
 	/**
@@ -525,7 +522,8 @@ return{
             case 'mean':
                 var values = model.getMean();			//Mean values of all the generated random samples
                 var datum = model.getMeanOfDataset(1);	//datum is the dataset mean value
-                console.log("Mean Values:"+ values );
+                //console.log("Mean Values:"+ values );
+                //console.log("datum value:"+ datum) ;
                 break
 
             case 'standardDev':
@@ -579,7 +577,7 @@ return{
 		var temp=values.sort(function(a,b){return a-b});
 		var start=Math.floor(temp[0]);
 		var stop=Math.ceil(temp[values.length-1]);
-		console.log("start"+start+"stop"+stop);
+		console.log("start: "+start+" stop: "+stop);
 		
 		var binNo = $('input[name="binno"]').val() != '' ? $('input[name="binno"]').val() : 10;
 
@@ -591,16 +589,16 @@ return{
 			range: [start,stop],
 			datum :datum,
 			bins : binNo,
-			variable: setting.variable	,
+			variable: setting.variable
 			// nature: 'continuous'			
 		});
 
-		 // socr.vis.addBar({
-		 // 	elem: dotplot,
-		 // 	variable: setting.variable,
-		 // 	datum: datum
-		 // });
-		 view.updateCtrlMessage("Infer plot created.","success");
+		socr.vis.addBar({
+		  	elem: dotplot,
+		  	variable: setting.variable,
+		  	datum: datum
+		});
+		this.updateCtrlMessage("Infer plot created.","success");
         return true;
 	},
 	
