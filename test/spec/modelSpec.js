@@ -5,63 +5,53 @@ describe("appModel", function() {
     });
 
     it("should have a generateTrail function", function() {
-        expect(model.generateTrail()).toEqual(false);
+        expect(model.generateTrail(null)).toEqual(false);
 
     });
 
-    it("should be able to set a dataset", function() {
+    it("should be able to set a data set", function() {
         var input={
-            values:{0: [0,1],
-                1 : [2,3]
-            },
-            keys:{
-                0 :['H','T'],
-                1 :['T','H']
-            },
-            type:'processed'
+            values:[
+                  [0,1],
+                  [2,3]
+            ],
+            keys:[
+                ['H','T'],
+                ['T','H']
+            ],
+            processed:true
         };
-        expect(model.setDataset(input)).toEqual(false);
-
+        expect(model.setDataset(input)).toEqual(true);
     });
 
-  describe("should be able to set a dataset", function() {
+  describe("generating random samples", function() {
     beforeEach(function() {
-      model.play(song);
-      model.pause();
+        var input = {
+            processed:true,
+            keys:[
+                ["T", "T", "H", "T", "T", "H", "H", "T", "T", "H"],
+                ["H","H","H","T","H","T","H","T","T","T"]
+
+            ],
+            values:[
+                [0,0,1,0,0,1,1,0,0,1],
+                [1,1,1,0,1,0,1,0,0,0]
+            ]
+        };
+        model.setDataset(input);
     });
 
-    it("should indicate that the song is currently paused", function() {
-      expect(model.isPlaying).toBeFalsy();
+    it("should generate a trail", function() {
+      expect(typeof model.generateTrail(1)). toEqual('object');
 
-      // demonstrates use of 'not' with a custom matcher
-      expect(model).not.toBePlaying(song);
+      // incase of no input given to generateTrail
+      //expect(model.generateTrail(null)).toEqual(false);
     });
 
-    it("should be possible to resume", function() {
-      model.resume();
-      expect(model.isPlaying).toBeTruthy();
-      expect(model.currentlyPlayingSong).toEqual(song);
-    });
+
+
+
   });
 
-  // demonstrates use of spies to intercept and test method calls
-  it("tells the current song if the user has made it a favorite", function() {
-    spyOn(song, 'persistFavoriteStatus');
 
-    model.play(song);
-    model.makeFavorite();
-
-    expect(song.persistFavoriteStatus).toHaveBeenCalledWith(true);
-  });
-
-  //demonstrates use of expected exceptions
-  describe("#resume", function() {
-    it("should throw an exception if song is already playing", function() {
-      model.play(song);
-
-      expect(function() {
-        model.resume();
-      }).toThrow("song is already playing");
-    });
-  });
 });
