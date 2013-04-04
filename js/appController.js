@@ -276,9 +276,7 @@ socr.controller=function(model,view){
 		}
 		else{
 			view.createControllerView();
-            console.log(3);
 			//check for input
-            console.log(4);
             if(socr.exp.current){
 				if(socr.exp.current.getDataset()!=''){	
 					console.log('simulation drive has some data');

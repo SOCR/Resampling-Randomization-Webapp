@@ -20,81 +20,116 @@ socr.view = function( model ){
 	*@method: [private] _create
 	*@param :  start: the first sample number to be displayed
 	*@param :  size: how many samples to be displayed
+     * @return : {boolean}
 	*@desc:   populates the sampleList div with random samples
 	*/ 
 	function _create(start,size){
-		console.log("_create("+start+","+size+") funtion started");
-		y=parseInt(start)+size;
-		$('#sampleList').html('');		//first empty the sample list
-		_datapoints=$('#nSize').val();
-		//change the loop to a inverse while loop
-		for(var i=start;i<y;i++)
-			{
-			var temp=['<div class="entry"><div class="header">Sample<span class="values"> '];
-			temp.push(i);
-			temp.push('</span> &nbsp;&nbsp;  Datapoints:<span class="values">');
-			temp.push(_datapoints);
-			temp.push('</span>&nbsp;&nbsp;<a data-toggle="modal" href="#plot" class="tooltips" rel="tooltip" data-original-title="plot"><i class="icon-fullscreen plot" id="'+i+'"></i></a> &nbsp; <a href="#" class="tooltips" rel="tooltip" data-original-title="contribution"><i class="icon-filter contribution" id="'+i+'"></i></a>&nbsp; <a href="#" class="tooltips" rel="tooltip" data-original-title="toggle"><i class="icon-retweet toggle-sample" data-type="sample" id="'+i+'"></i></a></span>');
-			temp.push('<ul class="nav nav-tabs" id="sample-tabs'+i+'" ><li class="active"><a href="#sample-'+i+'1">1</a></li>');
-  			var j=2;
-  			while(j<=model.getK())
-  				{
-  					temp.push('<li><a href="#sample-'+i+j+'">'+j+'</a></li>');	
-  					j++;
-  				}
-		  	temp.push('</ul><div class="tab-content"><div class="tab-pane active" id="sample-1"><pre>'+model.getSample(i,"keys",1)+'</pre></div>');
- 			var j=2;
- 			while(j<=model.getK())
-  				{
-  					temp.push('<div class="tab-pane" id="sample-'+i+j+'"><pre>'+model.getSample(i,"keys",j)+'</pre></div>');
-  					j++;
-  				}
-		  	temp.push("</div>");
-			$('#sampleList').append(temp.join(''));
-			}
-		$('.tooltips').tooltip();
-		
-		/*plot icon is present on each child of the sampleList Div . It basically opens a popup and plots a bar chart of that particular sample.*/
-		$('.plot').on('click',function(e){
-			$('.chart').html('');
-			var sampleID=$(this).attr('id');
-			//var sampleID=e.target.id;
-			console.log("test"+sampleID);
-			var values=model.getSample(sampleID,"values");
-			//console.log("values for plot click:"+values);
-			var temp=values.sort(function(a,b){return a-b});
-			var start=Math.floor(temp[0]);
-			var stop=Math.ceil(temp[values.length-1])+1;
-			$('#plot').find('h3').text(' Sample : ' + sampleID );
-			socr.vis.generate({
-				parent : '.chart',
-			    data : values,
-			    height: 380,
-			    width: 500,
-			    //nature: 'discreete'
-				//range:[start,stop]
-	        	});
-		});//click binding for .plot
+        var _datapoints=$('#nSize').val(),
+            end=parseInt(start)+size,
+            j = 0,
+            k = model.getK();
 
-		/**toggle-sample icon is present on each child of the sampleList Div . It basically toggles the data if the sample and sampleValue are different.
-		*	TODO : disable this button if the app is data driven mode (as the sample and sampleValues are same.)
-		*/
-		$('.toggle-sample').on('click',function(){
-				var id=$(this).attr('id');
-				if($(this).attr('data-type')==='value')
-					{
-						$(this).parent().parent().find('pre').text(model.getSample(id,"keys"));
-						$(this).attr('data-type','sample');
-					}
-				else
-					{
-						$(this).parent().parent().find('pre').text(model.getSample(id,"values"));
-						$(this).attr('data-type','value');
-					}
-		});//click binding for .toggle-sample
+        if(size === undefined || start === undefined){
+            return false;
+        }
+
+        console.log("_create("+start+","+size+") function started");
+
+        $('#sampleList').html('');		//first empty the sample list
+
+        //generate the json object for mustache
+        var config = {entries:[]},obj={};
+        for(var i=start;i<end;i++){
+            obj.sampleNo = i;
+            obj.datapoints = _datapoints;
+            obj.sample = [];
+            var j=0;
+            while(j<k-1){
+                var temp = obj.sample[j] = {};
+                if(j == 0){
+                    temp.class = "active";
+                }
+                else{
+                    temp.class = "";
+                }
+                temp.kIndex = j+1;
+                temp.id = i*(Math.pow(10,(Math.ceil(Math.log(i)/Math.log(10)))))+(j+1);
+                temp.values = model.getSample(i,"values",j+1);
+                temp.keys = model.getSample(i,"keys",j+1);
+                j++;
+                console.log(obj);
+            }
+            config.entries.push(obj);
+            obj={};         //destroying the object
+        }
+
+        $.get("partials/sampleList.tmpl",function(data){
+            var temp = Mustache.render(data,config);
+            $("#sampleList").html(temp);
+            //console.log(temp);
+            $('.tooltips').tooltip();
+            $('.nav-tabs li').click(function (e) {
+                e.preventDefault();
+                var kIndex = $(this).find("a").html();
+                console.log("kvalue"+kIndex);
+                //setting the k-index attribute of toggle-sample icon
+                $(this).parent().parent().find(".toggle-sample").attr('k-index',kIndex);
+                $(this).find('a').tab('show');
+            });
+
+            /*plot icon present on each child of the sampleList Div .
+            It basically opens a popup and plots a bar chart of that particular sample.*/
+            $('.plot').on('click',function(e){
+                e.preventDefault();
+                $('.chart').html('');
+                var sampleID=$(this).attr('id');
+                //var sampleID=e.target.id;
+                console.log("test"+sampleID);
+                var values=model.getSample(sampleID,"values");
+                //console.log("values for plot click:"+values);
+                //var temp=values.sort(function(a,b){return a-b});
+                //var start=Math.floor(temp[0]);
+                //var stop=Math.ceil(temp[values.length-1])+1;
+                $('#plot').find('h3').text(' Sample : ' + sampleID );
+                socr.vis.generate({
+                    parent : '.chart',
+                    data : values,
+                    height: 380,
+                    width: 500
+                    //nature: 'discreete'
+                    //range:[start,stop]
+                });
+            });//click binding for .plot
+
+            /* toggle-sample icon is present on each child of the sampleList Div .
+             * It basically toggles the data if the sample and sampleValue are different.
+             *	TODO : disable this button if the app is data driven mode (as the sample and sampleValues are same.)
+             */
+            $('.toggle-sample').on('click',function(e){
+                e.preventDefault();
+                var id = $(this).attr('sample-number'),
+                    kIndex = $(this).parent().parent().find(".toggle-sample").attr('k-index');
+
+                if($(this).attr('data-type')==='value'){
+                    console.log($(this).parent().parent().find('div[sample-div="'+id+'"][k-index="'+kIndex+'"]'));
+                        //.find('pre')text(model.getSample(id,"keys",kIndex));
+                    $(this).attr('data-type','keys');
+                }
+                else{
+                    console.log($(this).parent().parent().find('div[sample-div="'+id+'"][k-index="'+kIndex+'"]'));
+                    //.find('pre').text(model.getSample(id,"values",kIndex));
+                    $(this).attr('data-type','value');
+                }
+            });//click binding for .toggle-sample
+        }); //get call end
+
+
+
+
 			
-		$('.contribution').on('click',function(){
-			console.log("Mean of this sample:"+model.getMeanOf($(this).attr('id')));
+		$('.contribution').on('click',function(e){
+            e.preventDefault();
+            console.log("Mean of this sample:"+model.getMeanOf($(this).attr('id')));
 			$("#accordion").accordion( "activate" , 2);
 			console.log("dataset mean:"+model.getMeanOfDataset(1));
 			console.log("standard deviation:"+ model.getStandardDevOf($(this).attr('id')));
@@ -338,17 +373,14 @@ return{
 	createControllerView:function(){
 		$( "#amount" ).val( "$" + $( "#slider" ).slider( "value" ) );
         //define the configuration json file
-        var view = {
-            title: "Joe",
-            animationSpeed:false,
-            calc: function () {
-                return 2 + 4;
-            }
-        };
+        var config = {
+            animationSpeed:false
+            };
+
+
         $.get('partials/controller.tmpl',function(data){
-            var _output = Mustache.render(data, view);
+            var _output = Mustache.render(data, config);
             $('#controller-content').html(_output);
-            console.log(5);
             controller.initController();
 //            $( "#speed-selector" ).slider({
 //                value:400,
