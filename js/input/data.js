@@ -377,7 +377,15 @@ socr.dataTable= function () {
           model.reset(); 
 
       $("#accordion").accordion( "activate" , 0);
-      $(this).update({to:'dataDriven'});    
+      try{
+          $(this).update({to:'dataDriven'});
+      }
+      catch(e){
+          console.log(e)
+      }
+      finally{
+          $.update({to:'dataDriven'});
+      }
       
       if(spreadSheet.validate(dataset)){
         // model.setDataset({
@@ -415,7 +423,12 @@ socr.dataTable= function () {
             console.log(' Select Data request with  '+ selectedCoords )  
             var dataset = $dataTable.inputtable('getSelectedData');
             $("#accordion").accordion( "activate" , 0);
-            $(this).update({to:'dataDriven'});    
+            try{
+            $(this).update({to:'dataDriven'});
+            }
+            catch(e){
+                console.log(e.message)
+            }
            if(socr.exp.controllerSliderState!=0)
             $(".controller-handle").trigger("click");
             if(spreadSheet.validate(dataset)){
@@ -552,12 +565,15 @@ socr.dataTable= function () {
     export : function(){
       console.log('Export the following datasets');
       console.log(stage.content);
-      model.setDataset({
+      var result=model.setDataset({
         type:"spreadsheet",
         values:stage.content,
         range:stage.content.length,
         processed:false
       });
+      if(result == true){
+          $.update({to:'dataDriven'});
+      }
     },
     reset : function(){
       stage.index = 1;
