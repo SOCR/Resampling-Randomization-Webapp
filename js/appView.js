@@ -136,7 +136,7 @@ socr.view = function( model ){
 					data : values,
 					height:390,
 					range: [0,10],
-					dataSetMean :datum,
+					datum :datum,
 					sample : setting.sample
 				});
 			}
