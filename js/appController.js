@@ -279,14 +279,10 @@ socr.controller=function(model,view){
 			socr.exp.current.initialize();
 		}
 		else{
-<<<<<<< HEAD
+
 			//check for input
             if(!$.isEmptyObject(socr.exp.current)){
-=======
-			view.createControllerView();
-			//check for input
-            if(socr.exp.current){
->>>>>>> mustache
+
 				if(socr.exp.current.getDataset()!=''){	
 					console.log('simulation drive has some data');
 					var result=model.setDataset({
