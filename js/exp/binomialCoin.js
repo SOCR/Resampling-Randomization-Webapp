@@ -129,7 +129,7 @@ return{
  	},
 	createControllerView:function(){
 	console.log("createControllerView for binomialCoin executed!");
-		var html='<p class="toolbar"><p class="tool"><span id="nLabel" class="badge badge-warning" for="nInput">N = </span><span id="nvalue"></span><input id="nInput" type="range" tabindex="7" class="parameter"/><i class="icon-question-sign popups" rel="popover" data-content=" n = number of coins to be tossed!" data-original-title="n"></i></p><p class="tool"><span id="pLabel" class="badge badge-warning" for="pInput">P = </span><span id="pvalue"></span><input id="pInput" type="range" tabindex="8" class="parameter"/><i class="icon-question-sign popups" rel="popover" data-content=" p = probability of getting a Head!" data-original-title="p"></i></p><select id="rvSelect" tabindex="9" title="Random variable" ><option value="0" selected="true">Y: Number of heads</option><option value="1">M: Proportion of heads</option></select><div><span class="badge badge-warning"> K=<span id="kValue">2</span></span><div id="kValue-slider" style="display:inline-block;width:50%;margin-left:5%"></div></div></p><button class="btn popups" id="sdbutton"  rel="popover" data-content="To generate random samples, first you need a dataset to start with. Once you generate it, go ahead and generate random samples!" data-original-title="Dataset">Generate DataSet!</button>&nbsp;<button class="btn btn-danger" id="grsbutton" >Generate Random Samples!</button><div class="controller-warning"></div>';
+		var html='<p class="toolbar"><p class="tool"><span id="nLabel" class="badge badge-warning" for="nInput">N = </span><span id="nvalue"></span><input id="nInput" type="range" tabindex="7" class="parameter"/><i class="icon-question-sign popups" rel="popover" data-content=" n = number of coins to be tossed!" data-original-title="n"></i></p><p class="tool"><span id="pLabel" class="badge badge-warning" for="pInput">P = </span><span id="pvalue"></span><input id="pInput" type="range" tabindex="8" class="parameter"/><i class="icon-question-sign popups" rel="popover" data-content=" p = probability of getting a Head!" data-original-title="p"></i></p><select id="rvSelect" tabindex="9" title="Random variable" ><option value="0" selected="true">Y: Number of heads</option><option value="1">M: Proportion of heads</option></select><div><span class="badge badge-warning"> K=<span id="kValue">1</span></span><div id="kValue-slider" style="display:inline-block;width:50%;margin-left:5%"></div></div></p><button class="btn popups" id="sdbutton"  rel="popover" data-content="To generate random samples, first you need a dataset to start with. Once you generate it, go ahead and generate random samples!" data-original-title="Dataset">Generate DataSet!</button>&nbsp;<button class="btn btn-danger" id="grsbutton" >Generate Random Samples!</button><div class="controller-warning"></div>';
 		$('#controller-content').delay(1000).html(html);
 		$('.popups').popover();
 		try{
@@ -138,12 +138,11 @@ return{
 		catch(err){
 			console.log(err.message);
 		}
-		var minKVal = socr.exp.multiK ? 2 : 1;
-		console.log(minKVal)
+
 		$('.tooltips').tooltip();
 		$( "#kValue-slider" ).slider({
-			value: minKVal,
-			min: minKVal,
+			value:1,
+			min: 1,
 			max: 10,
 			step: 1,
 			slide: function( event, ui ) {
