@@ -95,8 +95,9 @@ socr.view = function( model ){
                     parent : '.chart',
                     data : values,
                     height: 380,
-                    width: 500
-                    //nature: 'discreete'
+                    width: 500,
+                    method: 'discrete',
+                    variable : 'Frequency'
                     //range:[start,stop]
                 });
             });//click binding for .plot
@@ -168,7 +169,7 @@ socr.view = function( model ){
 					parent : '#dotplot',
 					data : values,
 					height:390,
-					range: [0,10],
+					//range: [0,10],
 					datum :datum,
 					sample : setting.sample
 				});
