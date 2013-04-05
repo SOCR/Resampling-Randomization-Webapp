@@ -80,7 +80,7 @@ return{
 	},
 	
 	generate: function(){
-		view.updateSimulationInfo();		//updates experiment info into third tile in the accordion
+		socr.view.updateSimulationInfo();		//updates experiment info into third tile in the accordion
 		socr.exp.cardExp.setVariable();
 		socr.exp.cardExp.createDataPlot(_n);			//create the canvas fro the dataset
 		$(".device-container").width(_width);
@@ -128,10 +128,9 @@ return{
 		}
 
 		$('.tooltips').tooltip();
-		var minKVal = socr.exp.multiK ? 2 : 1;
 		$( "#kValue-slider" ).slider({
-			value: minKVal,
-			min: minKVal,
+			value: 1,
+			min: 1,
 			max: 10,
 			step: 1,
 			slide: function( event, ui ) {

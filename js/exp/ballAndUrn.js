@@ -186,11 +186,9 @@ return{
 
 		$('.tooltips').tooltip();
 
-		var minKVal = socr.exp.multiK ? 2 : 1;
-		console.log(minKVal);
 		$( "#kValue-slider" ).slider({
-			value: minKVal,
-			min: minKVal,
+			value: 1,
+			min: 1,
 			max: 10,
 			step: 1,
 			slide: function( event, ui ) {

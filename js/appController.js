@@ -138,33 +138,40 @@ socr.controller=function(model,view){
 	},
 
 	initController:function(){
-		$("#runButton").on('click',function(){
+		$("#runButton").on('click',function(e){
+            e.preventDefault();
 			console.log('Run Started');
 			socr.controller.run();
 		});
 		
-		$("#stepButton").on('click',function(){
-			console.log('Step pressed ');
+		$("#stepButton").on('click',function(e){
+            e.preventDefault();
+            console.log('Step pressed ');
 			socr.controller.step();
 		});
 		
-		$("#stopButton").on('click',function(){
-			console.log('Stop Pressed ');
+		$("#stopButton").on('click',function(e){
+            e.preventDefault();
+            console.log('Stop Pressed ');
 			socr.controller.stop();
 		});
 		
-		$("#resetButton").on('click',function(){
-			console.log('Reset pressed');
+		$("#resetButton").on('click',function(e){
+            e.preventDefault();
+            console.log('Reset pressed');
 			socr.controller.reset();
 		});
 		
-		$("#infer").on('click',function(){
-            console.log(model);
-		/*^^^^^create loading gif ^^^^^^^^*/
-			if(socr.model.getSample(1)==false)
+		$("#infer").on('click',function(e){
+            e.preventDefault();
+            /*^^^^^create loading gif ^^^^^^^^*/
+			if(socr.model.getSample(1)==false){
 				socr.view.handleResponse('<h4 class="alert-heading">No Random samples to infer From!</h4>Please generate some random samples. Click "back" button on the controller to go to the "Generate Random Samples!" button.','error','controller-content');
-			else
-			socr.controller.setDotplot();
+            }
+			else{
+			    socr.controller.setDotplot();
+                socr.view.toggleControllerHandle("hide");
+            }
 		});
 	},
 
@@ -175,9 +182,7 @@ socr.controller=function(model,view){
 	*/
 	step: function(){
 		$("#accordion").accordion( "activate" , 1);
-		if(socr.exp.controllerSliderState==1){
-			$('.controller-handle').trigger('click');
-		}
+        socr.view.toggleControllerHandle("hide");
 		view.disableButtons();					//disabling buttons
 		model.setN(nSize.val());				// save the datapoints size
 	    var keys=model.generateStep();			//generate one sample
@@ -244,7 +249,7 @@ socr.controller=function(model,view){
 							model.reset();
 							view.reset();		    //clearing all the canvas
                             socr.exp.current={};    //deleting the current experiment instance
-							view.toggleControllerHandle();
+							view.toggleControllerHandle('hide');
 							socr.dataTable.simulationDriven.resetScreen();
                             $(this).dialog("close");					//close the confirmation window
                             },
@@ -274,7 +279,6 @@ socr.controller=function(model,view){
 			socr.exp.current.initialize();
 		}
 		else{
-			view.createControllerView();
 			//check for input
             if(!$.isEmptyObject(socr.exp.current)){
 				if(socr.exp.current.getDataset()!=''){	
@@ -285,7 +289,7 @@ socr.controller=function(model,view){
 							processed:true
 						});
 					if(result === true){
-					    view.toggleControllerHandle();
+					    view.toggleControllerHandle('show');
 					}
 					console.log(model.getDataset(1));
 					//call to loadInputSheet to input the generated simulation data if any
@@ -294,7 +298,8 @@ socr.controller=function(model,view){
 			else
 				console.log("Experiment object not defined!");
 				//set the input
-		}
+            view.createControllerView();
+        }
 	}
  
     }//return

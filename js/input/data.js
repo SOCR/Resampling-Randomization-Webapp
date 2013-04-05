@@ -80,8 +80,7 @@ socr.dataTable= function () {
           socr.exp.current.createControllerView();
           socr.exp.current.initialize();
           simulationDriven.expLoaded.push(id);
-         if(socr.exp.controllerSliderState==0)
-          $(".controller-handle").trigger("click");
+         socr.view.toggleControllerHandle("show");
       },
       displayText : function(details){
           console.log(details);
@@ -94,6 +93,7 @@ socr.dataTable= function () {
       },
       resetScreen : function(){
         view.toggleScreens({ visible: splashScreen });
+        socr.view.toggleControllerHandle("hide");
       }
 
    } ;
@@ -398,8 +398,7 @@ socr.dataTable= function () {
         console.log('Dataset is valid')
         view.displayResponse(' Entire dataset is selected ', 'success');
 
-      if(socr.exp.controllerSliderState==0)
-            $(".controller-handle").trigger("click");
+      socr.view.toggleControllerHandle("show");
         //select.selectAll();
        } else{
         console.log("Dataset isn't valid")
@@ -429,8 +428,7 @@ socr.dataTable= function () {
             catch(e){
                 console.log(e.message)
             }
-           if(socr.exp.controllerSliderState!=0)
-            $(".controller-handle").trigger("click");
+           socr.view.toggleControllerHandle("hide");
             if(spreadSheet.validate(dataset)){
             //  model.setDataset({
 
@@ -573,6 +571,7 @@ socr.dataTable= function () {
       });
       if(result == true){
           $.update({to:'dataDriven'});
+          socr.view.toggleControllerHandle("show");
       }
     },
     reset : function(){

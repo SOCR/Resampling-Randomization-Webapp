@@ -11,7 +11,7 @@ socr.model=function(){
 	var _stopCount = 1000;			//Number of runs to be made when 'run' button is pressed 
 	var _count=0;					//keeps count of number of samples generated from start
 	var _dataset={};				// All the input datapoints from wich bootstrap sample is generated
-	var _n=50;						//Number of datapoints in a bootstrap sample or Sample Size
+	var _n=10;						//Number of datapoints in a bootstrap sample or Sample Size
 	var _K=1;						//contains the number of datasets
 	/*
 	Why there are keys and values? Its because in some form of data input (like coin toss), the "key" contains the symbolic meaningful reference whereas the "value" contains the mathematical equivalent value.
@@ -71,7 +71,7 @@ socr.model=function(){
 		var x=_bootstrapGroupValues[sampleNumber][groupNumber];
 		var total=0;
 		for(var i=0;i<x.length;i++) {
-		   total += parseInt(x[i]); 
+		   total += parseFloat(x[i]);
 		}
 		return total;
 	}
@@ -104,7 +104,7 @@ socr.model=function(){
 			Array.prototype.mean = function() {
 				var _total=0;
 				for(var i=0;i<this.length;i++){
-					_total+=this[i];
+					_total+=parseFloat(this[i]);
 				}
 				return _total/this.length;
 			}; 
@@ -129,11 +129,11 @@ socr.model=function(){
 //            console.log("means");
 //            console.log(_ymean);
 //            console.log("grand mean: "+ _y);
-
+//
 //            console.log("N :"+ _N)
             var _dofe=_k - 1;//calculate the dof between =  k - 1
 			var _dofw=_N - _k; //calculate the dof within = N - k
-
+//
 //            console.log("dofe:"+_dofe);
 //            console.log("dofw:"+_dofw);
 
@@ -157,7 +157,7 @@ socr.model=function(){
 			var _mse = _sse/_dofw;
 //
 //            console.log("mean sum of squares between "+_mst);
-//            console.log("mean sum of squares within  "+_mse);
+//           console.log("mean sum of squares within  "+_mse);
 
 //            console.log("F value: "+_mst/_mse);
 			return _mst/_mse;
@@ -301,7 +301,7 @@ return{
 		var _val=_dataset[K].values;
 		var total=0;
 		for(var i=0;i<_val.length;i++) {
-			total += parseInt(_val[i]); 
+			total += parseFloat(_val[i]);
 		}
 		total=total/_val.length;
 		if(isNaN(total)){return false;}else{return total;}
@@ -370,7 +370,7 @@ return{
 		var _val=_dataset[K].values;
 		var total=0;
 		for(var i=0;i<_val.length;i++) 
-			{ total += parseInt(_val[i]); }
+			{ total += parseFloat(_val[i]); }
 		return total;
 	},
 	/** COUNT METHODS ENDS **/

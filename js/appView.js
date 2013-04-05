@@ -14,8 +14,6 @@ socr.view = function( model ){
 	var _currentValues;					// [ARRAY] Reference to current inference variable's value of each random sample.
 
 
-	var inputHandle = $('.input-handle'),controllerHandle = $('.controller-handle') ;
-
 	/**
 	*@method: [private] _create
 	*@param :  start: the first sample number to be displayed
@@ -189,20 +187,39 @@ return{
 	*	@description - Method to toggle the controller slider
 	*
 	*/
-	toggleControllerHandle: function(){
-		$target = $('#slide-out-controller');
-		if(!$target.hasClass('active')){
-			$target.addClass('active').show().css({left:-425}).animate({left: 0}, 500);
-			$('.controller-handle').css({left:-30}).animate({left: 394}, 500);
-			socr.exp.controllerSliderState=1;
-		}
-		else{
-		$target.removeClass('active').animate({
-					left: -425
-				}, 500);
-			$('.controller-handle').css({left:400}).animate({left: -30}, 500);
-			socr.exp.controllerSliderState=0;
-		}
+	toggleControllerHandle: function(action){
+        console.log(action);
+        var $target = $('#slide-out-controller');
+        var show = function(){
+            $target.addClass('active').show().css({left:-425}).animate({left: 0}, 500);
+            $('.controller-handle').css({left:-30}).animate({left: 394}, 500);
+            socr.exp.controllerSliderState="show";
+        };
+        var hide = function(){
+            // if($target.hasClass('active')){
+            $target.removeClass('active').animate({left: -425}, 500);
+            $('.controller-handle').css({left:400}).animate({left: -30}, 500);
+            socr.exp.controllerSliderState="hide";
+        };
+        if(typeof action === "object"){
+            if(socr.exp.controllerSliderState == "hide"){
+                show();
+            }
+            else{
+                hide();
+            }
+        }
+        else if(action === "show" && socr.exp.controllerSliderState === "hide"){
+            show();
+            return true;
+        }
+        else if(action == "hide" && socr.exp.controllerSliderState == "show"){
+            hide();
+            return true;
+        }
+        else{
+            return false;
+        }
 
 	},
 
@@ -339,17 +356,24 @@ return{
 	createControllerView:function(){
 		$( "#amount" ).val( "$" + $( "#slider" ).slider( "value" ) );
         //define the configuration json file
-        var view = {
-            title: "Joe",
+        if(socr.model.getK() === 1){
+            var variables = ["mean","count"];
+            var disabled = ["standardDev"];
+        }
+        else{
+            var variables = ["f-value","p-value","mean","count"];
+            var disabled = ["standardDev"];
+        }
+        console.log("k "+socr.model.getK());
+        console.log(variables);
+        var config = {
             animationSpeed:false,
-            calc: function () {
-                return 2 + 4;
-            }
+            variables:variables,
+            disabled:disabled
         };
         $.get('partials/controller.tmpl',function(data){
-            var _output = Mustache.render(data, view);
+            var _output = Mustache.render(data, config);
             $('#controller-content').html(_output);
-            console.log(5);
             socr.controller.initController();
 //            $( "#speed-selector" ).slider({
 //                value:400,
@@ -360,7 +384,8 @@ return{
 //                    $( "#speed-value" ).html( ui.value );
 //                }
 //            });
-            $('.controller-back').on('click',function(){
+            $('.controller-back').on('click',function(e){
+                e.preventDefault();
                 try{
                     socr.exp.current.createControllerView();
 
@@ -583,7 +608,8 @@ return{
 		var binNo = $('input[name="binno"]').val() != '' ? $('input[name="binno"]').val() : 10;
 
 		_currentValues=values;
-		var dotplot = socr.vis.generate({
+		try{
+            var dotplot = socr.vis.generate({
 			parent : '#dotplot',
 			data : values,
 			height:390,
@@ -591,14 +617,39 @@ return{
 			datum :datum,
 			bins : binNo,
 			variable: setting.variable
-			// nature: 'continuous'			
+			// nature: 'continuous'
 		});
+        }
+        catch(e){
+            console.log(e);
+            var dotplot = socr.vis.generate({
+                parent : '#dotplot',
+                data : values,
+                height:390,
+                range: [start,stop],
+                bins : binNo,
+                variable: setting.variable
+                // nature: 'continuous'
+            });
+        }
 
-		socr.vis.addBar({
-		  	elem: dotplot,
-		  	variable: setting.variable,
-		  	datum: datum
-		});
+//        try{
+//		socr.vis.addBar({
+//		  	elem: dotplot,
+//		  	variable: setting.variable,
+//		  	datum: datum
+//		});
+//        }
+//        catch(e){
+//            console.log(e);
+//        }
+//        finally{
+//            socr.vis.addBar({
+//                elem: dotplot,
+//                variable: setting.variable,
+//                datum: datum
+//            });
+//        }
 		this.updateCtrlMessage("Infer plot created.","success");
         return true;
 	},
