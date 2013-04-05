@@ -45,11 +45,13 @@ socr.dataTable= function () {
    var simulationDriven = {
       init : function(arg){
         var expId = arg.substr(4);
-        console.log(expId);
-        console.log(simulationDriven.expLoaded);
-        if($.inArray( expId, simulationDriven.expLoaded))
-          simulationDriven.loadData(expId);
-        else
+        console.log('Experiments loaded: '+simulationDriven.expLoaded);
+        /* 
+          ToDO : Verify .js extension addition in all browsers
+        */
+        // if($.inArray( expId, simulationDriven.expLoaded))
+        //   simulationDriven.loadData(expId);
+        // else
           simulationDriven.loadScript(expId);
       },
       expLoaded : [],
