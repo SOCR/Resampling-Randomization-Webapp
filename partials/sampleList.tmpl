@@ -8,16 +8,14 @@
         <span class="values">{{datapoints}}</span>
         &nbsp;&nbsp;
         <a data-toggle="modal" href="#plot" class="tooltips" rel="tooltip" data-original-title="plot">
-            <i class="icon-fullscreen plot" id="plot-{{sampleNo}}"></i>
+            <i class="icon-fullscreen plot" id="plot-{{sampleNo}}" sample-number="{{sampleNo}}" k-index="1"></i>
         </a>
         &nbsp;
         <a href="#" class="tooltips" rel="tooltip" data-original-title="contribution">
-            <i class="icon-filter contribution" id="contribution-{{sampleNo}}"></i></a>
+            <i class="icon-filter contribution" id="contribution-{{sampleNo}}" ></i></a>
         &nbsp;
         <a href="#" class="tooltips" rel="tooltip" data-original-title="toggle">
-            <i class="icon-retweet toggle-sample" data-type="keys" id="toggle-{{sampleNo}}" sample-number="{{sampleNo}}"
-
-        k-index="{{kIndex}}"></i>
+            <i class="icon-retweet toggle-sample" data-type="keys" id="toggle-{{sampleNo}}" sample-number="{{sampleNo}}" k-index="1"></i>
         </a>
         <ul class="nav nav-tabs" id="sample-tabs{{sampleNo}}">
             {{#sample}}
@@ -26,7 +24,7 @@
         </ul>
         <div class="tab-content">
             {{#sample}}
-                <div class="tab-pane {{class}}" id="sample-{{id}}" sample-div="{{id}}" k-index={{kIndex}}>
+                <div class="tab-pane {{class}}" id="sample-{{id}}" sample-div="{{id}}">
                     <pre>{{keys}}</pre>
                 </div>
             {{/sample}}

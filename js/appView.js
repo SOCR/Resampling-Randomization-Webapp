@@ -44,7 +44,7 @@ socr.view = function( model ){
             obj.datapoints = _datapoints;
             obj.sample = [];
             var j=0;
-            while(j<k-1){
+            while(j<=k-1){
                 var temp = obj.sample[j] = {};
                 if(j == 0){
                     temp.class = "active";
@@ -71,7 +71,6 @@ socr.view = function( model ){
             $('.nav-tabs li').click(function (e) {
                 e.preventDefault();
                 var kIndex = $(this).find("a").html();
-                console.log("kvalue"+kIndex);
                 //setting the k-index attribute of toggle-sample icon
                 $(this).parent().parent().find(".toggle-sample").attr('k-index',kIndex);
                 $(this).find('a').tab('show');
@@ -82,15 +81,18 @@ socr.view = function( model ){
             $('.plot').on('click',function(e){
                 e.preventDefault();
                 $('.chart').html('');
-                var sampleID=$(this).attr('id');
+                var id = $(this).attr('sample-number'),
+                    kIndex = $(this).parent().parent().find(".toggle-sample").attr('k-index');
                 //var sampleID=e.target.id;
-                console.log("test"+sampleID);
-                var values=model.getSample(sampleID,"values");
+                var values=model.getSample(id,"values",kIndex);
+                for(var i=0;i<values.length;i++){
+                    values[i] = parseFloat(values[i]);
+                }
                 //console.log("values for plot click:"+values);
                 //var temp=values.sort(function(a,b){return a-b});
                 //var start=Math.floor(temp[0]);
                 //var stop=Math.ceil(temp[values.length-1])+1;
-                $('#plot').find('h3').text(' Sample : ' + sampleID );
+                $('#plot').find('h3').text(' Sample : ' + id );
                 socr.vis.generate({
                     parent : '.chart',
                     data : values,
@@ -109,15 +111,13 @@ socr.view = function( model ){
                 e.preventDefault();
                 var id = $(this).attr('sample-number'),
                     kIndex = $(this).parent().parent().find(".toggle-sample").attr('k-index');
-
+                console.log();
                 if($(this).attr('data-type')==='value'){
-                    console.log($(this).parent().parent().find('div[sample-div="'+id+'"][k-index="'+kIndex+'"]'));
-                        //.find('pre')text(model.getSample(id,"keys",kIndex));
+                    $(this).parent().parent().find('div.active pre').text(model.getSample(id,"keys",kIndex));
                     $(this).attr('data-type','keys');
                 }
                 else{
-                    console.log($(this).parent().parent().find('div[sample-div="'+id+'"][k-index="'+kIndex+'"]'));
-                    //.find('pre').text(model.getSample(id,"values",kIndex));
+                    $(this).parent().parent().find('div.active pre').text(model.getSample(id,"values",kIndex));
                     $(this).attr('data-type','value');
                 }
             });//click binding for .toggle-sample
