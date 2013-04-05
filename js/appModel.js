@@ -108,7 +108,7 @@ socr.model=function(){
 				}
 				return _total/this.length;
 			}; 
-			var _k=0,_ymean=[],_total=0,_temp=0,_sst=0,_sse=0,_mst=0,_mse=0, _data=[];
+			var _k=0,_ymean=[],_total=0,_N= 0,_temp=0,_sst=0,_sse=0,_mst=0,_mse=0, _data=[];
 			_k=_this.getK();
 			if (sampleNumber === "dataset"){
 				for (var i = 1; i <=_k; i++) {
@@ -120,42 +120,56 @@ socr.model=function(){
 			}
 			for(var i=1;i<=_k;i++){
 				_ymean[i]=_data[i].mean();
+                _N +=_data[i].length;       //calculate N = total number of observations
 				_total+=_ymean[i];
 			}
-			//console.log(_ymean);
 			_y = _total/_k; // grand mean
-			var _dofe=_k - 1;//calculate the dof between K - 1
-			var _dofw=_n*_k - _n; //calculate the dof within
-			//console.log("_y:"+_y+"_dofe:"+_dofe+".... +dofw:"+_dofw);
+//            console.log("dataset:");
+//            console.log(_data);
+//            console.log("means");
+//            console.log(_ymean);
+//            console.log("grand mean: "+ _y);
+
+//            console.log("N :"+ _N)
+            var _dofe=_k - 1;//calculate the dof between =  k - 1
+			var _dofw=_N - _k; //calculate the dof within = N - k
+
+//            console.log("dofe:"+_dofe);
+//            console.log("dofw:"+_dofw);
+
 			//SST
 			for (var i = 1; i <= _k; i++) {
-				_temp = ( _ymean[i] - _y);
-				_sst=+_n*_temp*_temp;
-			};
-			//console.log("_sst:"+_sst);
+				_temp = (_ymean[i] - _y);
+				_sst+=_data[i].length*_temp*_temp;
+			}
+//			console.log("_sst:"+_sst);
 			//SSE
 			for (var i = 1,_temp=0; i <= _k; i++) {
 				for(var j=0;j<_data[i].length;j++){
 					_temp = ( _data[i][j] - _ymean[i]);
-					_sse=+_temp*_temp;
+					_sse+=_temp*_temp;
 				}
-			};
-			//console.log("_sse:"+_sse);
+			}
+//			console.log("_sse:"+_sse);
 			//MST
 			var _mst = _sst/_dofe;
 			//MSE
 			var _mse = _sse/_dofw;
+//
+//            console.log("mean sum of squares between "+_mst);
+//            console.log("mean sum of squares within  "+_mse);
 
+//            console.log("F value: "+_mst/_mse);
 			return _mst/_mse;
 
 		}
 	}
 
-    function _generateP(sampleNumber){
+    function _generateP(sampleNumber,_ndf,_ddf){
         var x = _generateF(sampleNumber);
         var _k = _this.getK();
-        var _ndf = _k -1 ;
-        var _ddf = _n*_k - _n ;
+        var _ndf = _ndf || (_k -1) ;
+        var _ddf = _ddf || (_n*_k - _n) ;
         return socr.tools.fCal.computeP(x,_ndf,_ddf);
 
     }
@@ -423,7 +437,7 @@ return{
         return _data;
     },
 
-    getPof:function(){
+    getPof:function(sampleNumber){
         _this=this;
         return _generateP(sampleNumber);
     },
