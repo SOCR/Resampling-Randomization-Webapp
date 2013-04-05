@@ -129,7 +129,8 @@ socr.vis = (function(){
 	      'width' : $(config.parent).innerWidth(),
 	      'bins' : 20,
 	      'binSize' : 10,
-	      'type' : 'histogram' //Keeping histogram as the default rendering mode
+	      'type' : 'histogram', //Keeping histogram as the default rendering mode
+	      'transitionDuration' : 500
 	    };
 
 
@@ -221,7 +222,13 @@ socr.vis = (function(){
 	    var bar = svg.select(".bars").selectAll(".bar").data(data);
 	    bar.enter().append("rect");
 	    // bar.exit().remove();
-	  
+	  	
+  	 	 var legendData = [ 
+	    				{
+	    					text : settings.variable + ' Distribution',
+	    					color: 'steelblue'
+	    				}
+	     				];
 
 	  	 if(settings.datum){
 
@@ -232,19 +239,32 @@ socr.vis = (function(){
 	  	 				return [classes[i-1],classes[i]];
 	  	 				break;
 	  	 			}
+
 	  	 		}
 	  	 	}
 
-	  	 	var interval = meanClass(settings.datum);
 
+	  	 	var interval = meanClass(settings.datum);
+	  	 	if(typeof interval == 'undefined'){
+	  	 		displayError("Interval classese didn't match");
+	  	 		return;
+	  	 	}
 	  	 	var interpolateWidth =((settings.datum - interval[0])/ (interval[1] - interval[0]))*x.rangeBand();
-	  	 	
+	
     			 
 			    var meanbar = g.append('rect')		    
-			    .attr('y',function(){ return 0;})
-			    .attr('width', function(){ return 10;})
-			    .attr('height',function(){ return height - margin.top - margin.bottom ;})
+			    .attr('y',function(){ return height - margin.top - margin.bottom ;});
+
+			    if(settings.method == 'decimal'){
+			    	meanbar.attr('x',function(){ return (x.rangeBand()/2)+x(settings.datum) - (10/2)})
+			    } else{
+			    	meanbar.attr('x',function(){ return x(interval[0]) +x.rangeBand()+ interpolateWidth - 5; });
+			    }
+
+
+			    meanbar.attr('width', function(){ return 10;})	   
 			    .attr('class','meanBar')
+			   
 			    .on('mouseover', function(d){ 
 			      d3.select(this).classed('hover', true) 
 			      var left = $(this).position().left,
@@ -259,13 +279,17 @@ socr.vis = (function(){
 			        d3.select(this).classed('hover', false);
 			        if(typeof viswrap != 'undefined') 
 			        	viswrap.tooltip.cleanup();
-			   });
+			   }).transition()
+		         .delay( function(d,i){ return settings.transitionDuration + 100; } )
+		         .attr("y", function(d) { return 0; })
+		          .attr('height',function(){ return height - margin.top - margin.bottom ;});			    ;
 
-			    if(settings.method == 'decimal'){
-			    	meanbar.attr('x',function(){ return (x.rangeBand()/2)+x(settings.datum) - (10/2)})
-			    } else{
-			    	meanbar.attr('x',function(){ return x(interval[0]) + interpolateWidth - 5; });
-			    }
+			    //Display mean Bar in legend
+
+			    legendData.push({ 
+	    					text : settings.variable +' : ' + settings.datum ,
+	    					color : '#ff7f0e'
+	    				});
 
 			}
 				
@@ -280,7 +304,7 @@ socr.vis = (function(){
 	          d3.select(this).classed('hover', false) 
 	        })
 	        .transition()
-	         .delay( function(d,i){ return i*50; } )
+	         .delay( function(d,i){ return settings.transitionDuration * (i / classes.length); } )
 	        .attr("y", function(d) { return y(d.y); })
 	        .attr("height", function(d) { return y.range()[0] - y(d.y); });
 
@@ -301,6 +325,28 @@ socr.vis = (function(){
 	    //Update the y-axis
 	    g.select(".y.axis")
 	        .call(yAxis);
+
+	  
+
+	    var legend = g.selectAll('.legend')
+	    				.data(legendData)
+	    				.enter()
+	    				.append('g')
+	    				.attr('class','legend')
+	    				.attr('transform', function(d,i){ return "translate(20, "+i*20+")"; })
+
+	    legend.append("rect")
+	      .attr("x", (width-margin.left-margin.right) - 18)
+	      .attr("width", 18)
+	      .attr("height", 18)
+	      .style("fill", function(d){ return d.color });
+
+		  legend.append("text")
+		      .attr("x", width-margin.left-margin.right - 24)
+		      .attr("y", 9)
+		      .attr("dy", ".35em")
+		      .style("text-anchor", "end")
+		      .text(function(d) { return d.text; });				
 
 	    SVGElement = g;
 
