@@ -19,17 +19,17 @@
      */
         if(setting.to == 'dataDriven'){
             console.log("dataDriven tab has been clicked!");
-            controller.loadController('dataDriven');
-            console.log('DataSet: '+model.getDataset());
+            socr.controller.loadController('dataDriven');
+            console.log('DataSet: '+socr.model.getDataset());
     	}
     	if(setting.to == 'simulationDriven'){	
     		console.log("Update.js : simulationDriven tab has been clicked!");
     	    $("#input").inputtable('clear'); 		//clear the input sheet 
-    	    view.reset();
+    	    socr.view.reset();
     		console.log("view cleared");
-    	    model.reset();
+    	    socr.model.reset();
     		console.log("model reset");
-    		controller.loadController('simulationDriven');
+    		socr.controller.loadController('simulationDriven');
     	}
     };
 })(jQuery);

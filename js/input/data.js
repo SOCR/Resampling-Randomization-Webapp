@@ -374,7 +374,7 @@ socr.dataTable= function () {
 
     parseAll : function(){
       var dataset = $dataTable.inputtable('getNonEmptyData');
-          model.reset(); 
+          socr.model.reset();
 
       $("#accordion").accordion( "activate" , 0);
       try{
@@ -565,7 +565,7 @@ socr.dataTable= function () {
     export : function(){
       console.log('Export the following datasets');
       console.log(stage.content);
-      var result=model.setDataset({
+      var result=socr.model.setDataset({
         type:"spreadsheet",
         values:stage.content,
         range:stage.content.length,

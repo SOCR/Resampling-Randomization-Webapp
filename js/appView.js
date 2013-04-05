@@ -238,7 +238,8 @@ return{
 	reset:function(){
 		$('#displayCount').html('0');	//resetting the count to 0
 		$('#sampleList').html('');		//clear the sample List dive
-		$('#dataPlot').html('');		//clear dataPlot div
+        $('#showCount').html('');
+        $('#dataPlot').html('');		//clear dataPlot div
 		$('#dotplot').empty();			//clear dotPlot div
 		$('#accordion').accordion( "activate" , 0);
 		$('.pagination').html('');
@@ -349,7 +350,7 @@ return{
             var _output = Mustache.render(data, view);
             $('#controller-content').html(_output);
             console.log(5);
-            controller.initController();
+            socr.controller.initController();
 //            $( "#speed-selector" ).slider({
 //                value:400,
 //                min: 100,
@@ -489,7 +490,7 @@ return{
 				else
 					{
 						$( ".ui-accordion-header" ).removeClass("ui-state-disabled");
-						view.enableButtons();
+						socr.view.enableButtons();
 						console.log("enableButtons() invoked");
 					}
 		}

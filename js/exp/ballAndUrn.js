@@ -104,7 +104,7 @@ return{
 		$('#grsbutton').on('click',function(){
 			if(_values.length!=0){
 					$.update({to:'dataDriven'});	//Loads the data into the appModel .
-					view.updateSimulationInfo();		//updates experiment info into third tile in the accordion
+					socr.view.updateSimulationInfo();		//updates experiment info into third tile in the accordion
 				}
 			else
 				$('.controller-warning').html('<div class="alert alert-error"><a class="close" data-dismiss="alert" href="#">x</a><h4 class="alert-heading">Dataset NOT generated!</h4>Please click the adjacent "Generate Dataset!" button first.</div>');
@@ -112,7 +112,7 @@ return{
 	},
 	
 	generate:function(){
-		view.updateSimulationInfo();		//updates experiment info into third tile in the accordion
+		socr.view.updateSimulationInfo();		//updates experiment info into third tile in the accordion
 		
 		socr.exp.ballAndUrn.setVariable();
 		socr.exp.ballAndUrn.createDataPlot(_n);

@@ -66,7 +66,7 @@ return{
 			$("#grsbutton").addClass("disabled");	
 			socr.exp.current.generate();
 			$("#accordion").accordion( "activate" , 1);
-			view.updateCtrlMessage("dataset generated successfully.","success");
+			socr.view.updateCtrlMessage("dataset generated successfully.","success");
 		});
 
 		$('#nInput').on('change',function(){

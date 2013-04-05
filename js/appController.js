@@ -8,7 +8,7 @@
 
 socr.controller=function(model,view){
 /* PRIVATE PROPERTIES   */
-	view=view || new socr.view();   // Reference to the Global App view object.
+//	view=view || new socr.view();   // Reference to the Global App view object.
 	var _id=0;						// Stores the id for setInterval in run mode
 	var _runsElapsed=0;				// Keeps count of number of resamples generated
 	var _this = this;						// contains reference to this object.
@@ -53,12 +53,11 @@ socr.controller=function(model,view){
 		
 		/*ADDING EVENT LISTENERS STARTS
 		--------------------------------*/
-		
-		$('.controller-handle').on('click',view.toggleControllerHandle);
+		$('.controller-handle').on('click',socr.view.toggleControllerHandle);
 
 		$("#showButton").on('click',function(){
 			//a check to see if the sample count is 0 or not
-			view.createList($('.show-list-start').val(),$('.show-list-end').val());
+			socr.view.createList($('.show-list-start').val(),$('.show-list-end').val());
 		});
 		
 		$('#startApp').on('click',function(){
@@ -141,31 +140,31 @@ socr.controller=function(model,view){
 	initController:function(){
 		$("#runButton").on('click',function(){
 			console.log('Run Started');
-			controller.run();
+			socr.controller.run();
 		});
 		
 		$("#stepButton").on('click',function(){
 			console.log('Step pressed ');
-			controller.step();
+			socr.controller.step();
 		});
 		
 		$("#stopButton").on('click',function(){
 			console.log('Stop Pressed ');
-			controller.stop();
+			socr.controller.stop();
 		});
 		
 		$("#resetButton").on('click',function(){
 			console.log('Reset pressed');
-			controller.reset();
+			socr.controller.reset();
 		});
 		
 		$("#infer").on('click',function(){
             console.log(model);
 		/*^^^^^create loading gif ^^^^^^^^*/
-			if(model.getSample(1)==false)
-				view.handleResponse('<h4 class="alert-heading">No Random samples to infer From!</h4>Please generate some random samples. Click "back" button on the controller to go to the "Generate Random Samples!" button.','error','controller-content');
+			if(socr.model.getSample(1)==false)
+				socr.view.handleResponse('<h4 class="alert-heading">No Random samples to infer From!</h4>Please generate some random samples. Click "back" button on the controller to go to the "Generate Random Samples!" button.','error','controller-content');
 			else
-			controller.setDotplot();
+			socr.controller.setDotplot();
 		});
 	},
 
@@ -243,10 +242,10 @@ socr.controller=function(model,view){
                             Yes: function () {
 							_this.stop();
 							model.reset();
-							view.reset();		//clearing all the canvas
+							view.reset();		    //clearing all the canvas
+                            socr.exp.current={};    //deleting the current experiment instance
 							view.toggleControllerHandle();
 							socr.dataTable.simulationDriven.resetScreen();
-							$('#showCount').html('');
                             $(this).dialog("close");					//close the confirmation window
                             },
                             No: function () {
@@ -276,10 +275,8 @@ socr.controller=function(model,view){
 		}
 		else{
 			view.createControllerView();
-            console.log(3);
 			//check for input
-            console.log(4);
-            if(socr.exp.current){
+            if(!$.isEmptyObject(socr.exp.current)){
 				if(socr.exp.current.getDataset()!=''){	
 					console.log('simulation drive has some data');
 					var result=model.setDataset({

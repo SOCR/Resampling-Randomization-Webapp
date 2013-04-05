@@ -495,15 +495,15 @@
 		/*
 		*Loading MVC
 		*/
-		model = new socr.model();
-		view = new socr.view(model);
-		controller = new socr.controller(model,view);
+		socr.model = new socr.model();
+		socr.view = new socr.view(socr.model);
+		socr.controller = new socr.controller(socr.model,socr.view);
 		
 		/*
 		*  CoverPage rendering
 		*/
 
-		view.CoverPage();
+		socr.view.CoverPage();
 
 		document.onreadystatechange = function(){
 			 if (document.readyState == 'complete'){
@@ -519,7 +519,7 @@
 		 */
 		$(window).resize(function(){
 			console.log('Coverpage function')
-			view.CoverPage();
+			socr.view.CoverPage();
 		});
 		
 		$(document).ready(function(){
@@ -527,7 +527,7 @@
 		/*
 		* Initialize the controller 
 		*/
-		controller.initialize();   
+		socr.controller.initialize();
 		
 		var urlParams = {};
 		(function () {
@@ -551,13 +551,13 @@
 			$("#nSize").val(urlParams.nSize);
 			$("#countSize").val(urlParams.countSize);
 			
-			model.setDataset({
+			socr.model.setDataset({
 					data:urlParams.dataset,
 					processed:false,
 					type:'url'
 					});
 			//load the dataset grid with the url values		
-			view.loadInputSheet(urlParams.dataset.split(","));
+			socr.view.loadInputSheet(urlParams.dataset.split(","));
 			//view.updateSimulationInfo()
 
 		$('section .response').html('Data loaded successfully! Just go to controller tile and start generating random samples!<i class="icon-ok"></i>').show();
