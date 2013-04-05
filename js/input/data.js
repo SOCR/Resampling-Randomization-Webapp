@@ -56,7 +56,7 @@ socr.dataTable= function () {
       },
       expLoaded : [],
       loadScript: function(id){
-        $.getScript( 'js/exp/'+id, function(){
+        $.getScript( 'js/exp/'+id +'.js', function(){
           simulationDriven.loadData(id)
         } )
       },
