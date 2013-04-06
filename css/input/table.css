@@ -68,6 +68,7 @@
   text-align: center;
   font-weight: normal;
   white-space: nowrap;
+  width: 50px !important;
 }
 
 .dataTable th .small {
@@ -211,4 +212,8 @@ textarea.inputtableInput {
 .typeahead a {
   color: #08C;
   text-decoration: none;
+}
+
+.htColHeader{
+  width: 50px;
 }

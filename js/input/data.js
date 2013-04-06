@@ -287,12 +287,29 @@ socr.dataTable= function () {
       }
     },
     editTitles : function(){
-    
-      var content = '<form class="form form-horizontal" id="input-titles"><fieldset><legend>Add titles to Spreadsheet</legend><div class="control-group"><label class="control-label">Title</label><div class="controls"><input type="text" placeholder="Input field1"></div></div><div class="control-group"><label class="control-label">Title</label>\
-      <div class="controls"><input type="text" placeholder="Input Title"></div></div><div class="control-group"><label class="control-label">Title</label>\
-      <div class="controls"><input type="text" placeholder="Input Title"></div></div>\
-      <div class="control-group"><label class="control-label">Title</label><div class="controls"><input type="text" placeholder="Input Title"></div></div>\
-      <div class="pagination-centered"><input type="submit" class="btn btn-large btn-block"></div></form>';
+
+        var d = $dataTable.inputtable('getColHeaders');
+        console.log(d)
+        colHeader = d.blockedRows.headers;
+
+        var content = '<form class="form form-horizontal" id="input-titles"><fieldset><legend>Add titles to Spreadsheet</legend>';
+        if(typeof colHeader[0] !== 'undefined'){
+          console.log(colHeader[0]);
+          for (var i=0; i<d.colCount; i++){
+            var label = (typeof colHeader[0].labels[i] !== 'undefined') ? colHeader[0].labels[i] : 'Title';
+           content += '<div class="control-group"><label class="control-label">Title ' + i +'</label><div class="controls"><input type="text" placeholder="Input field" value="' + label + '"></div></div>';
+          }
+        }
+        else{
+
+         var k = 0;
+         while(k < d.colCount){  
+          content += '<div class="control-group"><label class="control-label">Title ' + k +'</label><div class="controls"><input type="text" placeholder="Input field"></div></div>';
+          k++;
+        }
+        }
+     
+      content += '<div class="pagination-centered"><input type="submit" class="btn btn-large btn-block"></div></form>';
       $('#input-modal .modal-body').html(content);
     },
     parseTitles : function(e){
@@ -332,12 +349,13 @@ socr.dataTable= function () {
       */ 
       $dataTable.inputtable({
         cols : 8,
-        rows : 8,
+        rows: 8,
         minSpareCols: 1,
         minSpareRows: 1,
-        fillHandle: true
+        fillHandle: true,
       });
 
+    //    $dataTable.inputtable({colHeaders : true})
     },
 
     validate : function(dataset){
@@ -362,6 +380,7 @@ socr.dataTable= function () {
     },
 
      addColHeaders : function(arr){
+
         $dataTable.inputtable({colHeaders : arr});
       },
 

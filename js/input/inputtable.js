@@ -2465,6 +2465,17 @@
 
     }
 
+    this.getColHeaders = function(row){
+
+      var headers = [];
+      for(var i=0, ilen = self.count; i<ilen; i++){
+        headers.push(self.colHeader.columnLabel(i));
+      }
+
+      return self;
+
+    }
+
     /**
      * Returns current selection. Returns undefined if there is no selection.
      * @public
@@ -2984,7 +2995,7 @@
     'minSpareRows': 0,
     'minSpareCols': 0,
     'minHeight': 0,
-    'minWidth': 0,
+    'minWidth': 50,
     'multiSelect': true,
     'fillHandle': true,
     'undo': true,
@@ -3115,7 +3126,7 @@ inputtable.BlockedRows.prototype.createCol = function (className) {
     }
 
     th = document.createElement('th');
-    th.className = this.headers[h].className;
+     th.className = this.headers[h].className;
     if (className) {
       th.className += ' ' + className;
     }
@@ -3128,8 +3139,9 @@ inputtable.BlockedRows.prototype.createCol = function (className) {
     if (className) {
       th.className += ' ' + className;
     }
-    this.instance.minWidthFix(th);
-    this.main.find('thead tr.' + this.headers[h].className)[0].appendChild(th);
+    
+     this.instance.minWidthFix(th);
+     this.main.find('thead tr.' + this.headers[h].className)[0].appendChild(th);
   }
 };
 
