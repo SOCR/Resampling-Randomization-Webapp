@@ -28,10 +28,12 @@ socr.vis = (function(){
 			displayError('Dataset not specified');
 			return;
 		}
-		if(typeof config.data[0] != 'number'){
+		if(typeof config.data[0] != 'number' ){
 			displayError('Only numeric entries accepted');
+
 			return;
 		}
+		console.log('Initial Entry' + config.data[0]);
 
 	    var defaults = {
 	      'range' : d3.extent(config.data),
@@ -118,7 +120,7 @@ socr.vis = (function(){
 			displayError('Dataset for histogram not entered');
 			return;
 		}
-		if(typeof config.data[0] != 'number'){
+		if(typeof config.data[0] != 'number'  || isNaN(config.data[0])){
 			displayError('Only numeric entries accepted');
 			return;
 		}
@@ -246,7 +248,7 @@ socr.vis = (function(){
 
 	  	 	var interval = meanClass(settings.datum);
 	  	 	if(typeof interval == 'undefined'){
-	  	 		displayError("Interval classese didn't match");
+	  	 		displayError("Error allocating the datum on plot");
 	  	 		return;
 	  	 	}
 	  	 	var interpolateWidth =((settings.datum - interval[0])/ (interval[1] - interval[0]))*x.rangeBand();
@@ -385,9 +387,13 @@ socr.vis = (function(){
 	}
 
 	var displayError = function(m){
-		console.log(priv)
-		$(priv.parent).html(m)
+		var lh = $(priv.parent).height();
+		var content = '<div style="line-height:'+(lh/2)+';height:'+lh+'"> Error Rendering Histogram : ' + m;
+		$(priv.parent).html(content);			
+
 	}
+
+
 
 	return {
 		generate : function(){
