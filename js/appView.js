@@ -55,7 +55,6 @@ socr.view = function( model ){
                 temp.values = model.getSample(i,"values",j+1);
                 temp.keys = model.getSample(i,"keys",j+1);
                 j++;
-                console.log(obj);
             }
             config.entries.push(obj);
             obj={};         //destroying the object
@@ -619,14 +618,14 @@ return{
 
             case 'f-value':
                 var values=model.getF();
-                var datum=model.getFof("dataset");
+                var datum=model.getFof("dataset").fValue;
                 console.log("F-values"+values);
                 break
 
             case 'p-value':
                 var values=model.getP();
-                var datum=model.getFof("dataset");
-                console.log("P values"+values);
+                var datum=model.getPof("dataset");
+//                console.log("P values"+values);
                 break
 
             default :

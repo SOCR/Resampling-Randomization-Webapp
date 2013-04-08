@@ -182,20 +182,27 @@ socr.controller=function(model,view){
 	*/
 	step: function(){
 		$("#accordion").accordion( "activate" , 1);
-        socr.view.toggleControllerHandle("hide");
+        //socr.view.toggleControllerHandle("hide");
 		view.disableButtons();					//disabling buttons
-		model.setN(nSize.val());				// save the datapoints size
-	    var keys=model.generateStep();			//generate one sample
-	    view.updateCounter();					//update counter
-		$(".removable").remove();				//remove the previously generated canvas during animation
+		model.setN($("#nSize").val());				// save the datapoints size
+	    try{
+            model.generateSample();			//generate one sample
+            view.updateCounter();					//update counter
+            $(".removable").remove();				//remove the previously generated canvas during animation
+            view.updateSlider();					//update slider count
+            view.updateSimulationInfo();
+        }
+        catch(e){
+            console.log(e);
+        }
+        view.enableButtons();
 		/*view.animate({
 			stopCount:$('#nSize').val(),
 			speed:$('#speed').val(),
 			indexes:keys.indexes,
 			datasetIndexes:keys.datasetIndexes
 		});	*/									//show sample generation animation
-		view.updateSlider();					//update slider count
-		view.updateSimulationInfo();
+
 	},
 	
 	/**
