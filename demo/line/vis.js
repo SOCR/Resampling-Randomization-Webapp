@@ -137,8 +137,9 @@ socr.vis = (function(){
 	  /**
 	  * Initalized with an empty object, so that the contents of default are not replaced
 	  **/
-	  
+	  	
 		 var settings = $.extend({}, defaults, config);
+		 console.log('Datum ' + settings.datum)
 
 	   /**
 	   * Removing any unnecessary padding from the parent
@@ -246,7 +247,7 @@ socr.vis = (function(){
 
 	  	 	var interval = meanClass(settings.datum);
 	  	 	if(typeof interval == 'undefined'){
-	  	 		displayError("Interval classese didn't match");
+	  	 		displayError("Interval classes didn't match");
 	  	 		return;
 	  	 	}
 	  	 	var interpolateWidth =((settings.datum - interval[0])/ (interval[1] - interval[0]))*x.rangeBand();
@@ -350,6 +351,8 @@ socr.vis = (function(){
 
 	    SVGElement = g;
 
+	    console.log(settings.datum)
+
 	}
 
 	var addBar = function(obj){
@@ -393,6 +396,7 @@ socr.vis = (function(){
 		generate : function(){
 
 			 priv = arguments[0];
+			 console.log(priv)
 			 // console.log(priv);
 			// if(priv.type == 'line')
 			// 	generateLine();
