@@ -390,7 +390,7 @@ return{
 	*@return : none
 	*/
 	createControllerView:function(){
-		$( "#amount" ).val( "$" + $( "#slider" ).slider( "value" ) );
+        var _datapoints = socr.model.getDataset().length;
         //define the configuration json file
         if(socr.model.getK() === 1){
             var variables = ["mean","count"];
@@ -400,12 +400,13 @@ return{
             var variables = ["f-value","p-value","mean","count"];
             var disabled = ["standardDev"];
         }
-        console.log("k "+socr.model.getK());
-        console.log(variables);
+        //console.log("k "+socr.model.getK());
+        //console.log(variables);
         var config = {
             animationSpeed:false,
             variables:variables,
-            disabled:disabled
+            disabled:disabled,
+            datapoints:_datapoints
         };
         $.get('partials/controller.tmpl',function(data){
             var _output = Mustache.render(data, config);
@@ -455,7 +456,6 @@ return{
             });
 
         });
-        console.log(2);
 	},
 	
 	/**
