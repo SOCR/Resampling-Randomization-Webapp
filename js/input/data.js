@@ -317,7 +317,7 @@ socr.dataTable= function () {
       console.log('Call for parse Titles');
       var titles = [];
       $('#input-titles').find('input[type="text"]').each(function(){
-        if($(this).val() !== '')
+        // if($(this).val() !== '')
         titles.push($(this).val());
       })
       spreadSheet.addColHeaders(titles);
