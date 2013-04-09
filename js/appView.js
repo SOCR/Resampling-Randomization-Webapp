@@ -394,10 +394,17 @@ return{
         if(socr.model.getK() === 1){
             var variables = ["mean","count"];
             var disabled = ["standardDev"];
+            var _showIndex = false;
+            var indexes = [];
         }
         else{
             var variables = ["f-value","p-value","mean","count"];
             var disabled = ["standardDev"];
+            var _showIndex = true;
+            var i = socr.model.getK(), indexes=[];
+            while(i--){
+                indexes[i]=i+1;
+            }
         }
         //console.log("k "+socr.model.getK());
         //console.log(variables);
@@ -405,7 +412,9 @@ return{
             animationSpeed:false,
             variables:variables,
             disabled:disabled,
-            datapoints:_datapoints
+            datapoints:_datapoints,
+            showIndex:_showIndex,
+            index:indexes
         };
         $.get('partials/controller.tmpl',function(data){
             var _output = Mustache.render(data, config);
@@ -432,26 +441,33 @@ return{
                 }
                 socr.exp.current.initialize();
             });
-            $('#variable').on('click',function(){
-                var _percentile=$('#percentile-control');
-                if($(this).val()=='Percentile'){
-                    if(_percentile.length)
-                        _percentile.show();
-                    else
-                        $('#controller-content').append('<div id="percentile-control"><div><span class="badge badge-warning" style="float:left;">Percentile: <span id="percentile-value">10</span>%</span></div><div id="percentile-selector"></div></div>');
-                    //create a slider
-                    $('#percentile-selector').slider({
-                        value:20,
-                        min: 10,
-                        max: 90,
-                        step: 5,
-                        slide: function( event, ui ) {
-                            $( "#percentile-value" ).html( ui.value );
-                        }
-                    });
+            $('#variable').on('change',function(){
+                if($(this).val()=='mean' || $(this).val()=='count'){
+                    $("#index").attr("disabled",false);
                 }
-                else
-                    _percentile.hide();
+                else{
+                    $("#index").attr("disabled",true);
+                }
+
+//                var _percentile=$('#percentile-control');
+//                if($(this).val()=='Percentile'){
+//                    if(_percentile.length)
+//                        _percentile.show();
+//                    else
+//                        $('#controller-content').append('<div id="percentile-control"><div><span class="badge badge-warning" style="float:left;">Percentile: <span id="percentile-value">10</span>%</span></div><div id="percentile-selector"></div></div>');
+//                    //create a slider
+//                    $('#percentile-selector').slider({
+//                        value:20,
+//                        min: 10,
+//                        max: 90,
+//                        step: 5,
+//                        slide: function( event, ui ) {
+//                            $( "#percentile-value" ).html( ui.value );
+//                        }
+//                    });
+//                }
+//                else
+//                    _percentile.hide();
             });
 
         });
@@ -582,15 +598,15 @@ return{
         switch(setting.variable){
 
             case 'mean':
-                var values = model.getMean();			//Mean values of all the generated random samples
-                var datum = model.getMeanOf("dataset",1);	//datum is the dataset mean value
+                var values = model.getMean(setting.index);			//Mean values of all the generated random samples
+                var datum = model.getMeanOf("dataset",setting.index);	//datum is the dataset mean value
                 //console.log("Mean Values:"+ values );
                 //console.log("datum value:"+ datum) ;
                 break
 
             case 'standardDev':
-                var values = model.getStandardDev();	//Standard deviation values of all the generated random samples
-                var datum=model.getStandardDevOfDataset(1);		//datum is the dataset SD value
+                var values = model.getStandardDev(setting.index);	//Standard deviation values of all the generated random samples
+                var datum=model.getStandardDevOfDataset(setting.index);		//datum is the dataset SD value
                 console.log("SD Values:"+ values );
                 break
 
@@ -611,8 +627,8 @@ return{
                 break
 
             case 'count':
-                var values = model.getCount();	//Standard deviation values of all the generated random samples
-                var datum=model.getCountOf("dataset",1);		//datum is the dataset SD value
+                var values = model.getCount(setting.index);	//Standard deviation values of all the generated random samples
+                var datum=model.getCountOf("dataset",setting.index);		//datum is the dataset SD value
                 console.log("Count Values:"+ values );
                 break
 
@@ -629,8 +645,8 @@ return{
                 break
 
             default :
-                var values=model.getMean();
-                var datum=model.getMeanOf("dataset",1);
+                var values=model.getMean(setting.index);
+                var datum=model.getMeanOf("dataset",setting.index);
                 console.log(values);
                 break
 

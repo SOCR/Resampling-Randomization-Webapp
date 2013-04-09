@@ -274,10 +274,14 @@ socr.controller=function(model,view){
     
 	setDotplot:function(){
 		$('#dotplot').html('');
-		//create dotplot
+        var index = parseInt($("#index").val());
+        //create dotplot
 		console.log("setdotplot started");
 		console.log("variable:"+$('#variable').val());
-		view.createDotplot({variable:$('#variable').val()});
+		view.createDotplot({
+            variable:$('#variable').val(),
+            index:index
+        });
 	},
 	
 	loadController:function(x){

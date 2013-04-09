@@ -59,7 +59,14 @@
             <option disabled value="{{.}}">{{.}}</option>
             {{/disabled}}
         </select>
-       
+        {{#showIndex}}
+        &nbsp; of &nbsp;
+        <select id="index" disabled style="width:15%">
+            {{#index}}
+            <option value="{{.}}">{{.}}</option>
+            {{/index}}
+        </select>
+        {{/showIndex}}
         <span>
             <a href="#" class="btn btn-danger popups" rel="popover" data-content="This will create a plot of the variable for each generated sample. Click this once you have generated some samples!" data-original-title="Inference" id="infer">Infer!</a>
         </span>
