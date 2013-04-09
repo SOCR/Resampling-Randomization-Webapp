@@ -325,7 +325,7 @@ return{
 	createList:function(start,end){
 		console.log('createList('+start+','+end+') invoked ');
 		//if(Object.getOwnPropertyNames(model.bootstrapGroupKeys).length === 0){ 
-		if(model.getSample(1) === false){
+		if(socr.model.getRSampleCount() === 0){
 			// if no random samples have been generated, display a alert message!
 			$("#sampleList").html('<div class="alert alert-error"><a class="close" data-dismiss="alert" href="#">x</a><h4 class="alert-heading">No Random samples to show!</h4>Please generate a dataset using the list of experiments or manually enter the data. Then generate some random samples from the controller tile before click "show"</div>');
 			}
@@ -640,7 +640,34 @@ return{
 		var start=Math.floor(temp[0]);
 		var stop=Math.ceil(temp[values.length-1]);
 		console.log("start: "+start+" stop: "+stop);
-		
+		if(setting.variable === "p-value"){
+            var total = temp.length, lSide, rSide, start =0 , end = temp.length- 1, index, flag=0;
+            if(datum<temp[0]){
+                lSide = 0; rSide = 100;
+            }
+            else if(datum>temp[temp.length-1]){
+                lSide = 100; rSide = 0;
+            }
+            else {
+                while(end != (start+1)){
+                    index = Math.ceil((start+end)/2) ;
+                    if(datum == temp[index]){
+                        break;
+                    }
+                    else if(datum < temp[index] ){
+                        end = index;
+                    }
+                    else{
+                        start = index;
+                    }
+                } //while
+                lSide = (index/total)*100;
+                rSide = 100 - lSide;
+            }
+        console.log("total: "+total );
+        console.log("index: "+index);
+        console.log("R Side : "+rSide+".... L Side : "+lSide);
+        }
 		var binNo = $('input[name="binno"]').val() != '' ? $('input[name="binno"]').val() : 10;
 
 		_currentValues=values;

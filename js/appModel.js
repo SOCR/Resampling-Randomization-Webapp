@@ -251,7 +251,8 @@ return{
     generateSample:function(){
 		var i=this.getK(),keyEl=['0 is taken'],valEl=['0 is taken'],k=1;
 		while(k<=i){
-			var j=$('#nSize').val();
+			//var j=$('#nSize').val();
+            var j = _n;
 			var sample=[],values=[];
 			while(j--){
 				var temp=this.generateTrail(k);
@@ -617,9 +618,12 @@ return{
 	getSample:function(index,type,K){
 		K= K || 1;		//default set to 1
 		type=type || "values";	//default set to "values"
-		if(typeof _bootstrapGroupKeys[1] === "undefined" || typeof _bootstrapGroupValues[1] === "undefined" || index === "undefined"){
-			return false;
-		}
+//		if(typeof _bootstrapGroupKeys[1] === "undefined" || typeof _bootstrapGroupValues[1] === "undefined" || index === "undefined"){
+//			return false;
+//		}
+        if(this.getRSampleCount() === 0){
+            return false;
+        }
 		if(type === "values"){
 			return _bootstrapGroupValues[index][K];
 		}
