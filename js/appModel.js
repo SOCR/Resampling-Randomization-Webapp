@@ -32,7 +32,9 @@ socr.model=function(){
 		Mean:{},
 		Count:{},
 		StandardDev:{},
-		Percentile:{}
+		Percentile:{},
+        FValue:{},
+        PValue:{}
 	};
 
 	var _this=this;
@@ -54,15 +56,27 @@ socr.model=function(){
 
 	/**
 	 *@private _generateMean()
-	 *@param {number} sampleNumber - the random sample number for which the mean is to be calculated
+	 *@param {number|string} sampleNumber - the random sample number for which the mean is to be calculated
      *@param {number} groupNumber
 	 *@desc: the calculated mean value
 	 *@return: {number}
 	*/
 	function _generateMean(sampleNumber,groupNumber){
-		var total=_generateCount(sampleNumber,groupNumber);
-		return total/_bootstrapGroupValues[sampleNumber][groupNumber].length;
-	}
+        var groupNumber= groupNumber || 1;
+        var total=0;
+        if(sampleNumber === "dataset"){
+            var _val=_dataset[groupNumber].values;
+            for(var i=0;i<_val.length;i++) {
+                total += parseFloat(_val[i]);
+            }
+            total=total/_val.length;
+            if(isNaN(total)){return false;}else{return total;}
+        }
+        else{
+		    var total=_generateCount(sampleNumber,groupNumber);
+		    return total/_bootstrapGroupValues[sampleNumber][groupNumber].length;
+        }
+    }
 	
 	/**
 	 *@private _generateCount()
@@ -265,15 +279,16 @@ return{
 		if(_sample.Mean[groupNumber] === undefined){
 			_sample.Mean[groupNumber]=[];
 		}
-		
-		//if(_sample.Mean[groupNumber].length==_bootstrapGroupValues.length )
-		//	return _sample.Mean[groupNumber];
-		//else
+		if(_sample.Mean[groupNumber].length ===_count ){
+            console.log("already saved!");
+			return _sample.Mean[groupNumber];
+        }
+		else
 		{
 			for(var j=_sample.Mean[groupNumber].length;j<_count;j++){
 				_sample.Mean[groupNumber][j]=_generateMean(j,groupNumber);
 			}
-			console.log("sample mean "+_sample.Mean);
+			//console.log("sample mean ");console.log(_sample.Mean);
 			return _sample.Mean[groupNumber];
 			}
 		},
@@ -289,26 +304,7 @@ return{
 	getMeanOf:function(sampleNumber,groupNumber){
 		return _generateMean(sampleNumber,groupNumber);
 	},
-	
-	/**
-	 * @method getMeanOfDataset()
-	 * @param K
-	 * @desc gets the mean of the initially created dataset/sample.
-     * @return
-	*/
 
-	getMeanOfDataset:function(K){
-		if(K===undefined)
-			K=1;
-		var _val=_dataset[K].values;
-		var total=0;
-		for(var i=0;i<_val.length;i++) {
-			total += parseFloat(_val[i]);
-		}
-		total=total/_val.length;
-		if(isNaN(total)){return false;}else{return total;}
-
-	},
 	
 	/** STANDARD DEVIATION METHODS STARTS **/
 
@@ -354,7 +350,7 @@ return{
 	getStandardDevOfDataset:function(K){
 		K=K || 1;
 		var _val=_dataset[K].values;
-		var _mean=this.getMeanOfDataset(K);
+		var _mean=this.getMeanOf("dataset",K);
 		var _squaredSum=null;
 		for(var i=0;i<_val.length;i++)
 			{
@@ -365,51 +361,57 @@ return{
 		console.log("SD of Dataset:"+_SD);
 		return _SD;
 	},
-	/** STANDARD DEVIATION METHODS ENDS **/
 
+	/** STANDARD DEVIATION METHODS ENDS **/
 	/** COUNT METHODS STARTS **/
+
     /**
      * @method getCount
      * @param groupNumber
-     * @returns {*}
+     * @returns {Array}
      */
 	getCount:function(groupNumber){
 		groupNumber = groupNumber || 1;
-		var _test=[];
-		for(var j=0;j<_count;j++)
-			{
-			_test[j]=_generateCount(j,groupNumber);
-			//console.log(_sample.Count[j]);
+        if(_sample.Count[groupNumber] === undefined){
+            _sample.Count[groupNumber]=[];
+        }
+        if(_sample.Count[groupNumber].length ===_count ){
+            console.log("return already saved count values!");
+            return _sample.Count[groupNumber];
+        }
+        else{
+            for(var j=_sample.Count[groupNumber].length;j<_count;j++){
+                _sample.Count[groupNumber][j]=_generateCount(j,groupNumber);
+			    //console.log(_sample.Count[j]);
 			}
-			_sample.Count[groupNumber]=_test;
 			return _sample.Count[groupNumber];
+        }
 	},
 
     /**
      * @method getCountOf
-     * @param sampleNumber
+     * @param {number | string}sampleNumber
+     * @param {number} groupNumber
      * @returns {number}
      */
-	getCountOf:function(sampleNumber){
-		return _generateCount(sampleNumber);
+	getCountOf:function(sampleNumber,groupNumber){
+        var K = groupNumber || 1;
+        if(sampleNumber === "dataset"){
+            var _val=_dataset[K].values;
+            var total=0;
+            for(var i=0;i<_val.length;i++){
+                total += parseFloat(_val[i]);
+            }
+            return total;
+        }
+        else{
+		    return _generateCount(sampleNumber,K);
+        }
 	},
 
-    /**
-     * @method - getCountOfDataset
-     * @param K
-     * @returns {number}
-     */
-	getCountOfDataset:function(K){
-		K=K || 1;
-		var _val=_dataset[K].values;
-		var total=0;
-		for(var i=0;i<_val.length;i++) 
-			{ total += parseFloat(_val[i]); }
-		return total;
-	},
 	/** COUNT METHODS ENDS **/
-
 	/** PERCENTILE METHODS STARTS **/
+
 	/**
 	 * @method getPercentile ()
 	 * @param  pvalue - what is the percentile value that is to be calculated.
@@ -460,26 +462,57 @@ return{
 	*@desc returns the F value computed from the supplied group
 	*@return {Object}
     */
-    getF:function(){
-		 _this=this;
-		var _data=[];
-		for(var i=0;i<_count;i++){
-			_data[i]=_generateF(i).fValue;
-		}
-		return _data;
+    getF:function(groupNumber){
+        var groupNumber = groupNumber || 1;
+		_this=this;
+        if(_sample.FValue[groupNumber] === undefined){
+            _sample.FValue[groupNumber] = [];
+        }
+		if(_sample.FValue[groupNumber].length === _count){
+            console.log("returning the saved F-values!")
+            return _sample.FValue[groupNumber];
+        }
+        else{
+            for(var i=_sample.FValue[groupNumber].length;i<_count;i++){
+                _sample.FValue[groupNumber][i]=_generateF(i).fValue;
+            }
+            return _sample.FValue[groupNumber];
+        }
+
 	},
+
+    /**
+     * @method  getFof
+     * @desc returns the F value computed from the supplied group
+     * @param sampleNumber - Random sample Number at which the F value is to be calculated
+     * @returns {Object}
+     */
+    getFof:function(sampleNumber){
+        _this=this;
+        return _generateF(sampleNumber);
+    },
+
     /**
      * @method getP
      * @return {Object}
      */
 
-    getP:function(){
+    getP:function(groupNumber){
+        var groupNumber = groupNumber || 1;
         _this = this;
-        var _data=[];
-        for(var i=0;i<_count;i++){
-            _data[i]=_generateP(i);
+        if(_sample.PValue[groupNumber] === undefined){
+            _sample.PValue[groupNumber] = [];
         }
-        return _data;
+        if(_sample.PValue[groupNumber].length === _count){
+            console.log("returning the saved P-values!")
+            return _sample.PValue[groupNumber];
+        }
+        else{
+            for(var i=_sample.PValue[groupNumber].length;i<_count;i++){
+                _sample.PValue[groupNumber][i]=_generateP(i);
+            }
+            return _sample.PValue[groupNumber];
+        }
     },
 
     /**
@@ -491,18 +524,6 @@ return{
         _this=this;
         return _generateP(sampleNumber);
     },
-
-
-    /**
-     * @method  getFof
-     * @desc returns the F value computed from the supplied group
-     * @param sampleNumber - Random sample Number at which the F value is to be calculated
-     * @returns {Object}
-     */
-	getFof:function(sampleNumber){
-		_this=this;
-		return _generateF(sampleNumber);
-	},
 
     /**
      * @method getDataset
