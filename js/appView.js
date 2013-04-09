@@ -734,30 +734,40 @@ return{
 	},
 	
 	/**
-	*@method: updateSimulationInfo
-	*@description: Called when the 'step button' or 'run button' is pressed in the controller tile.
+	 *@method updateSimulationInfo
+	 *@desc Called when the 'step button' or 'run button' is pressed in the controller tile.
      * Call is made in appController.js
-	*@return : none
-	*/
-	updateSimulationInfo:function(){
+	 *@return none
+	 */
+	updateSimulationInfo:function(name){
 		console.log('updateSimulationInfo() invoked');
-		try{
-			var array=['<table class="table table-striped">'];
-			array.push('<tr><td>Experiment Name</td><td><strong>'+socr.exp.current.name+'</strong></td></tr>');
-			array.push('<tr><td>DataSet Size </td><td><strong>'+socr.exp.current.getDatasetSize()+'</strong></td></tr>');
-			array.push('<tr><td>Number of Random Samples : </td><td><strong>'+model.getRSampleCount()+'</strong></td></tr>');
-			//dont show mean and standard deviation in info tab when there is no mean or sd.
-			if(model.getMeanOf("dataset",1)!==false)
-				{
-					array.push('<tr><td>DataSet Mean : </td><td><strong>'+model.getMeanOf("dataset",1)+'</strong></td></tr>');
-					array.push('<tr><td>DataSet Standard Deviation: </td><td><strong>'+model.getStandardDevOfDataset()+'</strong></td></tr>');
-				}
-			array.push('</table>');
-		}
-		catch(err){
-			console.log("error:"+err.message);
-		}
-		$('#details').html(array.join(''));
+        if(name !== "Data Driven Experiment"){
+            try{
+                name = socr.exp.current.name;
+            }
+            catch(e){
+                name= "Data Driven Experiment";
+            }
+        }
+            var config = {
+                name : name,
+                k : socr.model.getK(),
+                groups:[],
+                rCount: model.getRSampleCount()
+            };
+            for(var i=1;i<=config.k;i++){
+                var obj={};
+                obj.mean = socr.model.getMeanOf("dataset",i);
+                obj.size = socr.model.getDataset(i).length;
+                obj.number = i;
+                config.groups.push(obj);
+            }
+            //console.log(config);
+
+            $.get("partials/info.tmpl",function(data){
+                var temp = Mustache.render(data,config);
+                $('#details').html(temp);
+            });
 	},
 	
 	/**

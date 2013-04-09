@@ -290,7 +290,6 @@ socr.controller=function(model,view){
 			socr.exp.current.initialize();
 		}
 		else{
-
 			//check for input
             if(!$.isEmptyObject(socr.exp.current)){
 
@@ -303,14 +302,14 @@ socr.controller=function(model,view){
 						});
 					if(result === true){
 					    view.toggleControllerHandle('show');
+                        view.updateSimulationInfo();
 					}
-					console.log(model.getDataset(1));
 					//call to loadInputSheet to input the generated simulation data if any
 				}	
 			}
-			else
+			else{
 				console.log("Experiment object not defined!");
-				//set the input
+            }
             view.createControllerView();
         }
 	}

@@ -593,6 +593,7 @@ socr.dataTable= function () {
       if(result == true){
           $.update({to:'dataDriven'});
           socr.view.toggleControllerHandle("show");
+          socr.view.updateSimulationInfo("Data Driven Experiment");
       }
     },
     reset : function(){
