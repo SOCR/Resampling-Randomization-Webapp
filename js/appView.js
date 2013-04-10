@@ -172,6 +172,8 @@ socr.view = function( model ){
 					datum :datum,
 					sample : setting.sample
 				});
+
+		
 			}
 			
 			var html = '<div> Mean of Sample :'+ model.getMeanOf($(this).attr('id')) +' Mean of DataSet : '+ model.getMeanOf("dataset",1) +' Standard Deviation :'+ model.getStandardDevOf($(this).attr('id')) +'</div>';

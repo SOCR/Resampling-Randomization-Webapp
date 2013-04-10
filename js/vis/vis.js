@@ -16,97 +16,103 @@ socr.vis = (function(){
 	var priv = {};
 
 
-	var generateLine = function(){
+	// var generateLine = function(){
 
-		config = priv;
+	// 	config = priv;
 		
-		if(typeof config.parent == 'undefined' && config.parent == null){
-			displayError('Parent Selector not specified');
-			return;
-		}
-		if(typeof config.data == 'undefined' && config.data == null){
-			displayError('Dataset not specified');
-			return;
-		}
-		if(typeof config.data[0] != 'number' ){
-			displayError('Only numeric entries accepted');
+	// 	if(typeof config.parent == 'undefined' && config.parent == null){
+	// 		displayError('Parent Selector not specified');
+	// 		return;
+	// 	}
+	// 	if(typeof config.data == 'undefined' && config.data == null){
+	// 		displayError('Dataset not specified');
+	// 		return;
+	// 	}
+	// 	if(typeof config.data[0] != 'number' ){
+	// 		displayError('Only numeric entries accepted');
 
-			return;
-		}
-		console.log('Initial Entry' + config.data[0]);
+	// 		return;
+	// 	}
+	// 	console.log('Initial Entry' + config.data[0]);
 
-	    var defaults = {
-	      'range' : d3.extent(config.data),
-	      'height' : $(config.parent).height(),
-	      'width' : $(config.parent).innerWidth(), // inner width of parent div
-	      'type' : 'histogram' ,//Keeping histogram as the default rendering mode
-	      'barWidth' : 10
-	    };
+	//     var defaults = {
+	//       'range' : d3.extent(config.data),
+	//       'height' : $(config.parent).height(),
+	//       'width' : $(config.parent).innerWidth(), // inner width of parent div
+	//       'type' : 'histogram' ,//Keeping histogram as the default rendering mode
+	//       'barWidth' : 10
+	//     };
 
 
-	  /**
-	  * Initalized with an empty object, so that the contents of default are not replaced
-	  **/
+	//   /**
+	//   * Initalized with an empty object, so that the contents of default are not replaced
+	//   **/
 	  
-		 var settings = $.extend({}, defaults, config);
-		 console.log(settings);
+	// 	 var settings = $.extend({}, defaults, config);
+		 
+	// 	 priv.settings = settings;
 
-	   /**
-	   * Removing any unnecessary padding from the parent
-	   **/	
-	    $(config.parent).css('padding','0px');
+	//    /**
+	//    * Removing any unnecessary padding from the parent
+	//    **/	
+	//     $(config.parent).css('padding','0px');
 
-	    var margin = {top: 50, right: 30, bottom: 30, left: 50};
+	//     var margin = {top: 50, right: 30, bottom: 30, left: 50};
 
-	    var width = settings.width,
-			height = settings.height;
+	    
 
-		var data = [3, 6, 2, 7, 5, 2, 1, 3, 8, 9, 2, 5, 7];
-
-		var y = d3.scale.linear().domain([0, d3.max(data)]).range([0, height - margin.top - margin.bottom]);
-
-		var x = d3.scale.linear().domain([0,data.length]).range([0, width - margin.left - margin.right]);
-
-		//console.log(x(4))
-	    xAxis = d3.svg.axis()
-				.scale(x)
-				.orient("bottom")
-				.tickFormat(d3.format(',.2f'));
-
-	    yAxis = d3.svg.axis()
-	    		.scale(y)
-	    		.orient("left")
-	    		.tickPadding(5)
-	    		.ticks(10)
-	    		.tickSize(-(width - margin.right - margin.left), 2, 8);
-
-	     // Select the svg element, if it exists.
-	    var svg = d3.select(settings.parent).selectAll("svg").data([data]);
-
-	     // Update the outer dimensions.
-	    svg .attr("width", width)
-	        .attr("height", height);
+	//     var width = settings.width,
+	// 		height = settings.height;
 
 
-	    // Otherwise, create the skeletal chart.
-	    //This sequence is important
-	    var gEnter = svg.enter().append("svg").append("g");
-		    gEnter.append("g").attr("class","y axis")
-		    gEnter.append("g").attr("class", "x axis");
+	// 	var y = d3.scale.linear().domain([0, d3.max(data)]).range([0, height - margin.top - margin.bottom]);
+
+		
+
+	// 	var x = d3.scale.linear().domain([0,data.length]).range([0, width - margin.left - margin.right]);
+
+	
+
+	// 	//console.log(x(4))
+	//     xAxis = d3.svg.axis()
+	// 			.scale(x)
+	// 			.orient("bottom")
+	// 			.tickFormat(d3.format(',.2f'));
+
+	//     yAxis = d3.svg.axis()
+	//     		.scale(y)
+	//     		.orient("left")
+	//     		.tickPadding(5)
+	//     		.ticks(10)
+	//     		.tickSize(-(width - margin.right - margin.left), 2, 8);
+
+	//      // Select the svg element, if it exists.
+	//     var svg = d3.select(settings.parent).selectAll("svg").data([data]);
+
+	//      // Update the outer dimensions.
+	//     svg .attr("width", width)
+	//         .attr("height", height);
+
+
+	//     // Otherwise, create the skeletal chart.
+	//     //This sequence is important
+	//     var gEnter = svg.enter().append("svg").append("g");
+	// 	    gEnter.append("g").attr("class","y axis")
+	// 	    gEnter.append("g").attr("class", "x axis");
 
 	   
-	    // Update the inner dimensions.
-	    var g = svg.select("g")
-	        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+	//     // Update the inner dimensions.
+	//     var g = svg.select("g")
+	//         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-	    var line = d3.svg.line()
-				    .x(function(d,i) { return x(i); })
-				    .y(function(d) { return -1 * y(d); })
+	//     var line = d3.svg.line()
+	// 			    .x(function(d,i) { return x(i); })
+	// 			    .y(function(d) { return -1 * y(d); })
 
-		gEnter.append("svg:path").attr("d", line(data));
-		console.log(data)
+	// 	gEnter.append("svg:path").attr("d", line(data));
+	// 	console.log(data)
 
-	}
+	// }
 
 	var generateHistogram = function(){
 
@@ -152,6 +158,8 @@ socr.vis = (function(){
 	    var width = settings.width,
 			height = settings.height;
 
+
+
       /* This does all the good work of the construction of bins, most likely to break the execution of code */
 		
       switch(settings.method){
@@ -179,7 +187,10 @@ socr.vis = (function(){
       }
 
 			          
-		var classes = data.map(function(d) { return d.x; });	          
+		var classes = data.map(function(d) { return d.x; });	
+
+		
+
 	  	var x = d3.scale.ordinal()
         	 .domain(data.map(function(d) { return d.x; }))
         	 //.domain([0, d3.max(settings.data)])
@@ -188,7 +199,9 @@ socr.vis = (function(){
 
 	    var y = d3.scale.linear()
 	       	    .domain([0, d3.max(data, function(d) { return d.y; })])
-	            .range([height - margin.top - margin.bottom, 0]);;
+	            .range([height - margin.top - margin.bottom, 0]);
+
+
 
 	    xAxis = d3.svg.axis()
 	    		.scale(x)
@@ -201,6 +214,12 @@ socr.vis = (function(){
 	    		.tickPadding(5)
 	    		.ticks(10)
 	    		.tickSize(-(width - margin.right - margin.left), 2, 8);
+
+	    priv.settings = settings;	
+		priv.margin = margin;
+		priv.y = y;
+		priv.x = x;
+		priv.classes = classes;
 
 	    // Select the svg element, if it exists.
 	    var svg = d3.select(settings.parent).selectAll("svg").data([data]);
@@ -225,16 +244,108 @@ socr.vis = (function(){
 	    bar.enter().append("rect");
 	    // bar.exit().remove();
 	  	
-  	 	 var legendData = [ 
+  	 	priv.legendData = [ 
 	    				{
-	    					text : settings.variable + ' Distribution',
+	    					text : ' Distribution',
 	    					color: 'steelblue'
 	    				}
 	     				];
 
-	  	 if(settings.datum){
+	  	
+				
+	    bar.attr("width", x.rangeBand() )
+	        .attr("x", function(d) { return x(d.x); })
+	        .attr("y", height - margin.top - margin.bottom) 
+	        // .order()
+	        .on('mouseover', function(d){ 
+	          d3.select(this).classed('hover', true) 
+	        })
+	        .on('mouseout', function(){ 
+	          d3.select(this).classed('hover', false) 
+	        })
+	        .transition()
+	         .delay( function(d,i){ return settings.transitionDuration * (i / classes.length); } )
+	        .attr("y", function(d) { return y(d.y); })
+	        .attr("height", function(d) { return y.range()[0] - y(d.y); });
 
-	  	 	var meanClass = function(datum){
+	    priv.g = g;
+	    
+
+	    // Update the x-axis.
+	    g.select(".x.axis")
+	        .attr("transform", "translate(0," + y.range()[0] + ")")
+	        .call(xAxis);
+	    //Update the y-axis
+	    g.select(".y.axis")
+	        .call(yAxis);
+
+	   if(settings.datum){
+
+		     	addBar();
+
+			}
+
+	
+	   		
+
+
+	}
+
+	var showLegend = function(){
+
+		var g = priv.g,
+			width = priv.settings.width,
+			margin = priv.margin;
+
+		 var legend = g.selectAll('.legend')
+	    				.data(priv.legendData)
+	    				.enter()
+	    				.append('g')
+	    				.attr('class','legend')
+	    				.attr('transform', function(d,i){ return "translate(20, "+i*20+")"; })
+
+	    legend.append("rect")
+	      .attr("x", (width-margin.left-margin.right) - 18)
+	      .attr("width", 18)
+	      .attr("height", 18)
+	      .style("fill", function(d){ return d.color });
+
+		  legend.append("text")
+		      .attr("x", width-margin.left-margin.right - 24)
+		      .attr("y", 9)
+		      .attr("dy", ".35em")
+		      .style("text-anchor", "end")
+		      .text(function(d) { return d.text; });		
+
+	}
+
+	var addBar = function(args){
+		
+		if(arguments.length > 0){
+
+			priv = args.el;
+			priv.settings.datum = args.datum;
+			priv.settings.variable = args.variable;
+			console.log('AddBar with Arguments');
+
+		}
+		var classes = priv.classes,
+			settings = priv.settings,
+			x = priv.x,
+			y = priv.y,
+			height = priv.settings.height,
+			width = priv.settings.width,
+			margin = priv.margin,
+			g = priv.g;
+
+		priv.legendData.push({ 
+				text : settings.variable +' : ' + settings.datum ,
+				color : '#ff7f0e'
+			});
+
+		showLegend();
+
+		var meanClass = function(datum){
 
 	  	 		for(i in classes){
 	  	 			if(classes[i] > datum){
@@ -248,7 +359,7 @@ socr.vis = (function(){
 
 	  	 	var interval = meanClass(settings.datum);
 	  	 	if(typeof interval == 'undefined'){
-	  	 		displayError("Error allocating the datum on plot");
+	  	 		//displayError("Error plotting the datum on plot");
 	  	 		return;
 	  	 	}
 	  	 	var interpolateWidth =((settings.datum - interval[0])/ (interval[1] - interval[0]))*x.rangeBand();
@@ -284,77 +395,9 @@ socr.vis = (function(){
 			   }).transition()
 		         .delay( function(d,i){ return settings.transitionDuration + 100; } )
 		         .attr("y", function(d) { return 0; })
-		          .attr('height',function(){ return height - margin.top - margin.bottom ;});			    ;
+		          .attr('height',function(){ return height - margin.top - margin.bottom ;});
 
-			    //Display mean Bar in legend
-
-			    legendData.push({ 
-	    					text : settings.variable +' : ' + settings.datum ,
-	    					color : '#ff7f0e'
-	    				});
-
-			}
-				
-	    bar.attr("width", x.rangeBand() )
-	        .attr("x", function(d) { return x(d.x); })
-	        .attr("y", height - margin.top - margin.bottom) 
-	        // .order()
-	        .on('mouseover', function(d){ 
-	          d3.select(this).classed('hover', true) 
-	        })
-	        .on('mouseout', function(){ 
-	          d3.select(this).classed('hover', false) 
-	        })
-	        .transition()
-	         .delay( function(d,i){ return settings.transitionDuration * (i / classes.length); } )
-	        .attr("y", function(d) { return y(d.y); })
-	        .attr("height", function(d) { return y.range()[0] - y(d.y); });
-
-	    //Reusable components:
-	    // g,x,height,margin
-
-	    // priv.GElement = g;
-	    // priv.xScale = x;
-	    // priv.height = height;
-	    // priv.margin = margin;
-
-	    
-
-	    // Update the x-axis.
-	    g.select(".x.axis")
-	        .attr("transform", "translate(0," + y.range()[0] + ")")
-	        .call(xAxis);
-	    //Update the y-axis
-	    g.select(".y.axis")
-	        .call(yAxis);
-
-	  
-
-	    var legend = g.selectAll('.legend')
-	    				.data(legendData)
-	    				.enter()
-	    				.append('g')
-	    				.attr('class','legend')
-	    				.attr('transform', function(d,i){ return "translate(20, "+i*20+")"; })
-
-	    legend.append("rect")
-	      .attr("x", (width-margin.left-margin.right) - 18)
-	      .attr("width", 18)
-	      .attr("height", 18)
-	      .style("fill", function(d){ return d.color });
-
-		  legend.append("text")
-		      .attr("x", width-margin.left-margin.right - 24)
-		      .attr("y", 9)
-		      .attr("dy", ".35em")
-		      .style("text-anchor", "end")
-		      .text(function(d) { return d.text; });				
-
-	    SVGElement = g;
-
-	}
-
-	var addBar = function(obj){
+		/*
 		if(typeof obj[0].elem.GElement=='undefined')
 			return;
 		var g = obj[0].elem.GElement,
@@ -384,11 +427,13 @@ socr.vis = (function(){
 		        if(typeof viswrap != 'undefined') 
 		        	viswrap.tooltip.cleanup();
 		   });
+	*/
 	}
 
 	var displayError = function(m){
+
 		var lh = $(priv.parent).height();
-		var content = '<div style="line-height:'+(lh/2)+';height:'+lh+'"> Error Rendering Histogram : ' + m;
+		var content = '<div> Error Rendering Histogram : <strong>' + m + '.</strong><p> Try resetting the Experiment </p></div>';
 		$(priv.parent).html(content);			
 
 	}
@@ -398,18 +443,14 @@ socr.vis = (function(){
 	return {
 		generate : function(){
 
-			 priv = arguments[0];
-			 // console.log(priv);
-			// if(priv.type == 'line')
-			// 	generateLine();
-			// else
-				generateHistogram();
-			
-			return 'blank';		
+			priv = arguments[0];
+			generateHistogram();			
+			return priv;	
+
 		},
-		addBar : function(args){
-			addBar.call(this, arguments);
-			//return priv;
+		addBar : function(priv){
+			addBar(priv)
+			console.log('Addbar called -1')
 		},
 		set : function(el, prop){
 

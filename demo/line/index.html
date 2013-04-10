@@ -49,12 +49,22 @@ var data =[
 	binSize : 80,
 	labelPrecision : 1,
 	tickNo : 10,
-	variable: 'Mean',
- 	datum: 0.5,
- 	// method : 'decimal',
 
 });
 
+console.log(el);
+
+socr.vis.addBar({
+	el : el,
+	variable: 'Mean',
+ 	datum: 0.8,
+})
+
+socr.vis.addBar({
+	el : el,
+	variable: 'Contribution',
+ 	datum: 0.5,
+})
 $('#method').on('change', function(){
 	$('.chart').html('');
 	socr.vis.generate({
