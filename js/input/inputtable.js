@@ -2306,7 +2306,7 @@
          
               if(++i > ilen - 1){
                 clearInterval(processor);
-                console.log('Finished proessing :)')
+                console.log('Dataset Import Complete')
               }
 
             busy = false;
