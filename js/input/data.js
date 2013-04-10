@@ -294,10 +294,9 @@ socr.dataTable= function () {
 
         var content = '<form class="form form-horizontal" id="input-titles"><fieldset><legend>Add titles to Spreadsheet</legend>';
         if(typeof colHeader[0] !== 'undefined'){
-          console.log(colHeader[0]);
           for (var i=0; i<d.colCount; i++){
-            var label = (typeof colHeader[0].labels[i] !== 'undefined') ? colHeader[0].labels[i] : 'Title';
-           content += '<div class="control-group"><label class="control-label">Title ' + i +'</label><div class="controls"><input type="text" placeholder="Input field" value="' + label + '"></div></div>';
+            var label = (typeof colHeader[0].labels[i] !== 'undefined') ? colHeader[0].labels[i] : '';
+           content += '<div class="control-group"><label class="control-label">Column ' + i +' :</label><div class="controls"><input type="text" placeholder="Input field" value="' + label + '"></div></div>';
           }
         }
         else{
@@ -353,6 +352,7 @@ socr.dataTable= function () {
         minSpareCols: 1,
         minSpareRows: 1,
         fillHandle: true,
+        colHeaders: true
       });
 
     //    $dataTable.inputtable({colHeaders : true})

@@ -54,6 +54,7 @@
       scrollable: null,
       hasLegend: null,
       lastAutoComplete: null,
+      colHeaders: true,
     //  undoRedo: settings.undo ? new inputtable.UndoRedo(this) : null,
       extensions: {},
       stopNextPropagation: 0

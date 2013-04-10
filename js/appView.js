@@ -164,6 +164,7 @@ socr.view = function( model ){
 						//var datum=model.getStandardDevOfDataset();
 					}
 				
+				datum = Math.floor(datum * 100) / 100;
 				var histogram = socr.vis.generate({
 					parent : '#dotplot',
 					data : values,
@@ -173,7 +174,7 @@ socr.view = function( model ){
 					sample : setting.sample
 				});
 
-		
+
 			}
 			
 			var html = '<div> Mean of Sample :'+ model.getMeanOf($(this).attr('id')) +' Mean of DataSet : '+ model.getMeanOf("dataset",1) +' Standard Deviation :'+ model.getStandardDevOf($(this).attr('id')) +'</div>';
@@ -637,6 +638,7 @@ return{
             case 'f-value':
                 var values=model.getF();
                 var datum=model.getFof("dataset").fValue;
+
                 console.log("F-values"+values);
                 break
 
@@ -687,7 +689,7 @@ return{
         console.log("R Side : "+rSide+".... L Side : "+lSide);
         }
 		var binNo = $('input[name="binno"]').val() != '' ? $('input[name="binno"]').val() : 10;
-
+		datum = Math.floor(datum*100) / 100;
 		_currentValues=values;
 		try{
             var dotplot = socr.vis.generate({
@@ -697,7 +699,8 @@ return{
 			range: [start,stop],
 			datum :datum,
 			bins : binNo,
-			variable: setting.variable
+			variable: setting.variable,
+			aux : [lSide,rSide]
 			// nature: 'continuous'
 		});
         }
