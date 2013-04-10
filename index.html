@@ -22,6 +22,8 @@
    	<link rel="stylesheet" href="css/common.css" >
     <link rel="stylesheet" href="css/vis.css" >
 	<link rel="stylesheet" href="css/default-table.css" >
+    <link href="css/chardinjs/chardinjs.css" rel="stylesheet">
+    <link rel="stylesheet" media="screen" href="http://openfontlibrary.org/face/linear-regular" rel="stylesheet" type="text/css"/>
    	<!--<link rel="stylesheet" type="text/css" href="css/SOCR_Tools_style.css">-->
      <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
@@ -239,7 +241,7 @@
 									
 						</div>	
 								
-						<h3>
+						<h3 data-intro="All generated initial K initial dataset group " data-position="top">
 							<a href="#">DataSet <i class="icon-question-sign popups" rel="popover" data-content="It is graphical view of the dataset from where the random samples are generated.Goto input tab to get started!" data-original-title="Dataset"></i></a>
 						</h3>
 						<div class='q'>
@@ -257,7 +259,7 @@
 						<div id='details'></div><div id="contribution-details"></div>
 					</div>
 					
-					<a class="controller-handle" href="#"><button class='btn-primary btn-large '>Controller</button></a>
+					<a class="controller-handle" data-intro="control panel - Run, Plot, Generate." data-position="right" href="#"><button class='btn-primary btn-large '>Controller</button></a>
 					<div id="slide-out-controller" >
 						<div class="row-fluid">
 							<div class="span4 heading">Controller</div>
@@ -270,7 +272,7 @@
 					</div><!--/slide-out-controller-->
 		  		</div><!--span8-->
 				<div class="span4">
-					<h3>Sample List 
+					<h3 data-intro="Contains all the random sample generated" data-position="left">Sample List
 						<span>
 							<i class="icon-question-sign popups" rel="popover" data-content="It shows the list of generated samples when the show button is pressed." data-original-title="Sample List"></i>
 						</span>
@@ -280,7 +282,7 @@
 						<span class="badge badge-warning">Samples Generated: <span id='displayCount'>0</span></span>
 						<span class="badge badge-success">Showing <span id='showCount'>0</span> samples</span>
 					</div>  
-					<div id='showListSlider'>
+					<div id='showListSlider' data-intro="Selector to show specific random samples" data-position="bottom">
 						<div id="range"></div>
 						<div>
 							<input type='text' class='show-list-start' placeholder='start' style='width:60px'> - <input type='text' class='show-list-end' placeholder='end' style='width:60px'>
@@ -479,7 +481,8 @@
 			"js/input/data.js",
 			"js/vis/tooltip.js",
 			"js/tools/FCal.js",
-            "js/lib/mustache/mustache.js"
+            "js/lib/mustache/mustache.js",
+            "js/lib/chardinjs/chardinjs.min.js"
 	    	);
     
 	head.ready(function () {
@@ -527,7 +530,6 @@
 		});
 		
 		$(document).ready(function(){
-					
 		/*
 		* Initialize the controller 
 		*/
