@@ -700,7 +700,8 @@ return{
 			datum :datum,
 			bins : binNo,
 			variable: setting.variable,
-			aux : [lSide,rSide]
+			pl : lSide,
+			pr : rSide
 			// nature: 'continuous'
 		});
         }

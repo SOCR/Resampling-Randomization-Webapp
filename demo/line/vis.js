@@ -153,7 +153,7 @@ socr.vis = (function(){
 	   **/	
 	    $(config.parent).css('padding','0px');
 
-	    var margin = {top: 50, right: 30, bottom: 30, left: 50};
+	    var margin = {top: 20, right: 30, bottom: 50, left: 50};
 
 	    var width = settings.width,
 			height = settings.height;
@@ -189,7 +189,6 @@ socr.vis = (function(){
 			          
 		var classes = data.map(function(d) { return d.x; });	
 
-		
 
 	  	var x = d3.scale.ordinal()
         	 .domain(data.map(function(d) { return d.x; }))
@@ -215,12 +214,7 @@ socr.vis = (function(){
 	    		.ticks(10)
 	    		.tickSize(-(width - margin.right - margin.left), 2, 8);
 
-	    priv.settings = settings;	
-		priv.margin = margin;
-		priv.y = y;
-		priv.x = x;
-		priv.classes = classes;
-
+	   
 	    // Select the svg element, if it exists.
 	    var svg = d3.select(settings.parent).selectAll("svg").data([data]);
 
@@ -238,6 +232,14 @@ socr.vis = (function(){
 	    // Update the inner dimensions.
 	    var g = svg.select("g")
 	        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+	    priv.settings = settings;	
+		priv.margin = margin;
+		priv.y = y;
+		priv.x = x;
+		priv.svg = svg;
+		priv.classes = classes;
+
 
 	    // Update the bars.
 	    var bar = svg.select(".bars").selectAll(".bar").data(data);
@@ -269,7 +271,7 @@ socr.vis = (function(){
 	        .attr("height", function(d) { return y.range()[0] - y(d.y); });
 
 	    priv.g = g;
-	    
+
 
 	    // Update the x-axis.
 	    g.select(".x.axis")
@@ -285,8 +287,56 @@ socr.vis = (function(){
 
 			}
 
-	
-	   		
+
+	}
+
+	var addPercentline = function(){
+
+		var g = priv.g,
+			svg = priv.svg,
+			width = priv.settings.width,
+			height = priv.settings.height - 5,
+			barWidth = 10,
+			x = priv.x;
+
+		px1 = priv.meanbarX + priv.margin.left,
+		px2 = px1 + 10;	//barwidth
+
+		var line1 = svg.append('line')
+	    				.attr('x1', priv.margin.left)
+	    				.attr('y1', height)
+	    				.attr('x2', priv.margin.left)
+	    				.attr('y2', height)
+	    				.attr('stroke-width', 2)
+	    				.attr('stroke','#676767')
+	    				.transition()
+	    				 .delay(priv.settings.transitionDuration + 500)
+	    				.attr('x2', px1);
+
+	    var label1 = svg.append('text')
+	    				.attr('x', (px1 + priv.margin.left) / 2)
+	    				.attr('y', height - 10)
+	    				.attr("dy", ".35em")
+		      			.style("text-anchor", "middle")
+		      			.text(priv.settings.pl +' %')
+
+	    var line2 = svg.append('line')
+	    				.attr('x1', px2)
+	    				.attr('y1', height)
+	    				.attr('x2', px2)
+	    				.attr('y2', height)
+	    				.attr('stroke-width', 2)
+	    				.attr('stroke','#343434')
+	    				.transition()
+	    				 .delay(priv.settings.transitionDuration + 500)
+	    				.attr('x2', width - priv.margin.right)
+
+	    var label2 = svg.append('text')
+	    				.attr('x', (width -priv.margin.right+ px2 + 10) / 2 )
+	    				.attr('y', height - 10)
+	    				.attr("dy", ".35em")
+		      			.style("text-anchor", "middle")
+		      			.text(priv.settings.pr +'%')
 
 
 	}
@@ -368,13 +418,17 @@ socr.vis = (function(){
 			    var meanbar = g.append('rect')		    
 			    .attr('y',function(){ return height - margin.top - margin.bottom ;});
 
+			    var meanbarX; 
 			    if(settings.method == 'decimal'){
-			    	meanbar.attr('x',function(){ return (x.rangeBand()/2)+x(settings.datum) - (10/2)})
+			    	meanbarX = (x.rangeBand()/2)+x(settings.datum) - (10/2);
+			  
 			    } else{
-			    	meanbar.attr('x',function(){ return x(interval[0]) +x.rangeBand()+ interpolateWidth - 5; });
+			    	meanbarX = x(interval[0]) +x.rangeBand()+ interpolateWidth - 5;
+			    	
 			    }
 
 
+			    meanbar.attr('x',function(){ return meanbarX });
 			    meanbar.attr('width', function(){ return 10;})	   
 			    .attr('class','meanBar')
 			   
@@ -397,6 +451,9 @@ socr.vis = (function(){
 		         .attr("y", function(d) { return 0; })
 		          .attr('height',function(){ return height - margin.top - margin.bottom ;});
 
+		        priv.meanbarX = meanbarX;
+		        if(settings.variable == 'p-value')
+		        addPercentline();
 		/*
 		if(typeof obj[0].elem.GElement=='undefined')
 			return;
