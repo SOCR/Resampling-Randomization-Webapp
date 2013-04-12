@@ -1,17 +1,18 @@
 /**
-*appModel.js is the model object for the SOCR app.
-*
-*@author: selvam , ashwini 
-*
-*SOCR - Statistical Online Computational Resource
+ *appModel.js is the model object for the SOCR app.
+ *
+ *@author selvam , ashwini
+ * @constructor
+ *@return {object}
+ *SOCR - Statistical Online Computational Resource
 */
 
 socr.model=function(){
 //::::::: PRIVATE PROPERTIES :::::::::::::::
 	var _stopCount = 1000;			//Number of runs to be made when 'run' button is pressed 
 	var _count=0;					//keeps count of number of samples generated from start
-	var _dataset={};				// All the input datapoints from wich bootstrap sample is generated
-	var _n=50;						//Number of datapoints in a bootstrap sample or Sample Size
+	var _dataset={};				// All the input datapoints from which bootstrap sample is generated
+	var _n=10;						//Number of datapoints in a bootstrap sample or Sample Size
 	var _K=1;						//contains the number of datasets
 	/*
 	Why there are keys and values? Its because in some form of data input (like coin toss), the "key" contains the symbolic meaningful reference whereas the "value" contains the mathematical equivalent value.
@@ -31,7 +32,9 @@ socr.model=function(){
 		Mean:{},
 		Count:{},
 		StandardDev:{},
-		Percentile:{}
+		Percentile:{},
+        FValue:{},
+        PValue:{}
 	};
 
 	var _this=this;
@@ -42,45 +45,61 @@ socr.model=function(){
 
 /* PRIVATE METHODS   */
 	/**
-	*@method: [private] _getRandomInt()
-	*@desc:  returns a random number in the range [min,max]
-	*@return: Random number
-	*/
+	 * @method _getRandomInt()
+	 * @desc  returns a random number in the range [min,max]
+	 * @return {number}
+     * @private
+	 */
 	function _getRandomInt(min, max) {
 		return Math.floor(Math.random() * (max - min )) + min;
 	}
 
 	/**
-	*@method: [private] _generateMean()
-	*@param:  sampleNumber - the random sample number for which the mean is to be calculated
-	*@desc: 
-	*@return: the calculated mean value
+	 *@private _generateMean()
+	 *@param {number|string} sampleNumber - the random sample number for which the mean is to be calculated
+     *@param {number} groupNumber
+	 *@desc: the calculated mean value
+	 *@return: {number}
 	*/
 	function _generateMean(sampleNumber,groupNumber){
-		var total=_generateCount(sampleNumber,groupNumber);
-		return total/_bootstrapGroupValues[sampleNumber][groupNumber].length;
-	}
+        var groupNumber= groupNumber || 1;
+        var total=0;
+        if(sampleNumber === "dataset"){
+            var _val=_dataset[groupNumber].values;
+            for(var i=0;i<_val.length;i++) {
+                total += parseFloat(_val[i]);
+            }
+            total=total/_val.length;
+            if(isNaN(total)){return false;}else{return total;}
+        }
+        else{
+		    var total=_generateCount(sampleNumber,groupNumber);
+		    return total/_bootstrapGroupValues[sampleNumber][groupNumber].length;
+        }
+    }
 	
 	/**
-	*@method: [private] _generateCount()
-	*@param:  sampleNumber - the random sample number for which the count is to be calculated
-	*@desc: 
-	*@return: the calculated total count value for the sample
+	 *@private _generateCount()
+	 *@param  sampleNumber  the random sample number for which the count is to be calculated
+     * @param groupNumber
+	 *@desc the calculated total count value for the sample
+	 *@return {number}
 	*/
 	function _generateCount(sampleNumber,groupNumber){
 		var x=_bootstrapGroupValues[sampleNumber][groupNumber];
 		var total=0;
 		for(var i=0;i<x.length;i++) {
-		   total += parseInt(x[i]); 
+		   total += parseFloat(x[i]);
 		}
 		return total;
 	}
 	
 	/**
-	*@method: [private] _generateStandardDev()
-	*@param:  sampleNumber - the random sample number for which the mean is to be calculated
-	@dependencies: _generateMean()
-	*@return: the calculated mean standard deviation
+     * @private
+	 *@param  sampleNumber - the random sample number for which the mean is to be calculated
+     *@param groupNumber
+	 *@desc the calculated mean standard deviation.
+	 *@return {number} standard deviation for the input sample and group numbers
 	*/
 	function _generateStandardDev(sampleNumber,groupNumber){
 		//formula used here is SD= ( E(x^2) - (E(x))^2 ) ^ 1/2
@@ -96,19 +115,26 @@ socr.model=function(){
 		return _SD;
 	}
 
+    /**
+     * @desc Generates the F value using the one way ANOVA method
+     * @param sampleNumber
+     * @returns {object}
+     * @private
+     */
 	function _generateF(sampleNumber){
 		if(sampleNumber == undefined){
-			return false;
+			return null;
 		}
 		else{
+            //Remove mean from the prototype...bad practice
 			Array.prototype.mean = function() {
 				var _total=0;
 				for(var i=0;i<this.length;i++){
-					_total+=this[i];
+					_total+=parseFloat(this[i]);
 				}
 				return _total/this.length;
 			}; 
-			var _k=0,_ymean=[],_total=0,_temp=0,_sst=0,_sse=0,_mst=0,_mse=0, _data=[];
+			var _k=0,_ymean=[],_total=0,_N= 0,_sst=0,_sse=0, _data=[];
 			_k=_this.getK();
 			if (sampleNumber === "dataset"){
 				for (var i = 1; i <=_k; i++) {
@@ -118,38 +144,70 @@ socr.model=function(){
 			else{
 				_data=_bootstrapGroupValues[sampleNumber];
 			}
-			for(var i=1;i<=_k;i++){
+
+            for(i=1;i<=_k;i++){
 				_ymean[i]=_data[i].mean();
+                _N +=_data[i].length;       //calculate N = total number of observations
 				_total+=_ymean[i];
 			}
-			//console.log(_ymean);
-			_y = _total/_k; // grand mean
-			var _dofe=_k - 1;//calculate the dof between K - 1
-			var _dofw=_n*_k - _n; //calculate the dof within
-			//console.log("_y:"+_y+"_dofe:"+_dofe+".... +dofw:"+_dofw);
+			var _y = _total/_k; // grand mean
+//            console.log("dataset:");
+//            console.log(_data);
+//            console.log("means");
+//            console.log(_ymean);
+//            console.log("grand mean: "+ _y);
+//            console.log("N :"+ _N)
+            var _dofe=_k - 1;//calculate the dof between =  k - 1
+			var _dofw=_N - _k; //calculate the dof within = N - k
+//
+//            console.log("dofe:"+_dofe);
+//            console.log("dofw:"+_dofw);
+
 			//SST
-			for (var i = 1; i <= _k; i++) {
-				_temp = ( _ymean[i] - _y);
-				_sst=+_n*_temp*_temp;
-			};
-			//console.log("_sst:"+_sst);
+			for (i = 1; i <= _k; i++) {
+				_temp = (_ymean[i] - _y);
+				_sst+=_data[i].length*_temp*_temp;
+			}
+//			console.log("_sst:"+_sst);
 			//SSE
 			for (var i = 1,_temp=0; i <= _k; i++) {
 				for(var j=0;j<_data[i].length;j++){
 					_temp = ( _data[i][j] - _ymean[i]);
-					_sse=+_temp*_temp;
+					_sse+=_temp*_temp;
 				}
-			};
-			//console.log("_sse:"+_sse);
+			}
+//			console.log("_sse:"+_sse);
 			//MST
 			var _mst = _sst/_dofe;
 			//MSE
 			var _mse = _sse/_dofw;
+//            console.log("mean sum of squares between "+_mst);
+//           console.log("mean sum of squares within  "+_mse);
 
-			return _mst/_mse;
+//            console.log("F value: "+_mst/_mse);
+			return {
+                fValue:_mst/_mse,
+                ndf:_dofe,
+                ddf:_dofw
+            };
 
 		}
 	}
+
+    /**
+     * @desc Generates p value for the "k" data groups using one way ANOVA method.
+     * @param sampleNumber
+     * @param _ndf
+     * @param _ddf
+     * @returns {number}
+     * @private
+     */
+    function _generateP(sampleNumber,_ndf,_ddf){
+        var x = _generateF(sampleNumber);
+        var _ndf = _ndf || x.ndf ;
+        var _ddf = _ddf || x.ddf ;
+        return socr.tools.fCal.computeP(x.fValue,_ndf,_ddf);
+    }
 	
 return{
 	/* PUBLIC PROPERTIES   */
@@ -164,12 +222,15 @@ return{
 	*/    
     
     /**
-	*@method: [public] generateTrail()
-	*@desc:  Generating a random number between 0 and dataSet size {@ashwini: I think this should be a private function}
-	*/
+     *
+     * @method: [public] generateTrail()
+     * @param datasetIndex
+     * @desc:  Generating a random number between 0 and dataSet size {@ashwini: I think this should be a private function}
+     * @returns {object}
+     */
 	generateTrail:function(datasetIndex){
 		if(_dataset[1] === undefined || this.getK() === false){
-			return false;
+			return null;
 		}
 		else{
 		var randomIndex=_getRandomInt(0, _dataset[datasetIndex].values.length);	//generating a random number between 0 and dataSet size 
@@ -180,114 +241,79 @@ return{
 			};			//returning the generated trail into a bootstrap sample array	
 		}
 	},
-    
-	/**
-	*@method: [public] generateSample()
-	*@desc:  generating a random number between 0 and dataSet size 
-	*/
-	generateSample:function(){
-		var i=this.getK();	var keyEl=['0 is taken'],valEl=['0 is taken'],k=1;
+
+    /**
+     *@method [public] generateSample()
+     *@desc  generating a random number between 0 and dataSet size
+     * @return {boolean}
+     */
+
+    generateSample:function(){
+		var i=this.getK(),keyEl=['0 is taken'],valEl=['0 is taken'],k=1;
 		while(k<=i){
-			var j=$('#nSize').val();
+			//var j=$('#nSize').val();
+            var j = _n;
 			var sample=[],values=[];
-			while(j--)
-				{
+			while(j--){
 				var temp=this.generateTrail(k);
 				sample[j]=temp.key;	//inserting the new sample
 				values[j]=temp.value;
-				}
+			}
 			keyEl.push(sample);
 			valEl.push(values);
 			k++;
-			}
+		}
 		Object.defineProperty(_bootstrapGroupKeys,_count,{value:keyEl,writable:true,configurable : true});
 		Object.defineProperty(_bootstrapGroupValues,_count,{value:valEl,writable:true,configurable : true});
 		_count++;		//incrementing the total count - number of samples generated from start of simulation
+        return true;
 	},
-	
+
 	/**
-	*@method: [public] generateStep()
-	*@desc:  executed when the user presses step button in the controller tile. The click binding of the step button is done in the {experiment}.js
-	*@dependencies: generateTrail()
-	*@return: returns the indexes of the dataset for the animation to occur
-	*/
-	generateStep:function(){
-		var j=$('#nSize').val();
-		var key=[];var values=[];var indexes=[];var datasetIndexes=[];
-		while(j--)
-			{
-			//bootstrapSamples[_count][j]=this.generateTrail();
-			var temp=this.generateTrail();
-			key[j]=temp.key;	//inserting the new sample
-			values[j]=temp.value;
-			indexes[j]=temp.index;
-			datasetIndexes[j]=temp.datasetIndex;
-			}
-		bootstrapSamples[_count]=key;
-		bootstrapSampleValues[_count]=values;
-		//bootstrapSamples[_count]= new Array(sample);
-		//console.log(_count+' random sample:'+sample);
-		_count++;
-		return {
-			indexes:indexes,
-			datasetIndexes:datasetIndexes
-				};
-	},
-	
-	/**
-	*@method: [public] getMean()
-	*@desc:  executed when the user presses "infer" button in the controller tile. The click binding of the step button is done in the {experiment}.js
-	*@param: groupNumber 
-	*@dependencies: generateTrail()
+	 * @method getMean()
+	 * @desc  executed when the user presses "infer" button in the controller tile. The click binding of the step button is done in the {experiment}.js
+	 * @param groupNumber
+     * @return {Array}
 	*/
 	getMean:function(groupNumber){
 		var	groupNumber = groupNumber || 1 ;    // 1 is default value - meaning the first dataset
 		if(_sample.Mean[groupNumber] === undefined){
 			_sample.Mean[groupNumber]=[];
 		}
-		
-		//if(_sample.Mean[groupNumber].length==_bootstrapGroupValues.length )
-		//	return _sample.Mean[groupNumber];
-		//else
+		if(_sample.Mean[groupNumber].length ===_count ){
+            console.log("already saved!");
+			return _sample.Mean[groupNumber];
+        }
+		else
 		{
-			for(var j=_sample.Mean[groupNumber].length;j<_count;j++)
-				{
+			for(var j=_sample.Mean[groupNumber].length;j<_count;j++){
 				_sample.Mean[groupNumber][j]=_generateMean(j,groupNumber);
-				}
-				console.log("sample mean "+_sample.Mean);
-				return _sample.Mean[groupNumber];
+			}
+			//console.log("sample mean ");console.log(_sample.Mean);
+			return _sample.Mean[groupNumber];
 			}
 		},
-	
-	/**
-	*@method: [public] getMeanOf()
-	*@desc:  executed when the user presses "infer" button in the controller tile. The click binding of the step button is done in the {experiment}.js
-	*@dependencies: generateTrail()
-	*/	
+
+    /**
+     * @method getMeanOf()
+     * @desc  executed when the user presses "infer" button in the controller tile.
+     *        The click binding of the step button is done in the {experiment}.js
+     * @param sampleNumber
+     * @param groupNumber
+     * @returns {number}
+     */
 	getMeanOf:function(sampleNumber,groupNumber){
 		return _generateMean(sampleNumber,groupNumber);
 	},
-	
-	/**
-	*@method: [public] getMeanOfDataset()
-	*@param: K 
-	*@desc: gets the mean of the intially created dataset/sample.
-	*@dependencies: generateTrail()
-	*/	
-	getMeanOfDataset:function(K){
-		if(K===undefined)
-			K=1;
-		var _val=_dataset[K].values;
-		var total=0;
-		for(var i=0;i<_val.length;i++) {
-			total += parseInt(_val[i]); 
-		}
-		total=total/_val.length;
-		if(isNaN(total)){return false;}else{return total;}
 
-	},
 	
 	/** STANDARD DEVIATION METHODS STARTS **/
+
+    /**
+     * @method getStandardDev
+     * @param groupNumber
+     * @returns {*}
+     */
 	getStandardDev:function(groupNumber){
 		var	groupNumber = groupNumber || 1 ;    // 1 is default value - meaning the first dataset
 		//if the _sampleStandardDev already has the values
@@ -307,14 +333,25 @@ return{
 		}	
 	},
 
-	getStandardDevOf:function(sampleNumber,groupNumber){
+    /**
+     * @method getStandardDevOf
+     * @param sampleNumber
+     * @param groupNumber
+     * @returns {number}
+     */
+    getStandardDevOf:function(sampleNumber,groupNumber){
 		return _generateStandardDev(sampleNumber,groupNumber);
 	},
 
+    /**
+     *
+     * @param K
+     * @returns {number}
+     */
 	getStandardDevOfDataset:function(K){
 		K=K || 1;
 		var _val=_dataset[K].values;
-		var _mean=this.getMeanOfDataset(K);
+		var _mean=this.getMeanOf("dataset",K);
 		var _squaredSum=null;
 		for(var i=0;i<_val.length;i++)
 			{
@@ -325,39 +362,61 @@ return{
 		console.log("SD of Dataset:"+_SD);
 		return _SD;
 	},
-	/** STANDARD DEVIATION METHODS ENDS **/
 
+	/** STANDARD DEVIATION METHODS ENDS **/
 	/** COUNT METHODS STARTS **/
+
+    /**
+     * @method getCount
+     * @param groupNumber
+     * @returns {Array}
+     */
 	getCount:function(groupNumber){
 		groupNumber = groupNumber || 1;
-		var _test=[];
-		for(var j=0;j<_count;j++)
-			{
-			_test[j]=_generateCount(j,groupNumber);
-			//console.log(_sample.Count[j]);
+        if(_sample.Count[groupNumber] === undefined){
+            _sample.Count[groupNumber]=[];
+        }
+        if(_sample.Count[groupNumber].length ===_count ){
+            console.log("return already saved count values!");
+            return _sample.Count[groupNumber];
+        }
+        else{
+            for(var j=_sample.Count[groupNumber].length;j<_count;j++){
+                _sample.Count[groupNumber][j]=_generateCount(j,groupNumber);
+			    //console.log(_sample.Count[j]);
 			}
-			_sample.Count[groupNumber]=_test;
 			return _sample.Count[groupNumber];
-	},
-	
-	getCountOf:function(sampleNumber){
-		return _generateCount(sampleNumber);
+        }
 	},
 
-	getCountOfDataset:function(K){
-		K=K || 1;
-		var _val=_dataset[K].values;
-		var total=0;
-		for(var i=0;i<_val.length;i++) 
-			{ total += parseInt(_val[i]); }
-		return total;
+    /**
+     * @method getCountOf
+     * @param {number | string}sampleNumber
+     * @param {number} groupNumber
+     * @returns {number}
+     */
+	getCountOf:function(sampleNumber,groupNumber){
+        var K = groupNumber || 1;
+        if(sampleNumber === "dataset"){
+            var _val=_dataset[K].values;
+            var total=0;
+            for(var i=0;i<_val.length;i++){
+                total += parseFloat(_val[i]);
+            }
+            return total;
+        }
+        else{
+		    return _generateCount(sampleNumber,K);
+        }
 	},
+
 	/** COUNT METHODS ENDS **/
-
 	/** PERCENTILE METHODS STARTS **/
+
 	/**
-	*@method:getPercentile ()
-	*@param: pvalue - what is the percentile value that is to be calculated.
+	 * @method getPercentile ()
+	 * @param  pvalue - what is the percentile value that is to be calculated.
+     * @return {Array}
 	*/
 	getPercentile:function(pvalue){
 	console.log("getPercentile() invoked");
@@ -374,6 +433,12 @@ return{
 	//	}
 	},
 
+    /**
+     * @method getPercentileOf
+     * @param sampleNumber
+     * @param pvalue
+     * @returns {*}
+     */
 	getPercentileOf:function(sampleNumber,pvalue){
 		var temp=bootstrapSampleValues[sampleNumber].sort(function(a,b){return a-b});
 		var position=Math.floor(bootstrapSampleValues[sampleNumber].length*(pvalue/100));
@@ -381,7 +446,11 @@ return{
 		//console.log(bootstrapSampleValues[sampleNumber]+"---"+position);
 		return temp[position];
 	},
-
+    /**
+     *
+     * @param pvalue
+     * @returns {*}
+     */
 	getPercentileOfDataset:function(pvalue){
 		var temp=_datasetValues.sort(function(a,b){return a-b});
 		var position=Math.floor(_datasetValues.length*(pvalue/100));
@@ -390,35 +459,80 @@ return{
 	/** PERCENTILE METHODS ENDS **/
 
 	/**
-	*@method: [public] getF()
-	*@desc: returns the F value computed from the supplied group
-	*
-	*/
-	getF:function(){
-		 _this=this;
-		var _data=[];
-		for(var i=0;i<_count;i++){
-			_data[i]=_generateF(i);
-		}
-		return _data;
+	*@method getF()
+	*@desc returns the F value computed from the supplied group
+	*@return {Object}
+    */
+    getF:function(groupNumber){
+        var groupNumber = groupNumber || 1;
+		_this=this;
+        if(_sample.FValue[groupNumber] === undefined){
+            _sample.FValue[groupNumber] = [];
+        }
+		if(_sample.FValue[groupNumber].length === _count){
+            console.log("returning the saved F-values!")
+            return _sample.FValue[groupNumber];
+        }
+        else{
+            for(var i=_sample.FValue[groupNumber].length;i<_count;i++){
+                _sample.FValue[groupNumber][i]=_generateF(i).fValue;
+            }
+            return _sample.FValue[groupNumber];
+        }
+
 	},
 
-	/**
-	*@method: [public] getFof(SampleNumber)
-	*@desc: returns the F value computed from the supplied group
-	*@param: sampleNumber - Random sample Number at which the F value is to be calculated
-	*
-	*/
-	getFof:function(sampleNumber){
-		_this=this;
-		return _generateF(sampleNumber);
-	},
-	/**
-	*@method: [public] getDataset()
-	*@desc:  getter funtion for dataSet variable. 
-	*@param: K - dataset number , field - what value to return i.e values or keys or name
-	*@dependencies: generateTrail()
-	*/
+    /**
+     * @method  getFof
+     * @desc returns the F value computed from the supplied group
+     * @param sampleNumber - Random sample Number at which the F value is to be calculated
+     * @returns {Object}
+     */
+    getFof:function(sampleNumber){
+        _this=this;
+        return _generateF(sampleNumber);
+    },
+
+    /**
+     * @method getP
+     * @return {Object}
+     */
+
+    getP:function(groupNumber){
+        var groupNumber = groupNumber || 1;
+        _this = this;
+        if(_sample.PValue[groupNumber] === undefined){
+            _sample.PValue[groupNumber] = [];
+        }
+        if(_sample.PValue[groupNumber].length === _count){
+            console.log("returning the saved P-values!")
+            return _sample.PValue[groupNumber];
+        }
+        else{
+            for(var i=_sample.PValue[groupNumber].length;i<_count;i++){
+                _sample.PValue[groupNumber][i]=_generateP(i);
+            }
+            return _sample.PValue[groupNumber];
+        }
+    },
+
+    /**
+     * @method getPof
+     * @param sampleNumber
+     * @returns {number}
+     */
+    getPof:function(sampleNumber){
+        _this=this;
+        return _generateP(sampleNumber);
+    },
+
+    /**
+     * @method getDataset
+     * @desc  getter function for dataSet variable.
+     * @param K  dataset number , field - what value to return i.e values or keys or name
+     * @param field
+     * @returns {*}
+     */
 	getDataset:function(K,field){
 		if(K===undefined)
 				K=1;
@@ -429,16 +543,21 @@ return{
 		else
 			return _dataset[K][field];
 	},
+
 	/**
-	*@method: setDataset
-	*@param: input 
-	*@description: sets the data from the input sheet into the app model
-	*/
+	 * @method setDataset
+	 * @desc sets the data from the input sheet into the app model
+     * @param input
+     * @return {boolean}
+	 */
 	setDataset:function(input){
 		//check for input values...if its empty...then throw error
+        if(input === undefined){
+            return false;
+        }
 		console.log('setDataSet() invoked!');
-		console.log('Input Data :'+input.keys+' Input Type :'+input.type+' Input Range :'+input.range+' Input Values :'+input.values);
-	//input.processed is true incase of a simulation -> data mode switch
+        console.log(input);
+	//input.processed is true in case of a simulation -> data mode switch
 		if(input.processed){
 			for(var i=0;i<input.keys.length;i++){
 				_dataset[i+1]={
@@ -449,7 +568,7 @@ return{
 				};
 			}
 			console.log('Simulation data is loaded now.');
-			return false;
+			return true;
 		}
 		else if(input.type=='url'){
 			console.log('Simulation data is loaded now.');
@@ -490,19 +609,21 @@ return{
 		}
 	},
     /**
-	*@method: [public] getSample(index,type,K)
-	*@param: index - random sample index
-        *@param: K - group index
-	*@param: type - values or keys
-	*@desc:  getter and setter funtion for dataSet variable. 
-	*@dependencies: generateTrail()
-	*/
+	 *@method getSample
+	 *@param index  random sample index
+     *@param K group index
+	 *@param type values or keys
+	 *@desc  getter and setter function for random samples.
+	 */
 	getSample:function(index,type,K){
 		K= K || 1;		//default set to 1
 		type=type || "values";	//default set to "values"
-		if(typeof _bootstrapGroupKeys[1] === "undefined" || typeof _bootstrapGroupValues[1] === "undefined" || index === "undefined"){
-			return false;
-		}
+//		if(typeof _bootstrapGroupKeys[1] === "undefined" || typeof _bootstrapGroupValues[1] === "undefined" || index === "undefined"){
+//			return false;
+//		}
+        if(this.getRSampleCount() === 0){
+            return false;
+        }
 		if(type === "values"){
 			return _bootstrapGroupValues[index][K];
 		}
@@ -510,7 +631,13 @@ return{
 			return _bootstrapGroupKeys[index][K];
 		}
 	},
-	
+
+    /**
+     * @method - getSamples
+     * @param type
+     * @param K
+     * @returns {Array}
+     */
 	getSamples:function(type,K){
 		type = type || "values";	
 		K=K || 1;var _temp=[];
@@ -527,7 +654,7 @@ return{
 		return _temp;
 	},
 	
-	/*  getter and setter for variable '_stopCount'  */
+	/**  getter and setter for variable '_stopCount'  */
 	setStopCount:function(y){
 		//alert(y);
 		_stopCount=y;
@@ -536,21 +663,24 @@ return{
 		return _stopCount;
 	},
 	
-	/*  getter and setter for variable '_n'  */
+	/**  getter and setter for variable '_n'  */
 	setN:function(z){
 		_n=z;
 	},
 	getN:function(){
 		return _n;
 	},
-	/*  getter and setter for variable '_count'  */
+
+	/**  getter and setter for variable '_count'  */
 	setRSampleCount:function(v){
 		_count=v;
 		return true;
 	},
+
 	getRSampleCount:function(){
 		return _count;
 	},
+
 	reset:function(){
 		//dataset values deleted
 		_dataset={};
@@ -564,12 +694,17 @@ return{
 		//setting the global random sample count to 0
 		this.setRSampleCount(0);
 	},
+
 	resetVariables:function(){
 		_sample.Mean=[];
 		_sample.StandardDev=[];
 		_sample.Percentile=[];
 		_sample.Count=[];
 	},
+    /**
+     * @method getK
+     * @returns {number}
+     */
 	getK:function(){
 		/*if(socr.exp.current)
 			{

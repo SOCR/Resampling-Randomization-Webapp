@@ -104,7 +104,7 @@ return{
 		$('#grsbutton').on('click',function(){
 			if(_values.length!=0){
 					$.update({to:'dataDriven'});	//Loads the data into the appModel .
-					view.updateSimulationInfo();		//updates experiment info into third tile in the accordion
+					socr.view.updateSimulationInfo();		//updates experiment info into third tile in the accordion
 				}
 			else
 				$('.controller-warning').html('<div class="alert alert-error"><a class="close" data-dismiss="alert" href="#">x</a><h4 class="alert-heading">Dataset NOT generated!</h4>Please click the adjacent "Generate Dataset!" button first.</div>');
@@ -112,7 +112,7 @@ return{
 	},
 	
 	generate:function(){
-		view.updateSimulationInfo();		//updates experiment info into third tile in the accordion
+		socr.view.updateSimulationInfo();		//updates experiment info into third tile in the accordion
 		
 		socr.exp.ballAndUrn.setVariable();
 		socr.exp.ballAndUrn.createDataPlot(_n);
@@ -174,7 +174,7 @@ return{
 
 	createControllerView:function(){
 	console.log("createControllerView for Ball and Urn executed!");
-	var html='<p class="toolbar"><p class="tool"><span id="nLabel" class="badge badge-warning" for="nInput">Draw N Balls = </span><span id="nvalue"></span><input id="nInput" type="range" tabindex="7" class="parameter"/></p><p class="tool"><span id="mLabel" class="badge badge-warning" for="pInput">Total M Balls = </span><span id="mvalue"></span><input id="mInput" type="range" tabindex="8" class="parameter"/></p><p class="tool"><span id="rLabel" class="badge badge-warning" for="rInput">Red Balls = </span><span id="rvalue"></span><input id="rInput" type="range" tabindex="8" class="parameter"/></p><p class="tool"><input type="checkbox" tabindex="7" id="type"><span for="replaceCheck">With replacement</span></p><div><span class="badge badge-warning"> K=<span id="kValue">2</span></span><div id="kValue-slider" style="display:inline-block;width:50%;margin-left:5%"></div></p><button class="btn" id="sdbutton">Generate DataSet!</button>&nbsp;<button class="btn btn-danger" id="grsbutton">Generate Random Samples!</button>';
+	var html='<p class="toolbar"><p class="tool"><span id="nLabel" class="badge badge-warning" for="nInput">Draw N Balls = </span><span id="nvalue"></span><input id="nInput" type="range" tabindex="7" class="parameter"/></p><p class="tool"><span id="mLabel" class="badge badge-warning" for="pInput">Total M Balls = </span><span id="mvalue"></span><input id="mInput" type="range" tabindex="8" class="parameter"/></p><p class="tool"><span id="rLabel" class="badge badge-warning" for="rInput">Red Balls = </span><span id="rvalue"></span><input id="rInput" type="range" tabindex="8" class="parameter"/></p><p class="tool"><input type="checkbox" tabindex="7" id="type"><span for="replaceCheck">With replacement</span></p><div><span class="badge badge-warning"> K=<span id="kValue">1</span></span><div id="kValue-slider" style="display:inline-block;width:50%;margin-left:5%"></div></p><button class="btn" id="sdbutton">Generate DataSet!</button>&nbsp;<button class="btn btn-danger" id="grsbutton">Generate Random Samples!</button>';
 		$('#controller-content').delay(1000).html(html);
 		$('.popups').popover();
 		try{
@@ -186,11 +186,9 @@ return{
 
 		$('.tooltips').tooltip();
 
-		var minKVal = socr.exp.multiK ? 2 : 1;
-		console.log(minKVal);
 		$( "#kValue-slider" ).slider({
-			value: minKVal,
-			min: minKVal,
+			value: 1,
+			min: 1,
 			max: 10,
 			step: 1,
 			slide: function( event, ui ) {

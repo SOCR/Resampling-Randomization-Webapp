@@ -1,48 +1,74 @@
 svg {
-     font-size: 13px;
-     font-family:sans-serif;
-    }
+     -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    /* Trying to get SVG to act like a greedy block in all browsers */
+    display: block;
+    width:100%;
+    height:100%;
+}
+
+svg text {
+  font: normal 12px sans-serif;
+}
 
     .bars rect {
-	  fill: #1f77b4;
-	  stroke: #1f77b4;
-	  shape-rendering: crispEdges;
-	}
+    fill: #1f77b4;
+    stroke: #1f77b4;
+    shape-rendering: crispEdges;
+  }
 
-	.bars text {
-	  fill: #fff;
-	}
+  .bars text {
+    fill: #fff;
+  }
 
-	.axis path, .axis line {
-	  fill: none;
-	  stroke: #000;
-	  shape-rendering: crispEdges;
-	}
+  .axis path, .axis line {
+    fill: none;
+    stroke: #000;
+    shape-rendering: crispEdges;
+    stroke-opacity: .75;
+  }
 
-	circle.node{
-	  cursor:pointer;
-	}
+  circle.node{
+    cursor:pointer;
+  }
 
-	rect{
-	  fill-opacity:0.7;
-	}
-	 
-	 rect.meanBar{
-	  fill:#ff7f0e;
-	  stroke:#ff7f0e;
-	  fill-opacity:0.8;
-	}
+  rect{
+   zfill: steelblue;
+  fill-opacity: .75;
+  transition: fill-opacity 250ms linear;
+  -moz-transition: fill-opacity 250ms linear;
+  -webkit-transition: fill-opacity 250ms linear;
+  }
+   
+   rect.meanBar{
+    fill:#ff7f0e;
+    stroke:#ff7f0e;
+    fill-opacity:0.8;
+  }
 
-	rect.hover{
-		fill-opacity:1;
-	}
+  rect.hover{
+    fill-opacity:1;
+    cursor:pointer;
+  }
 
-   .y.axis line.tick { opacity: .15; }
+  .y.axis line.tick { opacity: .15; }
 
-	/*
-		******************
-		  TOOLTIP CSS 
-	 */
+  /*
+    ******************
+      Legend
+   */
+  .legend text{
+    font-weight: bold;
+  } 
+
+  /*
+    ******************
+      TOOLTIP CSS 
+   */
 
 .viswraptooltip {
   position: absolute;

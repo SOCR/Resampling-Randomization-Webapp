@@ -54,6 +54,7 @@
       scrollable: null,
       hasLegend: null,
       lastAutoComplete: null,
+      colHeaders: true,
     //  undoRedo: settings.undo ? new inputtable.UndoRedo(this) : null,
       extensions: {},
       stopNextPropagation: 0
@@ -2305,7 +2306,7 @@
          
               if(++i > ilen - 1){
                 clearInterval(processor);
-                console.log('Finished proessing :)')
+                console.log('Dataset Import Complete')
               }
 
             busy = false;
@@ -2462,6 +2463,17 @@
       }, 10);
 
       return td;
+
+    }
+
+    this.getColHeaders = function(row){
+
+      var headers = [];
+      for(var i=0, ilen = self.count; i<ilen; i++){
+        headers.push(self.colHeader.columnLabel(i));
+      }
+
+      return self;
 
     }
 
@@ -2984,7 +2996,7 @@
     'minSpareRows': 0,
     'minSpareCols': 0,
     'minHeight': 0,
-    'minWidth': 0,
+    'minWidth': 50,
     'multiSelect': true,
     'fillHandle': true,
     'undo': true,
@@ -3115,7 +3127,7 @@ inputtable.BlockedRows.prototype.createCol = function (className) {
     }
 
     th = document.createElement('th');
-    th.className = this.headers[h].className;
+     th.className = this.headers[h].className;
     if (className) {
       th.className += ' ' + className;
     }
@@ -3128,8 +3140,9 @@ inputtable.BlockedRows.prototype.createCol = function (className) {
     if (className) {
       th.className += ' ' + className;
     }
-    this.instance.minWidthFix(th);
-    this.main.find('thead tr.' + this.headers[h].className)[0].appendChild(th);
+    
+     this.instance.minWidthFix(th);
+     this.main.find('thead tr.' + this.headers[h].className)[0].appendChild(th);
   }
 };
 

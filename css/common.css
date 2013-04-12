@@ -367,3 +367,7 @@ a.input-handle{
     width:45%;
     */margin:5px;
 }
+div.tool{
+	margin-top: 5px;
+	line-height: 24px;
+}

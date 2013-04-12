@@ -2,6 +2,7 @@
 	The SOCR visualizations module
 	Current Support 
 		- histogram  - 4 methods of caluclating number of classes/bins
+		- Line Chart
 **/
 socr.vis = (function(){
 	//private properties and methods
@@ -307,7 +308,7 @@ socr.vis = (function(){
 	    				.attr('x2', priv.margin.left)
 	    				.attr('y2', height)
 	    				.attr('stroke-width', 2)
-	    				.attr('stroke','#121212')
+	    				.attr('stroke','#676767')
 	    				.transition()
 	    				 .delay(priv.settings.transitionDuration + 500)
 	    				.attr('x2', px1);
@@ -317,8 +318,6 @@ socr.vis = (function(){
 	    				.attr('y', height - 10)
 	    				.attr("dy", ".35em")
 		      			.style("text-anchor", "middle")
-		      			.style('font-weight','bold')
-		      			.style('font-size','15px')
 		      			.text(priv.settings.pl +' %')
 
 	    var line2 = svg.append('line')
@@ -327,7 +326,7 @@ socr.vis = (function(){
 	    				.attr('x2', px2)
 	    				.attr('y2', height)
 	    				.attr('stroke-width', 2)
-	    				.attr('stroke','#121212')
+	    				.attr('stroke','#343434')
 	    				.transition()
 	    				 .delay(priv.settings.transitionDuration + 500)
 	    				.attr('x2', width - priv.margin.right)
@@ -337,8 +336,6 @@ socr.vis = (function(){
 	    				.attr('y', height - 10)
 	    				.attr("dy", ".35em")
 		      			.style("text-anchor", "middle")
-		      			.style('font-weight','bold')
-		      			.style('font-size','15px')
 		      			.text(priv.settings.pr +'%')
 
 

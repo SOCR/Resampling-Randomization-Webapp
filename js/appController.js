@@ -2,56 +2,50 @@
 * socr.controller is the controller object for the SOCR app.
 *
 *@author: selvam , ashwini 
-*
+*@return: {object}
 *SOCR - Statistical Online Computational Resource
 */
 
 socr.controller=function(model,view){
 /* PRIVATE PROPERTIES   */
-	view=view || new socr.view();		// [OBJECT] Reference to the Global App view object.
+//	view=view || new socr.view();   // Reference to the Global App view object.
 	var _id=0;						// Stores the id for setInterval in run mode
-	var _runsElasped=0;				// Keeps count of number of resamples generated
-	var _this;						// [OBJECT] contains reference to this obect.				
+	var _runsElapsed=0;				// Keeps count of number of resamples generated
+	var _this = this;						// contains reference to this object.
 	var _noOfSteps=0;
-	var _datapoints=model.getN();		//this can create problems...if the n value is changed after the intialization of the app
-	var _stopCount=model.stopCount;
-	var _count=model.getCount();	//Number of resamples already generated in the app...can create problems
 	var _currentMode="dataDriven";  //App starts with dataDriven mode [default value]
 
 /* PRIVATE METHODS   */
 
 	/**
-	*@method: [private] _generate()
-	*@description:   This function generates 1000 resamples by calling the generateSample() of model.
-	*@dependencies: generateSample()
-	*/ 
+	 *@method: [private] _generate()
+	 *@description:   This function generates 1000 resamples by calling the generateSample() of model.
+	 *@dependencies: generateSample()
+	*/
 	function _generate(){
-	if(_runsElasped!=_noOfSteps)
-		{
-		var i=1000;
-		while(i--)
-			{			
-			model.generateSample();
-			}
-		view.updateCounter();
-		_runsElasped++;
-		var percent=Math.ceil((_runsElasped/_noOfSteps)*100);
-		view.updateStatus("update",percent);	
-		}
-	else
-		{
-		view.updateCtrlMessage("samples generated sucessfully.","success",2000);
-		view.updateStatus("finished");
-		view.updateSimulationInfo();
-		_this.stop();
-		}
+        if(_runsElapsed!=_noOfSteps){
+            var i=1000;
+            while(i--){
+                model.generateSample();
+            }
+            view.updateCounter();
+            _runsElapsed++;
+            var percent=Math.ceil((_runsElapsed/_noOfSteps)*100);
+            view.updateStatus("update",percent);
+        }
+        else{
+            view.updateCtrlMessage("samples generated sucessfully.","success",2000);
+            view.updateStatus("finished");
+            view.updateSimulationInfo();
+            _this.stop();
+	    }
 	}
 
 /* PUBLIC METHODS */	
 	return{
 	/**
-	*@method: [private] initialize()
-	*@description:Initializes the app..binds all the buttons...create the show slider
+	 *@method: [private] initialize()
+	 *@description:Initializes the app..binds all the buttons...create the show slider
 	*/
 	initialize:function(){
 		_this=this;
@@ -59,14 +53,11 @@ socr.controller=function(model,view){
 		
 		/*ADDING EVENT LISTENERS STARTS
 		--------------------------------*/
-		
-		$('.controller-handle').on('click',view.toggleControllerHandle);
+		$('.controller-handle').on('click',socr.view.toggleControllerHandle);
 
-		
-		
 		$("#showButton").on('click',function(){
 			//a check to see if the sample count is 0 or not
-			view.createList($('.show-list-start').val(),$('.show-list-end').val());
+			socr.view.createList($('.show-list-start').val(),$('.show-list-end').val());
 		});
 		
 		$('#startApp').on('click',function(){
@@ -89,16 +80,13 @@ socr.controller=function(model,view){
 		
 		$("#generate-url-button").on('click',function(){
 			if(model.getDataset()!=''){
-				
 				$("#url").val(baseUrl+"index.html?"+"type=url&dataset="+model.getDataset()+"&countSize="+$("#countSize").val()+"&nSize="+$("#nSize").val());
-				}
+			}
 			else{
-				
 				console.log('Dataset not initialised');
 				var alertblock = '<div class="alert alert-block">Dataset not initialised</div>';
 				$('.generate-response').html(alertblock);
-
-				}
+			}
 		});
 
 		$("#reset-button").on("click",function() {
@@ -150,32 +138,40 @@ socr.controller=function(model,view){
 	},
 
 	initController:function(){
-		$("#runButton").on('click',function(){
+		$("#runButton").on('click',function(e){
+            e.preventDefault();
 			console.log('Run Started');
-			_this.run();
+			socr.controller.run();
 		});
 		
-		$("#stepButton").on('click',function(){
-			console.log('Step pressed ');
-			_this.step();
+		$("#stepButton").on('click',function(e){
+            e.preventDefault();
+            console.log('Step pressed ');
+			socr.controller.step();
 		});
 		
-		$("#stopButton").on('click',function(){
-			console.log('Stop Pressed ');
-			_this.stop();
+		$("#stopButton").on('click',function(e){
+            e.preventDefault();
+            console.log('Stop Pressed ');
+			socr.controller.stop();
 		});
 		
-		$("#resetButton").on('click',function(){
-			console.log('Reset pressed');
-			_this.reset();
+		$("#resetButton").on('click',function(e){
+            e.preventDefault();
+            console.log('Reset pressed');
+			socr.controller.reset();
 		});
 		
-		$("#infer").on('click',function(){
-		/*^^^^^create loading gif ^^^^^^^^*/
-			if(model.getSample(1)==false)
-				view.handleResponse('<h4 class="alert-heading">No Random samples to infer From!</h4>Please generate some random samples. Click "back" button on the controller to go to the "Generate Random Samples!" button.','error','controller-content');
-			else
-			_this.setDotplot();
+		$("#infer").on('click',function(e){
+            e.preventDefault();
+            /*^^^^^create loading gif ^^^^^^^^*/
+			if(socr.model.getSample(1)==false){
+				socr.view.handleResponse('<h4 class="alert-heading">No Random samples to infer From!</h4>Please generate some random samples. Click "back" button on the controller to go to the "Generate Random Samples!" button.','error','controller-content');
+            }
+			else{
+			    socr.controller.setDotplot();
+                socr.view.toggleControllerHandle("hide");
+            }
 		});
 	},
 
@@ -186,22 +182,27 @@ socr.controller=function(model,view){
 	*/
 	step: function(){
 		$("#accordion").accordion( "activate" , 1);
-		if(socr.exp.controllerSliderState==1){
-			$('.controller-handle').trigger('click');
-		}
+        //socr.view.toggleControllerHandle("hide");
 		view.disableButtons();					//disabling buttons
-		model.setN(nSize.val());				// save the datapoints size
-	    var keys=model.generateStep();			//generate one sample
-	    view.updateCounter();					//update counter
-		$(".removable").remove();				//remove the previously generated canvas during animation
+		model.setN($("#nSize").val());				// save the datapoints size
+	    try{
+            model.generateSample();			//generate one sample
+            view.updateCounter();					//update counter
+            $(".removable").remove();				//remove the previously generated canvas during animation
+            view.updateSlider();					//update slider count
+            view.updateSimulationInfo();
+        }
+        catch(e){
+            console.log(e);
+        }
+        view.enableButtons();
 		/*view.animate({
 			stopCount:$('#nSize').val(),
 			speed:$('#speed').val(),
 			indexes:keys.indexes,
 			datasetIndexes:keys.datasetIndexes
 		});	*/									//show sample generation animation
-		view.updateSlider();					//update slider count
-		view.updateSimulationInfo();
+
 	},
 	
 	/**
@@ -217,7 +218,7 @@ socr.controller=function(model,view){
 		var _temp=model.getStopCount()/1000;
 		_noOfSteps=Math.ceil(_temp);
 		var d=Date();
-		console.log('start'+_runsElasped+d);
+		console.log('start'+_runsElapsed+d);
 		_generate();
 		_id=setInterval(_generate,0);
 	},
@@ -228,10 +229,10 @@ socr.controller=function(model,view){
 	*/
 	stop:function(){
 		var d=Date();
-		console.log('end'+_runsElasped+d);
+		console.log('end'+_runsElapsed+d);
 		view.updateSlider();
 		clearInterval(_id);		//stop the setinterval function
-		_runsElasped=0;			//reset the runelapsed count
+		_runsElapsed=0;			//reset the runelapsed count
 		view.enableButtons();		//enable buttons
         },
 	
@@ -253,10 +254,10 @@ socr.controller=function(model,view){
                             Yes: function () {
 							_this.stop();
 							model.reset();
-							view.reset();		//clearing all the canvas
-							view.toggleControllerHandle();
+							view.reset();		    //clearing all the canvas
+                            socr.exp.current={};    //deleting the current experiment instance
+							view.toggleControllerHandle('hide');
 							socr.dataTable.simulationDriven.resetScreen();
-							$('#showCount').html('');
                             $(this).dialog("close");					//close the confirmation window
                             },
                             No: function () {
@@ -273,10 +274,14 @@ socr.controller=function(model,view){
     
 	setDotplot:function(){
 		$('#dotplot').html('');
-		//create dotplot
+        var index = parseInt($("#index").val());
+        //create dotplot
 		console.log("setdotplot started");
 		console.log("variable:"+$('#variable').val());
-		view.createDotplot({variable:$('#variable').val()});
+		view.createDotplot({
+            variable:$('#variable').val(),
+            index:index
+        });
 	},
 	
 	loadController:function(x){
@@ -285,10 +290,9 @@ socr.controller=function(model,view){
 			socr.exp.current.initialize();
 		}
 		else{
-			view.createControllerView();
-			this.initController();
 			//check for input
-			if(socr.exp.current){
+            if(!$.isEmptyObject(socr.exp.current)){
+
 				if(socr.exp.current.getDataset()!=''){	
 					console.log('simulation drive has some data');
 					var result=model.setDataset({
@@ -297,16 +301,17 @@ socr.controller=function(model,view){
 							processed:true
 						});
 					if(result === true){
-					    view.toggleControllerHandle();
+					    view.toggleControllerHandle('show');
+                        view.updateSimulationInfo();
 					}
-					console.log(model.getDataset(1));
 					//call to loadInputSheet to input the generated simulation data if any
 				}	
 			}
-			else
+			else{
 				console.log("Experiment object not defined!");
-				//set the input
-		}
+            }
+            view.createControllerView();
+        }
 	}
  
     }//return

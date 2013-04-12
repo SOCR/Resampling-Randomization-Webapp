@@ -45,16 +45,18 @@ socr.dataTable= function () {
    var simulationDriven = {
       init : function(arg){
         var expId = arg.substr(4);
-        console.log(expId);
-        console.log(simulationDriven.expLoaded);
-        if($.inArray( expId, simulationDriven.expLoaded))
-          simulationDriven.loadData(expId);
-        else
+        console.log('Experiments loaded: '+simulationDriven.expLoaded);
+        /* 
+          ToDO : Verify .js extension addition in all browsers
+        */
+        // if($.inArray( expId, simulationDriven.expLoaded))
+        //   simulationDriven.loadData(expId);
+        // else
           simulationDriven.loadScript(expId);
       },
       expLoaded : [],
       loadScript: function(id){
-        $.getScript( 'js/exp/'+id, function(){
+        $.getScript( 'js/exp/'+id +'.js', function(){
           simulationDriven.loadData(id)
         } )
       },
@@ -80,8 +82,7 @@ socr.dataTable= function () {
           socr.exp.current.createControllerView();
           socr.exp.current.initialize();
           simulationDriven.expLoaded.push(id);
-         if(socr.exp.controllerSliderState==0)
-          $(".controller-handle").trigger("click");
+         socr.view.toggleControllerHandle("show");
       },
       displayText : function(details){
           console.log(details);
@@ -94,6 +95,7 @@ socr.dataTable= function () {
       },
       resetScreen : function(){
         view.toggleScreens({ visible: splashScreen });
+        socr.view.toggleControllerHandle("hide");
       }
 
    } ;
@@ -285,12 +287,28 @@ socr.dataTable= function () {
       }
     },
     editTitles : function(){
-    
-      var content = '<form class="form form-horizontal" id="input-titles"><fieldset><legend>Add titles to Spreadsheet</legend><div class="control-group"><label class="control-label">Title</label><div class="controls"><input type="text" placeholder="Input field1"></div></div><div class="control-group"><label class="control-label">Title</label>\
-      <div class="controls"><input type="text" placeholder="Input Title"></div></div><div class="control-group"><label class="control-label">Title</label>\
-      <div class="controls"><input type="text" placeholder="Input Title"></div></div>\
-      <div class="control-group"><label class="control-label">Title</label><div class="controls"><input type="text" placeholder="Input Title"></div></div>\
-      <div class="pagination-centered"><input type="submit" class="btn btn-large btn-block"></div></form>';
+
+        var d = $dataTable.inputtable('getColHeaders');
+        console.log(d)
+        colHeader = d.blockedRows.headers;
+
+        var content = '<form class="form form-horizontal" id="input-titles"><fieldset><legend>Add titles to Spreadsheet</legend>';
+        if(typeof colHeader[0] !== 'undefined'){
+          for (var i=0; i<d.colCount; i++){
+            var label = (typeof colHeader[0].labels[i] !== 'undefined') ? colHeader[0].labels[i] : '';
+           content += '<div class="control-group"><label class="control-label">Column ' + i +' :</label><div class="controls"><input type="text" placeholder="Input field" value="' + label + '"></div></div>';
+          }
+        }
+        else{
+
+         var k = 0;
+         while(k < d.colCount){  
+          content += '<div class="control-group"><label class="control-label">Title ' + k +'</label><div class="controls"><input type="text" placeholder="Input field"></div></div>';
+          k++;
+        }
+        }
+     
+      content += '<div class="pagination-centered"><input type="submit" class="btn btn-large btn-block"></div></form>';
       $('#input-modal .modal-body').html(content);
     },
     parseTitles : function(e){
@@ -298,7 +316,7 @@ socr.dataTable= function () {
       console.log('Call for parse Titles');
       var titles = [];
       $('#input-titles').find('input[type="text"]').each(function(){
-        if($(this).val() !== '')
+        // if($(this).val() !== '')
         titles.push($(this).val());
       })
       spreadSheet.addColHeaders(titles);
@@ -330,12 +348,14 @@ socr.dataTable= function () {
       */ 
       $dataTable.inputtable({
         cols : 8,
-        rows : 8,
+        rows: 8,
         minSpareCols: 1,
         minSpareRows: 1,
-        fillHandle: true
+        fillHandle: true,
+        colHeaders: true
       });
 
+    //    $dataTable.inputtable({colHeaders : true})
     },
 
     validate : function(dataset){
@@ -360,6 +380,7 @@ socr.dataTable= function () {
     },
 
      addColHeaders : function(arr){
+
         $dataTable.inputtable({colHeaders : arr});
       },
 
@@ -374,10 +395,18 @@ socr.dataTable= function () {
 
     parseAll : function(){
       var dataset = $dataTable.inputtable('getNonEmptyData');
-          model.reset(); 
+          socr.model.reset();
 
       $("#accordion").accordion( "activate" , 0);
-      $(this).update({to:'dataDriven'});    
+      try{
+          $(this).update({to:'dataDriven'});
+      }
+      catch(e){
+          console.log(e)
+      }
+      finally{
+          $.update({to:'dataDriven'});
+      }
       
       if(spreadSheet.validate(dataset)){
         // model.setDataset({
@@ -390,8 +419,7 @@ socr.dataTable= function () {
         console.log('Dataset is valid')
         view.displayResponse(' Entire dataset is selected ', 'success');
 
-      if(socr.exp.controllerSliderState==0)
-            $(".controller-handle").trigger("click");
+      socr.view.toggleControllerHandle("show");
         //select.selectAll();
        } else{
         console.log("Dataset isn't valid")
@@ -415,9 +443,13 @@ socr.dataTable= function () {
             console.log(' Select Data request with  '+ selectedCoords )  
             var dataset = $dataTable.inputtable('getSelectedData');
             $("#accordion").accordion( "activate" , 0);
-            $(this).update({to:'dataDriven'});    
-           if(socr.exp.controllerSliderState!=0)
-            $(".controller-handle").trigger("click");
+            try{
+            $(this).update({to:'dataDriven'});
+            }
+            catch(e){
+                console.log(e.message)
+            }
+           socr.view.toggleControllerHandle("hide");
             if(spreadSheet.validate(dataset)){
             //  model.setDataset({
 
@@ -552,12 +584,17 @@ socr.dataTable= function () {
     export : function(){
       console.log('Export the following datasets');
       console.log(stage.content);
-      model.setDataset({
+      var result=socr.model.setDataset({
         type:"spreadsheet",
         values:stage.content,
         range:stage.content.length,
         processed:false
       });
+      if(result == true){
+          $.update({to:'dataDriven'});
+          socr.view.toggleControllerHandle("show");
+          socr.view.updateSimulationInfo("Data Driven Experiment");
+      }
     },
     reset : function(){
       stage.index = 1;

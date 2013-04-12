@@ -66,7 +66,7 @@ return{
 			$("#grsbutton").addClass("disabled");	
 			socr.exp.current.generate();
 			$("#accordion").accordion( "activate" , 1);
-			view.updateCtrlMessage("dataset generated successfully.","success");
+			socr.view.updateCtrlMessage("dataset generated successfully.","success");
 		});
 
 		$('#nInput').on('change',function(){
@@ -80,7 +80,7 @@ return{
 	},
 	
 	generate: function(){
-		view.updateSimulationInfo();		//updates experiment info into third tile in the accordion
+		socr.view.updateSimulationInfo();		//updates experiment info into third tile in the accordion
 		socr.exp.cardExp.setVariable();
 		socr.exp.cardExp.createDataPlot(_n);			//create the canvas fro the dataset
 		$(".device-container").width(_width);
@@ -117,7 +117,7 @@ return{
 
 	createControllerView:function(){
 	console.log("createControllerView for socr.exp.cardExp executed!");
-	var html='<p class="toolbar"></p><p class="tool"><span id="nLabel" class="badge badge-warning" for="nInput"><var><var>n</var></var> = 10</span><span id="nvalue"></span><input id="nInput" type="range" tabindex="7" class="parameter" min="1" max="100" step="1"></p><p><div><span class="badge badge-warning"> K=<span id="kValue">2</span></span><div id="kValue-slider" style="display:inline-block;width:50%;margin-left:5%"></div></p><button class="btn" id="sdbutton">Generate DataSet!</button><button class="btn btn-danger" id="grsbutton">Generate Random Samples!</button></div>';
+	var html='<p class="toolbar"></p><p class="tool"><span id="nLabel" class="badge badge-warning" for="nInput"><var><var>n</var></var> = 10</span><span id="nvalue"></span><input id="nInput" type="range" tabindex="7" class="parameter" min="1" max="100" step="1"></p><p><div><span class="badge badge-warning"> K=<span id="kValue">1</span></span><div id="kValue-slider" style="display:inline-block;width:50%;margin-left:5%"></div></p><button class="btn" id="sdbutton">Generate DataSet!</button><button class="btn btn-danger" id="grsbutton">Generate Random Samples!</button></div>';
 	$('#controller-content').delay(1000).html(html);
 		$('.popups').popover();
 		try{
@@ -128,10 +128,9 @@ return{
 		}
 
 		$('.tooltips').tooltip();
-		var minKVal = socr.exp.multiK ? 2 : 1;
 		$( "#kValue-slider" ).slider({
-			value: minKVal,
-			min: minKVal,
+			value: 1,
+			min: 1,
 			max: 10,
 			step: 1,
 			slide: function( event, ui ) {

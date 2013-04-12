@@ -2,7 +2,7 @@
 * appView.js is the view object for the SOCR app.
 *
 *@author: selvam , ashwini 
-*
+*@return: {object}
 *SOCR - Statistical Online Computational Resource
 */
 
@@ -13,112 +13,130 @@ socr.view = function( model ){
 	var _currentVariable;				// [ARRAY] Reference to current inference varaible [mean , SD , count , percentile]
 	var _currentValues;					// [ARRAY] Reference to current inference variable's value of each random sample.
 
-/* public properties */	
-	runButton = $("#runButton"),
-	stepButton =$("#stepButton"),
-	stopButton =$("#stopButton"),
-	resetButton =$("#resetButton"),
-	stopSelect =$("#stopSelect"),
-	animationSpeed=$("#animationSpeed"),
-	datasetCanvas = $("#distCanvas"),
-	dotPlot=$("#dotPlot"),
-	countSize=$("#countSize"),
-	nSize=$('#nSize');
 
-	var inputHandle = $('.input-handle'),controllerHandle = $('.controller-handle') ;
-
-	/**
-
-
-	
 	/**
 	*@method: [private] _create
 	*@param :  start: the first sample number to be displayed
 	*@param :  size: how many samples to be displayed
+     * @return : {boolean}
 	*@desc:   populates the sampleList div with random samples
 	*/ 
 	function _create(start,size){
-		console.log("_create("+start+","+size+") funtion started");
-		y=parseInt(start)+size;
-		$('#sampleList').html('');		//first empty the sample list
-		_datapoints=$('#nSize').val();
-		//change the loop to a inverse while loop
-		for(var i=start;i<y;i++)
-			{
-			var temp=['<div class="entry"><div class="header">Sample<span class="values"> '];
-			temp.push(i);
-			temp.push('</span> &nbsp;&nbsp;  Datapoints:<span class="values">');
-			temp.push(_datapoints);
-			temp.push('</span>&nbsp;&nbsp;<a data-toggle="modal" href="#plot" class="tooltips" rel="tooltip" data-original-title="plot"><i class="icon-fullscreen plot" id="'+i+'"></i></a> &nbsp; <a href="#" class="tooltips" rel="tooltip" data-original-title="contribution"><i class="icon-filter contribution" id="'+i+'"></i></a>&nbsp; <a href="#" class="tooltips" rel="tooltip" data-original-title="toggle"><i class="icon-retweet toggle-sample" data-type="sample" id="'+i+'"></i></a></span>');
-			temp.push('<ul class="nav nav-tabs" id="sample-tabs'+i+'" ><li class="active"><a href="#sample-'+i+'1">1</a></li>');
-  			var j=2;
-  			while(j<=model.getK())
-  				{
-  					temp.push('<li><a href="#sample-'+i+j+'">'+j+'</a></li>');	
-  					j++;
-  				}
-		  	temp.push('</ul><div class="tab-content"><div class="tab-pane active" id="sample-1"><pre>'+model.getSample(i,"keys",1)+'</pre></div>');
- 			var j=2;
- 			while(j<=model.getK())
-  				{
-  					temp.push('<div class="tab-pane" id="sample-'+i+j+'"><pre>'+model.getSample(i,"keys",j)+'</pre></div>');
-  					j++;
-  				}
-		  	temp.push("</div>");
-			$('#sampleList').append(temp.join(''));
-			}
-		$('.tooltips').tooltip();
-		
-		/*plot icon is present on each child of the sampleList Div . It basically opens a popup and plots a bar chart of that particular sample.*/
-		$('.plot').on('click',function(e){
-			$('.chart').html('');
-			var sampleID=$(this).attr('id');
-			//var sampleID=e.target.id;
-			console.log("test"+sampleID);
-			var values=model.getSample(sampleID,"values");
-			//console.log("values for plot click:"+values);
-			var temp=values.sort(function(a,b){return a-b});
-			var start=Math.floor(temp[0]);
-			var stop=Math.ceil(temp[values.length-1])+1;
-			$('#plot').find('h3').text(' Sample : ' + sampleID );
-			socr.vis.generate({
-				parent : '.chart',
-			    data : values,
-			    height: 380,
-			    width: 500,
-			    //nature: 'discreete'
-				//range:[start,stop]
-	        	});
-		});//click binding for .plot
+        var _datapoints=$('#nSize').val(),
+            end=parseInt(start)+size,
+            j = 0,
+            k = model.getK();
 
-		/**toggle-sample icon is present on each child of the sampleList Div . It basically toggles the data if the sample and sampleValue are different.
-		*	TODO : disable this button if the app is data driven mode (as the sample and sampleValues are same.)
-		*/
-		$('.toggle-sample').on('click',function(){
-				var id=$(this).attr('id');
-				if($(this).attr('data-type')==='value')
-					{
-						$(this).parent().parent().find('pre').text(model.getSample(id,"keys"));
-						$(this).attr('data-type','sample');
-					}
-				else
-					{
-						$(this).parent().parent().find('pre').text(model.getSample(id,"values"));
-						$(this).attr('data-type','value');
-					}
-		});//click binding for .toggle-sample
+        if(size === undefined || start === undefined){
+            return false;
+        }
+
+        console.log("_create("+start+","+size+") function started");
+
+        $('#sampleList').html('');		//first empty the sample list
+
+        //generate the json object for mustache
+        var config = {entries:[]},obj={};
+        for(var i=start;i<end;i++){
+            obj.sampleNo = i;
+            obj.datapoints = _datapoints;
+            obj.sample = [];
+            var j=0;
+            while(j<=k-1){
+                var temp = obj.sample[j] = {};
+                if(j == 0){
+                    temp.class = "active";
+                }
+                else{
+                    temp.class = "";
+                }
+                temp.kIndex = j+1;
+                temp.id = i*(Math.pow(10,(Math.ceil(Math.log(i)/Math.log(10)))))+(j+1);
+                temp.values = model.getSample(i,"values",j+1);
+                temp.keys = model.getSample(i,"keys",j+1);
+                j++;
+            }
+            config.entries.push(obj);
+            obj={};         //destroying the object
+        }
+
+        $.get("partials/sampleList.tmpl",function(data){
+            var temp = Mustache.render(data,config);
+            $("#sampleList").html(temp);
+            //console.log(temp);
+            $('.tooltips').tooltip();
+            $('.nav-tabs li').click(function (e) {
+                e.preventDefault();
+                var kIndex = $(this).find("a").html();
+                //setting the k-index attribute of toggle-sample icon
+                $(this).parent().parent().find(".toggle-sample").attr('k-index',kIndex);
+                $(this).find('a').tab('show');
+            });
+
+            /*plot icon present on each child of the sampleList Div .
+            It basically opens a popup and plots a bar chart of that particular sample.*/
+            $('.plot').on('click',function(e){
+                e.preventDefault();
+                $('.chart').html('');
+                var id = $(this).attr('sample-number'),
+                    kIndex = $(this).parent().parent().find(".toggle-sample").attr('k-index');
+                //var sampleID=e.target.id;
+                var values=model.getSample(id,"values",kIndex);
+                for(var i=0;i<values.length;i++){
+                    values[i] = parseFloat(values[i]);
+                }
+                //console.log("values for plot click:"+values);
+                //var temp=values.sort(function(a,b){return a-b});
+                //var start=Math.floor(temp[0]);
+                //var stop=Math.ceil(temp[values.length-1])+1;
+                $('#plot').find('h3').text(' Sample : ' + id );
+                socr.vis.generate({
+                    parent : '.chart',
+                    data : values,
+                    height: 380,
+                    width: 500,
+                    method: 'discrete',
+                    variable : 'Frequency'
+                    //range:[start,stop]
+                });
+            });//click binding for .plot
+
+            /* toggle-sample icon is present on each child of the sampleList Div .
+             * It basically toggles the data if the sample and sampleValue are different.
+             *	TODO : disable this button if the app is data driven mode (as the sample and sampleValues are same.)
+             */
+            $('.toggle-sample').on('click',function(e){
+                e.preventDefault();
+                var id = $(this).attr('sample-number'),
+                    kIndex = $(this).parent().parent().find(".toggle-sample").attr('k-index');
+                console.log();
+                if($(this).attr('data-type')==='value'){
+                    $(this).parent().parent().find('div.active pre').text(model.getSample(id,"keys",kIndex));
+                    $(this).attr('data-type','keys');
+                }
+                else{
+                    $(this).parent().parent().find('div.active pre').text(model.getSample(id,"values",kIndex));
+                    $(this).attr('data-type','value');
+                }
+            });//click binding for .toggle-sample
+        }); //get call end
+
+
+
+
 			
-		$('.contribution').on('click',function(){
-			console.log("Mean of this sample:"+model.getMeanOf($(this).attr('id')));
+		$('.contribution').on('click',function(e){
+            e.preventDefault();
+            console.log("Mean of this sample:"+model.getMeanOf($(this).attr('id')));
 			$("#accordion").accordion( "activate" , 2);
-			console.log("dataset mean:"+model.getMeanOfDataset(1));
+			console.log("dataset mean:"+model.getMeanOf("dataset",1));
 			console.log("standard deviation:"+ model.getStandardDevOf($(this).attr('id')));
 			$('#dotplot').html('');
 			createDotplot({
 				variable : 'mean',
 				sample : {
 					mean : model.getMeanOf($(this).attr('id')),
-					meanDataset : model.getMeanOfDataset(1),
+					meanDataset : model.getMeanOf("dataset",1),
 					standardDev : model.getStandardDevOf($(this).attr('id'))
 				}
 			});
@@ -131,7 +149,7 @@ socr.view = function( model ){
 				if(setting.variable=='mean')
 					{
 						var values = model.getMean();
-						var datum = model.getMeanOfDataset(1);
+						var datum = model.getMeanOf("dataset",1);
 						console.log("Mean Values:"+ values );
 					}
 				else if (setting.variable=='standardDev')
@@ -146,17 +164,20 @@ socr.view = function( model ){
 						//var datum=model.getStandardDevOfDataset();
 					}
 				
+				datum = Math.floor(datum * 100) / 100;
 				var histogram = socr.vis.generate({
 					parent : '#dotplot',
 					data : values,
 					height:390,
-					range: [0,10],
-					dataSetMean :datum,
+					//range: [0,10],
+					datum :datum,
 					sample : setting.sample
 				});
+
+
 			}
 			
-			var html = '<div> Mean of Sample :'+ model.getMeanOf($(this).attr('id')) +' Mean of DataSet : '+ model.getMeanOfDataset() +' Standard Deviation :'+ model.getStandardDevOf($(this).attr('id')) +'</div>';
+			var html = '<div> Mean of Sample :'+ model.getMeanOf($(this).attr('id')) +' Mean of DataSet : '+ model.getMeanOf("dataset",1) +' Standard Deviation :'+ model.getStandardDevOf($(this).attr('id')) +'</div>';
 				
 			var table =['<table class="table table-striped>"'];
 			table.push('<tr><td>Mean Of Sample</td><td></td></tr>')
@@ -204,20 +225,39 @@ return{
 	*	@description - Method to toggle the controller slider
 	*
 	*/
-	toggleControllerHandle: function(){
-		$target = $('#slide-out-controller');
-		if(!$target.hasClass('active')){
-			$target.addClass('active').show().css({left:-425}).animate({left: 0}, 500);
-			$('.controller-handle').css({left:-30}).animate({left: 394}, 500);
-			socr.exp.controllerSliderState=1;
-		}
-		else{
-		$target.removeClass('active').animate({
-					left: -425
-				}, 500);
-			$('.controller-handle').css({left:400}).animate({left: -30}, 500);
-			socr.exp.controllerSliderState=0;
-		}
+	toggleControllerHandle: function(action){
+        console.log(action);
+        var $target = $('#slide-out-controller');
+        var show = function(){
+            $target.addClass('active').show().css({left:-425}).animate({left: 0}, 500);
+            $('.controller-handle').css({left:-30}).animate({left: 394}, 500);
+            socr.exp.controllerSliderState="show";
+        };
+        var hide = function(){
+            // if($target.hasClass('active')){
+            $target.removeClass('active').animate({left: -425}, 500);
+            $('.controller-handle').css({left:400}).animate({left: -30}, 500);
+            socr.exp.controllerSliderState="hide";
+        };
+        if(typeof action === "object"){
+            if(socr.exp.controllerSliderState == "hide"){
+                show();
+            }
+            else{
+                hide();
+            }
+        }
+        else if(action === "show" && socr.exp.controllerSliderState === "hide"){
+            show();
+            return true;
+        }
+        else if(action == "hide" && socr.exp.controllerSliderState == "show"){
+            hide();
+            return true;
+        }
+        else{
+            return false;
+        }
 
 	},
 
@@ -253,7 +293,8 @@ return{
 	reset:function(){
 		$('#displayCount').html('0');	//resetting the count to 0
 		$('#sampleList').html('');		//clear the sample List dive
-		$('#dataPlot').html('');		//clear dataPlot div
+        $('#showCount').html('');
+        $('#dataPlot').html('');		//clear dataPlot div
 		$('#dotplot').empty();			//clear dotPlot div
 		$('#accordion').accordion( "activate" , 0);
 		$('.pagination').html('');
@@ -287,7 +328,7 @@ return{
 	createList:function(start,end){
 		console.log('createList('+start+','+end+') invoked ');
 		//if(Object.getOwnPropertyNames(model.bootstrapGroupKeys).length === 0){ 
-		if(model.getSample(1) === false){
+		if(socr.model.getRSampleCount() === 0){
 			// if no random samples have been generated, display a alert message!
 			$("#sampleList").html('<div class="alert alert-error"><a class="close" data-dismiss="alert" href="#">x</a><h4 class="alert-heading">No Random samples to show!</h4>Please generate a dataset using the list of experiments or manually enter the data. Then generate some random samples from the controller tile before click "show"</div>');
 			}
@@ -351,51 +392,88 @@ return{
 	*@return : none
 	*/
 	createControllerView:function(){
-		$( "#amount" ).val( "$" + $( "#slider" ).slider( "value" ) );
-		var html='<div id="buttonPanel"><a href="#" class="tooltips" rel="tooltip" title="Step"><button class="btn" type="button" id="stepButton" tabindex="1" title="Step"><i class="icon-step-forward"></i></button></a> <a href="#" class="tooltips" rel="tooltip" title="Run"><button class="btn btn-success" type="button" id="runButton" tabindex="2" title="Run" ><i class="icon-fast-forward"></i></button></a><a href="#" class="tooltips" rel="tooltip" title="Stop"><button class="btn btn-danger" type="button" id="stopButton" tabindex="3" title="Stop" ><i class="icon-stop" ></i></button></a><a href="#" class="tooltips" rel="tooltip" title="Reset"><button class="btn" type="button" id="resetButton" tabindex="4" title="Reset" ><i class="icon-refresh" ></i></button></a><span><i class="icon-question-sign popups" rel="popover" data-content="<ul><li>Step Button : generates 1 sample</li><li>Run Button : generates X sample..X can be set from the option below</li><li>Stop Button :Stops the sample generation</li><li>Reset Button : Resets all values</li></ul>" data-original-title="Controls"></i></span>&nbsp;&nbsp;<a href="#"><button class="btn controller-back"><i class="icon-arrow-left" ></i></button></a></div><div id="speed-controller"><div><span class="badge badge-warning" style="float:left;">Animation Time: <span id="speed-value">200</span>ms</span></div><div id="speed-selector"></div></div><div class="tool"><span>Generate</span><input type="text" id="countSize" class="input-mini" value="1000"> <span>Samples with </span><input type="text" id="nSize" class="input-mini" value="50"><span>Datapoint per sample.</span></div><div><form class="form form-inline"><select id="variable" style="width:30%"><option value="f-value">F-Value</option><option value="mean">Mean</option><option value="count">Count</option><option value="standardDev">Standard Dev.</option><option value="Percentile">Percentile</option></select><input type="text" placeholder="binsize" name="binsize" class="input-mini"><span><a href="#" class="btn btn-danger popups" rel="popover" data-content="This will create a plot of the variable for each generated sample. Click this once you have generated some samples!" data-original-title="Inference" id="infer">Infer!</a></span></form></div>';
-		$('#controller-content').html(html);
-		$( "#speed-selector" ).slider({
-			value:400,
-			min: 100,
-			max: 2000,
-			step: 50,
-			slide: function( event, ui ) {
-			$( "#speed-value" ).html( ui.value );
-			}
-		});
-		$('.controller-back').on('click',function(){
-			try{
-			socr.exp.current.createControllerView();
-			
-			}
-			catch(err){
-				console.log(err.message);
-			}
-			socr.exp.current.initialize();
-		});
+        var _datapoints = socr.model.getDataset().length;
+        //define the configuration json file
+        if(socr.model.getK() === 1){
+            var variables = ["mean","count"];
+            var disabled = ["standardDev"];
+            var _showIndex = false;
+            var indexes = [];
+        }
+        else{
+            var variables = ["f-value","p-value","mean","count"];
+            var disabled = ["standardDev"];
+            var _showIndex = true;
+            var i = socr.model.getK(), indexes=[];
+            while(i--){
+                indexes[i]=i+1;
+            }
+        }
+        //console.log("k "+socr.model.getK());
+        //console.log(variables);
+        var config = {
+            animationSpeed:false,
+            variables:variables,
+            disabled:disabled,
+            datapoints:_datapoints,
+            showIndex:_showIndex,
+            index:indexes
+        };
+        $.get('partials/controller.tmpl',function(data){
+            var _output = Mustache.render(data, config);
+            $('#controller-content').html(_output);
+            socr.controller.initController();
 
-		$('#variable').on('click',function(){
-			var _percentile=$('#percentile-control');
-			if($(this).val()=='Percentile')
-			{
-				if(_percentile.length)
-					_percentile.show();
-				else
-					$('#controller-content').append('<div id="percentile-control"><div><span class="badge badge-warning" style="float:left;">Percentile: <span id="percentile-value">10</span>%</span></div><div id="percentile-selector"></div></div>');
-				//create a slider
-				$('#percentile-selector').slider({
-				value:20,
-				min: 10,
-				max: 90,
-				step: 5,
-				slide: function( event, ui ) {
-					$( "#percentile-value" ).html( ui.value );
-					}
-				});
-			}
-			else
-				_percentile.hide();
-		});
+//            $( "#speed-selector" ).slider({
+//                value:400,
+//                min: 100,
+//                max: 2000,
+//                step: 50,
+//                slide: function( event, ui ) {
+//                    $( "#speed-value" ).html( ui.value );
+//                }
+//            });
+            $('.controller-back').on('click',function(e){
+                e.preventDefault();
+                try{
+                    socr.exp.current.createControllerView();
+
+                }
+                catch(err){
+                    console.log(err.message);
+                }
+                socr.exp.current.initialize();
+            });
+            $('#variable').on('change',function(){
+                if($(this).val()=='mean' || $(this).val()=='count'){
+                    $("#index").attr("disabled",false);
+                }
+                else{
+                    $("#index").attr("disabled",true);
+                }
+
+//                var _percentile=$('#percentile-control');
+//                if($(this).val()=='Percentile'){
+//                    if(_percentile.length)
+//                        _percentile.show();
+//                    else
+//                        $('#controller-content').append('<div id="percentile-control"><div><span class="badge badge-warning" style="float:left;">Percentile: <span id="percentile-value">10</span>%</span></div><div id="percentile-selector"></div></div>');
+//                    //create a slider
+//                    $('#percentile-selector').slider({
+//                        value:20,
+//                        min: 10,
+//                        max: 90,
+//                        step: 5,
+//                        slide: function( event, ui ) {
+//                            $( "#percentile-value" ).html( ui.value );
+//                        }
+//                    });
+//                }
+//                else
+//                    _percentile.hide();
+            });
+
+        });
 	},
 	
 	/**
@@ -434,12 +512,12 @@ return{
 			var self = $("#device"+sampleNumber);	//reference to the device (i.e. coin , card, dice) canvas
 			var content=self.clone();				// make a copy of the sample canvas
 			self.addClass('removable');
-			currentX=$("#device"+sampleNumber+"-container").position().left; //get the X position of current sample canvas
+			var currentX=$("#device"+sampleNumber+"-container").position().left; //get the X position of current sample canvas
 			console.log('currentX:'+currentX);
-			currentY=$("#device"+sampleNumber+"-container").position().top;  //get the Y position of current sample canvas
+			var currentY=$("#device"+sampleNumber+"-container").position().top;  //get the Y position of current sample canvas
 			console.log('currentY:'+currentY);
 			
-			samplesInRow=$('#generatedSamples').width()/_dimensions['width'] -1;				//number of samples in a row
+			var samplesInRow=$('#generatedSamples').width()/_dimensions['width'] -1;				//number of samples in a row
 			
 			/*Block to adjust the generatedSamples div height*/
 			var divHeight=(stopCount/samplesInRow)*_dimensions['height'];
@@ -492,7 +570,7 @@ return{
 				else
 					{
 						$( ".ui-accordion-header" ).removeClass("ui-state-disabled");
-						view.enableButtons();
+						socr.view.enableButtons();
 						console.log("enableButtons() invoked");
 					}
 		}
@@ -500,11 +578,14 @@ return{
 	
 	/**
 	*@method: createDotPlot
-	*@description: Dot plot tab in the accordion is populated by this call. call invoked when "infer" button pressed in the controller tile.
-	*@return : none
+	*@description: Dot plot tab in the accordion is populated by this call.
+     * Call invoked when "infer" button pressed in the controller tile.
+	*@return : {boolean}
 	*/
 	createDotplot:function(setting){
-	
+	    if(setting.variable == null){
+            return false
+        }
 		_currentVariable=setting.variable;
 		$("#accordion").accordion( "activate" , 2);
 
@@ -517,96 +598,182 @@ return{
 			return Math.min.apply( Math, array );
 		};
 		//setting.variable;
-		if(setting.variable=='mean'){
-			var values = model.getMean();			//Mean values of all the generated random samples
-			var datum = model.getMeanOfDataset(1);	//datum is the dataset mean value
-			console.log("Mean Values:"+ values );	
-		}
-		else if (setting.variable=='standardDev'){
-			var values = model.getStandardDev();	//Standard deviation values of all the generated random samples
-			var datum=model.getStandardDevOfDataset(1);		//datum is the dataset SD value
-			console.log("SD Values:"+ values );
-		}
-		else if (setting.variable=='count'){
-			var values = model.getCount();	//Standard deviation values of all the generated random samples
-			var datum=model.getCountOfDataset(1);		//datum is the dataset SD value
-			console.log("Count Values:"+ values );
-		}
-		else if(setting.variable == 'percentile'){
-			try{
-				var pvalue=parseInt($('#percentile-value').html());
-				//console.log(pvalue);
-			}
-			catch(err)
-			{
-				console.log("unable to read the percentile value from DOM. setting default value to 50%");
-				var pvalue=50;
-			}
-			var values = model.getPercentile(pvalue);
-			var datum=model.getPercentileOfDataset(pvalue);
-			//var datum=model.getStandardDevOfDataset();
-			console.log("Percentile Values:"+ values );
-		}
-		else{
-			var values=model.getF();
-			var datum=model.getFof("dataset");
-			console.log(values);
-		}
+        switch(setting.variable){
+
+            case 'mean':
+                var values = model.getMean(setting.index);			//Mean values of all the generated random samples
+                var datum = model.getMeanOf("dataset",setting.index);	//datum is the dataset mean value
+                //console.log("Mean Values:"+ values );
+                //console.log("datum value:"+ datum) ;
+                break
+
+            case 'standardDev':
+                var values = model.getStandardDev(setting.index);	//Standard deviation values of all the generated random samples
+                var datum=model.getStandardDevOfDataset(setting.index);		//datum is the dataset SD value
+                console.log("SD Values:"+ values );
+                break
+
+            case 'percentile':
+                try{
+                    var pvalue=parseInt($('#percentile-value').html());
+                    //console.log(pvalue);
+                }
+                catch(err)
+                {
+                    console.log("unable to read the percentile value from DOM. setting default value to 50%");
+                    var pvalue=50;
+                }
+                var values = model.getPercentile(pvalue);
+                var datum=model.getPercentileOfDataset(pvalue);
+                //var datum=model.getStandardDevOfDataset();
+                console.log("Percentile Values:"+ values );
+                break
+
+            case 'count':
+                var values = model.getCount(setting.index);	//Standard deviation values of all the generated random samples
+                var datum=model.getCountOf("dataset",setting.index);		//datum is the dataset SD value
+                console.log("Count Values:"+ values );
+                break
+
+            case 'f-value':
+                var values=model.getF();
+                var datum=model.getFof("dataset").fValue;
+
+                console.log("F-values"+values);
+                break
+
+            case 'p-value':
+                var values=model.getP();
+                var datum=model.getPof("dataset");
+//                console.log("P values"+values);
+                break
+
+            default :
+                var values=model.getMean(setting.index);
+                var datum=model.getMeanOf("dataset",setting.index);
+                console.log(values);
+                break
+
+        }
 			
 		var temp=values.sort(function(a,b){return a-b});
 		var start=Math.floor(temp[0]);
 		var stop=Math.ceil(temp[values.length-1]);
-		console.log("start"+start+"stop"+stop);
-		
-
-
+		console.log("start: "+start+" stop: "+stop);
+		if(setting.variable === "p-value"){
+            var total = temp.length, lSide, rSide, start =0 , end = temp.length- 1, index, flag=0;
+            if(datum<temp[0]){
+                lSide = 0; rSide = 100;
+            }
+            else if(datum>temp[temp.length-1]){
+                lSide = 100; rSide = 0;
+            }
+            else {
+                while(end != (start+1)){
+                    index = Math.ceil((start+end)/2) ;
+                    if(datum == temp[index]){
+                        break;
+                    }
+                    else if(datum < temp[index] ){
+                        end = index;
+                    }
+                    else{
+                        start = index;
+                    }
+                } //while
+                lSide = (index/total)*100;
+                rSide = 100 - lSide;
+            }
+        console.log("total: "+total );
+        console.log("index: "+index);
+        console.log("R Side : "+rSide+".... L Side : "+lSide);
+        }
 		var binNo = $('input[name="binno"]').val() != '' ? $('input[name="binno"]').val() : 10;
-
+		datum = Math.floor(datum*100) / 100;
 		_currentValues=values;
-		var dotplot = socr.vis.generate({
+		try{
+            var dotplot = socr.vis.generate({
 			parent : '#dotplot',
 			data : values,
 			height:390,
 			range: [start,stop],
 			datum :datum,
 			bins : binNo,
-			variable: setting.variable	,
-			// nature: 'continuous'			
+			variable: setting.variable,
+			pl : lSide,
+			pr : rSide
+			// nature: 'continuous'
 		});
+        }
+        catch(e){
+            console.log(e);
+            var dotplot = socr.vis.generate({
+                parent : '#dotplot',
+                data : values,
+                height:390,
+                range: [start,stop],
+                bins : binNo,
+                variable: setting.variable
+                // nature: 'continuous'
+            });
+        }
 
-		 // socr.vis.addBar({
-		 // 	elem: dotplot,
-		 // 	variable: setting.variable,
-		 // 	datum: datum
-		 // });
-		 view.updateCtrlMessage("Infer plot created.","success");
-		
+//        try{
+//		socr.vis.addBar({
+//		  	elem: dotplot,
+//		  	variable: setting.variable,
+//		  	datum: datum
+//		});
+//        }
+//        catch(e){
+//            console.log(e);
+//        }
+//        finally{
+//            socr.vis.addBar({
+//                elem: dotplot,
+//                variable: setting.variable,
+//                datum: datum
+//            });
+//        }
+		this.updateCtrlMessage("Infer plot created.","success");
+        return true;
 	},
 	
 	/**
-	*@method: updateSimulationInfo
-	*@description: Called when the 'step button' or 'run button' is pressed in the controller tile. Call is made in appController.js
-	*@return : none
-	*/
-	updateSimulationInfo:function(){
+	 *@method updateSimulationInfo
+	 *@desc Called when the 'step button' or 'run button' is pressed in the controller tile.
+     * Call is made in appController.js
+	 *@return none
+	 */
+	updateSimulationInfo:function(name){
 		console.log('updateSimulationInfo() invoked');
-		try{
-			var array=['<table class="table table-striped">'];
-			array.push('<tr><td>Experiment Name</td><td><strong>'+socr.exp.current.name+'</strong></td></tr>');
-			array.push('<tr><td>DataSet Size </td><td><strong>'+socr.exp.current.getDatasetSize()+'</strong></td></tr>');
-			array.push('<tr><td>Number of Random Samples : </td><td><strong>'+model.getRSampleCount()+'</strong></td></tr>');
-			//dont show mean and standard deviation in info tab when there is no mean or sd.
-			if(model.getMeanOfDataset()!==false)
-				{
-					array.push('<tr><td>DataSet Mean : </td><td><strong>'+model.getMeanOfDataset()+'</strong></td></tr>');
-					array.push('<tr><td>DataSet Standard Deviation: </td><td><strong>'+model.getStandardDevOfDataset()+'</strong></td></tr>');
-				}
-			array.push('</table>');
-		}
-		catch(err){
-			console.log("error:"+err.message);
-		}
-		$('#details').html(array.join(''));
+        if(name !== "Data Driven Experiment"){
+            try{
+                name = socr.exp.current.name;
+            }
+            catch(e){
+                name= "Data Driven Experiment";
+            }
+        }
+            var config = {
+                name : name,
+                k : socr.model.getK(),
+                groups:[],
+                rCount: model.getRSampleCount()
+            };
+            for(var i=1;i<=config.k;i++){
+                var obj={};
+                obj.mean = socr.model.getMeanOf("dataset",i);
+                obj.size = socr.model.getDataset(i).length;
+                obj.number = i;
+                config.groups.push(obj);
+            }
+            //console.log(config);
+
+            $.get("partials/info.tmpl",function(data){
+                var temp = Mustache.render(data,config);
+                $('#details').html(temp);
+            });
 	},
 	
 	/**
