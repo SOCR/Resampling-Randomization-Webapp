@@ -5,7 +5,7 @@ describe("appModel", function() {
     });
 
     it("should have a generateTrail function", function() {
-        expect(model.generateTrail(null)).toEqual(false);
+        expect(model.generateTrail).toBeDefined();
 
     });
 

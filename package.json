@@ -1,0 +1,23 @@
+{
+  "author": {
+    "name": "Selvam Palanimalai,Ashwini Khare",
+    "email": "selvam1991@gmail.com"
+  },
+  "scripts": {
+    "start": "node server.js"
+  },
+  "version": "0.1.0-2",
+  "dependencies": {},
+  "engines": {
+    "node": "0.8.x"
+  },
+  "analyze": false,
+  "readme": "A modern and portable SOCR web-app that demonstrates the concepts of statistical analysis such as resampling, randomization and probabilistic simulation.",
+  "readmeFilename": "ReadMe.md",
+  "description": "[https://github.com/SOCRedu/Resampling-Randomization-WebApp](Socr randomization webapp)",
+  "dist": {
+    "shasum": "fceea3c0a1a766a6762e6bd8d7b0d57a85ecbb2f"
+  },
+  "subdomain": "socr-randomization",
+  "name": "socr-randomization"
+}
