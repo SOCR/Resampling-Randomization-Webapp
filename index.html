@@ -61,7 +61,7 @@
 		</div>
 	</div>
 	
-  <div id='header'>
+ 	<div id='header'>
 		<div class="navbar navbar-fixed-top navbar-inverse">
 			<div class="navbar-inner">
 				<div class="container-fluid">
@@ -76,10 +76,12 @@
 							<li><a  href="http://wiki.stat.ucla.edu/socr/index.php/SOCR_ResamplingSimulation_Activity" target='_blank'>About</a></li>
 							<li><a data-toggle="modal" href="#simulationDesc">Simulations</a></li>
 							<!--<a data-toggle="modal" href="#help"><button class='btn btn-danger' >Need Help!</button></a>-->
+							<li class="help"><a data-toggle="modal" href="#faq">Help!</a></li>
 							<li><a data-toggle="modal" href="#faq">FAQ</a></li>
 							<li class="dropdown">
 								<a id="more" href="#" role="button" class="dropdown-toggle" data-toggle="dropdown">More <b class="caret"></b></a>
 								<ul class="dropdown-menu" role="menu" aria-labelledby="more">
+									<li><a tabindex="-1" href="http://goo.gl/MNEi7" target="_blank">Screencasts</a></li>
 									<li><a tabindex="-1" href="#share" data-toggle="modal">Buzz</a></li>
 									<li><a tabindex="-1" href="#generate-url" data-toggle="modal" id='share-instance-button'>Share Instance</a></li>
 								</ul>
@@ -450,18 +452,7 @@
     
     head.js("js/init.js",
     		"js/lib/jquery.min.js",
-            "js/bootstrap/bootstrap-transition.js",
-            "js/bootstrap/bootstrap-alert.js",
-            "js/bootstrap/bootstrap-tab.js",
-            "js/bootstrap/bootstrap-button.js",
-            "js/bootstrap/bootstrap-modal.js",
-            "js/bootstrap/bootstrap-dropdown.js",
-            "js/bootstrap/bootstrap-scrollspy.js",
-            "js/bootstrap/bootstrap-tooltip.js",
-            "js/bootstrap/bootstrap-popover.js",
-            "js/bootstrap/bootstrap-collapse.js",
-            "js/bootstrap/bootstrap-carousel.js",
-            "js/bootstrap/bootstrap-typeahead.js",
+            "js/bootstrap/bootstrap.min.js",
 			{coreFunctions:"js/exp/core.js"},
 			{binomialCoin:"js/exp/binomialCoin.js"},
 			{ballAndUrn:"js/exp/ballAndUrn.js"},
