@@ -1,5 +1,5 @@
 socr.tutorial=(function(){
-	var _status = "on";
+	var _status = "off";
 	var _steps = {
 		"intro":[".controller-handle",
 				"#showListSlider",
@@ -18,7 +18,7 @@ socr.tutorial=(function(){
 		"generatingDotplot":[".inference-variable"]
 	};
 	var _data ;
-	$.getJSON("js/tutorial-data.json").success(
+	$.getJSON("js/tutorial/tutorial-data.json").success(
 		function(data){
 			socr.tutorial.setData(data)
 		}
@@ -43,6 +43,14 @@ socr.tutorial=(function(){
             else
                 return false
 
+        },
+        toggleStatus:function(){
+            if(_status === "on"){
+                _status = "off"
+            }
+            else{
+                _status = "on";
+            }
         },
         setData:function(data){
 			_data = data;

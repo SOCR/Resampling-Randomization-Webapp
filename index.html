@@ -76,7 +76,7 @@
 							<li><a  href="http://wiki.stat.ucla.edu/socr/index.php/SOCR_ResamplingSimulation_Activity" target='_blank'>About</a></li>
 							<li><a data-toggle="modal" href="#simulationDesc">Simulations</a></li>
 							<!--<a data-toggle="modal" href="#help"><button class='btn btn-danger' >Need Help!</button></a>-->
-							<li class="help"><a data-toggle="modal" href="#faq">Help!</a></li>
+							<li class="help"><a href="#">Help!</a></li>
 							<li><a data-toggle="modal" href="#faq">FAQ</a></li>
 							<li class="dropdown">
 								<a id="more" href="#" role="button" class="dropdown-toggle" data-toggle="dropdown">More <b class="caret"></b></a>
@@ -89,7 +89,7 @@
 						</ul>
 		  			</div><!--/.nav-collapse -->
 		  			<button class="btn btn-medium" id="reset-button"><i class="icon-refresh"></i>Reset</button>
-				
+
 				</div>
 			</div>
 		</div>
@@ -243,7 +243,7 @@
 									
 						</div>	
 								
-						<h3 data-intro="All generated initial K initial dataset group " data-position="top">
+						<h3 class="dataset-header">
 							<a href="#">DataSet <i class="icon-question-sign popups" rel="popover" data-content="It is graphical view of the dataset from where the random samples are generated.Goto input tab to get started!" data-original-title="Dataset"></i></a>
 						</h3>
 						<div class='q'>
@@ -261,7 +261,7 @@
 						<div id='details'></div><div id="contribution-details"></div>
 					</div>
 					
-					<a class="controller-handle" data-intro="control panel - Run, Plot, Generate." data-position="right" href="#"><button class='btn-primary btn-large '>Controller</button></a>
+					<a class="controller-handle" href="#"><button class='btn-primary btn-large '>Controller</button></a>
 					<div id="slide-out-controller" >
 						<div class="row-fluid">
 							<div class="span4 heading">Controller</div>
@@ -274,7 +274,7 @@
 					</div><!--/slide-out-controller-->
 		  		</div><!--span8-->
 				<div class="span4">
-					<h3 data-intro="Contains all the random sample generated" data-position="left">Sample List
+					<h3>Sample List
 						<span>
 							<i class="icon-question-sign popups" rel="popover" data-content="It shows the list of generated samples when the show button is pressed." data-original-title="Sample List"></i>
 						</span>
@@ -284,7 +284,7 @@
 						<span class="badge badge-warning">Samples Generated: <span id='displayCount'>0</span></span>
 						<span class="badge badge-success">Showing <span id='showCount'>0</span> samples</span>
 					</div>  
-					<div id='showListSlider' data-intro="Selector to show specific random samples" data-position="bottom">
+					<div id='showListSlider'>
 						<div id="range"></div>
 						<div>
 							<input type='text' class='show-list-start' placeholder='start' style='width:60px'> - <input type='text' class='show-list-end' placeholder='end' style='width:60px'>
@@ -469,11 +469,13 @@
 			"js/lib/jtweet/jquery.jtweetsanywhere-1.3.1.min.js",
 			"js/lib/jquery.transit.min.js",
 			"js/lib/jquery.easing.1.3.js",
+            "js/lib/jquery.pubsub.js",
 			"js/input/data.js",
 			"js/vis/tooltip.js",
 			"js/tools/FCal.js",
             "js/lib/mustache/mustache.js",
-            "js/lib/chardinjs/chardinjs.min.js"
+            "js/lib/chardinjs/chardinjs.min.js",
+            "js/tutorial/tutorial.js"
 	    	);
     
 	head.ready(function () {

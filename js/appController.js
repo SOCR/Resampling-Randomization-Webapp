@@ -55,6 +55,11 @@ socr.controller=function(model,view){
 		--------------------------------*/
 		$('.controller-handle').on('click',socr.view.toggleControllerHandle);
 
+        $(".help").on("click",function(){
+            socr.tutorial.toggleStatus()
+           console.log(socr.tutorial.getStatus());
+           (socr.tutorial.getStatus() === "on")?$(this).css("background-color","green"):$(this).css("background-color","");
+        });
 		$("#showButton").on('click',function(){
 			//a check to see if the sample count is 0 or not
 			socr.view.createList($('.show-list-start').val(),$('.show-list-end').val());
