@@ -229,8 +229,8 @@ return{
         console.log(action);
         var $target = $('#slide-out-controller');
         var show = function(){
-            $target.addClass('active').show().css({left:-425}).animate({left: 0}, 500);
-            $('.controller-handle').css({left:-30}).animate({left: 394}, 500);
+            $target.addClass('active').show().css({left:-425}).animate({left: 0}, 200);
+            $('.controller-handle').css({left:-30}).animate({left: 394}, 200);
             socr.exp.controllerSliderState="show";
         };
         var hide = function(){
@@ -342,6 +342,7 @@ return{
 					_createPagination(start,end);
 					_create(start,500);
 				}
+            PubSub.publish("Sample List generated");
 			}
 	},
 	/**

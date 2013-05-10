@@ -37,6 +37,7 @@ socr.controller=function(model,view){
             view.updateCtrlMessage("samples generated sucessfully.","success",2000);
             view.updateStatus("finished");
             view.updateSimulationInfo();
+            PubSub.publish("Random samples generated");
             _this.stop();
 	    }
 	}
@@ -55,10 +56,10 @@ socr.controller=function(model,view){
 		--------------------------------*/
 		$('.controller-handle').on('click',socr.view.toggleControllerHandle);
 
-        $(".help").on("click",function(){
-            socr.tutorial.toggleStatus()
-           console.log(socr.tutorial.getStatus());
-           (socr.tutorial.getStatus() === "on")?$(this).css("background-color","green"):$(this).css("background-color","");
+        $(".help").on("click",function(e){
+            e.preventDefault();
+            socr.tutorial.toggleStatus();
+            (socr.tutorial.getStatus() === "on")?$(this).css("background-color","green"):$(this).css("background-color","");
         });
 		$("#showButton").on('click',function(){
 			//a check to see if the sample count is 0 or not
@@ -176,6 +177,7 @@ socr.controller=function(model,view){
 			else{
 			    socr.controller.setDotplot();
                 socr.view.toggleControllerHandle("hide");
+                setTimeout(function(){PubSub.publish("Dotplot generated")},500);
             }
 		});
 	},

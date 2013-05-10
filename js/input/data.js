@@ -81,8 +81,9 @@ socr.dataTable= function () {
           socr.exp.current=socr.exp[id];
           socr.exp.current.createControllerView();
           socr.exp.current.initialize();
+          socr.view.toggleControllerHandle("show");
           simulationDriven.expLoaded.push(id);
-         socr.view.toggleControllerHandle("show");
+          setTimeout(function(){PubSub.publish("Experiment loaded")},500);
       },
       displayText : function(details){
           console.log(details);

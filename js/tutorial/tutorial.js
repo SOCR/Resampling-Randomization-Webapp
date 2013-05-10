@@ -1,21 +1,22 @@
 socr.tutorial=(function(){
 	var _status = "off";
 	var _steps = {
-		"intro":[".controller-handle",
+		"Introduction to help":[".controller-handle",
 				"#showListSlider",
-				".dataset-header"],
+				".dataset-header","#footer"],
 		"selectType":["#datadriven-splash",
 				".menu-datadriven",
 				".menu-simulationdriven"],
-		"simulationSelected":["#simulationdriven-details",
-				".controller-handle"],
+		"Experiment loaded":["#simulationdriven-details",
+				"#controller-content","#footer"],
 		//"spreadsheetSelected":["datadriven-import"],
 		"stage":["datadriven-stage"],
-		"generatingRSamples":["#controller-content .tool",
-				"#buttonPanel",
-				".inference-variable"],
-		"RSamplesGenerated":[".inference-variable","#showListSlider"],
-		"generatingDotplot":[".inference-variable"]
+        "Initial dataset generated":[".dataset-header","#grsbutton"],
+		"Datadriven controller loaded":["#controller-content"],
+		"Random samples generated":[".inference-variable","#showListSlider"],
+		"generatingDotplot":[".inference-variable"],
+        "Sample List generated":["#sampleList"],
+        "Dotplot generated":["#dotplot"]
 	};
 	var _data ;
 	$.getJSON("js/tutorial/tutorial-data.json").success(
@@ -31,13 +32,42 @@ socr.tutorial=(function(){
 		else
 			return false
 	}
+
+    function _callbacks(opt){
+     switch(opt){
+         case "register":
+             PubSub.subscribe("Introduction to help",socr.tutorial.start);
+             //PubSub.publish("Introduction to help",{help:"intro"}) this will trigger it.
+             PubSub.subscribe("Experiment loaded",socr.tutorial.start);
+             PubSub.subscribe("Initial dataset generated",socr.tutorial.start);
+             PubSub.subscribe("Random samples generated",socr.tutorial.start);
+             PubSub.subscribe("Datadriven controller loaded",socr.tutorial.start);
+             PubSub.subscribe("Dotplot generated",socr.tutorial.start);
+             PubSub.subscribe("Sample List generated",socr.tutorial.start);
+             console.log("registered");
+             break;
+         case "unregister":
+             console.log("unregistered");
+             PubSub.unsubscribe(socr.tutorial.start);
+             break;
+     }
+    }
+
 	return{
 		getStatus:function(){
             return _status;
         },
         setStatus:function(status){
+            console.log("new state:"+status);
             if(typeof status === "string"){
-                _status = (status === "on")?"on":"off";
+                if(status === "on"){
+                    _status="on";
+                    _callbacks("register");
+                }
+                else{
+                    _status = "off";
+                    _callbacks("unregister");
+                }
                 return true
             }
             else
@@ -45,20 +75,28 @@ socr.tutorial=(function(){
 
         },
         toggleStatus:function(){
-            if(_status === "on"){
-                _status = "off"
+            console.log("current state:"+this.getStatus());
+            try{
+                if(_status === "on"){
+                    this.setStatus("off");
+                }
+                else{
+                    this.setStatus("on");
+                }
             }
-            else{
-                _status = "on";
+            catch(e){
+                console.log(e.message);
             }
         },
         setData:function(data){
 			_data = data;
 			return this;
 		},
-		start:function(step){
-			if(step){
-				ids=_getIds(step);
+		start:function(msg,data){
+            if(typeof msg === "string"){
+                var step = msg;
+                console.log(step);
+				var ids=_getIds(step);
 				//break the ids
 				//ids=ids.split("/");
 				for(var i=0;i<=ids.length-1;i++){

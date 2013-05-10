@@ -21,7 +21,8 @@
             console.log("dataDriven tab has been clicked!");
             socr.controller.loadController('dataDriven');
             console.log('DataSet: '+socr.model.getDataset());
-    	}
+            PubSub.publish("Datadriven controller loaded");
+        }
     	if(setting.to == 'simulationDriven'){	
     		console.log("Update.js : simulationDriven tab has been clicked!");
     	    $("#input").inputtable('clear'); 		//clear the input sheet 

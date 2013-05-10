@@ -63,6 +63,8 @@ function _tossCoin(){
 			}
 		//console.log(_datasetKeys); 
 		//console.log(_datasetValues);
+        socr.view.updateCtrlMessage("dataset generated successfully.","success");
+        PubSub.publish("Initial dataset generated");
 		$("#grsbutton").removeClass("disabled"); 
 		socr.exp.binomialCoin.reset();
 	}
@@ -86,7 +88,7 @@ return{
 			$("#grsbutton").addClass("disabled");	
 			socr.exp.binomialCoin.generate();		
 			$("#accordion").accordion( "activate" , 1);
-			socr.view.updateCtrlMessage("dataset generated successfully.","success");
+
 			
 		});
 
