@@ -88,8 +88,6 @@ return{
 			$("#grsbutton").addClass("disabled");	
 			socr.exp.binomialCoin.generate();		
 			$("#accordion").accordion( "activate" , 1);
-
-			
 		});
 
 		$('#nInput,#pInput').on('change',function(){

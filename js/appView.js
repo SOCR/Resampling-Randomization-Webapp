@@ -231,6 +231,8 @@ return{
         var show = function(){
             $target.addClass('active').show().css({left:-425}).animate({left: 0}, 200);
             $('.controller-handle').css({left:-30}).animate({left: 394}, 200);
+            $target.addClass('active').show().css({left:-425}).animate({left: 0}, 500);
+            $('.controller-handle').css({left:-30}).animate({left: 394}, 500);
             socr.exp.controllerSliderState="show";
         };
         var hide = function(){
