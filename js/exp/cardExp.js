@@ -28,6 +28,7 @@ function _dealCard(){
 	if (_tempK < _K){
 		var _datum=_d[_tempK][_tempN];
 		_hand[_count].setValue(_datum);
+		console.log(typeof _datum);
 		_datasetValues[_tempK][_tempN]=_datasetKeys[_tempK][_tempN]=_datum;
 		_count++;
 		_tempN++;
@@ -137,6 +138,7 @@ return{
 			$( "#kValue" ).html( ui.value );
 			}
 		});
+		PubSub.publish("controller view for cardExp created")
 	},
 
 	createDataPlot:function(size){

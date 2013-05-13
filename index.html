@@ -123,6 +123,7 @@
 										<li> <a data-rel="exp_binomialCoin">Binomial Coin Toss</a> </li>
 										<li> <a data-rel="exp_ballAndUrn">Ball and Urn</a> </li>
 										<li> <a data-rel="exp_cardExp">Card Experiment</a> </li>
+										<li> <a data-rel="exp_betaBinomial">Beta Binomial Experiment</a> </li>
 									</ul>
 								</div> 
 							</section>
@@ -453,11 +454,13 @@
     
     head.js("js/init.js",
     		"js/lib/jquery.min.js",
+    		"js/lib/async.js",
             "js/bootstrap/bootstrap.min.js",
 			{coreFunctions:"js/exp/core.js"},
 			{binomialCoin:"js/exp/binomialCoin.js"},
 			{ballAndUrn:"js/exp/ballAndUrn.js"},
 			{cardExp:"js/exp/cardExp.js"},
+			{betaBinomial:"js/exp/betaBinomial.js"},
             {inputTile:"js/input/inputtable.js"},
 			{Model:"js/appModel.js"},
 			{View:"js/appView.js"},

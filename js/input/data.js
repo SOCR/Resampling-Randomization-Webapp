@@ -79,8 +79,8 @@ socr.dataTable= function () {
       },
       adjustModel : function(id){
           socr.exp.current=socr.exp[id];
+          PubSub.subscribe("controller view for "+id+" created",socr.exp.current.initialize);
           socr.exp.current.createControllerView();
-          socr.exp.current.initialize();
           socr.view.toggleControllerHandle("show");
           simulationDriven.expLoaded.push(id);
           setTimeout(function(){PubSub.publish("Experiment loaded")},500);

@@ -88,8 +88,6 @@ return{
 			$("#grsbutton").addClass("disabled");	
 			socr.exp.binomialCoin.generate();		
 			$("#accordion").accordion( "activate" , 1);
-
-			
 		});
 
 		$('#nInput,#pInput').on('change',function(){
@@ -151,6 +149,7 @@ return{
 			$( "#kValue" ).html( ui.value );
 			}
 		});
+		PubSub.publish("controller view for binomialCoin created");
 	},
 	
 	createDataPlot:function(size){

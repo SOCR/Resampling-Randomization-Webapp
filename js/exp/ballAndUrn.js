@@ -195,6 +195,7 @@ return{
 			$( "#kValue" ).html( ui.value );
 			}
 		});
+		PubSub.publish("controller view for ballAndUrn created")
 	},
 	createDataPlot:function(size){
 	console.log("createDataPlot() invoked");
