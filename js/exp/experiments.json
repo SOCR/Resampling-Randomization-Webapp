@@ -17,6 +17,12 @@
 			"name" : "The Card Experiment",
 			"url" : "js/exp/CardExp.js",
 			"description" : "The card experiment consists of dealing n cards at random (and without replacement) from a standard deck of 52 cards. The cards (X1,X2,…,Xn) are recorded on each run. The parameter n can be varied from 1 to 12 with the input control."
+		},
+		{
+			"id" : "betaBinomial",
+			"name" : "The Beta Binomial Experiment",
+			"url" : "js/exp/betaBinomial.js",
+			"description" : "In the beta-binomial experiment, a random probability P has a beta distribution with left shape parameter a and right shape parameter b. Then, n Bernoulli trials with probability of success P are performed Random variable Y is the number of heads, and has the beta-binomial distribution with parameters n, a, and b. The values of P and Y are recorded on each run and the outcomes of the trials are shown in the timeline graph (red for success, green for failure). The probability density function of P is shown in the first graph, and the probability density function of Y is shown in the second graph and is given in the second table. On each run, the value of P is shown in the first graph, and the empirical probability density function of Y is shown in the seond graph and recorded in the second table. The parameters n, a, and b can be varied with input controls."
 		}
 	]
 }

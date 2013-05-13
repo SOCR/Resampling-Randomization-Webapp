@@ -109,6 +109,7 @@ return{
 			else
 				$('.controller-warning').html('<div class="alert alert-error"><a class="close" data-dismiss="alert" href="#">x</a><h4 class="alert-heading">Dataset NOT generated!</h4>Please click the adjacent "Generate Dataset!" button first.</div>');
 		});
+		PubSub.unsubscribe(socr.exp.current.initialize);
 	},
 	
 	generate:function(){
@@ -173,27 +174,29 @@ return{
 	},
 
 	createControllerView:function(){
-	console.log("createControllerView for Ball and Urn executed!");
-	var html='<p class="toolbar"><p class="tool"><span id="nLabel" class="badge badge-warning" for="nInput">Draw N Balls = </span><span id="nvalue"></span><input id="nInput" type="range" tabindex="7" class="parameter"/></p><p class="tool"><span id="mLabel" class="badge badge-warning" for="pInput">Total M Balls = </span><span id="mvalue"></span><input id="mInput" type="range" tabindex="8" class="parameter"/></p><p class="tool"><span id="rLabel" class="badge badge-warning" for="rInput">Red Balls = </span><span id="rvalue"></span><input id="rInput" type="range" tabindex="8" class="parameter"/></p><p class="tool"><input type="checkbox" tabindex="7" id="type"><span for="replaceCheck">With replacement</span></p><div><span class="badge badge-warning"> K=<span id="kValue">1</span></span><div id="kValue-slider" style="display:inline-block;width:50%;margin-left:5%"></div></p><button class="btn" id="sdbutton">Generate DataSet!</button>&nbsp;<button class="btn btn-danger" id="grsbutton">Generate Random Samples!</button>';
-		$('#controller-content').delay(1000).html(html);
-		$('.popups').popover();
-		try{
-		$('.tooltips').tooltip('destroy');	// destroy first and bind tooltips again. UI bug: the "back to generateDataset" (back button) tooltip doesnt vanish after mouse click.
-		}
-		catch(err){
-			console.log(err.message);
-		}
-
-		$('.tooltips').tooltip();
-
-		$( "#kValue-slider" ).slider({
-			value: 1,
-			min: 1,
-			max: 10,
-			step: 1,
-			slide: function( event, ui ) {
-			$( "#kValue" ).html( ui.value );
+		console.log("createControllerView for Ball and Urn executed!");
+		$.get("partials/exp/ballAndUrn.tmpl",function(data){
+			var config = {};
+			var html = Mustache.render(data,config);
+			$('#controller-content').delay(1000).html(html);
+			$('.popups').popover();
+			try{
+				$('.tooltips').tooltip('destroy');	// destroy first and bind tooltips again. UI bug: the "back to generateDataset" (back button) tooltip doesnt vanish after mouse click.
 			}
+			catch(err){
+				console.log(err.message);
+			}
+			$('.tooltips').tooltip();
+			$( "#kValue-slider" ).slider({
+				value: 1,
+				min: 1,
+				max: 10,
+				step: 1,
+				slide: function( event, ui ) {
+					$( "#kValue" ).html( ui.value );
+				}
+			});
+			PubSub.publish("controller view for ballAndUrn created");
 		});
 	},
 	createDataPlot:function(size){

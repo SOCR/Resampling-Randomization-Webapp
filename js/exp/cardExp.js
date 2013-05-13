@@ -28,6 +28,7 @@ function _dealCard(){
 	if (_tempK < _K){
 		var _datum=_d[_tempK][_tempN];
 		_hand[_count].setValue(_datum);
+		console.log(typeof _datum);
 		_datasetValues[_tempK][_tempN]=_datasetKeys[_tempK][_tempN]=_datum;
 		_count++;
 		_tempN++;
@@ -77,6 +78,7 @@ return{
 			$.update({to:'dataDriven'});
 			view.updateSimulationInfo();
 		});
+		PubSub.unsubscribe(socr.exp.current.initialize);
 	},
 	
 	generate: function(){
@@ -116,26 +118,30 @@ return{
 	},
 
 	createControllerView:function(){
-	console.log("createControllerView for socr.exp.cardExp executed!");
-	var html='<p class="toolbar"></p><p class="tool"><span id="nLabel" class="badge badge-warning" for="nInput"><var><var>n</var></var> = 10</span><span id="nvalue"></span><input id="nInput" type="range" tabindex="7" class="parameter" min="1" max="100" step="1"></p><p><div><span class="badge badge-warning"> K=<span id="kValue">1</span></span><div id="kValue-slider" style="display:inline-block;width:50%;margin-left:5%"></div></p><button class="btn" id="sdbutton">Generate DataSet!</button><button class="btn btn-danger" id="grsbutton">Generate Random Samples!</button></div>';
-	$('#controller-content').delay(1000).html(html);
-		$('.popups').popover();
-		try{
-		$('.tooltips').tooltip('destroy');	// destroy first and bind tooltips again. UI bug: the "back to generateDataset" (back button) tooltip doesnt vanish after mouse click.
-		}
-		catch(err){
-			console.log(err.message);
-		}
-
-		$('.tooltips').tooltip();
-		$( "#kValue-slider" ).slider({
-			value: 1,
-			min: 1,
-			max: 10,
-			step: 1,
-			slide: function( event, ui ) {
-			$( "#kValue" ).html( ui.value );
+		console.log("createControllerView for socr.exp.cardExp executed!");
+		config={};
+		$.get("partials/exp/cardExp.tmpl",function(data){
+			var config = {};
+            var html = Mustache.render(data,config);
+			$('#controller-content').delay(1000).html(html);
+			$('.popups').popover();
+			try{
+				$('.tooltips').tooltip('destroy');	// destroy first and bind tooltips again. UI bug: the "back to generateDataset" (back button) tooltip doesnt vanish after mouse click.
 			}
+			catch(err){
+				console.log(err.message);
+			}
+			$('.tooltips').tooltip();
+			$( "#kValue-slider" ).slider({
+				value: 1,
+				min: 1,
+				max: 10,
+				step: 1,
+				slide: function( event, ui ) {
+				$( "#kValue" ).html( ui.value );
+				}
+			});
+			PubSub.publish("controller view for cardExp created");
 		});
 	},
 

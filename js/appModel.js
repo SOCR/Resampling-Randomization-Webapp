@@ -551,12 +551,13 @@ return{
      * @return {boolean}
 	 */
 	setDataset:function(input){
+		console.log("INPUT");
+		console.log(input.values[0]);
 		//check for input values...if its empty...then throw error
-        if(input === undefined){
+        if(input === undefined || typeof input != "object"){
             return false;
         }
 		console.log('setDataSet() invoked!');
-        console.log(input);
 	//input.processed is true in case of a simulation -> data mode switch
 		if(input.processed){
 			for(var i=0;i<input.keys.length;i++){
