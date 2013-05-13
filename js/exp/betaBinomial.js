@@ -96,7 +96,7 @@ socr.exp.betaBinomial = function(){
 				else
 					$('.controller-warning').html('<div class="alert alert-error"><a class="close" data-dismiss="alert" href="#">x</a><h4 class="alert-heading">Dataset NOT generated!</h4>Please click the adjacent "Generate Dataset!" button first.</div>');
 				});
-			PubSub.unsubscribe(socr.exp.betaBinomial.initialize);
+			PubSub.unsubscribe(socr.exp.current.initialize);
 		},
 		generate: function(){
 			socr.exp.betaBinomial.setVariable();
