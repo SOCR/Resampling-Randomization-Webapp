@@ -13,7 +13,6 @@
  		*/
 socr.exp.binomialCoin=function(){
 
-
 //::::::: PRIVATE PROPERTIES :::::::::::::::
 var _stepID;
 var _pParam, _nParam; // binomialCoin is the distribution object

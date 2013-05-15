@@ -11,9 +11,11 @@
             <i class="icon-fullscreen plot" id="plot-{{sampleNo}}" sample-number="{{sampleNo}}" k-index="1"></i>
         </a>
         &nbsp;
+        {{#showContribution}}
         <a href="#" class="tooltips" rel="tooltip" data-original-title="contribution">
             <i class="icon-filter contribution" id="contribution-{{sampleNo}}" ></i></a>
         &nbsp;
+        {{/showContribution}}
         <a href="#" class="tooltips" rel="tooltip" data-original-title="toggle">
             <i class="icon-retweet toggle-sample" data-type="keys" id="toggle-{{sampleNo}}" sample-number="{{sampleNo}}" k-index="1"></i>
         </a>

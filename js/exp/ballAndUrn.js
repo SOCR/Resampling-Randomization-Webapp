@@ -67,6 +67,7 @@ function _selectBall(){
 	else{
 		console.log("temp values "+_datasetValues);
 		console.log("temp keys "+ _datasetKeys);
+		PubSub.publish("Initial dataset generated");
 		//view.loadInputSheet(_values);
 		//process the _dataset and convert it into a human readable sample space (example instead of 0 and 1 show tail and head)
 		

@@ -133,6 +133,44 @@ function Coin(canvas){
 	}
 }
 
+//sample Placeholder
+function RSample(canvas){
+	//Properties
+	this.backColor;
+	this.labelColor = "white";
+	this.label = "";
+	this.value; //1 heads, 0 tails, otherwise not tossed
+	//Local variables
+	var ctx , size, r ;
+	
+	//Methods
+	this.setValue = function(v) {
+		ctx=canvas.getContext("2d");
+		size = canvas.width;
+		r = size / 2;
+		ctx.clearRect(0, 0, size, size);
+		this.value = v;
+		if (this.value == -1){
+			this.backColor = "rgb(100,100,100)";
+			this.label = "";
+		}
+		else{
+			this.backColor = "orange";
+			this.label = v.toFixed(3);
+		}
+		
+		ctx.fillStyle = this.backColor;
+		ctx.beginPath();
+		ctx.arc(r, r, r, 0, 2 * Math.PI, true);
+		ctx.fill();
+		ctx.fillStyle = this.labelColor;
+		ctx.font = "9px Arial";
+		ctx.fillText(this.label, r - 10, r + 5);
+	}
+}
+
+
+
 //Ball
 function Ball(canvas){
 	//Properties

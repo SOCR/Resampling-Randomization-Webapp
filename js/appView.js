@@ -12,7 +12,7 @@ socr.view = function( model ){
 	var model = model;					// [OBJECT] Reference to the App's model object.
 	var _currentVariable;				// [ARRAY] Reference to current inference varaible [mean , SD , count , percentile]
 	var _currentValues;					// [ARRAY] Reference to current inference variable's value of each random sample.
-
+	var _currentExperiment = null;
 
 	/**
 	*@method: [private] _create
@@ -412,13 +412,15 @@ return{
         }
         //console.log("k "+socr.model.getK());
         //console.log(variables);
+        var showBack = (socr.controller.currentMode === "dataDriven")?false:true;
         var config = {
             animationSpeed:false,
             variables:variables,
             disabled:disabled,
             datapoints:_datapoints,
             showIndex:_showIndex,
-            index:indexes
+            index:indexes,
+            showBack:showBack
         };
         $.get('partials/controller.tmpl',function(data){
             var _output = Mustache.render(data, config);
@@ -437,7 +439,7 @@ return{
             $('.controller-back').on('click',function(e){
                 e.preventDefault();
                 try{
-                    socr.exp.current.createControllerView();
+                    socr.dataTable.simulationDriven.init("");
 
                 }
                 catch(err){

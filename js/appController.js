@@ -44,6 +44,7 @@ socr.controller=function(model,view){
 
 /* PUBLIC METHODS */	
 	return{
+		currentMode:_currentMode,
 	/**
 	 *@method: [private] initialize()
 	 *@description:Initializes the app..binds all the buttons...create the show slider
@@ -293,6 +294,7 @@ socr.controller=function(model,view){
 	
 	loadController:function(x){
 		if(x=='simulationDriven'){
+			_currentMode = x;
 			socr.exp.current.createControllerView();
 			socr.exp.current.initialize();
 		}
