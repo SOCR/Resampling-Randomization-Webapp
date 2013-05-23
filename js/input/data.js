@@ -86,7 +86,6 @@ socr.dataTable= function () {
           setTimeout(function(){PubSub.publish("Experiment loaded")},500);
       },
       displayText : function(details){
-          console.log(details);
           splashScreen.hide();
           excelScreen.hide();
           importScreen.hide();
@@ -495,6 +494,9 @@ socr.dataTable= function () {
           Yes: function () {
             //clear the input sheet 
             $dataTable.inputtable('clear');
+            $dataTable.inputtable({
+                colHeaders : []
+            })
             $response.html('<div class="alert"><a class="close" data-dismiss="alert" href="#">x</a>Clear! Enter some value to get started!</div>'); //display the message in the status div below the done and reset buttons
             $(this).dialog("close"); //close the confirmation window
            // $dataTable.inputtable({'colHeaders' : false});
