@@ -2521,6 +2521,20 @@
     }
     return box;
   };
+
+  /**
+     * Return first row elements
+     * @public
+     * @return {Array}
+  */
+  this.getFirstRow = function (){
+    var data = datamap.getAll(),
+        clen = data[0].length
+
+        return datamap.getRange({row: 0, col: 0},{row: 0, col:  clen });
+
+  }
+
   /**
      * Return non-empty data as array
      * @public

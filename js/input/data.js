@@ -315,7 +315,6 @@ socr.dataTable= function () {
       console.log('Call for parse Titles');
       var titles = [];
       $('#input-titles').find('input[type="text"]').each(function(){
-        // if($(this).val() !== '')
         titles.push($(this).val());
       })
       spreadSheet.addColHeaders(titles);
@@ -329,7 +328,6 @@ socr.dataTable= function () {
         v.hide();
       });
       $.each(options.visible, function(k,v){
-        console.log(v);
         $(v).show();
       });
       
@@ -379,7 +377,6 @@ socr.dataTable= function () {
     },
 
      addColHeaders : function(arr){
-
         $dataTable.inputtable({colHeaders : arr});
       },
 
@@ -392,6 +389,13 @@ socr.dataTable= function () {
 
     },
 
+    firstRowTitles : function(){
+         var firstrow = $dataTable.inputtable('getFirstRow')[0];
+        spreadSheet.addColHeaders(firstrow);
+        $dataTable.inputtable('alter','remove_row', 0 );
+        view.displayResponse(' Title successfully adjusted ', 'success');
+
+    },
     parseAll : function(){
       var dataset = $dataTable.inputtable('getNonEmptyData');
           socr.model.reset();
@@ -418,7 +422,7 @@ socr.dataTable= function () {
         console.log('Dataset is valid')
         view.displayResponse(' Entire dataset is selected ', 'success');
 
-      socr.view.toggleControllerHandle("show");
+        socr.view.toggleControllerHandle("show");
         //select.selectAll();
        } else{
         console.log("Dataset isn't valid")
@@ -632,6 +636,7 @@ socr.dataTable= function () {
   })
 
   $controls.find('.edittitles').on('click',view.editTitles);  
+  $controls.find('.firstrowtitles').on('click', spreadSheet.firstRowTitles);  
   $('#input-modal').on('submit', '#input-titles',view.parseTitles);
   
   spreadSheet.init();
