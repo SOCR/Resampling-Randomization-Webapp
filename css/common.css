@@ -250,7 +250,7 @@ div.welcome-container{
 	section.datadriven-wrap .spreadsheet{
 		margin-top: 50px;
 		overflow: auto;
-		max-height: 368px;
+		max-height: 350px;
 
 	}
 	section#datadriven-fetch{

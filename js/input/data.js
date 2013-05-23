@@ -10,6 +10,7 @@ socr.dataTable= function () {
     $boxsection = $('#fetchURL');
     $urlbox = $boxsection.find('input[name="urlbox"]');
     $urlsubmit = $boxsection.find('input[name="submit"]');
+   // Default Method of entering data
     method = 'sync';
 
     var splashScreen = $('section#datadriven-splash');
@@ -180,7 +181,6 @@ socr.dataTable= function () {
           })
 
           var inputMethod = tableparse.mode() === 'sync' ? 'loadDataSwift' : 'loadData';
-          console.log(inputMethod);
           $dataTable.inputtable(inputMethod,matrix);
         });
       },
@@ -254,7 +254,6 @@ socr.dataTable= function () {
         })
         $('#fetchasync').click(function(){
           tableparse.mode('async');
-          console.log('Fetch Async option')
         })
       }
 

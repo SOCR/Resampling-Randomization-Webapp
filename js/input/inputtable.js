@@ -14,7 +14,7 @@
         else {
           var currentSettings = $.extend({}, settings), instance;
           if (options) {
-            $.extend(currentSettings, options);
+             $.extend(currentSettings, options);
           }
           instance = new Inputtable($this, currentSettings);
           $this.data("inputtable", instance);
@@ -702,7 +702,7 @@
        * @param {String} [source="populateFromArray"]
        * @return {Object} ending td in pasted area
        */
-      populateFromArray: function (start, input, end, allowHtml, source) {
+      populateFromArrayAsync: function (start, input, end, allowHtml, source) {
         var r, rlen, c, clen, td, endTd, changes = [], current = {};
         rlen = input.length;
         if (rlen === 0) {
@@ -757,7 +757,16 @@
         return endTd || grid.getCellAtCoords(start);
       },
 
-      populateFromArraySwift: function (start, input, end, allowHtml, source) {
+      /**
+       * Populate cells at position with 2d array
+       * @param {Object} start Start selection position
+       * @param {Array} input 2d array
+       * @param {Object} [end] End selection position (only for drag-down mode)
+       * @param {Boolean} [allowHtml]
+       * @param {String} [source="populateFromArray"]
+       * @return {Object} ending td in pasted area
+       */
+      populateFromArray: function (start, input, end, allowHtml, source) {
         var r, rlen, c, clen, td, endTd, changes = [], current = {};
         rlen = input.length;
         if (rlen === 0) {
@@ -2577,22 +2586,22 @@
      * @param {Array} data
      * @param {Boolean} [allowHtml]
      */
-    this.loadData = function (data, allowHtml) {
+    this.loadDataAsync = function (data, allowHtml) {
       priv.isPopulated = false;
       datamap.clear();
       grid.clear();
-      grid.populateFromArray({
+      grid.populateFromArrayAsync({
         row: 0,
         col: 0
       }, data, null, allowHtml, 'loadData');
       priv.isPopulated = true;
     };
 
-    this.loadDataSwift = function(data, allowHtml){
+    this.loadData = function(data, allowHtml){
       priv.isPopulated = false;
       datamap.clear();
       grid.clear();
-      grid.populateFromArraySwift({
+      grid.populateFromArray({
         row: 0,
         col: 0
       }, data, null, allowHtml, 'loadData');
