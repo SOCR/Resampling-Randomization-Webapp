@@ -62,7 +62,7 @@ socr.exp.betaBinomial = function(){
 	}
 
 	return{
-		name:"Beta Binomial Toss",
+		name:"betaBinomial",
 		type:"timeline",
 		description:"The random experiment consists of tossing n coins, each with probability of heads p. Random variable Y gives the number of heads, and random variable M gives the proportion of heads. These are recorded on each update in the data table. Either Y or M can be selected with the list box. The probability density function and moments of the selected variable are shown in blue in the distribution graph blue and are recorded in the distribution table. On each update, the empirical density function and moments of the selected variable are shown in red in the distribution graph and are recorded in the distribution table. The parameters n and p can be varied with scroll bars.",
 	    
@@ -88,9 +88,9 @@ socr.exp.betaBinomial = function(){
 				});
 
 			$('#grsbutton').on('click',function(){
-				if(socr.exp.betaBinomial.getDatasetValues().length!=0)
+				if(_datasetValues.length!=0)
 					{
-						$.update({to:'dataDriven'});	//Loads the data into the appModel .
+						socr.controller.loadController({to:'dataDriven',from:'Experiment'});	//Loads the data into the appModel .
 						socr.view.updateSimulationInfo();		//updates experiment info into third tile in the accordion
 					}
 				else

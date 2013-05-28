@@ -61,6 +61,7 @@ function _experiment(){
 }
 
 return{
+	name:"betaDistribution",
 	initialize:function(){
 		_nParam = new Parameter(document.getElementById("nInput"), document.getElementById("nLabel"));
 		_nParam.setProperties(1, 50, 1, _n, "<var>n</var>");
@@ -82,7 +83,7 @@ return{
 		$('#grsbutton').on('click',function(){
 			if(_datasetValues.length!=0)
 				{
-					$.update({to:'dataDriven'});	//Loads the data into the appModel .
+					socr.controller.loadController({to:'dataDriven',from:'Experiment'});	//Loads the data into the appModel .
 					socr.view.updateSimulationInfo();		//updates experiment info into third tile in the accordion
 				}
 			else

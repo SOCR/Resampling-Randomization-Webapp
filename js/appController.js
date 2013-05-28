@@ -13,7 +13,7 @@ socr.controller=function(model,view){
 	var _runsElapsed=0;				// Keeps count of number of resamples generated
 	var _this = this;						// contains reference to this object.
 	var _noOfSteps=0;
-	var _currentMode="dataDriven";  //App starts with dataDriven mode [default value]
+	var _currentMode="Experiment";  //App starts with dataDriven mode [default value]
 
 /* PRIVATE METHODS   */
 
@@ -276,9 +276,7 @@ socr.controller=function(model,view){
                             $(this).remove();
                         }
                     });
-		
 		},
-        
     
 	setDotplot:function(){
 		$('#dotplot').html('');
@@ -292,16 +290,18 @@ socr.controller=function(model,view){
         });
 	},
 	
-	loadController:function(x){
-		if(x=='simulationDriven'){
-			_currentMode = x;
-			socr.exp.current.createControllerView();
-			socr.exp.current.initialize();
+	loadController:function(setting){
+		if(typeof setting !== "object"){
+			return false;
 		}
-		else{
-			//check for input
+		if(setting.to === "dataDriven"){
+			if(setting.from !== "undefined"){
+	            socr.controller.setCurrentMode(setting.from);
+	        }
+	       	console.log('DataSet: '+socr.model.getDataset());
+        	PubSub.publish("Datadriven controller loaded");
+			//checking for any dataset generated from experiment. If yes, they take priority and get loaded.
             if(!$.isEmptyObject(socr.exp.current)){
-
 				if(socr.exp.current.getDataset()!=''){	
 					console.log('simulation drive has some data');
 					var result=model.setDataset({
@@ -313,14 +313,23 @@ socr.controller=function(model,view){
 					    view.toggleControllerHandle('show');
                         view.updateSimulationInfo();
 					}
-					//call to loadInputSheet to input the generated simulation data if any
 				}	
 			}
 			else{
 				console.log("Experiment object not defined!");
             }
             view.createControllerView();
-        }
+		}
+	},
+
+	setCurrentMode:function(mode){
+		if(mode != undefined){
+			_currentMode = mode;
+		}
+		return true;
+	},
+	getCurrentMode:function(){
+		return _currentMode;
 	}
  
     }//return

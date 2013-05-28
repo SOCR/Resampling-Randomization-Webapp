@@ -412,7 +412,7 @@ return{
         }
         //console.log("k "+socr.model.getK());
         //console.log(variables);
-        var showBack = (socr.controller.currentMode === "dataDriven")?false:true;
+        var showBack = (socr.controller.getCurrentMode() === "Experiment")?true:false;
         var config = {
             animationSpeed:false,
             variables:variables,
@@ -439,13 +439,13 @@ return{
             $('.controller-back').on('click',function(e){
                 e.preventDefault();
                 try{
-                    socr.dataTable.simulationDriven.init("");
-
+                	console.log("exp_"+socr.exp.current.name);
+                    socr.dataTable.simulationDriven.init("exp_"+socr.exp.current.name);
+                	socr.exp.current.initialize();
                 }
                 catch(err){
                     console.log(err.message);
                 }
-                socr.exp.current.initialize();
             });
             $('#variable').on('change',function(){
                 if($(this).val()=='mean' || $(this).val()=='count'){

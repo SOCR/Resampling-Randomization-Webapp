@@ -81,6 +81,7 @@ socr.dataTable= function () {
       adjustModel : function(id){
           socr.exp.current=socr.exp[id];
           PubSub.subscribe("controller view for "+id+" created",socr.exp.current.initialize);
+          //socr.controller.setCurrentMode("simulationDriven");
           socr.exp.current.createControllerView();
           socr.view.toggleControllerHandle("show");
           simulationDriven.expLoaded.push(id);
@@ -408,7 +409,8 @@ socr.dataTable= function () {
           console.log(e)
       }
       finally{
-          $.update({to:'dataDriven'});
+          //$.update({to:'dataDriven'});
+          socr.controller.loadController({to:'dataDriven',from:"spreadSheet"});
       }
       
       if(spreadSheet.validate(dataset)){
@@ -447,7 +449,7 @@ socr.dataTable= function () {
             var dataset = $dataTable.inputtable('getSelectedData');
             $("#accordion").accordion( "activate" , 0);
             try{
-            $(this).update({to:'dataDriven'});
+            socr.controller.loadController({to:'dataDriven',from:"spreadSheet"});
             }
             catch(e){
                 console.log(e.message)
@@ -597,7 +599,7 @@ socr.dataTable= function () {
         processed:false
       });
       if(result == true){
-          $.update({to:'dataDriven'});
+          socr.controller.loadController({to:'dataDriven',from:"spreadSheet"});
           socr.view.toggleControllerHandle("show");
           socr.view.updateSimulationInfo("Data Driven Experiment");
       }
