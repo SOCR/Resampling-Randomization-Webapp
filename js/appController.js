@@ -137,7 +137,11 @@ socr.controller=function(model,view){
 			
 		$('#accordion').accordion();
 		$('.dropdown-toggle').dropdown();
-		$('.popups').popover();
+		$('.popups').popover({
+			html:true,
+			trigger:'click',
+			animation:true
+		});
 		$('.tooltips').tooltip();
 		
 		view.createShowSlider();	

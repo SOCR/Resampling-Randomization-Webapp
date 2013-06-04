@@ -1,3 +1,4 @@
+<h5>Sample Generation:</h5>
 <div id="buttonPanel">
     <a href="#" class="tooltips" rel="tooltip" title="Step">
         <button class="btn" type="button" id="stepButton" tabindex="1" title="Step">
@@ -20,7 +21,7 @@
         </button>
     </a>
     <span>
-        <i class="icon-question-sign popups" rel="popover" data-content="<ul><li>Step Button : generates 1 sample</li><li>Run Button : generates X sample..X can be set from the option below</li><li>Stop Button :Stops the sample generation</li><li>Reset Button : Resets all values</li></ul>" data-original-title="Controls"></i>
+        <i class="icon-question-sign controller-popups" rel="popover" data-content="<ul><li>Step Button : generates 1 sample</li><li>Run Button : generates X sample..X can be set from the option below</li><li>Stop Button :Stops the sample generation</li><li>Reset Button : Resets all values</li></ul>" data-original-title="Controls"></i>
     </span>
     &nbsp;&nbsp;
     {{#showBack}}
@@ -48,9 +49,11 @@
     <input type="text" id="countSize" class="input-mini" value="1000">
     <span>Samples with </span>
     <input type="text" id="nSize" class="input-mini" value="{{datapoints}}">
+    <button class="controller-popups btn">set</button>
     <span>Datapoint per sample.</span>
     <br>
 </div>
+<h5>Analysis:</h5>
 <div class="inference-variable">
     <form class="form form-inline">
         <select id="variable" style="width:30%">

@@ -402,7 +402,7 @@ return{
             var indexes = [];
         }
         else{
-            var variables = ["f-value","p-value","mean","count"];
+            var variables = ["f-value","p-value","difference-of-proportion","mean","count"];
             var disabled = ["standardDev"];
             var _showIndex = true;
             var i = socr.model.getK(), indexes=[];
@@ -426,6 +426,15 @@ return{
             var _output = Mustache.render(data, config);
             $('#controller-content').html(_output);
             socr.controller.initController();
+            $('.tooltips').tooltip();
+            try{
+            	$('.controller-popups').popover({
+				html:true
+            	});
+            }
+            catch(e){
+            	console.log(e.message)
+            }
 
 //            $( "#speed-selector" ).slider({
 //                value:400,
@@ -613,7 +622,7 @@ return{
             case 'standardDev':
                 var values = model.getStandardDev(setting.index);	//Standard deviation values of all the generated random samples
                 var datum=model.getStandardDevOfDataset(setting.index);		//datum is the dataset SD value
-                console.log("SD Values:"+ values );
+                //console.log("SD Values:"+ values );
                 break
 
             case 'percentile':
@@ -635,14 +644,14 @@ return{
             case 'count':
                 var values = model.getCount(setting.index);	//Standard deviation values of all the generated random samples
                 var datum=model.getCountOf("dataset",setting.index);		//datum is the dataset SD value
-                console.log("Count Values:"+ values );
+                //console.log("Count Values:"+ values );
                 break
 
             case 'f-value':
                 var values=model.getF();
                 var datum=model.getFof("dataset").fValue;
 
-                console.log("F-values"+values);
+                //console.log("F-values"+values);
                 break
 
             case 'p-value':
@@ -651,19 +660,32 @@ return{
 //                console.log("P values"+values);
                 break
 
+            case 'difference-of-proportion':
+                var values=model.getDOP();
+                var datum=model.getDOPof("dataset");
+                //console.log("DOP values"+values);
+                break
+
             default :
                 var values=model.getMean(setting.index);
                 var datum=model.getMeanOf("dataset",setting.index);
-                console.log(values);
+                //console.log(values);
                 break
 
         }
-			
+		/* 
+		Cleaning the NaN values generated.
+		Temporary fix. Need to avoid NaN generation.
+		*/ 
+		$.grep(values,function(a){return !isNaN(a)});	
+		/* Sorting the array to find start and stop values */
 		var temp=values.sort(function(a,b){return a-b});
 		var start=Math.floor(temp[0]);
 		var stop=Math.ceil(temp[values.length-1]);
 		console.log("start: "+start+" stop: "+stop);
-		if(setting.variable === "p-value"){
+		
+		/* Percentage on the right and left side of the intial dataset contribution point. */
+		if(setting.variable === "p-value" || setting.variable === "difference-of-proportion"){
             var total = temp.length, lSide, rSide, start =0 , end = temp.length- 1, index, flag=0;
             if(datum<temp[0]){
                 lSide = 0; rSide = 100;
