@@ -66,7 +66,14 @@ socr.controller=function(model,view){
 			//a check to see if the sample count is 0 or not
 			socr.view.createList($('.show-list-start').val(),$('.show-list-end').val());
 		});
-		
+		PubSub.subscribe("Random samples generated",function(){
+			var start = socr.model.getRSampleCount()*0.5;
+			var end = socr.model.getRSampleCount();
+			$( "#showCount" ).html( start + " - " + end );
+			$('.show-list-start').val(start);
+			$('.show-list-end').val(end);
+			$("#showButton").trigger("click");
+		});
 		$('#startApp').on('click',function(){
 			console.log('Launch button clicked');
 			$('#welcome').animate({
