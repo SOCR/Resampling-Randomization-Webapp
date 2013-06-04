@@ -2531,7 +2531,7 @@
     var data = datamap.getAll(),
         clen = data[0].length
 
-        return datamap.getRange({row: 0, col: 0},{row: 0, col:  clen });
+        return datamap.getRange({row: 0, col: 0},{row: 0, col:  clen + 1});
 
   }
 
