@@ -426,7 +426,7 @@ socr.vis = (function(){
 			    	meanbarX = (x.rangeBand()/2)+x(settings.datum) - (10/2);
 			  
 			    } else{
-			    	meanbarX = x(interval[0]) +x.rangeBand()+ interpolateWidth - 5;
+			    	meanbarX = x(interval[0]) +x.rangeBand()/2+ interpolateWidth - 5;
 			    	
 			    }
 
