@@ -393,7 +393,9 @@ return{
 	*@return : none
 	*/
 	createControllerView:function(){
-        var _datapoints = socr.model.getDataset().length;
+        var _RSampleLength = socr.model.getN();
+        //splice the first element
+        _RSampleLength.splice(0,1);
         //define the configuration json file
         if(socr.model.getK() === 1){
             var variables = ["mean","count"];
@@ -417,7 +419,7 @@ return{
             animationSpeed:false,
             variables:variables,
             disabled:disabled,
-            datapoints:_datapoints,
+            RSampleLength:_RSampleLength,
             showIndex:_showIndex,
             index:indexes,
             showBack:showBack
@@ -426,65 +428,6 @@ return{
             var _output = Mustache.render(data, config);
             $('#controller-content').html(_output);
             socr.controller.initController();
-            $('.tooltips').tooltip();
-            try{
-            	$('.controller-popups').popover({
-				html:true
-            	});
-            }
-            catch(e){
-            	console.log(e.message)
-            }
-
-//            $( "#speed-selector" ).slider({
-//                value:400,
-//                min: 100,
-//                max: 2000,
-//                step: 50,
-//                slide: function( event, ui ) {
-//                    $( "#speed-value" ).html( ui.value );
-//                }
-//            });
-            $('.controller-back').on('click',function(e){
-                e.preventDefault();
-                try{
-                	console.log("exp_"+socr.exp.current.name);
-                    socr.dataTable.simulationDriven.init("exp_"+socr.exp.current.name);
-                	socr.exp.current.initialize();
-                }
-                catch(err){
-                    console.log(err.message);
-                }
-            });
-            $('#variable').on('change',function(){
-                if($(this).val()=='mean' || $(this).val()=='count'){
-                    $("#index").attr("disabled",false);
-                }
-                else{
-                    $("#index").attr("disabled",true);
-                }
-
-//                var _percentile=$('#percentile-control');
-//                if($(this).val()=='Percentile'){
-//                    if(_percentile.length)
-//                        _percentile.show();
-//                    else
-//                        $('#controller-content').append('<div id="percentile-control"><div><span class="badge badge-warning" style="float:left;">Percentile: <span id="percentile-value">10</span>%</span></div><div id="percentile-selector"></div></div>');
-//                    //create a slider
-//                    $('#percentile-selector').slider({
-//                        value:20,
-//                        min: 10,
-//                        max: 90,
-//                        step: 5,
-//                        slide: function( event, ui ) {
-//                            $( "#percentile-value" ).html( ui.value );
-//                        }
-//                    });
-//                }
-//                else
-//                    _percentile.hide();
-            });
-
         });
 	},
 	

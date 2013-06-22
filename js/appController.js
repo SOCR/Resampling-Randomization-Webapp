@@ -156,6 +156,20 @@ socr.controller=function(model,view){
 	},
 
 	initController:function(){
+		
+		$('.tooltips').tooltip();
+
+        $('.controller-back').on('click',function(e){
+            e.preventDefault();
+            try{
+            	console.log("exp_"+socr.exp.current.name);
+                socr.dataTable.simulationDriven.init("exp_"+socr.exp.current.name);
+            	socr.exp.current.initialize();
+            }
+            catch(err){
+                console.log(err.message);
+            }
+        });
 		$("#runButton").on('click',function(e){
             e.preventDefault();
 			console.log('Run Started');
@@ -192,6 +206,25 @@ socr.controller=function(model,view){
                 setTimeout(function(){PubSub.publish("Dotplot generated")},500);
             }
 		});
+
+        $('#variable').on('change',function(){
+	        if($(this).val()=='mean' || $(this).val()=='count'){
+	            $("#index").attr("disabled",false);
+	        }
+    	    else{
+    	        $("#index").attr("disabled",true);
+    	    }
+    	});
+
+        try{
+        	$('.controller-popups').popover({
+			html:true
+        	});
+        }
+        catch(e){
+        	console.log(e.message)
+        }
+
 	},
 
 	/**
@@ -203,6 +236,7 @@ socr.controller=function(model,view){
 		$("#accordion").accordion( "activate" , 1);
         //socr.view.toggleControllerHandle("hide");
 		view.disableButtons();					//disabling buttons
+		/*EDIT THIS TO MAKE N DYNAMIC*/
 		model.setN($("#nSize").val());				// save the datapoints size
 	    try{
             model.generateSample();			//generate one sample
@@ -232,6 +266,7 @@ socr.controller=function(model,view){
         view.disableButtons();					//disabling buttons
         view.updateStatus("started");
 		model.setStopCount($("#countSize").val());	//save the stopcount provided by user
+		/*EDIT THIS TO MAKE N DYNAMIC*/
 		model.setN($("#nSize").val());				// save the datapoints size
 		//generate samples
 		var _temp=model.getStopCount()/1000;
@@ -329,6 +364,8 @@ socr.controller=function(model,view){
 			else{
 				console.log("Experiment object not defined!");
             }
+            //set N to default values	
+            model.setN();
             view.createControllerView();
 		}
 	},

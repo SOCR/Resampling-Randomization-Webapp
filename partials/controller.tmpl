@@ -48,8 +48,7 @@
     <span>Generate</span>
     <input type="text" id="countSize" class="input-mini" value="1000">
     <span>Samples with </span>
-    <input type="text" id="nSize" class="input-mini" value="{{datapoints}}">
-    <button class="controller-popups btn">set</button>
+    <a data-toggle="modal" href="#setN"><button class="controller-popups btn">Set</button></a></li>
     <span>Datapoint per sample.</span>
     <br>
 </div>
@@ -77,4 +76,19 @@
         </span>
     </form>
 </div>
-
+<div id='setN' class="modal hide fade">
+    <div class="modal-header">
+        <a class="close" data-dismiss="modal">X</a>
+        <h3>Set the Sample Length</h3>
+    </div>
+    <div class="modal-body">
+        <ul>
+            {{#RSampleLength}}
+            <li><input type="text" value="{{.}}"/></li>
+            {{/RSampleLength}}
+        </ul>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-info">Update</button>
+    </div>
+</div>
