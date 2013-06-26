@@ -138,7 +138,7 @@ socr.dataTable= function () {
   var tableparse = {
       init : function(url){
         
-         if( url.substr(0,7) !== 'http://'){
+       if( url.substr(0,7) !== 'http://'){
            url = 'http://' + url;
         }
         if( tableparse.checkRefer(url) === true)  {
@@ -158,7 +158,7 @@ socr.dataTable= function () {
         var requestHost = document.createElement("a");
             requestHost.href = url;
 
-            if(window.location.hostname !== requestHost.hostname){
+            if(window.location.hostname !== requestHost.hostname && url.indexOf('wiki.stat.ucla.edu') < 0 ){
               view.displayResponse('Datasets should be on the same server with the same URL hostname','error');
               return false;
             } else{
@@ -169,6 +169,7 @@ socr.dataTable= function () {
       request : function(uri){
         // Fix for FF 
        
+     
         $.get(uri, function(d){
 
         var tableCount = $(d).is('table') ? $(d).length : $(d).find('table').length,
@@ -183,7 +184,13 @@ socr.dataTable= function () {
 
           var inputMethod = tableparse.mode() === 'sync' ? 'loadDataSwift' : 'loadData';
           $dataTable.inputtable(inputMethod,matrix);
-        });
+        }).fail(function() { 
+
+            view.displayResponse('There was an error loadin the dataset','error')
+
+         })
+
+
       },
 
       filterBySize : function(arrayOfTables){
@@ -353,6 +360,9 @@ socr.dataTable= function () {
         colHeaders: true
       });
 
+      //Temporary solution to remove multiple table headers
+      $dataTable.find('tr.htColHeader')[0].remove()
+
     //    $dataTable.inputtable({colHeaders : true})
     },
 
@@ -480,7 +490,7 @@ socr.dataTable= function () {
        } 
         else {
 
-         view.displayResponse(' No coordinates are selected ', 'error');
+         view.displayResponse(' No cells are selected ', 'error');
         }
 
     },
