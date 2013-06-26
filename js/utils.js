@@ -5,3 +5,17 @@ $.sum = function(arr){
     });
     return sum;
 };
+
+/*
+splits a dot delimited string into an array.
+@return: array
+*/
+
+$.normalize = function(str){
+	if(typeof str === "string"){
+		return str.split(".");
+	}
+	else{
+		return false
+	}
+}

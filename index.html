@@ -484,7 +484,8 @@
             "js/lib/mustache/mustache.js",
             "js/lib/chardinjs/chardinjs.min.js",
             "js/tutorial/tutorial.js",
-            "js/utils.js"
+            "js/utils.js",
+            "js/appData.js"
 	    	);
     
 	head.ready(function () {
@@ -507,6 +508,7 @@
 		socr.model = new socr.model();
 		socr.view = new socr.view(socr.model);
 		socr.controller = new socr.controller(socr.model,socr.view);
+		socr.dataStore = new socr.dataStore();
 		
 		/*
 		*  CoverPage rendering

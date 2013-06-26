@@ -15,6 +15,7 @@ socr.exp = {};
 socr.input = {};
 socr.vis = {};
 socr.tools = {};
+socr.dataStore={};
 
 socr.exp.multiK = true; //By defaut allowing only multiK
 
