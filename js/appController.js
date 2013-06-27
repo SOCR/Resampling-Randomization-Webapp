@@ -57,11 +57,12 @@ socr.controller=function(model,view){
 		--------------------------------*/
 		$('.controller-handle').on('click',socr.view.toggleControllerHandle);
 
-        $(".help").on("click",function(e){
+        $(".help").on("change click",function(e){
             e.preventDefault();
             socr.tutorial.toggleStatus();
-            (socr.tutorial.getStatus() === "on")?$(this).css("background-color","green"):$(this).css("background-color","");
+            (socr.tutorial.getStatus() === "on")?$(".help").css("background-color","green").html("<a href='#'>Help : ON</a>"):$(".help").css("background-color","").html("<a href='#'>Help : OFF</a>");
         });
+
 		$("#showButton").on('click',function(){
 			//a check to see if the sample count is 0 or not
 			socr.view.createList($('.show-list-start').val(),$('.show-list-end').val());
