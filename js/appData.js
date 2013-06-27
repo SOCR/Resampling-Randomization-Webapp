@@ -76,6 +76,12 @@ socr.dataStore = function(){
 			catch(e){
 				console.log(e.stack)
 			}
+		},
+		removeObject:function(obj){
+			if(typeof this[obj] !== "undefined"){
+				delete this[obj];
+			}
+			return this;
 		}
 	}	
 
