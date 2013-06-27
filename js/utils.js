@@ -6,6 +6,13 @@ $.sum = function(arr){
     return sum;
 };
 
+$.mean = function(arr){
+    var sum = 0;
+    $.map(arr, function(v){
+        sum += parseInt(v);
+    });
+    return sum/arr.length;
+};
 /*
 splits a dot delimited string into an array.
 @return: array

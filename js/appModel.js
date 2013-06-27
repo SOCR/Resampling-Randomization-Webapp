@@ -100,14 +100,6 @@ socr.model=function(){
 			return null;
 		}
 		else{
-            //Remove mean from the prototype...bad practice
-			Array.prototype.mean = function() {
-				var _total=0;
-				for(var i=0;i<this.length;i++){
-					_total+=parseFloat(this[i]);
-				}
-				return _total/this.length;
-			}; 
 			var _k=0,_ymean=[],_total=0,_N= 0,_sst=0,_sse=0, _data=[];
 			_k=_this.getK();
 			if (sampleNumber === "dataset"){
@@ -120,7 +112,7 @@ socr.model=function(){
 			}
 
             for(i=1;i<=_k;i++){
-				_ymean[i]=_data[i].mean();
+				_ymean[i] = $.mean(_data[i]);
                 _N +=_data[i].length;       //calculate N = total number of observations
 				_total+=_ymean[i];
 			}
