@@ -14,7 +14,7 @@ socr.dataStore = function(){
 				return _data[index]
 			}
 			else
-				return false
+				return _data
 		},
 
 		setData: function(data){
@@ -71,6 +71,7 @@ socr.dataStore = function(){
 					temp.util.setData(data);
 				//custom helper functions
 				}
+				return temp;
 			}
 			catch(e){
 				console.log(e.stack)

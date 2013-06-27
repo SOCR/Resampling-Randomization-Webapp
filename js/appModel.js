@@ -322,20 +322,18 @@ return{
 	*/
 	getMean:function(groupNumber){
 		var	groupNumber = groupNumber || 1 ;    // 1 is default value - meaning the first dataset
-		if(_sample.Mean[groupNumber] === undefined){
-			_sample.Mean[groupNumber]=[];
-		}
-		if(_sample.Mean[groupNumber].length ===_count ){
+		var obj = socr.dataStore.createObject(groupNumber+".mean",[]);
+		if(obj.util.getData().length=== _count){
             console.log("already saved!");
-			return _sample.Mean[groupNumber];
-        }
-		else
-		{
-			for(var j=_sample.Mean[groupNumber].length;j<_count;j++){
-				_sample.Mean[groupNumber][j]=_generateMean(j,groupNumber);
+			return obj.util.getData()
+		}
+		else{
+			var _mean=[];
+			for(var j=obj.util.getData().length;j<_count;j++){
+				_mean[j]=_generateMean(j,groupNumber);
 			}
-			//console.log("sample mean ");console.log(_sample.Mean);
-			return _sample.Mean[groupNumber];
+			obj.util.setData(_mean)
+			return obj.util.getData()
 			}
 		},
 
@@ -417,21 +415,20 @@ return{
      * @returns {Array}
      */
 	getCount:function(groupNumber){
-		groupNumber = groupNumber || 1;
-        if(_sample.Count[groupNumber] === undefined){
-            _sample.Count[groupNumber]=[];
-        }
-        if(_sample.Count[groupNumber].length ===_count ){
-            console.log("return already saved count values!");
-            return _sample.Count[groupNumber];
-        }
-        else{
-            for(var j=_sample.Count[groupNumber].length;j<_count;j++){
-                _sample.Count[groupNumber][j]=_generateCount(j,groupNumber);
-			    //console.log(_sample.Count[j]);
+		var	groupNumber = groupNumber || 1 ;    // 1 is default value - meaning the first dataset
+		var obj = socr.dataStore.createObject(groupNumber+".count",[]);
+		if(obj.util.getData().length=== _count){
+            console.log("already saved!");
+			return obj.util.getData()
+		}
+		else{
+			var _c=[];
+			for(var j=obj.util.getData().length;j<_count;j++){
+				_c[j]=_generateCount(j,groupNumber);
 			}
-			return _sample.Count[groupNumber];
-        }
+			obj.util.setData(_c)
+			return obj.util.getData()
+		}
 	},
 
     /**
@@ -504,27 +501,26 @@ return{
 	/** PERCENTILE METHODS ENDS **/
 
 	/**
-	*@method getF()
+	*@method getF
 	*@desc returns the F value computed from the supplied group
 	*@return {Object}
     */
     getF:function(groupNumber){
-        var groupNumber = groupNumber || 1;
+		var	groupNumber = groupNumber || 1 ;    // 1 is default value - meaning the first dataset
 		_this=this;
-        if(_sample.FValue[groupNumber] === undefined){
-            _sample.FValue[groupNumber] = [];
-        }
-		if(_sample.FValue[groupNumber].length === _count){
-            console.log("returning the saved F-values!")
-            return _sample.FValue[groupNumber];
-        }
-        else{
-            for(var i=_sample.FValue[groupNumber].length;i<_count;i++){
-                _sample.FValue[groupNumber][i]=_generateF(i).fValue;
-            }
-            return _sample.FValue[groupNumber];
-        }
-
+		var obj = socr.dataStore.createObject("fValue",[]);
+		if(obj.util.getData().length=== _count){
+            console.log("already saved!");
+			return obj.util.getData()
+		}
+		else{
+			var _f=[];
+			for(var j=obj.util.getData().length;j<_count;j++){
+				_f[j]=_generateF(j).fValue;
+			}
+			obj.util.setData(_f)
+			return obj.util.getData()
+		}
 	},
 
     /**
@@ -544,21 +540,21 @@ return{
      */
 
     getP:function(groupNumber){
-        var groupNumber = groupNumber || 1;
-        _this = this;
-        if(_sample.PValue[groupNumber] === undefined){
-            _sample.PValue[groupNumber] = [];
-        }
-        if(_sample.PValue[groupNumber].length === _count){
-            console.log("returning the saved P-values!")
-            return _sample.PValue[groupNumber];
-        }
-        else{
-            for(var i=_sample.PValue[groupNumber].length;i<_count;i++){
-                _sample.PValue[groupNumber][i]=_generateP(i);
-            }
-            return _sample.PValue[groupNumber];
-        }
+ 		var	groupNumber = groupNumber || 1 ;    // 1 is default value - meaning the first dataset
+		_this=this;
+		var obj = socr.dataStore.createObject("pValue",[]);
+		if(obj.util.getData().length=== _count){
+            console.log("already saved!");
+			return obj.util.getData()
+		}
+		else{
+			var _p=[];
+			for(var j=obj.util.getData().length;j<_count;j++){
+				_p[j]=_generateP(j);
+			}
+			obj.util.setData(_p)
+			return obj.util.getData()
+		}
     },
 
     /**
@@ -572,29 +568,29 @@ return{
     },
 
     /**
-     * @method getP
+     * @method getDOP
      * @return {Object}
      */
 
     getDOP:function(){
-        _this = this;
-        if(_sample.DOPValue === undefined){
-            _sample.DOPValue = [];
-        }
-        if(_sample.DOPValue.length === _count){
-            console.log("returning the saved DOP-values!")
-            return _sample.DOPValue;
-        }
-        else{
-            for(var i=_sample.DOPValue.length;i<_count;i++){
-                _sample.DOPValue[i]=_generateDOP(i);
-            }
-            return _sample.DOPValue;
-        }
+		_this=this;
+		var obj = socr.dataStore.createObject("DOPValue",[]);
+		if(obj.util.getData().length=== _count){
+            console.log("already saved!");
+			return obj.util.getData()
+		}
+		else{
+			var _p=[];
+			for(var j=obj.util.getData().length;j<_count;j++){
+				_p[j]=_generateDOP(j);
+			}
+			obj.util.setData(_p)
+			return obj.util.getData()
+		}
 
     },
     /**
-     * @method getPof
+     * @method getDOPof
      * @param sampleNumber
      * @returns {number}
      */
