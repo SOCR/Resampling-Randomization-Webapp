@@ -1,16 +1,16 @@
-socr.dataTable= function () {
-  
+socr.dataTable = function () {
+
     $dataTable = $('#input');
     var $controls = $('section.controls');
     $parent = $('div.spreadsheet');
     var $response = $('#status');
 
-  // Drag and Drop site
+    // Drag and Drop site
     $drop = $('#drop');
     $boxsection = $('#fetchURL');
     $urlbox = $boxsection.find('input[name="urlbox"]');
     $urlsubmit = $boxsection.find('input[name="submit"]');
-   // Default Method of entering data
+    // Default Method of entering data
     method = 'sync';
 
     var splashScreen = $('section#datadriven-splash');
@@ -23,640 +23,662 @@ socr.dataTable= function () {
     var resetStage = $('.reset-stage');
     var stageList = $('table.stage-list tbody');
 
-    splashScreen.find('ul li a').on('click',function(){
-    
-      switch( $(this).attr('data-rel') ){
-        case 'spreadsheet' : 
-          view.toggleScreens({ visible: excelScreen})
-          break;
-        case 'fetch' :
-          view.toggleScreens({ visible: [excelScreen,importScreen] })
+    splashScreen.find('ul li a').on('click', function () {
+
+        switch ($(this).attr('data-rel')) {
+        case 'spreadsheet':
+            view.toggleScreens({
+                visible: excelScreen
+            })
+            break;
+        case 'fetch':
+            view.toggleScreens({
+                visible: [excelScreen, importScreen]
+            })
             $urlbox.focus();
-          break;
-        case 'worldbank' : 
-          view.toggleScreens({ visible:  worldbankContainer })
-          break;
-         default : 
-          simulationDriven.init($(this).attr('data-rel'));
-      }
+            break;
+        case 'worldbank':
+            view.toggleScreens({
+                visible: worldbankContainer
+            })
+            break;
+        default:
+            simulationDriven.init($(this).attr('data-rel'));
+        }
     });
 
-   
 
-   var simulationDriven = {
-      init : function(arg){
-        var expId = arg.substr(4);
-        console.log('Experiments loaded: '+simulationDriven.expLoaded);
-        /* 
+
+    var simulationDriven = {
+        init: function (arg) {
+            var expId = arg.substr(4);
+            console.log('Experiments loaded: ' + simulationDriven.expLoaded);
+            /* 
           ToDO : Verify .js extension addition in all browsers
         */
-        // if($.inArray( expId, simulationDriven.expLoaded))
-        //   simulationDriven.loadData(expId);
-        // else
-          simulationDriven.loadScript(expId);
-      },
-      expLoaded : [],
-      loadScript: function(id){
-        $.getScript( 'js/exp/'+id +'.js', function(){
-          simulationDriven.loadData(id)
-        } )
-      },
-      loadData : function(id){
-        console.log('loadData called '+id)
-        $.getJSON('js/exp/experiments.json', function(res){
-          console.log(res.experiments);
-          for(i in res.experiments){
-            
-            if(id == res.experiments[i].id){
-              simulationDriven.displayText({
-                title: res.experiments[i].name,
-                description: res.experiments[i].description
-              });
-              break;
-            }
-          }
-         simulationDriven.adjustModel(id) 
-        })
-      },
-      adjustModel : function(id){
-          socr.exp.current=socr.exp[id];
-          PubSub.subscribe("controller view for "+id+" created",socr.exp.current.initialize);
-          //socr.controller.setCurrentMode("simulationDriven");
-          socr.exp.current.createControllerView();
-          socr.view.toggleControllerHandle("show");
-          simulationDriven.expLoaded.push(id);
-          setTimeout(function(){PubSub.publish("Experiment loaded")},500);
-      },
-      displayText : function(details){
-          splashScreen.hide();
-          excelScreen.hide();
-          importScreen.hide();
-          worldbankContainer.hide();
-          simulationDetails.show().find('h3').text(details.title).parent().parent().find('.exp-dscp').html(details.description);
-        // simulationDriven.
-      },
-      resetScreen : function(){
-        view.toggleScreens({ visible: splashScreen });
-        socr.view.toggleControllerHandle("hide");
-      }
+            // if($.inArray( expId, simulationDriven.expLoaded))
+            //   simulationDriven.loadData(expId);
+            // else
+            simulationDriven.loadScript(expId);
+        },
+        expLoaded: [],
+        loadScript: function (id) {
+            $.getScript('js/exp/' + id + '.js', function () {
+                simulationDriven.loadData(id)
+            })
+        },
+        loadData: function (id) {
+            console.log('loadData called ' + id)
+            $.getJSON('js/exp/experiments.json', function (res) {
+                console.log(res.experiments);
+                for (i in res.experiments) {
 
-   } ;
+                    if (id == res.experiments[i].id) {
+                        simulationDriven.displayText({
+                            title: res.experiments[i].name,
+                            description: res.experiments[i].description
+                        });
+                        break;
+                    }
+                }
+                simulationDriven.adjustModel(id)
+            })
+        },
+        adjustModel: function (id) {
+            socr.exp.current = socr.exp[id];
+            PubSub.subscribe("controller view for " + id + " created", socr.exp.current.initialize);
+            //socr.controller.setCurrentMode("simulationDriven");
+            socr.exp.current.createControllerView();
+            socr.view.toggleControllerHandle("show");
+            simulationDriven.expLoaded.push(id);
+            setTimeout(function () {
+                PubSub.publish("Experiment loaded")
+            }, 500);
+        },
+        displayText: function (details) {
+            splashScreen.hide();
+            excelScreen.hide();
+            importScreen.hide();
+            worldbankContainer.hide();
+            simulationDetails.show().find('h3').text(details.title).parent().parent().find('.exp-dscp').html(details.description);
+            // simulationDriven.
+        },
+        resetScreen: function () {
+            view.toggleScreens({
+                visible: splashScreen
+            });
+            socr.view.toggleControllerHandle("hide");
+        }
+
+    };
     //Settings
 
 
-  var dragdrop = {
-      init : function(){
+    var dragdrop = {
+        init: function () {
 
-       // $drop.on('dragover', dragdrop.cancel);
-        $drop.on('dragenter', dragdrop.enter);
-        $drop.on('drop', dragdrop.drop);
-        $urlsubmit.on('click',dragdrop.urlboxsubmit);
-        $boxsection.submit(dragdrop.urlboxsubmit);
-        tableparse.switchMode();
-      },
-      enter : function(e){
-        $(drop).addClass('active');
-      },
-      drop : function(e){
-        console.log(e);
-         if (e.preventDefault) e.preventDefault(); // stops the browser from redirecting off to the text.  
-            drop.innerHTML = e.dataTransfer.getData('Text') ;
-         var a =e.dataTransfer.getData('Text');
-            tableparse.init(a);   
-      },
-      cancel : function(e){
-         if (e.preventDefault) e.preventDefault(); // required by FF + Safari
-        e.dataTransfer.dropEffect = 'copy'; // tells the browser what drop effect is allowed here
-        return false; // required by IE
-      },
-      urlboxsubmit : function(e){
-        e.preventDefault();
-        tableparse.init( $urlbox.val() );
-      }
-  };
+            // $drop.on('dragover', dragdrop.cancel);
+            $drop.on('dragenter', dragdrop.enter);
+            $drop.on('drop', dragdrop.drop);
+            $urlsubmit.on('click', dragdrop.urlboxsubmit);
+            $boxsection.submit(dragdrop.urlboxsubmit);
+            tableparse.switchMode();
+        },
+        enter: function (e) {
+            $(drop).addClass('active');
+        },
+        drop: function (e) {
+            console.log(e);
+            if (e.preventDefault) e.preventDefault(); // stops the browser from redirecting off to the text.  
+            drop.innerHTML = e.dataTransfer.getData('Text');
+            var a = e.dataTransfer.getData('Text');
+            tableparse.init(a);
+        },
+        cancel: function (e) {
+            if (e.preventDefault) e.preventDefault(); // required by FF + Safari
+            e.dataTransfer.dropEffect = 'copy'; // tells the browser what drop effect is allowed here
+            return false; // required by IE
+        },
+        urlboxsubmit: function (e) {
+            e.preventDefault();
+            tableparse.init($urlbox.val());
+        }
+    };
 
-  var tableparse = {
-      init : function(url){
-        
-       if( url.substr(0,7) !== 'http://'){
-           url = 'http://' + url;
-        }
-        if( tableparse.checkRefer(url) === true)  {
-           tableparse.notify();
-           tableparse.request(url)
-           return true;
-        }
-         return false;
-      },
-      notify : function(){
-        view.displayResponse('Dataset Request Initialized','success');
-        setTimeout(function(){
-          $response.slideToggle().html('');
-        }, 2000);
-      },
-      checkRefer : function(url){
-        var requestHost = document.createElement("a");
+    var tableparse = {
+        init: function (url) {
+
+            if (url.substr(0, 7) !== 'http://') {
+                url = 'http://' + url;
+            }
+            if (tableparse.checkRefer(url) === true) {
+                tableparse.notify();
+                tableparse.request(url)
+                return true;
+            }
+            return false;
+        },
+        notify: function () {
+            view.displayResponse('Dataset Request Initialized', 'success');
+            setTimeout(function () {
+                $response.slideToggle().html('');
+            }, 2000);
+        },
+        checkRefer: function (url) {
+            var requestHost = document.createElement("a");
             requestHost.href = url;
 
-            if(window.location.hostname !== requestHost.hostname && url.indexOf('wiki.stat.ucla.edu') < 0 ){
-              view.displayResponse('Datasets should be on the same server with the same URL hostname','error');
-              return false;
-            } else{
-              console.log('Dataset Server test passed')
-              return true;
+            if (window.location.hostname !== requestHost.hostname && url.indexOf('wiki.stat.ucla.edu') < 0) {
+                view.displayResponse('Datasets should be on the same server with the same URL hostname', 'error');
+                return false;
+            } else {
+                console.log('Dataset Server test passed')
+                return true;
             }
-      },
-      request : function(uri){
-        // Fix for FF 
-       
-     
-        $.get(uri, function(d){
-
-        var tableCount = $(d).is('table') ? $(d).length : $(d).find('table').length,
-          tables = $(d).is('table') ? $(d) : $(d).find('table'),
-          table = tableparse.filterBySize(tables),
-          titles = tableparse.parseHeadings (table);
-          matrix = tableparse.htmlToArray(table);  
-          $dataTable.inputtable({
-            cols : 2,
-            minSpareCols: 0
-          })
-
-          var inputMethod = tableparse.mode() === 'sync' ? 'loadDataSwift' : 'loadData';
-          $dataTable.inputtable(inputMethod,matrix);
-        }).fail(function() { 
-
-            view.displayResponse('There was an error loadin the dataset','error')
-
-         })
+        },
+        request: function (uri) {
+            // Fix for FF 
 
 
-      },
+            $.get(uri, function (d) {
 
-      filterBySize : function(arrayOfTables){
-          var sizes = [];
-        $(arrayOfTables).each(function(i){
-          sizes.push([ $(this).find('tr:last').index() , i] )
-        })
-        var maxIndex = 0;
-        for(k=0; k < sizes.length - 2 ; k++){
-          if(sizes[k][0] < sizes [k+1][0])
-            maxIndex = sizes[k+1][1];
-        }
-        return arrayOfTables[maxIndex];
-      },
+                var tableCount = $(d).is('table') ? $(d).length : $(d).find('table').length,
+                    tables = $(d).is('table') ? $(d) : $(d).find('table'),
+                    table = tableparse.filterBySize(tables),
+                    titles = tableparse.parseHeadings(table);
+                matrix = tableparse.htmlToArray(table);
+                $dataTable.inputtable({
+                    cols: 2,
+                    minSpareCols: 0
+                })
 
-      parseHeadings : function(html){
-        var title = [];
-        $stats = $(html);
-        var firstrow = $stats.find('tr').filter(':first');
-        
-        var element = firstrow.find('th').length > 0 ?'th':'td';
+                var inputMethod = tableparse.mode() === 'sync' ? 'loadDataSwift' : 'loadData';
+                $dataTable.inputtable(inputMethod, matrix);
+            }).fail(function () {
 
-        firstrow.find(element).each(function(){
-          title.push( $(this).text() );
-        });
-        spreadSheet.addColHeaders(title);
-        console.log(title + ' '+ element);
-        return title;
-      },
+                view.displayResponse('There was an error loadin the dataset', 'error')
 
-      htmlToArray : function(html){
-        var matrix = [];
-      $stats = $(html);
-        $stats.find('tr').each(function(){
-            var row = [];
-            $(this).find('td').each(function(){
-              row.push( $(this).text() );
             })
-            matrix.push(row);
-         });
 
-        /*
+
+        },
+
+        filterBySize: function (arrayOfTables) {
+            var sizes = [];
+            $(arrayOfTables).each(function (i) {
+                sizes.push([$(this).find('tr:last').index(), i])
+            })
+            var maxIndex = 0;
+            for (k = 0; k < sizes.length - 2; k++) {
+                if (sizes[k][0] < sizes[k + 1][0])
+                    maxIndex = sizes[k + 1][1];
+            }
+            return arrayOfTables[maxIndex];
+        },
+
+        parseHeadings: function (html) {
+            var title = [];
+            $stats = $(html);
+            var firstrow = $stats.find('tr').filter(':first');
+
+            var element = firstrow.find('th').length > 0 ? 'th' : 'td';
+
+            firstrow.find(element).each(function () {
+                title.push($(this).text());
+            });
+            spreadSheet.addColHeaders(title);
+            console.log(title + ' ' + element);
+            return title;
+        },
+
+        htmlToArray: function (html) {
+            var matrix = [];
+            $stats = $(html);
+            $stats.find('tr').each(function () {
+                var row = [];
+                $(this).find('td').each(function () {
+                    row.push($(this).text());
+                })
+                matrix.push(row);
+            });
+
+            /*
         Check if the table has th elements instead
         @Todo
         */
-         if(matrix[0][0] === ''){
-          var row = [];
-          $stats.find('tr').filter(':eq(0)').find('th').each(function(i,v){
-            matrix[0][i -1] = $(this).text();
-          });
-         }   
-         //Removed the first row by default
-         matrix.splice(0,1);
-         return matrix;
-      },
-      /*
+            if (matrix[0][0] === '') {
+                var row = [];
+                $stats.find('tr').filter(':eq(0)').find('th').each(function (i, v) {
+                    matrix[0][i - 1] = $(this).text();
+                });
+            }
+            //Removed the first row by default
+            matrix.splice(0, 1);
+            return matrix;
+        },
+        /*
       Setter-Getter for mode toggling
       */
-      mode : function(option){
-        if(arguments.length){
-          method = option;
+        mode: function (option) {
+            if (arguments.length) {
+                method = option;
+            }
+            return method;
+        },
+
+        switchMode: function () {
+            $('#fetchinstant').click(function () {
+                tableparse.mode('sync');
+            })
+            $('#fetchasync').click(function () {
+                tableparse.mode('async');
+            })
         }
-        return method;
-      },
-
-      switchMode : function(){
-        $('#fetchinstant').click(function(){
-          tableparse.mode('sync');
-        })
-        $('#fetchasync').click(function(){
-          tableparse.mode('async');
-        })
-      }
 
 
-  };
-/*
+    };
+    /*
   Ideally should serve as one-stop object for all visual element changes involving datasets
 */
-  var view = {
-    displayResponse : function(content, type){
-      $response.html('').slideUp(300);
-      $response.append(
-      $('<div></div>')
-        .addClass('alert')
-        .html(content)
-        ).slideDown(300);
+    var view = {
+        displayResponse: function (content, type) {
+            $response.html('').slideUp(300);
+            $response.append(
+                $('<div></div>')
+                .addClass('alert')
+                .html(content)
+            ).slideDown(300);
 
-      var $alertbox = $response.children('div');
-      switch(type) {
-        
-        case "success":
-          $alertbox.addClass('alert-success')
+            var $alertbox = $response.children('div');
+            switch (type) {
+
+            case "success":
+                $alertbox.addClass('alert-success')
                     .prepend(' <i class="icon-ok"></i> ');
-          break;
+                break;
 
-        case "error":
-          $alertbox.addClass('alert-error')
-                  .prepend(' <i class="icon-warning-sign"></i> ');
-          break;
-      }
-    },
-    editTitles : function(){
+            case "error":
+                $alertbox.addClass('alert-error')
+                    .prepend(' <i class="icon-warning-sign"></i> ');
+                break;
+            }
+        },
+        editTitles: function () {
 
-        var d = $dataTable.inputtable('getColHeaders');
-        console.log(d)
-        colHeader = d.blockedRows.headers;
+            var d = $dataTable.inputtable('getColHeaders');
+            console.log(d)
+            colHeader = d.blockedRows.headers;
 
-        var content = '<form class="form form-horizontal" id="input-titles"><fieldset><legend>Add titles to Spreadsheet</legend>';
-        if(typeof colHeader[0] !== 'undefined'){
-          for (var i=0; i<d.colCount; i++){
-            var label = (typeof colHeader[0].labels[i] !== 'undefined') ? colHeader[0].labels[i] : '';
-           content += '<div class="control-group"><label class="control-label">Column ' + i +' :</label><div class="controls"><input type="text" placeholder="Input field" value="' + label + '"></div></div>';
-          }
+            var content = '<form class="form form-horizontal" id="input-titles"><fieldset><legend>Add titles to Spreadsheet</legend>';
+            if (typeof colHeader[0] !== 'undefined') {
+                for (var i = 0; i < d.colCount; i++) {
+                    var label = (typeof colHeader[0].labels[i] !== 'undefined') ? colHeader[0].labels[i] : '';
+                    content += '<div class="control-group"><label class="control-label">Column ' + i + ' :</label><div class="controls"><input type="text" placeholder="Input field" value="' + label + '"></div></div>';
+                }
+            } else {
+
+                var k = 0;
+                while (k < d.colCount) {
+                    content += '<div class="control-group"><label class="control-label">Title ' + k + '</label><div class="controls"><input type="text" placeholder="Input field"></div></div>';
+                    k++;
+                }
+            }
+
+            content += '<div class="pagination-centered"><input type="submit" class="btn btn-large btn-block"></div></form>';
+            $('#input-modal .modal-body').html(content);
+        },
+        parseTitles: function (e) {
+            e.preventDefault();
+            console.log('Call for parse Titles');
+            var titles = [];
+            $('#input-titles').find('input[type="text"]').each(function () {
+                titles.push($(this).val());
+            })
+            spreadSheet.addColHeaders(titles);
+            $('#input-modal').modal('toggle');
+            view.displayResponse('Titles altered successfully', 'success');
+        },
+
+        toggleScreens: function (options) {
+            var dataScreens = [splashScreen, excelScreen, importScreen, worldbankContainer, simulationDetails, datastage];
+            $.each(dataScreens, function (k, v) {
+                v.hide();
+            });
+            $.each(options.visible, function (k, v) {
+                $(v).show();
+            });
+
         }
-        else{
 
-         var k = 0;
-         while(k < d.colCount){  
-          content += '<div class="control-group"><label class="control-label">Title ' + k +'</label><div class="controls"><input type="text" placeholder="Input field"></div></div>';
-          k++;
-        }
-        }
-     
-      content += '<div class="pagination-centered"><input type="submit" class="btn btn-large btn-block"></div></form>';
-      $('#input-modal .modal-body').html(content);
-    },
-    parseTitles : function(e){
-      e.preventDefault();
-      console.log('Call for parse Titles');
-      var titles = [];
-      $('#input-titles').find('input[type="text"]').each(function(){
-        titles.push($(this).val());
-      })
-      spreadSheet.addColHeaders(titles);
-      $('#input-modal').modal('toggle');
-      view.displayResponse('Titles altered successfully','success');
-    },
-
-    toggleScreens : function(options){
-      var dataScreens = [splashScreen, excelScreen, importScreen, worldbankContainer, simulationDetails, datastage];
-      $.each(dataScreens, function(k,v){
-        v.hide();
-      });
-      $.each(options.visible, function(k,v){
-        $(v).show();
-      });
-      
     }
-
-  }
-  /*
+    /*
     Hookups for spreadsheet opterations
   */
-  var spreadSheet = {
+    var spreadSheet = {
 
-    init : function() {
-      /*
+        init: function () {
+            /*
       Spreadsheet generation code, pretty much self explanatory
-      */ 
-      $dataTable.inputtable({
-        cols : 8,
-        rows: 8,
-        minSpareCols: 1,
-        minSpareRows: 1,
-        fillHandle: true,
-        colHeaders: true
-      });
+      */
+            $dataTable.inputtable({
+                cols: 8,
+                rows: 8,
+                minSpareCols: 1,
+                minSpareRows: 1,
+                fillHandle: true,
+                colHeaders: true
+            });
 
-      //Temporary solution to remove multiple table headers
-      $dataTable.find('tr.htColHeader')[0].remove()
+            //Temporary solution to remove multiple table headers
+            $dataTable.find('tr.htColHeader')[0].remove()
 
-    //    $dataTable.inputtable({colHeaders : true})
-    },
+            //    $dataTable.inputtable({colHeaders : true})
+        },
 
-    validate : function(dataset){
-      if(dataset.length > 0){
+        validate: function (dataset) {
+            if (dataset.length > 0) {
 
-        if(dataset[0][0] === '' && dataset[1][0] === '' && dataset[2][0] === ''){
+                if (dataset[0][0] === '' && dataset[1][0] === '' && dataset[2][0] === '') {
 
-          view.displayResponse('Dataset appears to be empty','error');
-          return false;
+                    view.displayResponse('Dataset appears to be empty', 'error');
+                    return false;
 
-        }
+                }
 
-        return true;
+                return true;
 
-      } else {
+            } else {
 
-        view.displayResponse('Empty Dataset, Please fill in from the first column ','error');
-        return;
-      }
+                view.displayResponse('Empty Dataset, Please fill in from the first column ', 'error');
+                return;
+            }
 
-      
-    },
 
-     addColHeaders : function(arr){
-        $dataTable.inputtable({colHeaders : arr});
-      },
+        },
 
-    addTitles : function(){
+        addColHeaders: function (arr) {
+            $dataTable.inputtable({
+                colHeaders: arr
+            });
+        },
 
-      $('<div></div>').appendTo('body')
-        .addClass('modal hide fade')
-        .html('<div class="modal-header"><div>')
-        
+        addTitles: function () {
 
-    },
+            $('<div></div>').appendTo('body')
+                .addClass('modal hide fade')
+                .html('<div class="modal-header"><div>')
 
-    firstRowTitles : function(){
-         var firstrow = $dataTable.inputtable('getFirstRow')[0];
-        spreadSheet.addColHeaders(firstrow);
-        $dataTable.inputtable('alter','remove_row', 0 );
-        view.displayResponse(' Title successfully adjusted ', 'success');
 
-    },
-    parseAll : function(){
-      var dataset = $dataTable.inputtable('getNonEmptyData');
-          socr.model.reset();
+        },
 
-      $("#accordion").accordion( "activate" , 0);
-      try{
-          $(this).update({to:'dataDriven'});
-      }
-      catch(e){
-          console.log(e)
-      }
-      finally{
-          //$.update({to:'dataDriven'});
-          socr.controller.loadController({to:'dataDriven',from:"spreadSheet"});
-      }
-      
-      if(spreadSheet.validate(dataset)){
-        // model.setDataset({
-        //   data: dataset,
-        //   range: 1,
-        //   type: 'getData',
-        //   processed: false,
-        // });
+        firstRowTitles: function () {
+            var firstrow = $dataTable.inputtable('getFirstRow')[0];
+            spreadSheet.addColHeaders(firstrow);
+            $dataTable.inputtable('alter', 'remove_row', 0);
+            view.displayResponse(' Title successfully adjusted ', 'success');
 
-        console.log('Dataset is valid')
-        view.displayResponse(' Entire dataset is selected ', 'success');
+        },
+        parseAll: function () {
+            var dataset = $dataTable.inputtable('getNonEmptyData');
+            socr.model.reset();
 
-        socr.view.toggleControllerHandle("show");
-        //select.selectAll();
-       } else{
-        console.log("Dataset isn't valid")
-       // view.displayResponse(' There is some error in the dataset ', 'error');  
-      }      
-      
-      // console.log(dataset);
-    },
+            $("#accordion").accordion("activate", 0);
+            try {
+                $(this).update({
+                    to: 'dataDriven'
+                });
+            } catch (e) {
+                console.log(e)
+            } finally {
+                //$.update({to:'dataDriven'});
+                socr.controller.loadController({
+                    to: 'dataDriven',
+                    from: "spreadSheet"
+                });
+            }
 
-    parseSelected :  function(){
-       
-       if(select.isSelected()) {
-          var selectedCoords = select.isSelected();
-          /*
+            if (spreadSheet.validate(dataset)) {
+                // model.setDataset({
+                //   data: dataset,
+                //   range: 1,
+                //   type: 'getData',
+                //   processed: false,
+                // });
+
+                console.log('Dataset is valid')
+                view.displayResponse(' Entire dataset is selected ', 'success');
+
+                socr.view.toggleControllerHandle("show");
+                //select.selectAll();
+            } else {
+                console.log("Dataset isn't valid")
+                // view.displayResponse(' There is some error in the dataset ', 'error');  
+            }
+
+            // console.log(dataset);
+        },
+
+        parseSelected: function () {
+
+            if (select.isSelected()) {
+                var selectedCoords = select.isSelected();
+                /*
             Selected Cells:
            [ startrow , startCol, endRow, endCol ]
           */
-        }
-        if(selectedCoords) {
-
-            console.log(' Select Data request with  '+ selectedCoords )  
-            var dataset = $dataTable.inputtable('getSelectedData');
-            $("#accordion").accordion( "activate" , 0);
-            try{
-            socr.controller.loadController({to:'dataDriven',from:"spreadSheet"});
             }
-            catch(e){
-                console.log(e.message)
+            if (selectedCoords) {
+
+                console.log(' Select Data request with  ' + selectedCoords)
+                var dataset = $dataTable.inputtable('getSelectedData');
+                $("#accordion").accordion("activate", 0);
+                try {
+                    socr.controller.loadController({
+                        to: 'dataDriven',
+                        from: "spreadSheet"
+                    });
+                } catch (e) {
+                    console.log(e.message)
+                }
+                socr.view.toggleControllerHandle("hide");
+                if (spreadSheet.validate(dataset)) {
+                    //  model.setDataset({
+
+                    //   data: dataset ,
+                    // //range:selected,
+                    //   type: 'getSelected',
+                    //   processed: false
+
+                    //   });
+
+                    var title = '';
+                    if ($dataTable.find('th')) {
+                        title = $dataTable.find('th.active').text();
+                    }
+                    stage.addRow(dataset, title)
+                    console.log(title)
+                    view.displayResponse('Data added to staging, continue adding more data or select <strong>Proceed</strong>', 'success');
+                    // if(controllerSliderState!=0)
+                    // $(".controller-handle").trigger("click");
+                    select.selectCells(selectedCoords);
+                }
+
+            } else {
+
+                view.displayResponse(' No cells are selected ', 'error');
             }
-           socr.view.toggleControllerHandle("hide");
-            if(spreadSheet.validate(dataset)){
-            //  model.setDataset({
 
-            //   data: dataset ,
-            // //range:selected,
-            //   type: 'getSelected',
-            //   processed: false
-            
-            //   });
-            
-            var title = '';
-            if($dataTable.find('th')){
-              title = $dataTable.find('th.active').text();
-            }
-            stage.addRow(dataset, title)
-            console.log(title)
-            view.displayResponse('Data added to staging, continue adding more data or select <strong>Proceed</strong>', 'success');
-           // if(controllerSliderState!=0)
-           // $(".controller-handle").trigger("click");
-             select.selectCells(selectedCoords);       
-           }
-
-       } 
-        else {
-
-         view.displayResponse(' No cells are selected ', 'error');
-        }
-
-    },
-
-    reset : function(){
-       $('<div></div>').appendTo('body')
-        .html('<div><h6>Are you sure you want to reset the data?</h6></div>')
-        .dialog({
-        modal: true,
-        title: 'Reset Data?',
-        zIndex: 10000,
-        autoOpen: true,
-        width: 'auto',
-        resizable: false,
-        buttons: {
-          Yes: function () {
-            //clear the input sheet 
-            $dataTable.inputtable('clear');
-            $dataTable.inputtable({
-                colHeaders : []
-            })
-            $response.html('<div class="alert"><a class="close" data-dismiss="alert" href="#">x</a>Clear! Enter some value to get started!</div>'); //display the message in the status div below the done and reset buttons
-            $(this).dialog("close"); //close the confirmation window
-           // $dataTable.inputtable({'colHeaders' : false});
-
-          },
-          No: function () {
-            $(this).dialog("close");
-          }
         },
-        close: function (event, ui) {
-          $(this).remove();
+
+        reset: function () {
+            $('<div></div>').appendTo('body')
+                .html('<div><h6>Are you sure you want to reset the data?</h6></div>')
+                .dialog({
+                    modal: true,
+                    title: 'Reset Data?',
+                    zIndex: 10000,
+                    autoOpen: true,
+                    width: 'auto',
+                    resizable: false,
+                    buttons: {
+                        Yes: function () {
+                            //clear the input sheet 
+                            $dataTable.inputtable('clear');
+                            $dataTable.inputtable({
+                                colHeaders: []
+                            })
+                            $response.html('<div class="alert"><a class="close" data-dismiss="alert" href="#">x</a>Clear! Enter some value to get started!</div>'); //display the message in the status div below the done and reset buttons
+                            $(this).dialog("close"); //close the confirmation window
+                            // $dataTable.inputtable({'colHeaders' : false});
+
+                        },
+                        No: function () {
+                            $(this).dialog("close");
+                        }
+                    },
+                    close: function (event, ui) {
+                        $(this).remove();
+                    }
+                });
         }
-      });
+
     }
 
-  }
-
-  /*
+    /*
     All member functions that involve selecting / highlighting
-  */   
-  var select = {
+  */
+    var select = {
 
-    selectCells : function(coords){
-        $dataTable.inputtable('selectCell', coords[0], coords[1], coords[2], coords[3]);
-    },
-    isSelected : function(){
-      var coords = $dataTable.inputtable('getSelected');
-      if(coords) {
-        /*
+        selectCells: function (coords) {
+            $dataTable.inputtable('selectCell', coords[0], coords[1], coords[2], coords[3]);
+        },
+        isSelected: function () {
+            var coords = $dataTable.inputtable('getSelected');
+            if (coords) {
+                /*
           Simple check for deselected members as the getSelected method returns the coordinates of last cell worked on
         */
-        if(coords[0] === coords[2] && coords[1] === coords[3]) {
-          return false;
-        } else {
-          return coords;
+                if (coords[0] === coords[2] && coords[1] === coords[3]) {
+                    return false;
+                } else {
+                    return coords;
+                }
+            }
+            return false;
+        },
+        checkSelected: function () {
+            if (select.isSelected()) {
+                $('#submatrix_spreadsheet').removeAttr('disabled');
+            }
+        },
+        selectAll: function () {
+            console.log('SelectAll member function');
+            $dataTable.inputtable('selectEntiregrid');
         }
-      }
-      return false;
-    },
-    checkSelected : function() {
-       if( select.isSelected() ){
-        $('#submatrix_spreadsheet').removeAttr('disabled');
-      }
-    },
-    selectAll : function(){
-      console.log('SelectAll member function');
-      $dataTable.inputtable('selectEntiregrid');
+
+    };
+
+    var stage = {
+        content: [],
+        index: 1,
+        init: function () {
+            view.toggleScreens({
+                visible: datastage
+            });
+            stage.showContent();
+        },
+        showExcel: function () {
+            view.toggleScreens({
+                visible: excelScreen
+            });
+        },
+        showContent: function () {
+            if (stage.content.length > 0) {
+                stageList.html('');
+                for (i in stage.content) {
+
+                    var elem = stage.content[i].cells.length;
+                    var name = stage.content[i].name;
+                    var index = stage.content[i].id;
+                    var content = '<tr><td>' + name + '</td><td> ' + elem + '</td><td>' + index + '</td></tr>';
+                    stageList.append(content);
+
+                }
+            } else {
+                stageList.html('');
+                stageList.append('<tr:q:q><td>No Content Selected Yet</td><td></td><td></td></tr>')
+            }
+        },
+        addRow: function (content, name) {
+            var obj = {};
+            obj.name = (name != '') ? name : content[0][0];
+            obj.cells = content;
+            obj.id = parseInt(stage.index);
+            stage.content.push(obj);
+            stage.index++;
+            console.log(stage.content);
+        },
+        export: function () {
+            console.log('Export the following datasets');
+            console.log(stage.content);
+            var result = socr.model.setDataset({
+                type: "spreadsheet",
+                values: stage.content,
+                range: stage.content.length,
+                processed: false
+            });
+            if (result == true) {
+                socr.controller.loadController({
+                    to: 'dataDriven',
+                    from: "spreadSheet"
+                });
+                socr.view.toggleControllerHandle("show");
+                socr.view.updateSimulationInfo("Data Driven Experiment");
+            }
+        },
+        reset: function () {
+            stage.index = 1;
+            stage.content = [];
+            stage.showContent();
+        }
     }
-
-  };
-
-  var stage = {
-    content : [],
-    index : 1,
-    init : function(){
-      view.toggleScreens({ visible: datastage });
-      stage.showContent();
-    },
-    showExcel : function(){
-      view.toggleScreens({ visible: excelScreen });
-    },
-    showContent : function(){
-      if(stage.content.length > 0){
-        stageList.html('');
-        for(i in stage.content){
-        
-          var elem = stage.content[i].cells.length;
-          var name = stage.content[i].name;
-          var index = stage.content[i].id;
-          var content ='<tr><td>' + name + '</td><td> ' + elem + '</td><td>' + index + '</td></tr>';
-          stageList.append(content);
-
-        }
-      } else {
-        stageList.html('');
-        stageList.append('<tr:q:q><td>No Content Selected Yet</td><td></td><td></td></tr>')
-      }
-    },
-    addRow : function(content, name){
-      var obj = {};
-      obj.name = (name != '') ? name : content[0][0] ;
-      obj.cells = content;
-      obj.id = parseInt(stage.index);
-      stage.content.push(obj);
-      stage.index++;
-      console.log(stage.content);
-    },
-    export : function(){
-      console.log('Export the following datasets');
-      console.log(stage.content);
-      var result=socr.model.setDataset({
-        type:"spreadsheet",
-        values:stage.content,
-        range:stage.content.length,
-        processed:false
-      });
-      if(result == true){
-          socr.controller.loadController({to:'dataDriven',from:"spreadSheet"});
-          socr.view.toggleControllerHandle("show");
-          socr.view.updateSimulationInfo("Data Driven Experiment");
-      }
-    },
-    reset : function(){
-      stage.index = 1;
-      stage.content = [];
-      stage.showContent();
-    }   
-  }
-  //General Pattern
-  // stage.content = {
+    //General Pattern
+    // stage.content = {
 
     // id
-   //   name : '',
-  //   cells : []
-  // }
-  // stage.content.cell[0] = []
+    //   name : '',
+    //   cells : []
+    // }
+    // stage.content.cell[0] = []
 
-  resetStage.on('click',function(e){
-    e.preventDefault();
-    stage.reset();
-  })
+    resetStage.on('click', function (e) {
+        e.preventDefault();
+        stage.reset();
+    })
 
-  $controls.find('input[value="Use Entire Dataset"]').on('click', spreadSheet.parseAll );
-  $controls.find('.reset-spreadsheet').on('click', spreadSheet.reset );
-  $controls.find('input[value="Proceed"]').on('click', stage.init );
-  datastage.find('input[value="Spreadsheet"]').on('click', stage.showExcel );
-  datastage.find('input[value="Done"]').on('click', stage.export );
-  $controls.find('#submatrix_spreadsheet').on('click',spreadSheet.parseSelected );
-   backSplash.on('click', simulationDriven.resetScreen);
+    $controls.find('input[value="Use Entire Dataset"]').on('click', spreadSheet.parseAll);
+    $controls.find('.reset-spreadsheet').on('click', spreadSheet.reset);
+    $controls.find('input[value="Proceed"]').on('click', stage.init);
+    datastage.find('input[value="Spreadsheet"]').on('click', stage.showExcel);
+    datastage.find('input[value="Done"]').on('click', stage.export);
+    $controls.find('#submatrix_spreadsheet').on('click', spreadSheet.parseSelected);
+    backSplash.on('click', simulationDriven.resetScreen);
 
-  $dataTable.parent().on('mouseup', select.checkSelected );
-    $('a.dragdrop').on('click', function(){
-      $('#fetchURL').slideToggle();
-  })
+    $dataTable.parent().on('mouseup', select.checkSelected);
+    $('a.dragdrop').on('click', function () {
+        $('#fetchURL').slideToggle();
+    })
 
-  $controls.find('.edittitles').on('click',view.editTitles);  
-  $controls.find('.firstrowtitles').on('click', spreadSheet.firstRowTitles);  
-  $('#input-modal').on('submit', '#input-titles',view.parseTitles);
-  
-  spreadSheet.init();
-  dragdrop.init();
+    $controls.find('.edittitles').on('click', view.editTitles);
+    $controls.find('.firstrowtitles').on('click', spreadSheet.firstRowTitles);
+    $('#input-modal').on('submit', '#input-titles', view.parseTitles);
 
-  return {
-    simulationDriven : simulationDriven,
-    spreadSheet: spreadSheet,
-    view: view
-  }
+    spreadSheet.init();
+    dragdrop.init();
+
+    return {
+        simulationDriven: simulationDriven,
+        spreadSheet: spreadSheet,
+        view: view
+    }
 }();
