@@ -2565,6 +2565,15 @@
       //console.log(nonEmptyCols + ' , ' + nonEmptyRows)
       return datamap.getRange({row: nonEmptyRows, col: 0},{row: 0, col: nonEmptyCols});
     };
+
+  /****
+
+    Temporary self refresh hook
+
+  ****/
+  this.refreshSpreadsheet = function(){
+    self.blockedCols.refresh();
+  }
   /*
     Returns the submatrix of data with the extremities of data coordinates
     @public

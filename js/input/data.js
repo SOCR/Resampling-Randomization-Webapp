@@ -338,7 +338,21 @@ socr.dataTable = function () {
             $('#input-modal').modal('toggle');
             view.displayResponse('Titles altered successfully', 'success');
         },
+        handleRemoveCol : function(e){
+            e.preventDefault();
+            var index = parseInt($('#remove-col').find('input[type="text"]').val());
+            spreadSheet.removeCol(index);
+            $('#input-modal').modal('toggle');
+            view.displayResponse('Column '+ index +' removed', 'success');
+        },
+        removeCol : function(){
+            var content = '<form class="form form-horizontal" id="remove-col"><fieldset><legend>Remove Column By Index</legend>';
+           
+            content += '<div class="control-group"><label class="control-label">Column Index </label><div class="controls"><input type="text" placeholder="Column Index (0/1/2/3..)" ></div></div>';
 
+            content += '<div class="pagination-centered"><input type="submit" class="btn btn-large btn-block"></div></form>';
+            $('#input-modal .modal-body').html(content);
+        },
         toggleScreens: function (options) {
             var dataScreens = [splashScreen, excelScreen, importScreen, worldbankContainer, simulationDetails, datastage];
             $.each(dataScreens, function (k, v) {
@@ -370,7 +384,7 @@ socr.dataTable = function () {
             });
 
             //Temporary solution to remove multiple table headers
-            $dataTable.find('tr.htColHeader')[0].remove()
+            $dataTable.find('tr.htColHeader')[1].remove()
 
             //    $dataTable.inputtable({colHeaders : true})
         },
@@ -400,6 +414,11 @@ socr.dataTable = function () {
             $dataTable.inputtable({
                 colHeaders: arr
             });
+        },
+
+        removeCol : function(index){
+             $dataTable.inputtable('alter', 'remove_col', index);
+             spreadSheet.refresh();
         },
 
         addTitles: function () {
@@ -456,6 +475,10 @@ socr.dataTable = function () {
             }
 
             // console.log(dataset);
+        },
+        refresh : function(){
+             $dataTable.inputtable({});
+             $dataTable.find('tr.htColHeader')[1].remove()
         },
 
         parseSelected: function () {
@@ -671,7 +694,10 @@ socr.dataTable = function () {
 
     $controls.find('.edittitles').on('click', view.editTitles);
     $controls.find('.firstrowtitles').on('click', spreadSheet.firstRowTitles);
+    $controls.find('.removecol').on('click', view.removeCol);
     $('#input-modal').on('submit', '#input-titles', view.parseTitles);
+    $('#input-modal').on('submit', '#remove-col', view.handleRemoveCol);
+    
 
     spreadSheet.init();
     dragdrop.init();
