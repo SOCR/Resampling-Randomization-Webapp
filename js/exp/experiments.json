@@ -23,6 +23,12 @@
 			"name" : "The Beta Binomial Experiment",
 			"url" : "js/exp/betaBinomial.js",
 			"description" : "In the beta-binomial experiment, a random probability P has a beta distribution with left shape parameter a and right shape parameter b. Then, n Bernoulli trials with probability of success P are performed Random variable Y is the number of heads, and has the beta-binomial distribution with parameters n, a, and b. The values of P and Y are recorded on each run and the outcomes of the trials are shown in the timeline graph (red for success, green for failure). The probability density function of P is shown in the first graph, and the probability density function of Y is shown in the second graph and is given in the second table. On each run, the value of P is shown in the first graph, and the empirical probability density function of Y is shown in the seond graph and recorded in the second table. The parameters n, a, and b can be varied with input controls."
+		},
+				{
+			"id" : "betaDistribution",
+			"name" : "The Beta Distribution Experiment",
+			"url" : "js/exp/betaDistribution.js",
+			"description" : "The experiment consists of selecting a random sample of size n from the standard uniform distribution. The first graph shows the probability density function and moments of the sampling distribution in blue. For each run of the experiment, the empirical density function and moments are shown in red. The sample values are shown in the sample table. For a specified k, the kth order statistic is displayed on each update in the data table. This order statistic has the beta distribution with parameters k and n−k+1. The probability density function and moments of X(k) are shown in blue in the distribution graph and are recorded in the distribution table. On each update, the empirical probability density function and moments of X(k) are shown in red in the distribution graph and are recorded in the distribution table. The parameters n and k can be varied with the input controls bars."
 		}
 	]
 }

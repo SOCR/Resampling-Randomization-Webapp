@@ -124,6 +124,7 @@
 										<li> <a data-rel="exp_ballAndUrn">Ball and Urn</a> </li>
 										<li> <a data-rel="exp_cardExp">Card Experiment</a> </li>
 										<li> <a data-rel="exp_betaBinomial">Beta Binomial Experiment</a> </li>
+										<li> <a data-rel="exp_betaDistribution">The Beta Distribution Experiment</a> </li>
 									</ul>
 								</div> 
 							</section>
@@ -139,6 +140,7 @@
 											</a>
 											<ul class="dropdown-menu">
 												<li><a class="edittitles" data-toggle="modal" href="#input-modal"> Edit titles </a></li>
+												<li><a class="firstrowtitles"> Use first row as titles </a></li>
 											</ul>
 										</div>
 										<!--<input class="btn" type='button' value='Use Entire Dataset'>-->
@@ -430,6 +432,7 @@
 					
 				</div>
 			</div>
+
 			<div id='footer'>
 
 			<!-- Start SOCR footer -->
@@ -477,9 +480,11 @@
 			"js/input/data.js",
 			"js/vis/tooltip.js",
 			"js/tools/FCal.js",
+			"js/tools/ZCal.js",
             "js/lib/mustache/mustache.js",
             "js/lib/chardinjs/chardinjs.min.js",
-            "js/tutorial/tutorial.js"
+            "js/tutorial/tutorial.js",
+            "js/utils.js"
 	    	);
     
 	head.ready(function () {

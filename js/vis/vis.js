@@ -258,12 +258,21 @@ socr.vis = (function(){
 	        .attr("x", function(d) { return x(d.x); })
 	        .attr("y", height - margin.top - margin.bottom) 
 	        // .order()
-	        .on('mouseover', function(d){ 
-	          d3.select(this).classed('hover', true) 
-	        })
-	        .on('mouseout', function(){ 
-	          d3.select(this).classed('hover', false) 
-	        })
+         	.on('mouseover', function(d){ 
+			      d3.select(this).classed('hover', true) 
+			      var left = $(this).position().left,
+			          top = $(this).position().top + 30;
+
+			      var content = '<h3> X :  '+ round(d.x) +' , Y : ' + round(d.y) + '</h3>';
+
+			      if(typeof viswrap != 'undefined')
+			     	 viswrap.tooltip.show([left, top], content, 's');
+			    })
+		    .on('mouseout', function(){ 
+		        d3.select(this).classed('hover', false);
+		        if(typeof viswrap != 'undefined') 
+		        	viswrap.tooltip.cleanup();
+		   	})
 	        .transition()
 	         .delay( function(d,i){ return settings.transitionDuration * (i / classes.length); } )
 	        .attr("y", function(d) { return y(d.y); })
@@ -286,6 +295,12 @@ socr.vis = (function(){
 
 			}
 
+
+	}
+
+	var round = function(no){
+		var SIG = priv.SIG ? priv.SIG : 2;
+		return Math.round(no* Math.pow(10,SIG) )/ Math.pow(10,SIG);
 
 	}
 
@@ -426,7 +441,7 @@ socr.vis = (function(){
 			    	meanbarX = (x.rangeBand()/2)+x(settings.datum) - (10/2);
 			  
 			    } else{
-			    	meanbarX = x(interval[0]) +x.rangeBand()+ interpolateWidth - 5;
+			    	meanbarX = x(interval[0]) +x.rangeBand()/2+ interpolateWidth - 5;
 			    	
 			    }
 

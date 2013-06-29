@@ -1,3 +1,4 @@
+<h5>Sample Generation:</h5>
 <div id="buttonPanel">
     <a href="#" class="tooltips" rel="tooltip" title="Step">
         <button class="btn" type="button" id="stepButton" tabindex="1" title="Step">
@@ -20,14 +21,16 @@
         </button>
     </a>
     <span>
-        <i class="icon-question-sign popups" rel="popover" data-content="<ul><li>Step Button : generates 1 sample</li><li>Run Button : generates X sample..X can be set from the option below</li><li>Stop Button :Stops the sample generation</li><li>Reset Button : Resets all values</li></ul>" data-original-title="Controls"></i>
+        <i class="icon-question-sign controller-popups" rel="popover" data-content="<ul><li>Step Button : generates 1 sample</li><li>Run Button : generates X sample..X can be set from the option below</li><li>Stop Button :Stops the sample generation</li><li>Reset Button : Resets all values</li></ul>" data-original-title="Controls"></i>
     </span>
     &nbsp;&nbsp;
+    {{#showBack}}
     <a href="#">
         <button class="btn controller-back">
             Back <i class="icon-arrow-left" ></i>
         </button>
     </a>
+    {{/showBack}}
 </div>
 
 {{#animationSpeed}}
@@ -45,10 +48,11 @@
     <span>Generate</span>
     <input type="text" id="countSize" class="input-mini" value="1000">
     <span>Samples with </span>
-    <input type="text" id="nSize" class="input-mini" value="{{datapoints}}">
+    <a data-toggle="modal" href="#setN"><button class="controller-popups btn">Set</button></a></li>
     <span>Datapoint per sample.</span>
     <br>
 </div>
+<h5>Analysis:</h5>
 <div class="inference-variable">
     <form class="form form-inline">
         <select id="variable" style="width:30%">
@@ -68,8 +72,23 @@
         </select>
         {{/showIndex}}
         <span>
-            <a href="#" class="btn btn-danger popups" rel="popover" data-content="This will create a plot of the variable for each generated sample. Click this once you have generated some samples!" data-original-title="Inference" id="infer">Infer!</a>
+            <a href="#" class="btn btn-info popups" rel="popover" data-content="This will create a plot of the variable for each generated sample. Click this once you have generated some samples!" data-original-title="Inference" id="infer">Infer!</a>
         </span>
     </form>
 </div>
-
+<div id='setN' class="modal hide fade">
+    <div class="modal-header">
+        <a class="close" data-dismiss="modal">X</a>
+        <h3>Set the Sample Length</h3>
+    </div>
+    <div class="modal-body">
+        <ul>
+            {{#RSampleLength}}
+            <li><input type="text" value="{{.}}"/></li>
+            {{/RSampleLength}}
+        </ul>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-info">Update</button>
+    </div>
+</div>

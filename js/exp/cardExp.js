@@ -53,9 +53,9 @@ function _dealCard(){
 
 
 return{
-	name:'Card Experiment',
+	name:'cardExp',
 	type:'card',
-	description:'he card experiment consists of dealing n cards at random (and without replacement) from a standard deck of 52 cards. The cards (X1,X2,…,Xn) are recorded on each run. The parameter n can be varied from 1 to 12 with the input control.',
+	description:'The card experiment consists of dealing n cards at random (and without replacement) from a standard deck of 52 cards. The cards (X1,X2,…,Xn) are recorded on each run. The parameter n can be varied from 1 to 12 with the input control.',
 	initialize: function(){
 		//socr.exp.cardExp=socr.exp.cardExp;
 		_nParam = new Parameter(document.getElementById("nInput"), document.getElementById("nLabel"));
@@ -75,9 +75,14 @@ return{
 		});
 
 		$('#grsbutton').on('click',function(){
-			$.update({to:'dataDriven'});
-			view.updateSimulationInfo();
-		});
+			if(_datasetValues.length!=0)
+				{
+					socr.controller.loadController({to:'dataDriven',from:'Experiment',expName:'binomialCoin'});	//Loads the data into the appModel .
+					socr.view.updateSimulationInfo();		//updates experiment info into third tile in the accordion
+				}
+			else
+				$('.controller-warning').html('<div class="alert alert-error"><a class="close" data-dismiss="alert" href="#">x</a><h4 class="alert-heading">Dataset NOT generated!</h4>Please click the adjacent "Generate Dataset!" button first.</div>');
+			});
 		PubSub.unsubscribe(socr.exp.current.initialize);
 	},
 	

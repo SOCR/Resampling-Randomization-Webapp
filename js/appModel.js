@@ -12,7 +12,7 @@ socr.model=function(){
 	var _stopCount = 1000;			//Number of runs to be made when 'run' button is pressed 
 	var _count=0;					//keeps count of number of samples generated from start
 	var _dataset={};				// All the input datapoints from which bootstrap sample is generated
-	var _n=10;						//Number of datapoints in a bootstrap sample or Sample Size
+	var _n=["0 is taken"];			//Number of datapoints in a bootstrap sample or Sample Size
 	var _K=1;						//contains the number of datasets
 	/*
 	Why there are keys and values? Its because in some form of data input (like coin toss), the "key" contains the symbolic meaningful reference whereas the "value" contains the mathematical equivalent value.
@@ -38,10 +38,6 @@ socr.model=function(){
 	};
 
 	var _this=this;
-/*
- IF EVENT DISPATCH MODEL IS TO BE IMPLEMENTED
-	subject = new LIB_makeSubject(['generateSamples','generateSample']); //list of all the events with observer pattern
-*/
 
 /* PRIVATE METHODS   */
 	/**
@@ -209,6 +205,55 @@ socr.model=function(){
         return socr.tools.fCal.computeP(x.fValue,_ndf,_ddf);
     }
 	
+	/**
+     * @desc Generates p value for the "k" data groups using difference of proportion test.
+     * @param sampleNumber
+     * @returns {number}
+     * @private
+     */
+	function _generateZ(sampleNumber){
+		if(sampleNumber === "dataset"){
+			var _data1 = _dataset[1]['values'],
+		    _data2 = _dataset[2]['values'];
+		}
+		else{
+			var _data1 = _bootstrapGroupValues[sampleNumber][1],
+		    _data2 = _bootstrapGroupValues[sampleNumber][2];
+		}
+		var n1 = _data1.length,
+		p1 = $.sum(_data1)/n1,
+		n2 = _data2.length,
+		p2 = $.sum(_data2)/n2;
+		//quickly generate the proportions
+		var p = (p1 * n1 + p2 * n2) / (n1 + n2);
+
+		var SE = Math.sqrt(p * ( 1 - p ) * ((1/n1) + (1/n2)));
+
+		return {
+			zValue:(p1-p2)/SE
+		}
+
+	}
+	/**
+     * @desc Generates p value for the "k" data groups using difference of proportion.
+     * @param sampleNumber
+     * @param mu
+     * @param sigma
+     * @returns {number}
+     * @private
+     */
+    function _generateDOP(sampleNumber,mu,sigma){
+        try{
+        	var x = _generateZ(sampleNumber),
+        	mu=mu ||0,
+        	sigma=sigma||1;
+        }
+        catch(e){
+        	console.log(e.message)
+        }
+        return socr.tools.zCal.computeP(x.zValue,mu,sigma);
+    }
+
 return{
 	/* PUBLIC PROPERTIES   */
 	//bootstrapGroupKeys:_bootstrapGroupKeys,
@@ -251,8 +296,8 @@ return{
     generateSample:function(){
 		var i=this.getK(),keyEl=['0 is taken'],valEl=['0 is taken'],k=1;
 		while(k<=i){
-			//var j=$('#nSize').val();
-            var j = _n;
+            /*EDIT THIS TO MAKE N DYNAMIC*/
+            var j = _n[k];
 			var sample=[],values=[];
 			while(j--){
 				var temp=this.generateTrail(k);
@@ -527,6 +572,38 @@ return{
     },
 
     /**
+     * @method getP
+     * @return {Object}
+     */
+
+    getDOP:function(){
+        _this = this;
+        if(_sample.DOPValue === undefined){
+            _sample.DOPValue = [];
+        }
+        if(_sample.DOPValue.length === _count){
+            console.log("returning the saved DOP-values!")
+            return _sample.DOPValue;
+        }
+        else{
+            for(var i=_sample.DOPValue.length;i<_count;i++){
+                _sample.DOPValue[i]=_generateDOP(i);
+            }
+            return _sample.DOPValue;
+        }
+
+    },
+    /**
+     * @method getPof
+     * @param sampleNumber
+     * @returns {number}
+     */
+    getDOPof:function(sampleNumber){
+    	_this=this;
+        return _generateDOP(sampleNumber);
+    },
+
+    /**
      * @method getDataset
      * @desc  getter function for dataSet variable.
      * @param K  dataset number , field - what value to return i.e values or keys or name
@@ -666,7 +743,48 @@ return{
 	
 	/**  getter and setter for variable '_n'  */
 	setN:function(z){
-		_n=z;
+		/*NEED TO MAKE N DYNAMIC*/
+		/*if z length != to dataset length, then default the values to the dataset lengths*/
+		//purge _n array
+		_n = ["0 is taken"];
+		var _k = socr.model.getK();
+		if (typeof z === "undefined" || z === null){
+			//computing default values
+			if(typeof _dataset !== "undefined"){
+				for (var i = 1; i <= _k; i++) {
+					try{
+						_n.push(_dataset[i]['values'].length)
+					}
+					catch(e){
+						console.log(e.message);
+						PubSub.publish("Error in model");
+					}
+				}
+			}
+		} 
+		else if($.isArray(z)){
+			if(z.length === _k){
+				z.forEach(function(el,index,arr){
+					if(typeof el === "undefined" || el === null){
+						z[i] = _dataset[i]['values'].length
+					}
+				},z);
+				_n = z;
+				console.log("YOYO")
+				console.log(_n)
+			}
+			else{
+				//some values are missing
+				//this case will come almost never
+			}
+		}
+		else if(typeof z === "number" || typeof z === "string"){
+			console.log(typeof z + " is the type of Z")
+			z = parseInt(z);
+			for (var i = _k; i > 0; i--) {
+				_n.push(z)
+			}
+		}
 	},
 	getN:function(){
 		return _n;

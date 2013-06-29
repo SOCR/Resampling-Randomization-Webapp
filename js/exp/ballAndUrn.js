@@ -67,6 +67,7 @@ function _selectBall(){
 	else{
 		console.log("temp values "+_datasetValues);
 		console.log("temp keys "+ _datasetKeys);
+		PubSub.publish("Initial dataset generated");
 		//view.loadInputSheet(_values);
 		//process the _dataset and convert it into a human readable sample space (example instead of 0 and 1 show tail and head)
 		
@@ -78,7 +79,7 @@ function _selectBall(){
 //returned object 
 //:::::::::::: PUBLIC METHODS :::::::::::::
 return{
-	name:'Ball and Urn',
+	name:'ballAndUrn',
 	type:'ball',
 	initialize: function(){
 		_mParam = new Parameter(document.getElementById("mInput"), document.getElementById("mLabel"));
@@ -102,8 +103,8 @@ return{
 		$('#type').on('click',function(){socr.exp.current.setType()});
 		
 		$('#grsbutton').on('click',function(){
-			if(_values.length!=0){
-					$.update({to:'dataDriven'});	//Loads the data into the appModel .
+			if(_datasetValues.length!=0){
+					socr.controller.loadController({to:'dataDriven',from:'Experiment'});	//Loads the data into the appModel .
 					socr.view.updateSimulationInfo();		//updates experiment info into third tile in the accordion
 				}
 			else

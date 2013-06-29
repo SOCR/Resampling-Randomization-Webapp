@@ -69,6 +69,7 @@
   font-weight: normal;
   white-space: nowrap;
   width: 50px !important;
+  cursor: pointer;
 }
 
 .dataTable th .small {

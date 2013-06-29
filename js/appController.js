@@ -13,7 +13,7 @@ socr.controller=function(model,view){
 	var _runsElapsed=0;				// Keeps count of number of resamples generated
 	var _this = this;						// contains reference to this object.
 	var _noOfSteps=0;
-	var _currentMode="dataDriven";  //App starts with dataDriven mode [default value]
+	var _currentMode="Experiment";  //App starts with dataDriven mode [default value]
 
 /* PRIVATE METHODS   */
 
@@ -44,6 +44,7 @@ socr.controller=function(model,view){
 
 /* PUBLIC METHODS */	
 	return{
+		currentMode:_currentMode,
 	/**
 	 *@method: [private] initialize()
 	 *@description:Initializes the app..binds all the buttons...create the show slider
@@ -65,7 +66,14 @@ socr.controller=function(model,view){
 			//a check to see if the sample count is 0 or not
 			socr.view.createList($('.show-list-start').val(),$('.show-list-end').val());
 		});
-		
+		PubSub.subscribe("Random samples generated",function(){
+			var start = socr.model.getRSampleCount()*0.5;
+			var end = socr.model.getRSampleCount();
+			$( "#showCount" ).html( start + " - " + end );
+			$('.show-list-start').val(start);
+			$('.show-list-end').val(end);
+			$("#showButton").trigger("click");
+		});
 		$('#startApp').on('click',function(){
 			console.log('Launch button clicked');
 			$('#welcome').animate({
@@ -136,7 +144,11 @@ socr.controller=function(model,view){
 			
 		$('#accordion').accordion();
 		$('.dropdown-toggle').dropdown();
-		$('.popups').popover();
+		$('.popups').popover({
+			html:true,
+			trigger:'click',
+			animation:true
+		});
 		$('.tooltips').tooltip();
 		
 		view.createShowSlider();	
@@ -144,6 +156,20 @@ socr.controller=function(model,view){
 	},
 
 	initController:function(){
+		
+		$('.tooltips').tooltip();
+
+        $('.controller-back').on('click',function(e){
+            e.preventDefault();
+            try{
+            	console.log("exp_"+socr.exp.current.name);
+                socr.dataTable.simulationDriven.init("exp_"+socr.exp.current.name);
+            	socr.exp.current.initialize();
+            }
+            catch(err){
+                console.log(err.message);
+            }
+        });
 		$("#runButton").on('click',function(e){
             e.preventDefault();
 			console.log('Run Started');
@@ -180,6 +206,25 @@ socr.controller=function(model,view){
                 setTimeout(function(){PubSub.publish("Dotplot generated")},500);
             }
 		});
+
+        $('#variable').on('change',function(){
+	        if($(this).val()=='mean' || $(this).val()=='count'){
+	            $("#index").attr("disabled",false);
+	        }
+    	    else{
+    	        $("#index").attr("disabled",true);
+    	    }
+    	});
+
+        try{
+        	$('.controller-popups').popover({
+			html:true
+        	});
+        }
+        catch(e){
+        	console.log(e.message)
+        }
+
 	},
 
 	/**
@@ -191,6 +236,7 @@ socr.controller=function(model,view){
 		$("#accordion").accordion( "activate" , 1);
         //socr.view.toggleControllerHandle("hide");
 		view.disableButtons();					//disabling buttons
+		/*EDIT THIS TO MAKE N DYNAMIC*/
 		model.setN($("#nSize").val());				// save the datapoints size
 	    try{
             model.generateSample();			//generate one sample
@@ -220,6 +266,7 @@ socr.controller=function(model,view){
         view.disableButtons();					//disabling buttons
         view.updateStatus("started");
 		model.setStopCount($("#countSize").val());	//save the stopcount provided by user
+		/*EDIT THIS TO MAKE N DYNAMIC*/
 		model.setN($("#nSize").val());				// save the datapoints size
 		//generate samples
 		var _temp=model.getStopCount()/1000;
@@ -275,9 +322,7 @@ socr.controller=function(model,view){
                             $(this).remove();
                         }
                     });
-		
 		},
-        
     
 	setDotplot:function(){
 		$('#dotplot').html('');
@@ -291,15 +336,18 @@ socr.controller=function(model,view){
         });
 	},
 	
-	loadController:function(x){
-		if(x=='simulationDriven'){
-			socr.exp.current.createControllerView();
-			socr.exp.current.initialize();
+	loadController:function(setting){
+		if(typeof setting !== "object"){
+			return false;
 		}
-		else{
-			//check for input
+		if(setting.to === "dataDriven"){
+			if(setting.from !== "undefined"){
+	            socr.controller.setCurrentMode(setting.from);
+	        }
+	       	console.log('DataSet: '+socr.model.getDataset());
+        	PubSub.publish("Datadriven controller loaded");
+			//checking for any dataset generated from experiment. If yes, they take priority and get loaded.
             if(!$.isEmptyObject(socr.exp.current)){
-
 				if(socr.exp.current.getDataset()!=''){	
 					console.log('simulation drive has some data');
 					var result=model.setDataset({
@@ -311,14 +359,25 @@ socr.controller=function(model,view){
 					    view.toggleControllerHandle('show');
                         view.updateSimulationInfo();
 					}
-					//call to loadInputSheet to input the generated simulation data if any
 				}	
 			}
 			else{
 				console.log("Experiment object not defined!");
             }
+            //set N to default values	
+            model.setN();
             view.createControllerView();
-        }
+		}
+	},
+
+	setCurrentMode:function(mode){
+		if(mode != undefined){
+			_currentMode = mode;
+		}
+		return true;
+	},
+	getCurrentMode:function(){
+		return _currentMode;
 	}
  
     }//return

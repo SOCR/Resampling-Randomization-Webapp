@@ -12,7 +12,7 @@ socr.view = function( model ){
 	var model = model;					// [OBJECT] Reference to the App's model object.
 	var _currentVariable;				// [ARRAY] Reference to current inference varaible [mean , SD , count , percentile]
 	var _currentValues;					// [ARRAY] Reference to current inference variable's value of each random sample.
-
+	var _currentExperiment = null;
 
 	/**
 	*@method: [private] _create
@@ -395,7 +395,9 @@ return{
 	*@return : none
 	*/
 	createControllerView:function(){
-        var _datapoints = socr.model.getDataset().length;
+        var _RSampleLength = socr.model.getN();
+        //splice the first element
+        _RSampleLength.splice(0,1);
         //define the configuration json file
         if(socr.model.getK() === 1){
             var variables = ["mean","count"];
@@ -404,7 +406,7 @@ return{
             var indexes = [];
         }
         else{
-            var variables = ["f-value","p-value","mean","count"];
+            var variables = ["f-value","p-value","difference-of-proportion","mean","count"];
             var disabled = ["standardDev"];
             var _showIndex = true;
             var i = socr.model.getK(), indexes=[];
@@ -414,68 +416,20 @@ return{
         }
         //console.log("k "+socr.model.getK());
         //console.log(variables);
+        var showBack = (socr.controller.getCurrentMode() === "Experiment")?true:false;
         var config = {
             animationSpeed:false,
             variables:variables,
             disabled:disabled,
-            datapoints:_datapoints,
+            RSampleLength:_RSampleLength,
             showIndex:_showIndex,
-            index:indexes
+            index:indexes,
+            showBack:showBack
         };
         $.get('partials/controller.tmpl',function(data){
             var _output = Mustache.render(data, config);
             $('#controller-content').html(_output);
             socr.controller.initController();
-
-//            $( "#speed-selector" ).slider({
-//                value:400,
-//                min: 100,
-//                max: 2000,
-//                step: 50,
-//                slide: function( event, ui ) {
-//                    $( "#speed-value" ).html( ui.value );
-//                }
-//            });
-            $('.controller-back').on('click',function(e){
-                e.preventDefault();
-                try{
-                    socr.exp.current.createControllerView();
-
-                }
-                catch(err){
-                    console.log(err.message);
-                }
-                socr.exp.current.initialize();
-            });
-            $('#variable').on('change',function(){
-                if($(this).val()=='mean' || $(this).val()=='count'){
-                    $("#index").attr("disabled",false);
-                }
-                else{
-                    $("#index").attr("disabled",true);
-                }
-
-//                var _percentile=$('#percentile-control');
-//                if($(this).val()=='Percentile'){
-//                    if(_percentile.length)
-//                        _percentile.show();
-//                    else
-//                        $('#controller-content').append('<div id="percentile-control"><div><span class="badge badge-warning" style="float:left;">Percentile: <span id="percentile-value">10</span>%</span></div><div id="percentile-selector"></div></div>');
-//                    //create a slider
-//                    $('#percentile-selector').slider({
-//                        value:20,
-//                        min: 10,
-//                        max: 90,
-//                        step: 5,
-//                        slide: function( event, ui ) {
-//                            $( "#percentile-value" ).html( ui.value );
-//                        }
-//                    });
-//                }
-//                else
-//                    _percentile.hide();
-            });
-
         });
 	},
 	
@@ -613,7 +567,7 @@ return{
             case 'standardDev':
                 var values = model.getStandardDev(setting.index);	//Standard deviation values of all the generated random samples
                 var datum=model.getStandardDevOfDataset(setting.index);		//datum is the dataset SD value
-                console.log("SD Values:"+ values );
+                //console.log("SD Values:"+ values );
                 break
 
             case 'percentile':
@@ -635,14 +589,14 @@ return{
             case 'count':
                 var values = model.getCount(setting.index);	//Standard deviation values of all the generated random samples
                 var datum=model.getCountOf("dataset",setting.index);		//datum is the dataset SD value
-                console.log("Count Values:"+ values );
+                //console.log("Count Values:"+ values );
                 break
 
             case 'f-value':
                 var values=model.getF();
                 var datum=model.getFof("dataset").fValue;
 
-                console.log("F-values"+values);
+                //console.log("F-values"+values);
                 break
 
             case 'p-value':
@@ -651,19 +605,32 @@ return{
 //                console.log("P values"+values);
                 break
 
+            case 'difference-of-proportion':
+                var values=model.getDOP();
+                var datum=model.getDOPof("dataset");
+                //console.log("DOP values"+values);
+                break
+
             default :
                 var values=model.getMean(setting.index);
                 var datum=model.getMeanOf("dataset",setting.index);
-                console.log(values);
+                //console.log(values);
                 break
 
         }
-			
+		/* 
+		Cleaning the NaN values generated.
+		Temporary fix. Need to avoid NaN generation.
+		*/ 
+		$.grep(values,function(a){return !isNaN(a)});	
+		/* Sorting the array to find start and stop values */
 		var temp=values.sort(function(a,b){return a-b});
 		var start=Math.floor(temp[0]);
 		var stop=Math.ceil(temp[values.length-1]);
 		console.log("start: "+start+" stop: "+stop);
-		if(setting.variable === "p-value"){
+		
+		/* Percentage on the right and left side of the intial dataset contribution point. */
+		if(setting.variable === "p-value" || setting.variable === "difference-of-proportion"){
             var total = temp.length, lSide, rSide, start =0 , end = temp.length- 1, index, flag=0;
             if(datum<temp[0]){
                 lSide = 0; rSide = 100;
