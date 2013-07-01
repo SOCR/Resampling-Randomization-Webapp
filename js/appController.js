@@ -202,19 +202,29 @@ socr.controller=function(model,view){
 				socr.view.handleResponse('<h4 class="alert-heading">No Random samples to infer From!</h4>Please generate some random samples. Click "back" button on the controller to go to the "Generate Random Samples!" button.','error','controller-content');
             }
 			else{
-			    socr.controller.setDotplot();
+			    setTimeout(socr.controller.setDotplot,50);
                 socr.view.toggleControllerHandle("hide");
                 setTimeout(function(){PubSub.publish("Dotplot generated")},500);
             }
 		});
 
         $('#variable').on('change',function(){
-	        if($(this).val()=='mean' || $(this).val()=='count'){
+	        if($(this).val()=='Mean' || $(this).val()=='Count'){
 	            $("#index").attr("disabled",false);
 	        }
     	    else{
     	        $("#index").attr("disabled",true);
     	    }
+    	});
+
+        $('#analysis').on('change',function(){
+	        if(socr.analysis[$(this).val()] !== "undefined"){
+	        	var el="";
+	        	$.each(socr.analysis[$(this).val()]["variables"],function(key,value){
+	        		 el+='<option value="'+value+'">'+value.replace("-"," ")+'</option>';
+	        	});
+	        	$("#variable").html(el);
+	        }
     	});
 
         try{
