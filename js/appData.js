@@ -71,7 +71,7 @@ socr.dataStore = function(){
 					temp.util.setData(data);
 				//custom helper functions
 				}
-				return temp;
+				return this;
 			}
 			catch(e){
 				console.log(e.stack)
@@ -80,6 +80,14 @@ socr.dataStore = function(){
 		removeObject:function(obj){
 			if(typeof this[obj] !== "undefined"){
 				delete this[obj];
+			}
+			// delete all the data entries created by the app
+			if(obj === "all"){
+				for(prop in this){
+					if(prop !== "createObject" && prop !== "removeObject"){
+						delete this[prop];
+					}
+				}
 			}
 			return this;
 		}

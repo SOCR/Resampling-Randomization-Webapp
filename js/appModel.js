@@ -225,6 +225,7 @@ socr.model=function(){
     }
 
 return{
+	n:_n,
 	/* PUBLIC PROPERTIES   */
 	//bootstrapGroupKeys:_bootstrapGroupKeys,
 	//bootstrapGroupValues:_bootstrapGroupValues,
@@ -265,13 +266,14 @@ return{
      */
 
     generateSample:function(){
-		var i=socr.model.getK(),
+		var k=socr.model.getK(),
 			keyEl=['0 is taken'],
 			valEl=['0 is taken'],
-			k=1;
-		while(k<=i){
+			i=1;
+		while(i <= k){
             /*EDIT THIS TO MAKE N DYNAMIC*/
-            var j = _n[k];
+            //var j = _n[k];
+            var j = socr.model.getN()[i];
 			var sample=[],values=[];
 			while(j--){
 				var temp=this.generateTrail(k);
@@ -280,7 +282,7 @@ return{
 			}
 			keyEl.push(sample);
 			valEl.push(values);
-			k++;
+			i++;
 		}
 		socr.dataStore.createObject("bootstrapGroup."+_count+".keys",keyEl);
 		socr.dataStore.createObject("bootstrapGroup."+_count+".values",valEl);
@@ -298,7 +300,7 @@ return{
 	*/
 	getMean:function(groupNumber){
 		var	groupNumber = groupNumber || 1 ;    // 1 is default value - meaning the first dataset
-		var obj = socr.dataStore.createObject(groupNumber+".mean",[]);
+		var obj = socr.dataStore.createObject(groupNumber+".mean",[])[groupNumber].mean;
 		if(obj.util.getData().length=== _count){
             console.log("already saved!");
 			return obj.util.getData()
@@ -392,7 +394,7 @@ return{
      */
 	getCount:function(groupNumber){
 		var	groupNumber = groupNumber || 1 ;    // 1 is default value - meaning the first dataset
-		var obj = socr.dataStore.createObject(groupNumber+".count",[]);
+		var obj = socr.dataStore.createObject(groupNumber+".count",[])[groupNumber].count;
 		if(obj.util.getData().length=== _count){
             console.log("already saved!");
 			return obj.util.getData()
@@ -485,7 +487,7 @@ return{
     getF:function(groupNumber){
 		var	groupNumber = groupNumber || 1 ;    // 1 is default value - meaning the first dataset
 		_this=this;
-		var obj = socr.dataStore.createObject("fValue",[]);
+		var obj = socr.dataStore.createObject("F-Value",[])["F-Value"];
 		if(obj.util.getData().length=== _count){
             console.log("already saved!");
 			return obj.util.getData()
@@ -519,7 +521,7 @@ return{
     getP:function(groupNumber){
  		var	groupNumber = groupNumber || 1 ;    // 1 is default value - meaning the first dataset
 		_this=this;
-		var obj = socr.dataStore.createObject("pValue",[]);
+		var obj = socr.dataStore.createObject("P-Value",[])["P-Value"];
 		if(obj.util.getData().length=== _count){
             console.log("already saved!");
 			return obj.util.getData()
@@ -551,7 +553,7 @@ return{
 
     getDOP:function(){
 		_this=this;
-		var obj = socr.dataStore.createObject("DOPValue",[]);
+		var obj = socr.dataStore.createObject("DOPValue",[])["DOPValue"];
 		if(obj.util.getData().length=== _count){
             console.log("already saved!");
 			return obj.util.getData()
@@ -720,7 +722,8 @@ return{
 		/*NEED TO MAKE N DYNAMIC*/
 		/*if z length != to dataset length, then default the values to the dataset lengths*/
 		//purge _n array
-		_n = ["0 is taken"];
+		_n.length=0;
+		_n.push("0 is taken");
 		var _k = socr.model.getK();
 		var _ds = socr.dataStore.dataset;
 		if (typeof z === "undefined" || z === null){
@@ -738,14 +741,13 @@ return{
 			}
 		} 
 		else if($.isArray(z)){
-			if(z.length === _k){
+			if((z.length-1 === _k )||(z.length === _k)){
 				z.forEach(function(el,index,arr){
 					if(typeof el === "undefined" || el === null){
 						z[i] = _ds[i]['values'].util.getData().length
 					}
 				},z);
-				_n = z;
-				console.log(_n)
+				_n.push(z);
 			}
 			else{
 				//some values are missing
@@ -759,6 +761,7 @@ return{
 				_n.push(z)
 			}
 		}
+		console.log(_n);
 	},
 	getN:function(){
 		return _n;
@@ -774,13 +777,18 @@ return{
 		return _count;
 	},
 
-	reset:function(){
-		//dataset values deleted
-		socr.dataStore.removeObject("dataset");
-		//random samples reset
-		socr.dataStore.removeObject("bootstrapGroup");
-		//setting the global random sample count to 0
-		this.setRSampleCount(0);
+	reset:function(option){
+		if(option !== "undefined" && option === "samples"){
+			socr.dataStore.removeObject("bootstrapGroup");
+			//setting the global random sample count to 0
+			socr.model.setRSampleCount(0);	
+		}
+		else{
+			//all values deleted
+			socr.dataStore.removeObject("all");
+			//setting the global random sample count to 0
+			socr.model.setRSampleCount(0);
+		}
 	},
 
     /**

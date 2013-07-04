@@ -225,6 +225,9 @@ return{
 	*	@description - Method to toggle the controller slider
 	*
 	*/
+	initialize:function(){
+	},
+
 	toggleControllerHandle: function(action){
         console.log(action);
         var $target = $('#slide-out-controller');
@@ -290,19 +293,25 @@ return{
 	 *@description: Clears all canvas and div. Resetting the view of the whole App
      * @dependencies : none
      */
-	reset:function(){
-		$('#displayCount').html('0');	//resetting the count to 0
-		$('#sampleList').html('');		//clear the sample List dive
-        $('#showCount').html('');
-        $('#dataPlot').html('');		//clear dataPlot div
-		$('#dotplot').empty();			//clear dotPlot div
-		$('#accordion').accordion( "activate" , 0);
-		$('.pagination').html('');
-		$('#details').html('');
-		$('#dataset').html('');
-		// $("#input").inputtable('clear'); 
-		_currentValues=[];
-		$("#controller-content").html('<div class="alert alert-error">Choose a experiment from "simulation drive" or enter data in the "data drive" first!</div>');
+	reset:function(option){
+		//reset only the samples in the view.
+		if(option != "undefined" && option === "samples"){
+			$('#sampleList').html('');
+		}
+		else{
+			//$('#displayCount').html('0');	//resetting the count to 0
+			$('#sampleList').html('');		//clear the sample List dive
+	        $('#showCount').html('');
+	        $('#dataPlot').html('');		//clear dataPlot div
+			$('#dotplot').empty();			//clear dotPlot div
+			$('#accordion').accordion( "activate" , 0);
+			$('.pagination').html('');
+			$('#details').html('');
+			$('#dataset').html('');
+			// $("#input").inputtable('clear'); 
+			_currentValues=[];
+			$("#controller-content").html('<div class="alert alert-error">Choose a experiment from "simulation drive" or enter data in the "data drive" first!</div>');
+		}
 	},
 	
 	/**
@@ -394,7 +403,8 @@ return{
 	*/
 	createControllerView:function(){
 		//get the random sample length
-        var _RSampleLength = socr.model.getN();
+		//slice(0) does a shallow copy 
+        var _RSampleLength = socr.model.getN().slice(0);
         //splice the first element
         _RSampleLength.splice(0,1);
         
