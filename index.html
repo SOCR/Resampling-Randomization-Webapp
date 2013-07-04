@@ -7,6 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Simulation App,Randomization and Resampling App">
     <meta name="author" content="selvam,ashwini,ivo">
+    <meta http-equiv="X-UA-Compatible" content="IE=9; IE=8;" />
+
   
     <!-- head.js ... its a javascript loader tool -->
     <script src="js/lib/head.min.js"></script>
@@ -20,6 +22,7 @@
     <link rel="stylesheet" media="screen" href="css/input/table.css">
 	<link rel="stylesheet" type="text/css" href="css/jquery.jtweetsanywhere-1.3.1.css" />
    	<link rel="stylesheet" href="css/common.css" >
+	<link rel="stylesheet" href="css/bootstrapSwitch.css">
     <link rel="stylesheet" href="css/vis.css" >
 	<link rel="stylesheet" href="css/default-table.css" >
     <link href="css/chardinjs/chardinjs.css" rel="stylesheet">
@@ -57,6 +60,12 @@
 		<div>
 			<span class="font" >Statistical Online Computational Resource - Resampling WebApp &nbsp;</span> 
 			<div><button id="startApp" class="btn btn-primary btn-large" disabled> Initialising ... </button></div>
+			<div>
+				<span class="font">Help (recommended for first timer!) :</span>
+				<span class="switch switch-mini" data-on="danger" data-off="primary">  
+	    			<input class="help" type="checkbox" >
+	    		</span>
+			</div>
 		</div>
 		</div>
 	</div>
@@ -272,7 +281,7 @@
 							<div class="span8" id="ctrlMessage"></div>
 							<div class="span8" id="progressBar" style="display:none"></div>
 						</div>
-						<div id='controller-content'>
+						<div id='controller-content' style="font-size:12px">
 							<div class="alert alert-error">Choose a experiment from "simulation drive" or enter data in the "data drive" first!</div>
 						</div>
 					</div><!--/slide-out-controller-->
@@ -485,7 +494,10 @@
             "js/lib/mustache/mustache.js",
             "js/lib/chardinjs/chardinjs.min.js",
             "js/tutorial/tutorial.js",
-            "js/utils.js"
+            "js/utils.js",
+            "js/appData.js",
+            "js/bootstrap/bootstrapSwitch.js",
+            "js/config.js"
 	    	);
     
 	head.ready(function () {
@@ -508,6 +520,7 @@
 		socr.model = new socr.model();
 		socr.view = new socr.view(socr.model);
 		socr.controller = new socr.controller(socr.model,socr.view);
+		socr.dataStore = new socr.dataStore();
 		
 		/*
 		*  CoverPage rendering
@@ -537,6 +550,8 @@
 		* Initialize the controller 
 		*/
 		socr.controller.initialize();
+
+		socr.view.initialize();
 		
 		var urlParams = {};
 		(function () {
