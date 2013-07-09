@@ -509,6 +509,9 @@ return{
      * @returns {Object}
      */
     getFof:function(sampleNumber){
+        if (socr.dataStore.dataset === undefined || socr.dataStore.bootstrapGroup === undefined) {
+        	return false
+        };
         _this=this;
         return _generateF(sampleNumber);
     },
@@ -542,6 +545,9 @@ return{
      * @returns {number}
      */
     getPof:function(sampleNumber){
+        if (socr.dataStore.dataset === undefined || socr.dataStore.bootstrapGroup === undefined) {
+        	return false
+        };
         _this=this;
         return _generateP(sampleNumber);
     },

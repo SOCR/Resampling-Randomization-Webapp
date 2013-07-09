@@ -394,6 +394,9 @@ socr.controller=function(model,view){
 		if(option.name !== "undefined" && option.name === "Difference-Of-Proportions"){
 			//reset the random samples
 			//socr.dataStore.removeObject("bootstrapGroup");
+			/*
+			TODO : warning - dataset will be modified .
+			*/
 			view.reset("samples");
 			model.reset("samples");
 			//merge the datasets
