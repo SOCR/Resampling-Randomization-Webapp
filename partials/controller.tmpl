@@ -1,4 +1,10 @@
-<h5>Sample Generation:</h5>
+<h5>STEP 1 -> Choose an Analysis:</h5>
+<select id="analysis">
+    {{#analysis}}
+    <option value="{{.}}">{{.}}</option>
+    {{/analysis}}
+</select>
+<h5>STEP 2 -> Generate Random Samples :</h5>
 <div id="buttonPanel">
     <a href="#" class="tooltips" rel="tooltip" title="Step">
         <button class="btn" type="button" id="stepButton" tabindex="1" title="Step">
@@ -52,16 +58,13 @@
     <span>Datapoint per sample.</span>
     <br>
 </div>
-<h5>Analysis:</h5>
+<h5>STEP 3 -> Choose an Inference :</h5>
 <div class="inference-variable">
     <form class="form form-inline">
         <select id="variable" style="width:30%">
             {{#variables}}
             <option value="{{.}}">{{.}}</option>
             {{/variables}}
-            {{#disabled}}
-            <option disabled value="{{.}}">{{.}}</option>
-            {{/disabled}}
         </select>
         {{#showIndex}}
         &nbsp; of &nbsp;

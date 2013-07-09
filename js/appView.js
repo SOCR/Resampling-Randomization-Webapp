@@ -225,6 +225,9 @@ return{
 	*	@description - Method to toggle the controller slider
 	*
 	*/
+	initialize:function(){
+	},
+
 	toggleControllerHandle: function(action){
         console.log(action);
         var $target = $('#slide-out-controller');
@@ -292,19 +295,25 @@ return{
 	 *@description: Clears all canvas and div. Resetting the view of the whole App
      * @dependencies : none
      */
-	reset:function(){
-		$('#displayCount').html('0');	//resetting the count to 0
-		$('#sampleList').html('');		//clear the sample List dive
-        $('#showCount').html('');
-        $('#dataPlot').html('');		//clear dataPlot div
-		$('#dotplot').empty();			//clear dotPlot div
-		$('#accordion').accordion( "activate" , 0);
-		$('.pagination').html('');
-		$('#details').html('');
-		$('#dataset').html('');
-		// $("#input").inputtable('clear'); 
-		_currentValues=[];
-		$("#controller-content").html('<div class="alert alert-error">Choose a experiment from "simulation drive" or enter data in the "data drive" first!</div>');
+	reset:function(option){
+		//reset only the samples in the view.
+		if(option != "undefined" && option === "samples"){
+			$('#sampleList').html('');
+		}
+		else{
+			//$('#displayCount').html('0');	//resetting the count to 0
+			$('#sampleList').html('');		//clear the sample List dive
+	        $('#showCount').html('');
+	        $('#dataPlot').html('');		//clear dataPlot div
+			$('#dotplot').empty();			//clear dotPlot div
+			$('#accordion').accordion( "activate" , 0);
+			$('.pagination').html('');
+			$('#details').html('');
+			$('#dataset').html('');
+			// $("#input").inputtable('clear'); 
+			_currentValues=[];
+			$("#controller-content").html('<div class="alert alert-error">Choose a experiment from "simulation drive" or enter data in the "data drive" first!</div>');
+		}
 	},
 	
 	/**
@@ -395,35 +404,41 @@ return{
 	*@return : none
 	*/
 	createControllerView:function(){
-        var _RSampleLength = socr.model.getN();
+		//get the random sample length
+		//slice(0) does a shallow copy 
+        var _RSampleLength = socr.model.getN().slice(0);
         //splice the first element
         _RSampleLength.splice(0,1);
-        //define the configuration json file
-        if(socr.model.getK() === 1){
-            var variables = ["mean","count"];
-            var disabled = ["standardDev"];
-            var _showIndex = false;
-            var indexes = [];
+        
+        var _k = socr.model.getK(), _analysis = [],_showIndex,_indexes=[];
+        
+        for(prop in socr.analysis){
+        	if(_k >= socr.analysis[prop]["start"] && _k <= socr.analysis[prop]["end"]){
+        		_analysis.unshift(prop);
+        		_variables = socr.analysis[prop]["variables"]
+        	}
         }
-        else{
-            var variables = ["f-value","p-value","difference-of-proportion","mean","count"];
-            var disabled = ["standardDev"];
-            var _showIndex = true;
-            var i = socr.model.getK(), indexes=[];
-            while(i--){
-                indexes[i]=i+1;
-            }
-        }
-        //console.log("k "+socr.model.getK());
-        //console.log(variables);
+        	if(_k>1){
+	        	_showIndex = true,
+            	_indexes = [];
+            	var i=0;
+            	while(_k--){
+               		_indexes[i]=i+1;
+               		i++;
+            	}
+        	}
+        	else{
+        		_showIndex = false;
+        	}
+
         var showBack = (socr.controller.getCurrentMode() === "Experiment")?true:false;
         var config = {
             animationSpeed:false,
-            variables:variables,
-            disabled:disabled,
+            analysis:_analysis,
+            variables:_variables,
             RSampleLength:_RSampleLength,
             showIndex:_showIndex,
-            index:indexes,
+            index:_indexes,
             showBack:showBack
         };
         $.get('partials/controller.tmpl',function(data){
@@ -557,7 +572,7 @@ return{
 		//setting.variable;
         switch(setting.variable){
 
-            case 'mean':
+            case 'Mean':
                 var values = model.getMean(setting.index);			//Mean values of all the generated random samples
                 var datum = model.getMeanOf("dataset",setting.index);	//datum is the dataset mean value
                 //console.log("Mean Values:"+ values );
@@ -586,26 +601,26 @@ return{
                 console.log("Percentile Values:"+ values );
                 break
 
-            case 'count':
+            case 'Count':
                 var values = model.getCount(setting.index);	//Standard deviation values of all the generated random samples
                 var datum=model.getCountOf("dataset",setting.index);		//datum is the dataset SD value
                 //console.log("Count Values:"+ values );
                 break
 
-            case 'f-value':
+            case 'F-Value':
                 var values=model.getF();
                 var datum=model.getFof("dataset").fValue;
 
                 //console.log("F-values"+values);
                 break
 
-            case 'p-value':
+            case 'P-Value':
                 var values=model.getP();
                 var datum=model.getPof("dataset");
 //                console.log("P values"+values);
                 break
 
-            case 'difference-of-proportion':
+            case 'Difference-Of-Proportions':
                 var values=model.getDOP();
                 var datum=model.getDOPof("dataset");
                 //console.log("DOP values"+values);
@@ -630,7 +645,7 @@ return{
 		console.log("start: "+start+" stop: "+stop);
 		
 		/* Percentage on the right and left side of the intial dataset contribution point. */
-		if(setting.variable === "p-value" || setting.variable === "difference-of-proportion"){
+		if(setting.variable === "P-Value" || setting.variable === "Difference-Of-Proportions"){
             var total = temp.length, lSide, rSide, start =0 , end = temp.length- 1, index, flag=0;
             if(datum<temp[0]){
                 lSide = 0; rSide = 100;
@@ -729,8 +744,17 @@ return{
                 name : name,
                 k : socr.model.getK(),
                 groups:[],
+                results:[],
                 rCount: model.getRSampleCount()
             };
+            //adding results
+            if(socr.model.getPof("dataset") !== false){
+            	config.results.push({param:"P-Value",value:socr.model.getPof("dataset")});
+            }
+
+            if(socr.model.getFof("dataset") !== false){
+            	config.results.push({param:"F-Value",value:socr.model.getFof("dataset").fValue});	
+            }
             for(var i=1;i<=config.k;i++){
                 var obj={};
                 obj.mean = socr.model.getMeanOf("dataset",i);

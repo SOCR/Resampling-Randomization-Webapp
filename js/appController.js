@@ -55,20 +55,21 @@ socr.controller=function(model,view){
 		
 		/*ADDING EVENT LISTENERS STARTS
 		--------------------------------*/
-		$('.controller-handle').on('click',socr.view.toggleControllerHandle);
+		$('.controller-handle').on('click',view.toggleControllerHandle);
 
-        $(".help").on("click",function(e){
+        $(".help").on("change click",function(e){
             e.preventDefault();
             socr.tutorial.toggleStatus();
-            (socr.tutorial.getStatus() === "on")?$(this).css("background-color","green"):$(this).css("background-color","");
+            (socr.tutorial.getStatus() === "on")?$(".help").css("background-color","green").html("<a href='#'>Help : ON</a>"):$(".help").css("background-color","").html("<a href='#'>Help : OFF</a>");
         });
+
 		$("#showButton").on('click',function(){
 			//a check to see if the sample count is 0 or not
-			socr.view.createList($('.show-list-start').val(),$('.show-list-end').val());
+			view.createList($('.show-list-start').val(),$('.show-list-end').val());
 		});
 		PubSub.subscribe("Random samples generated",function(){
-			var start = socr.model.getRSampleCount()*0.5;
-			var end = socr.model.getRSampleCount();
+			var start = model.getRSampleCount()*0.5;
+			var end = model.getRSampleCount();
 			$( "#showCount" ).html( start + " - " + end );
 			$('.show-list-start').val(start);
 			$('.show-list-end').val(end);
@@ -197,23 +198,36 @@ socr.controller=function(model,view){
 		$("#infer").on('click',function(e){
             e.preventDefault();
             /*^^^^^create loading gif ^^^^^^^^*/
-			if(socr.model.getSample(1)==false){
-				socr.view.handleResponse('<h4 class="alert-heading">No Random samples to infer From!</h4>Please generate some random samples. Click "back" button on the controller to go to the "Generate Random Samples!" button.','error','controller-content');
+			if(model.getSample(1)==false){
+				view.handleResponse('<h4 class="alert-heading">No Random samples to infer From!</h4>Please generate some random samples. Click "back" button on the controller to go to the "Generate Random Samples!" button.','error','controller-content');
             }
 			else{
-			    socr.controller.setDotplot();
-                socr.view.toggleControllerHandle("hide");
+			    setTimeout(socr.controller.setDotplot,50);
+                view.toggleControllerHandle("hide");
                 setTimeout(function(){PubSub.publish("Dotplot generated")},500);
             }
 		});
 
         $('#variable').on('change',function(){
-	        if($(this).val()=='mean' || $(this).val()=='count'){
+	        if($(this).val()=='Mean' || $(this).val()=='Count'){
 	            $("#index").attr("disabled",false);
 	        }
     	    else{
     	        $("#index").attr("disabled",true);
     	    }
+    	});
+
+        $('#analysis').on('change',function(){
+        	if($(this).val() === "Difference-Of-Proportions"){
+        		socr.controller.setAnalysis({name:"Difference-Of-Proportions"});
+        	}
+	        if(socr.analysis[$(this).val()] !== "undefined"){
+	        	var el="";
+	        	$.each(socr.analysis[$(this).val()]["variables"],function(key,value){
+	        		 el+='<option value="'+value+'">'+value.replace("-"," ")+'</option>';
+	        	});
+	        	$("#variable").html(el);
+	        }
     	});
 
         try{
@@ -236,8 +250,6 @@ socr.controller=function(model,view){
 		$("#accordion").accordion( "activate" , 1);
         //socr.view.toggleControllerHandle("hide");
 		view.disableButtons();					//disabling buttons
-		/*EDIT THIS TO MAKE N DYNAMIC*/
-		model.setN($("#nSize").val());				// save the datapoints size
 	    try{
             model.generateSample();			//generate one sample
             view.updateCounter();					//update counter
@@ -266,8 +278,6 @@ socr.controller=function(model,view){
         view.disableButtons();					//disabling buttons
         view.updateStatus("started");
 		model.setStopCount($("#countSize").val());	//save the stopcount provided by user
-		/*EDIT THIS TO MAKE N DYNAMIC*/
-		model.setN($("#nSize").val());				// save the datapoints size
 		//generate samples
 		var _temp=model.getStopCount()/1000;
 		_noOfSteps=Math.ceil(_temp);
@@ -344,7 +354,7 @@ socr.controller=function(model,view){
 			if(setting.from !== "undefined"){
 	            socr.controller.setCurrentMode(setting.from);
 	        }
-	       	console.log('DataSet: '+socr.model.getDataset());
+	       	console.log('DataSet: '+model.getDataset());
         	PubSub.publish("Datadriven controller loaded");
 			//checking for any dataset generated from experiment. If yes, they take priority and get loaded.
             if(!$.isEmptyObject(socr.exp.current)){
@@ -378,6 +388,32 @@ socr.controller=function(model,view){
 	},
 	getCurrentMode:function(){
 		return _currentMode;
+	},
+
+	setAnalysis:function(option){
+		if(option.name !== "undefined" && option.name === "Difference-Of-Proportions"){
+			//reset the random samples
+			//socr.dataStore.removeObject("bootstrapGroup");
+			/*
+			TODO : warning - dataset will be modified .
+			*/
+			view.reset("samples");
+			model.reset("samples");
+			//merge the datasets
+			var ma1 = $.merge(socr.dataStore.dataset[1].values.util.getData(),socr.dataStore.dataset[2].values.util.getData());
+			var ma2 = $.merge(socr.dataStore.dataset[1].keys.util.getData(),socr.dataStore.dataset[2].keys.util.getData());
+			//save the common dataset in both
+			// Now the random samples generated will be from the common data pool.
+			socr.dataStore.dataset[1].values.util.setData(ma1);
+			socr.dataStore.dataset[2].values.util.setData(ma1);
+
+			socr.dataStore.dataset[1].keys.util.setData(ma2);
+			socr.dataStore.dataset[2].keys.util.setData(ma2);
+
+
+
+		}
+
 	}
  
     }//return

@@ -5,6 +5,12 @@
             <td>Experiment Name</td>
             <td><strong>{{name}}</strong></td>
         </tr>
+        {{#results}}
+        <tr>
+            <td>{{param}}</td>
+            <td>{{value}}</td>
+        </tr>
+        {{/results}}
         <tr>
             <td>K</td>
             <td><strong>{{k}}</strong></td>
@@ -19,7 +25,6 @@
             <td><strong>{{mean}}</strong></td>
         </tr>
         {{/groups}}
-
         <tr>
             <td>Number of Random Samples : </td>
             <td><strong>{{rCount}}</strong></td>
