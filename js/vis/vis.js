@@ -35,7 +35,7 @@ socr.vis = (function(){
 	// 	console.log('Initial Entry' + config.data[0]);
 
 	//     var defaults = {
-	//       'range' : d3.extent(config.data),
+	//       'range' : d3.extent(config.data)
 	//       'height' : $(config.parent).height(),
 	//       'width' : $(config.parent).innerWidth(), // inner width of parent div
 	//       'type' : 'histogram' ,//Keeping histogram as the default rendering mode
@@ -470,7 +470,7 @@ socr.vis = (function(){
 		          .attr('height',function(){ return height - margin.top - margin.bottom ;});
 
 		        priv.meanbarX = meanbarX;
-		        if(settings.variable == 'p-value')
+		        if(settings.variable.toLowerCase() == 'p-value')
 		        addPercentline();
 		/*
 		if(typeof obj[0].elem.GElement=='undefined')
