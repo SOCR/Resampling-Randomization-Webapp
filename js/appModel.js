@@ -508,7 +508,8 @@ return{
      * @returns {Object}
      */
     getFof:function(sampleNumber){
-        if (socr.dataStore.dataset === undefined || socr.dataStore.bootstrapGroup === undefined) {
+    	//check if K > 1 and there are random samples to compute F.
+        if (socr.model.getK() <= 1 || socr.dataStore.bootstrapGroup === undefined) {
         	return false
         };
         _this=this;
@@ -544,7 +545,8 @@ return{
      * @returns {number}
      */
     getPof:function(sampleNumber){
-        if (socr.dataStore.dataset === undefined || socr.dataStore.bootstrapGroup === undefined) {
+    	//check if K > 1 and there are random samples to compute P.
+        if (socr.model.getK() <= 1 || socr.dataStore.bootstrapGroup === undefined) {
         	return false
         };
         _this=this;
