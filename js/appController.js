@@ -163,9 +163,12 @@ socr.controller=function(model,view){
         $('.controller-back').on('click',function(e){
             e.preventDefault();
             try{
+            	model.reset();
+            	view.reset();
             	console.log("exp_"+socr.exp.current.name);
                 socr.dataTable.simulationDriven.init("exp_"+socr.exp.current.name);
             	socr.exp.current.initialize();
+
             }
             catch(err){
                 console.log(err.message);
