@@ -19,6 +19,7 @@ var  _n = 12;
 var _deck, _hand, _suit, _value;
 var _d, _count;
 var _K=null;
+var clickFlag = false;
 
 var _width='79';
 var _height='123';
@@ -44,8 +45,11 @@ function _dealCard(){
 		console.log("Card Generated Dataset : "+_datasetValues + "-- socr.exp.cardExp.js");
 		console.log(_datasetKeys); 
 		console.log(_datasetValues);
-		$("#grsbutton").removeClass("disabled"); 
-		//view.loadInputSheet(_datasetValues);
+        socr.view.updateCtrlMessage("dataset generated successfully.","success");
+        PubSub.publish("Initial dataset generated");
+		$("#grsbutton").removeClass("disabled");
+		$("#sdbutton").removeClass("disabled"); 
+		clickFlag = false;
 		socr.exp.cardExp.reset();
 	}
 }
@@ -64,10 +68,17 @@ return{
 		socr.exp.cardExp.reset();
 
 		$("#sdbutton").on('click',function(){
-			$("#grsbutton").addClass("disabled");	
-			socr.exp.current.generate();
+			if( clickFlag === false){
+				clickFlag = true;
+			}
+			else {
+				console.log(clickFlag);
+				return false;
+			}	
+			$("#grsbutton").addClass("disabled");
+			$("#sdbutton").addClass("disabled");	
+			socr.exp.cardExp.generate();		
 			$("#accordion").accordion( "activate" , 1);
-			socr.view.updateCtrlMessage("dataset generated successfully.","success");
 		});
 
 		$('#nInput').on('change',function(){

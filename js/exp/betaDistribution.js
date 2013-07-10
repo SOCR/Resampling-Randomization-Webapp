@@ -30,6 +30,8 @@ var _width='30';
 var _height='30';
 var _arrCount=0;
 
+var clickFlag = false;
+
 var _coin = [];
 var _dist = null;
 
@@ -51,11 +53,11 @@ function _experiment(){
 	else{
 		console.log("temp values "+_datasetValues);
 		console.log("temp keys "+ _datasetKeys);
-		PubSub.publish("Initial dataset generated");
-		//view.loadInputSheet(_values);
-		//process the _dataset and convert it into a human readable sample space (example instead of 0 and 1 show tail and head)
-		
+        socr.view.updateCtrlMessage("dataset generated successfully.","success");
+        PubSub.publish("Initial dataset generated");
 		$("#grsbutton").removeClass("disabled");
+		$("#sdbutton").removeClass("disabled"); 
+		clickFlag = false;
 		socr.exp.betaDistribution.reset();
 	}
 }
@@ -70,8 +72,17 @@ return{
 		socr.exp.betaDistribution.reset();
 		// BINDING BUTTONS OF THE CONTROLLER
 		$("#sdbutton").on('click',function(){
-			//***clicking this button only generates the dataset...doesnt load it into the appModel. Clicking the grsbutton does that.
-			$("#grsbutton").addClass("disabled");	
+			//clicking this button only generates the dataset.
+			//doesnt load it into the appModel. Clicking the grsbutton does that.
+			if( clickFlag === false){
+				clickFlag = true;
+			}
+			else {
+				console.log(clickFlag);
+				return false;
+			}	
+			$("#grsbutton").addClass("disabled");
+			$("#sdbutton").addClass("disabled");	
 			socr.exp.betaDistribution.generate();		
 			$("#accordion").accordion( "activate" , 1);
 		});
