@@ -28,7 +28,7 @@ socr.controller=function(model,view){
             while(i--){
                 model.generateSample();
             }
-            view.updateCounter();
+            view.updateSlider();
             _runsElapsed++;
             var percent=Math.ceil((_runsElapsed/_noOfSteps)*100);
             view.updateStatus("update",percent);
@@ -68,7 +68,7 @@ socr.controller=function(model,view){
 			view.createList($('.show-list-start').val(),$('.show-list-end').val());
 		});
 		PubSub.subscribe("Random samples generated",function(){
-			var start = model.getRSampleCount()*0.5;
+			var start = Math.floor(model.getRSampleCount()*0.5);
 			var end = model.getRSampleCount();
 			$( "#showCount" ).html( start + " - " + end );
 			$('.show-list-start').val(start);
@@ -252,9 +252,11 @@ socr.controller=function(model,view){
 		view.disableButtons();					//disabling buttons
 	    try{
             model.generateSample();			//generate one sample
-            view.updateCounter();					//update counter
             $(".removable").remove();				//remove the previously generated canvas during animation
             view.updateSlider();					//update slider count
+            view.updateCtrlMessage("samples generated sucessfully.","success",2000);
+            view.updateSimulationInfo();
+            PubSub.publish("Random samples generated");
             view.updateSimulationInfo();
         }
         catch(e){

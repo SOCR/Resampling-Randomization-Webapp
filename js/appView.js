@@ -302,6 +302,7 @@ return{
 			//$('#displayCount').html('0');	//resetting the count to 0
 			$('#sampleList').html('');		//clear the sample List dive
 	        $('#showCount').html('');
+	        socr.view.updateSlider();
 	        $('#dataPlot').html('');		//clear dataPlot div
 			$('#dotplot').empty();			//clear dotPlot div
 			$('#accordion').accordion( "activate" , 0);
@@ -355,22 +356,13 @@ return{
 			}
 	},
 	/**
-     *@method : updateCounter()
-	 *@description: update the counter display
-     * @dependencies : none
-     */
-	updateCounter:function(){
-		//count value changed on top
-		$('#displayCount').text(model.getRSampleCount());
-		return true;
-	},
-	/**
      *@method : updateSlider()
 	 *@description:update the slider value
      * @dependencies : none
      */
 	updateSlider:function(){
 		//get the count and set it as the maximum value
+		$('#displayCount').text(model.getRSampleCount());
 		$( "#range" ).slider( "option", "max", model.getRSampleCount());
 		$( "#range" ).slider( "option", "min", 0);
 		//$( "#showCount" ).html($( "#range" ).slider( "values",0 )+" - " + $( "#range" ).slider( "values", 1 ) );
