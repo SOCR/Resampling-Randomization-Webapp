@@ -40,7 +40,7 @@ socr.model=function(){
         var groupNumber= groupNumber || 1;
         var total=0;
         if(sampleNumber === "dataset"){
-        	var _val = socr.dataStore.dataset[groupNumber].values.util.getData();
+        	var _val = socr.dataStore.dataset[groupNumber].values.getData();
             for(var i=0;i<_val.length;i++) {
                 total += parseFloat(_val[i]);
             }
@@ -49,7 +49,7 @@ socr.model=function(){
         }
         else{
 		    var total=_generateCount(sampleNumber,groupNumber);
-		    return total/socr.dataStore.bootstrapGroup[sampleNumber].values.util.getData(groupNumber).length;
+		    return total/socr.dataStore.bootstrapGroup[sampleNumber].values.getData(groupNumber).length;
         }
     }
 	
@@ -61,7 +61,7 @@ socr.model=function(){
 	 *@return : {number}
 	*/
 	function _generateCount(sampleNumber,groupNumber){
-		var x=socr.dataStore.bootstrapGroup[sampleNumber].values.util.getData(groupNumber);
+		var x=socr.dataStore.bootstrapGroup[sampleNumber].values.getData(groupNumber);
 		var total=0;
 		for(var i=0;i<x.length;i++) {
 		   total += parseFloat(x[i]);
@@ -79,7 +79,7 @@ socr.model=function(){
 		//formula used here is SD= ( E(x^2) - (E(x))^2 ) ^ 1/2
 		var _mean=_generateMean(sampleNumber,groupNumber) ;			//E(x)
 		var _squaredSum=null;							//stores E(x^2)
-		var _sample=socr.dataStore.bootstrapGroup[sampleNumber].values.util.getData(groupNumber)
+		var _sample=socr.dataStore.bootstrapGroup[sampleNumber].values.getData(groupNumber)
 		for(var i=0;i<_sample.length;i++){
 			_squaredSum+=_sample[i]*_sample[i];
 		}
@@ -104,11 +104,11 @@ socr.model=function(){
 			_k=_this.getK();
 			if (sampleNumber === "dataset"){
 				for (var i = 1; i <=_k; i++) {
-					_data[i] = socr.dataStore.dataset[i].values.util.getData();
+					_data[i] = socr.dataStore.dataset[i].values.getData();
 				};
 			}
 			else{
-				_data=socr.dataStore.bootstrapGroup[sampleNumber].values.util.getData()
+				_data=socr.dataStore.bootstrapGroup[sampleNumber].values.getData()
 			}
 
             for(i=1;i<=_k;i++){
@@ -183,12 +183,12 @@ socr.model=function(){
      */
 	function _generateZ(sampleNumber){
 		if(sampleNumber === "dataset"){
-			var _data1 = socr.dataStore.dataset[1].values.util.getData(),
-		    _data2 = socr.dataStore.dataset[2].values.util.getData();
+			var _data1 = socr.dataStore.dataset[1].values.getData(),
+		    _data2 = socr.dataStore.dataset[2].values.getData();
 		}
 		else{
-			var _data1 = socr.dataStore.bootstrapGroup[sampleNumber].values.util.getData(1),
-		    	_data2 = socr.dataStore.bootstrapGroup[sampleNumber].values.util.getData(2);
+			var _data1 = socr.dataStore.bootstrapGroup[sampleNumber].values.getData(1),
+		    	_data2 = socr.dataStore.bootstrapGroup[sampleNumber].values.getData(2);
 		}
 		var n1 = _data1.length,
 		p1 = $.sum(_data1)/n1,
@@ -245,16 +245,15 @@ return{
      * @returns {object}
      */
 	generateTrail:function(datasetIndex){
-		var _ds = socr.dataStore.dataset;
-		if(_ds[1] === undefined || this.getK() === false){
+		var _temp = socr.dataStore.sampleSpace;
+		if(_temp === undefined || this.getK() === false){
 			return null;
 		}
 		else{
-		var randomIndex=_getRandomInt(0, _ds[datasetIndex].values.util.getData().length);	//generating a random number between 0 and dataSet size 
-		var _temp=_ds[datasetIndex];
+		var randomIndex=_getRandomInt(0, _temp.values.getData().length);	//generating a random number between 0 and dataSet size 
 		return {
-			key:_temp.keys.util.getData(randomIndex),
-			value:_temp.values.util.getData(randomIndex)
+			key:_temp.keys.getData(randomIndex),
+			value:_temp.values.getData(randomIndex)
 			};			//returning the generated trail into a bootstrap sample array	
 		}
 	},
@@ -301,17 +300,17 @@ return{
 	getMean:function(groupNumber){
 		var	groupNumber = groupNumber || 1 ;    // 1 is default value - meaning the first dataset
 		var obj = socr.dataStore.createObject(groupNumber+".mean",[])[groupNumber].mean;
-		if(obj.util.getData().length=== _count){
+		if(obj.getData().length=== _count){
             console.log("already saved!");
-			return obj.util.getData()
+			return obj.getData()
 		}
 		else{
 			var _mean=[];
-			for(var j=obj.util.getData().length;j<_count;j++){
+			for(var j=obj.getData().length;j<_count;j++){
 				_mean[j]=_generateMean(j,groupNumber);
 			}
-			obj.util.setData(_mean)
-			return obj.util.getData()
+			obj.setData(_mean)
+			return obj.getData()
 			}
 		},
 
@@ -372,7 +371,7 @@ return{
 	getStandardDevOfDataset:function(K){
 		var K=K || 1,
 			_ds = socr.dataStore.dataset,
-			_val=_ds[K].values.util.getData(),
+			_val=_ds[K].values.getData(),
 			_mean=this.getMeanOf("dataset",K),
 			_squaredSum=null;
 		for(var i=0;i<_val.length;i++){
@@ -395,17 +394,17 @@ return{
 	getCount:function(groupNumber){
 		var	groupNumber = groupNumber || 1 ;    // 1 is default value - meaning the first dataset
 		var obj = socr.dataStore.createObject(groupNumber+".count",[])[groupNumber].count;
-		if(obj.util.getData().length=== _count){
+		if(obj.getData().length=== _count){
             console.log("already saved!");
-			return obj.util.getData()
+			return obj.getData()
 		}
 		else{
 			var _c=[];
-			for(var j=obj.util.getData().length;j<_count;j++){
+			for(var j=obj.getData().length;j<_count;j++){
 				_c[j]=_generateCount(j,groupNumber);
 			}
-			obj.util.setData(_c)
-			return obj.util.getData()
+			obj.setData(_c)
+			return obj.getData()
 		}
 	},
 
@@ -419,7 +418,7 @@ return{
         var K = groupNumber || 1,
         	_ds = socr.dataStore.dataset;
         if(sampleNumber === "dataset"){
-            var _val=_ds[K].values.util.getData();
+            var _val=_ds[K].values.getData();
             var total=0;
             for(var i=0;i<_val.length;i++){
                 total += parseFloat(_val[i]);
@@ -488,17 +487,17 @@ return{
 		var	groupNumber = groupNumber || 1 ;    // 1 is default value - meaning the first dataset
 		_this=this;
 		var obj = socr.dataStore.createObject("F-Value",[])["F-Value"];
-		if(obj.util.getData().length=== _count){
+		if(obj.getData().length=== _count){
             console.log("already saved!");
-			return obj.util.getData()
+			return obj.getData()
 		}
 		else{
 			var _f=[];
-			for(var j=obj.util.getData().length;j<_count;j++){
+			for(var j=obj.getData().length;j<_count;j++){
 				_f[j]=_generateF(j).fValue;
 			}
-			obj.util.setData(_f)
-			return obj.util.getData()
+			obj.setData(_f)
+			return obj.getData()
 		}
 	},
 
@@ -525,17 +524,17 @@ return{
  		var	groupNumber = groupNumber || 1 ;    // 1 is default value - meaning the first dataset
 		_this=this;
 		var obj = socr.dataStore.createObject("P-Value",[])["P-Value"];
-		if(obj.util.getData().length=== _count){
+		if(obj.getData().length=== _count){
             console.log("already saved!");
-			return obj.util.getData()
+			return obj.getData()
 		}
 		else{
 			var _p=[];
-			for(var j=obj.util.getData().length;j<_count;j++){
+			for(var j=obj.getData().length;j<_count;j++){
 				_p[j]=_generateP(j);
 			}
-			obj.util.setData(_p)
-			return obj.util.getData()
+			obj.setData(_p)
+			return obj.getData()
 		}
     },
 
@@ -560,17 +559,17 @@ return{
     getDOP:function(){
 		_this=this;
 		var obj = socr.dataStore.createObject("DOPValue",[])["DOPValue"];
-		if(obj.util.getData().length=== _count){
+		if(obj.getData().length=== _count){
             console.log("already saved!");
-			return obj.util.getData()
+			return obj.getData()
 		}
 		else{
 			var _p=[];
-			for(var j=obj.util.getData().length;j<_count;j++){
+			for(var j=obj.getData().length;j<_count;j++){
 				_p[j]=_generateDOP(j);
 			}
-			obj.util.setData(_p)
-			return obj.util.getData()
+			obj.setData(_p)
+			return obj.getData()
 		}
 
     },
@@ -597,7 +596,7 @@ return{
 		if(field ===undefined)
 			field='keys';
 		try{
-			return socr.dataStore.dataset[K][field].util.getData()
+			return socr.dataStore.dataset[K][field].getData()
 		}
 		catch(e){
 			console.log(e.message)
@@ -616,19 +615,15 @@ return{
         if(input === undefined || typeof input != "object"){
             return false;
         }
-		console.log('setDataSet() invoked!');
-	//input.processed is true in case of a simulation -> data mode switch
+		//input.processed is true in case of a simulation -> data mode switch
 		if(input.processed){
+			var ma1=[],ma2=[];
 			for(var i=0;i<input.keys.length;i++){
-				socr.dataStore.createObject("dataset."+(i+1)+".values",input.values[i]);
-				socr.dataStore.createObject("dataset."+(i+1)+".keys",input.keys[i]);
-				// _dataset[i+1]={
-				// 	values:input.values[i],
-				// 	keys:input.keys[i],
-				// 	name:null,
-				// 	index:i
-				// };
+				socr.dataStore.createObject("dataset."+(i+1)+".values",input.values[i]).createObject("dataset."+(i+1)+".keys",input.keys[i]);
+				ma1 = ma1.concat(input.values[i]);
+				ma2 = ma2.concat(input.keys[i]);
 			}
+			socr.dataStore.createObject("sampleSpace.values",ma1).createObject("sampleSpace.keys",ma2)
 			console.log('Simulation data is loaded now.');
 			return true;
 		}
@@ -637,12 +632,14 @@ return{
 			return false;
 		}
 		else if(input.type=='spreadsheet'){
+			var ma1=[],ma2=[];
+			//clear previous data.
 			socr.dataStore.removeObject("dataset");
 			console.log(input.values.length);
 			for (var i = 0; i < input.values.length; i++) {
-				var _cells=input.values[i].cells;
-				var _id=input.values[i].id;
-				var _temp=[];
+				var _cells=input.values[i].cells,
+					_id=input.values[i].id,
+					_temp=[];
 				console.log("_cells : "+_cells);
 				for (var j = 0; j < _cells.length; j++) {
 					if (_cells[j][0] !== ""){
@@ -653,15 +650,15 @@ return{
 						break;
 					}
 				};
-				socr.dataStore.createObject("dataset."+_id+".values",_temp);
-				socr.dataStore.createObject("dataset."+_id+".keys",_temp);
+				socr.dataStore.createObject("dataset."+_id+".values",_temp).createObject("dataset."+_id+".keys",_temp);
+				ma1 = ma1.concat(_temp);
+				ma2 = ma2.concat(_temp);
 			};
+			socr.dataStore.createObject("sampleSpace.values",ma1).createObject("sampleSpace.keys",ma2);
 			if(!socr.dataStore.dataset){
-					console.log("returning false");
 					return false;
 			}
 			else{
-				console.log("returning true");
 				return true;
 			}
 
@@ -683,10 +680,10 @@ return{
         }
         var _bg = socr.dataStore.bootstrapGroup[index] ;
 		if(type === "values"){
-			return _bg.values.util.getData(K);
+			return _bg.values.getData(K);
 		}
 		else{
-			return _bg.keys.util.getData(K);
+			return _bg.keys.getData(K);
 		}
 	},
 
@@ -703,12 +700,12 @@ return{
 		var _bg = socr.dataStore.bootstrapGroup;
 		if(type==="values"){
 			for(var i=0;i<_count;i++){
-			  _temp[i]=_bg[i].values.util.getData(K);
+			  _temp[i]=_bg[i].values.getData(K);
 			}
 		}
 		else{
 			for(var i=0;i<_count;i++){
-			  _temp[i]=_bg[i].keys.util.getData(K);
+			  _temp[i]=_bg[i].keys.getData(K);
 			}
 		}
 		return _temp;
@@ -737,7 +734,7 @@ return{
 			if(typeof _ds !== "undefined"){
 				for (var i = 1; i <= _k; i++) {
 					try{
-						_n.push(_ds[i]['values'].util.getData().length)
+						_n.push(_ds[i]['values'].getData().length)
 					}
 					catch(e){
 						console.log(e.message);
@@ -750,7 +747,7 @@ return{
 			if((z.length-1 === _k )||(z.length === _k)){
 				z.forEach(function(el,index,arr){
 					if(typeof el === "undefined" || el === null){
-						z[i] = _ds[i]['values'].util.getData().length
+						z[i] = _ds[i]['values'].getData().length
 					}
 				},z);
 				_n.push(z);
