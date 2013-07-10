@@ -5,6 +5,8 @@
 	
 */
 socr.dataStore = function(){
+	// helper toolkit.
+	// to be installed in all objects created using createObject()
 	_helper = function(type){
 		var _data = {}
 
@@ -50,7 +52,7 @@ socr.dataStore = function(){
 		createObject:function(name,data,type){
 			/* "."delimited name */
 			var name_list = $.normalize(name);
-			var temp = this, newFlag = false;
+			var temp= this, newFlag = false;
 			try{
 				for(var i=0;i<name_list.length;i++){
 					if(!temp.hasOwnProperty(name_list[i])){
@@ -58,6 +60,7 @@ socr.dataStore = function(){
 							writable: true,
 							enumerable: true,
 							configurable: true});
+						// Set the new Object flag to true.
 						newFlag=true;
 					}
 					temp = temp[name_list[i]]
@@ -66,15 +69,17 @@ socr.dataStore = function(){
 				if(typeof data !== "undefined"){
 					if(newFlag){
 						var h= _helper();
-						temp.util = h;	
+						// Installing the helper functions to the newly created object.
+						$.extend(temp,h);
 					}
-					temp.util.setData(data);
-				//custom helper functions
+					// set the data provided with the function call.
+					temp.setData(data);
 				}
 				return this;
 			}
 			catch(e){
-				console.log(e.stack)
+				console.log(e.stack);
+				PubSub.publish("Error",{description:"Error while creating dataStore object."})
 			}
 		},
 		removeObject:function(obj){

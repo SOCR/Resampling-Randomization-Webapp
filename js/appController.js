@@ -400,15 +400,15 @@ socr.controller=function(model,view){
 			view.reset("samples");
 			model.reset("samples");
 			//merge the datasets
-			var ma1 = $.merge(socr.dataStore.dataset[1].values.util.getData(),socr.dataStore.dataset[2].values.util.getData());
-			var ma2 = $.merge(socr.dataStore.dataset[1].keys.util.getData(),socr.dataStore.dataset[2].keys.util.getData());
+			var ma1 = $.merge(socr.dataStore.dataset[1].values.getData(),socr.dataStore.dataset[2].values.getData());
+			var ma2 = $.merge(socr.dataStore.dataset[1].keys.getData(),socr.dataStore.dataset[2].keys.getData());
 			//save the common dataset in both
 			// Now the random samples generated will be from the common data pool.
-			socr.dataStore.dataset[1].values.util.setData(ma1);
-			socr.dataStore.dataset[2].values.util.setData(ma1);
+			socr.dataStore.dataset[1].values.setData(ma1);
+			socr.dataStore.dataset[2].values.setData(ma1);
 
-			socr.dataStore.dataset[1].keys.util.setData(ma2);
-			socr.dataStore.dataset[2].keys.util.setData(ma2);
+			socr.dataStore.dataset[1].keys.setData(ma2);
+			socr.dataStore.dataset[2].keys.setData(ma2);
 
 
 
