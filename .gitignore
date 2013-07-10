@@ -1,2 +1,2 @@
-/assets
-/playfield
+node_modules
+test/npm-debug.log
