@@ -218,9 +218,6 @@ socr.controller=function(model,view){
     	});
 
         $('#analysis').on('change',function(){
-        	if($(this).val() === "Difference-Of-Proportions"){
-        		socr.controller.setAnalysis({name:"Difference-Of-Proportions"});
-        	}
 	        if(socr.analysis[$(this).val()] !== "undefined"){
 	        	var el="";
 	        	$.each(socr.analysis[$(this).val()]["variables"],function(key,value){
@@ -390,31 +387,5 @@ socr.controller=function(model,view){
 		return _currentMode;
 	},
 
-	setAnalysis:function(option){
-		if(option.name !== "undefined" && option.name === "Difference-Of-Proportions"){
-			//reset the random samples
-			//socr.dataStore.removeObject("bootstrapGroup");
-			/*
-			TODO : warning - dataset will be modified .
-			*/
-			view.reset("samples");
-			model.reset("samples");
-			//merge the datasets
-			var ma1 = $.merge(socr.dataStore.dataset[1].values.getData(),socr.dataStore.dataset[2].values.getData());
-			var ma2 = $.merge(socr.dataStore.dataset[1].keys.getData(),socr.dataStore.dataset[2].keys.getData());
-			//save the common dataset in both
-			// Now the random samples generated will be from the common data pool.
-			socr.dataStore.dataset[1].values.setData(ma1);
-			socr.dataStore.dataset[2].values.setData(ma1);
-
-			socr.dataStore.dataset[1].keys.setData(ma2);
-			socr.dataStore.dataset[2].keys.setData(ma2);
-
-
-
-		}
-
-	}
- 
     }//return
 };
