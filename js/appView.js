@@ -563,7 +563,7 @@ return{
         switch(setting.variable){
 
             case 'Mean':
-                var values = model.getMean(setting.index);			//Mean values of all the generated random samples
+                var values = model.getMean(setting.index).slice(0);			//Mean values of all the generated random samples
                 var datum = model.getMeanOf("dataset",setting.index);	//datum is the dataset mean value
                 //console.log("Mean Values:"+ values );
                 //console.log("datum value:"+ datum) ;
@@ -592,26 +592,26 @@ return{
                 break
 
             case 'Count':
-                var values = model.getCount(setting.index);	//Standard deviation values of all the generated random samples
+                var values = model.getCount(setting.index).slice(0);	//Standard deviation values of all the generated random samples
                 var datum=model.getCountOf("dataset",setting.index);		//datum is the dataset SD value
                 //console.log("Count Values:"+ values );
                 break
 
             case 'F-Value':
-                var values=model.getF();
+                var values=model.getF().slice(0);
                 var datum=model.getFof("dataset").fValue;
 
                 //console.log("F-values"+values);
                 break
 
             case 'P-Value':
-                var values=model.getP();
+                var values=model.getP().slice(0);
                 var datum=model.getPof("dataset");
 //                console.log("P values"+values);
                 break
 
             case 'Difference-Of-Proportions':
-                var values=model.getDOP();
+                var values=model.getDOP().slice(0);
                 var datum=model.getDOPof("dataset");
                 //console.log("DOP values"+values);
                 break

@@ -25,9 +25,12 @@ socr.dataStore = (function(){
 				//appending the values to data
 				// if certain key already exists, incoming data will overwrite it.
 				if(!$.isEmptyObject(_data)){
-					$.each(data,function(key,value){
-						_data[key]=value;
-					});
+					// $.each(data,function(key,value){
+					// 	_data[key]=value;
+					// });
+					data.forEach(function(val){
+						_data.push(val)
+					})
 				}
 				else{
 					_data = data;
