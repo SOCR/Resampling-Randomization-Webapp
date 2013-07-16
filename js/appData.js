@@ -4,7 +4,7 @@
 	@author: selvam1991@gmail.com
 	
 */
-socr.dataStore = function(){
+socr.dataStore = (function(){
 	// helper toolkit.
 	// to be installed in all objects created using createObject()
 	_helper = function(type){
@@ -98,4 +98,4 @@ socr.dataStore = function(){
 		}
 	}	
 
-};
+})();
