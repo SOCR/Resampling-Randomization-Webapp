@@ -19,5 +19,9 @@
     "shasum": "fceea3c0a1a766a6762e6bd8d7b0d57a85ecbb2f"
   },
   "subdomain": "socr-randomization",
-  "name": "socr-randomization"
+  "name": "socr-randomization",
+  "devDependencies": {
+    "grunt": "~0.4.1",
+    "grunt-contrib-jasmine": "~0.5.1"
+  }
 }
