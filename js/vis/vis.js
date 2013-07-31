@@ -470,7 +470,7 @@ socr.vis = (function(){
 		          .attr('height',function(){ return height - margin.top - margin.bottom ;});
 
 		        priv.meanbarX = meanbarX;
-		        if(settings.variable.toLowerCase() == 'p-value')
+		        if(settings.variable.toLowerCase() == 'p-value' ||( (settings.pr * settings.pl) > 0 ))
 		        addPercentline();
 		/*
 		if(typeof obj[0].elem.GElement=='undefined')

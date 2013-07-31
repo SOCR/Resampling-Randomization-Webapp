@@ -354,10 +354,20 @@ socr.dataTable = function () {
             $('#input-modal .modal-body').html(content);
         },
         toggleScreens: function (options) {
+
+            var splashScreen = $('section#datadriven-splash'),
+                excelScreen = $('section#datadriven-import'),
+                importScreen = $('section#fetchURL'),
+                datastage = $('section#datadriven-stage'),
+                simulationDetails = $('section#simulationdriven-details'),
+                worldbankContainer = $('section#worldbank'); 
+
             var dataScreens = [splashScreen, excelScreen, importScreen, worldbankContainer, simulationDetails, datastage];
+
             $.each(dataScreens, function (k, v) {
                 v.hide();
             });
+
             $.each(options.visible, function (k, v) {
                 $(v).show();
             });
@@ -367,7 +377,7 @@ socr.dataTable = function () {
     }
     /*
     Hookups for spreadsheet opterations
-  */
+    */
     var spreadSheet = {
 
         init: function () {
@@ -531,6 +541,13 @@ socr.dataTable = function () {
                 view.displayResponse(' No cells are selected ', 'error');
             }
 
+        },
+
+        loadData : function(grid){
+
+            $dataTable.inputtable('loadData',grid);
+            view.displayResponse('Data loaded','success');
+            
         },
 
         reset: function () {

@@ -126,22 +126,22 @@ socr.controller=function(model,view){
 		/*ADDING EVENT LISTENERS ENDS*/
 	
 		// Twitter Feed
-		$('#tweetFeed').jTweetsAnywhere({
-				searchParams: 'q=%23socrWebapp',
-				count: 10,
-				showTweetFeed: {
-					autorefresh: {
-						mode: 'trigger-insert',
-						interval: 60
-					},
-					paging: {
-					mode: 'more'
-					},
-					showTimestamp: {
-					refreshInterval: 30
-					}
-				}
-			}); 
+		// $('#tweetFeed').jTweetsAnywhere({
+		// 		searchParams: 'q=%23socrWebapp',
+		// 		count: 10,
+		// 		showTweetFeed: {
+		// 			autorefresh: {
+		// 				mode: 'trigger-insert',
+		// 				interval: 60
+		// 			},
+		// 			paging: {
+		// 			mode: 'more'
+		// 			},
+		// 			showTimestamp: {
+		// 			refreshInterval: 30
+		// 			}
+		// 		}
+		// 	}); 
 			
 		$('#accordion').accordion();
 		$('.dropdown-toggle').dropdown();
