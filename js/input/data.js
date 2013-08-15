@@ -697,8 +697,31 @@ socr.dataTable = function () {
     })
 
     var worldbank = {
+        
         init : function (){
+
+            var req = {
+                indicator : $('#indicator').val(),
+                year1 : $('#year1').val(),
+                year2 : $('#year2').val()
+            }
+
+            $('#worldbank-form').find('input[type="submit"]').attr('disabled', true);
+            $('.worldbank-response').html('<div class="alert alert success">Loading...</div>');
+
+            socr.input.worldbank.request(req);
+
             return false;
+
+        },
+        loadComplete : function() {
+
+            $('#worldbank-form').find('input[type="submit"]').attr('disabled', false);
+            $('.worldbank-response').html('');
+             view.toggleScreens({
+                visible: excelScreen
+            });
+
         }
     }
 
@@ -729,6 +752,7 @@ socr.dataTable = function () {
     return {
         simulationDriven: simulationDriven,
         spreadSheet: spreadSheet,
-        view: view
+        view: view,
+        worldbank : worldbank
     }
 }();

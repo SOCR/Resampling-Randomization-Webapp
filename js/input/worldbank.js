@@ -10,19 +10,20 @@ socr.input.worldbank = function(){
 	 * @param itemcount {number} - if itemcount is not set, the function is recalled to load all datasets
 	 */
 
-	var request = function(indicator, itemcount){
+	var request = function(req, itemcount){
 
 		var requestdata = {
 			format : 'jsonP',
-			date : '2008:2011',
+			// date : '2008:2011',
 			per_page  : '1'
 		}
 
+		requestdata["date"] = (typeof req.year1 == 'undefined') ? '2008:2011' : req.year1 + ':' + req.year2;
 		requestdata["per_page"] = (typeof itemcount == 'undefined') ? 1 : itemcount ;
 		
 
 		$.ajax({
-			url : 'http://api.worldbank.org/countries/indicators/'+indicator+'/?prefix=?',
+			url : 'http://api.worldbank.org/countries/indicators/'+req.indicator+'/?prefix=?',
 			dataType : 'json',	
 			type : 'GET',
 			data : requestdata,
@@ -32,10 +33,13 @@ socr.input.worldbank = function(){
 			function(res){
 				console.log(res)
 				var count = res[0].total;
-				if(requestdata['per_page'] == 1)
-					request(indicator, count);
+				if(requestdata['per_page'] == 1){
+
+					request(req, count);
+				}
 				else{
 					var grid = formatResponse(res);
+					socr.dataTable.worldbank.loadComplete();
 					socr.dataTable.spreadSheet.loadData(grid);
 				}
 			}
@@ -73,4 +77,7 @@ socr.input.worldbank = function(){
 		return table;
 	}
 
+	return {
+		request : request
+	}
 }();
