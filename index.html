@@ -122,7 +122,7 @@
 										<li class="nav-header"> Start by DataDriven : </li>
 										<li> <a data-rel="spreadsheet">Use a Excel Sheet</a> </li>
 										<li> <a data-rel="fetch">Fetch table from URL</a> </li>
-										<li> <a data-rel="worldbank" style="color:#7a7a7a">Use WorldBank API<sup style="color:red">Coming Soon</sup></a></li>
+										<li> <a data-rel="worldbank">Use WorldBank API</a></li>
 									</ul>
 
 								</div>
@@ -213,14 +213,42 @@
 							<section id="worldbank">
 								<a class="btn splash-datadriven" href="#"><i class =" icon-circle-arrow-left"></i></a>
 								<div class ="page-header">
-									<h3> Worldbank API </h3>
+									<h3> WorldBank Datasets </h3>
 								</div>
 
-									<p>
-										Coming Soon
-									</p>
+									<form class="form-horizontal" id="worldbank-form">
+										<div class="control-group">
+										 	<label for="dataset" class="control-label"> Dataset </label>
+										 	<div class="controls">
+										 		<select id="indicator">
 
-								<!--<div style="width:300px; font-family:'Helvetica Neue', Helvetica, Arial, sans-serif; line-height:20px"><div style="background-color:#333; padding:0px 5px; font-weight:bold"><div style="color:#fff; font-size:12px; line-height:20px;"><a href="http://data.worldbank.org/indicator/AG.LND.AGRI.ZS" style="color:#fff;text-decoration:none;" class="active">Agricultural land (% of land area)</a></div></div><script type="text/javascript">widgetContext = { "url": "http://data.worldbank.org/widgets/indicator/0/web_widgets_2/AG.LND.AGRI.ZS/countries", "width": 300, "height": 225, "widgetid": "web_widget_iframe_6b35281e4a873f0fb6537769f2473197" };</script><div id="web_widget_iframe_6b35281e4a873f0fb6537769f2473197"></div><script src="http://data.worldbank.org/profiles/datafinder/modules/contrib/web_widgets/iframe/web_widgets_iframe.js"></script><div style="font-size: 10px; color:#000">Data from <a href="http://data.worldbank.org/indicator/AG.LND.AGRI.ZS" style="color:#CCC;">World Bank</a></div></div>-->
+										 			<option value="SP.DYN.CBRT.IN">Birth Rate</option>
+										 			<option value="SP.DYN.CDRT.IN">Death Rate</option>
+										 			<option value="SH.XPD.TOTL.ZS">Health Expenditures</option>
+										 			<option value="SP.DYN.LE00.IN">Life Expectancy</option>
+										 			<option value="SP.POP.TOTL">Total Population</option>
+										 			<option value="SL.TLF.TOTL.IN">Total Labor Force</option>
+										 			<option value="EN.ATM.CO2E.PCNY.GDP.MKTP.CD">CO2 emissions per capita</option>
+										 			<option value="NY.GDP.MKTP.CD">GDP</option>
+										 			<option value="SP.URB.TOTL">Urban Population</option>
+										 			<option value="FR.INR.DPST">Deposit Interest Rates</option>
+
+										 		</select>
+										 	</div>
+										</div>
+										<div class="control-group">
+										 	<label for="year2" class="control-label"> Year Range <i class="icon-info-sign popups" rel="popover" data-content="It is recommended to keep a narrow range as the dataset request size increases proportionally to the year range" data-original-title="Dataset"></i></label>
+										 	<div class="controls">
+										 		<input type = "number" value = "2008" id="year1"> - <input type="number" value = "2011" id="year2">
+										 	</div>	
+										</div>
+										<div class="control-group">
+											<div class="controls">
+												<input type="submit" value="Submit" class="btn">
+											</div>
+										</div>
+									</form>
+								
 							</section>
 							<section id="simulationdriven-details">
 								<a class="btn splash-datadriven" href="#"><i class =" icon-circle-arrow-left"></i></a>

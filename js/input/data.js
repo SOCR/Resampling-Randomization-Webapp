@@ -696,6 +696,12 @@ socr.dataTable = function () {
         stage.reset();
     })
 
+    var worldbank = {
+        init : function (){
+            return false;
+        }
+    }
+
     $controls.find('input[value="Use Entire Dataset"]').on('click', spreadSheet.parseAll);
     $controls.find('.reset-spreadsheet').on('click', spreadSheet.reset);
     $controls.find('input[value="Proceed"]').on('click', stage.init);
@@ -712,6 +718,7 @@ socr.dataTable = function () {
     $controls.find('.edittitles').on('click', view.editTitles);
     $controls.find('.firstrowtitles').on('click', spreadSheet.firstRowTitles);
     $controls.find('.removecol').on('click', view.removeCol);
+    $('#worldbank-form').on('submit', worldbank.init);
     $('#input-modal').on('submit', '#input-titles', view.parseTitles);
     $('#input-modal').on('submit', '#remove-col', view.handleRemoveCol);
     
