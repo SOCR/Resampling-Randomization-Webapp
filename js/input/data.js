@@ -396,7 +396,8 @@ socr.dataTable = function () {
                 rowHeaders: true,
                 manualColumnResize : true,
                 width: 750,
-                height: 270
+                height: 270,
+                outsideClickDeselects : false
             });
 
             //Temporary solution to remove multiple table headers
@@ -501,12 +502,15 @@ socr.dataTable = function () {
 
             if (select.isSelected()) {
                 var selectedCoords = select.isSelected();
-                /*
-            Selected Cells:
-           [ startrow , startCol, endRow, endCol ]
-          */
+                
+           //  Selected Cells:
+           // [ startrow , startCol, endRow, endCol ]
+          
             }
-            if (selectedCoords) {
+           // var ht = $dataTable.handsontable('getInstance');
+           //      console.log(ht.getSelected());
+          
+              if (selectedCoords) {
 
                 console.log(' Select Data request with  ' + selectedCoords)
                 var dataset = $dataTable.handsontable('getData');
