@@ -394,7 +394,9 @@ socr.dataTable = function () {
                 fillHandle: true,
                 colHeaders: true,
                 rowHeaders: true,
-                manualColumnResize : true
+                manualColumnResize : true,
+                width: 750,
+                height: 270
             });
 
             //Temporary solution to remove multiple table headers
