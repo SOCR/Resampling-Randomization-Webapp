@@ -29,7 +29,8 @@ socr.dataStore = (function(){
 					// 	_data[key]=value;
 					// });
 					for (var i = 0; i < data.length; i++) {
-						_data[i] = data[i]
+						if(data[i] !== undefined || data[i] !== NaN)
+							_data[i] = data[i]
 					};
 				}
 				else{
