@@ -496,6 +496,13 @@
     <!--<script type='text/javascript' src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>-->
 <script type='text/javascript'>
     
+	//Fix for browsers that don't support console logging
+	if(!window.console) console = {};
+		console.log = console.log || function(){};
+		console.warn = console.warn || function(){};
+		console.error = console.error || function(){};
+		console.info = console.info || function(){};
+
     head.js("js/init.js",
     		"js/lib/jquery.min.js",
     		"js/lib/async.js",
