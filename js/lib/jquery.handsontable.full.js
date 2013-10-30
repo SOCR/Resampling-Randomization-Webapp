@@ -2439,6 +2439,29 @@ Handsontable.Core = function (rootElement, userSettings) {
     return true;
   };
 
+  /**
+   * Selects column in grid
+   * @param {Number} col
+   * @public
+   * @return {Boolean}
+   */
+  this.selectColumn = function(col){
+
+    priv.selStart.coords({row: 0, col: col});
+
+    if (document.activeElement && document.activeElement !== document.documentElement && document.activeElement !== document.body) {
+      document.activeElement.blur(); //needed or otherwise prepare won't focus the cell. selectionSpec tests this (should move focus to selected cell)
+    }
+
+    instance.listen();
+
+    selection.setRangeEnd({row: instance.countRows()-1, col: col});
+
+    instance.selection.finish();
+    return true;
+
+  };
+
   this.selectCellByProp = function (row, prop, endRow, endProp, scrollToCell) {
     arguments[1] = datamap.propToCol(arguments[1]);
     if (typeof arguments[3] !== "undefined") {

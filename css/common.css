@@ -228,11 +228,11 @@ div.welcome-container{
 	section.datadriven-wrap{
 		height: 400px;
 		overflow: hidden;
+		position: static;
 		display : none;
 	}
 	section.datadriven-wrap .controls{
-		top: 0px;
-		left: 0px;
+	
 		height: 30px;
 		border-bottom: 1px solid #e3e3e3;
 		width:100%;
@@ -369,4 +369,7 @@ a.input-handle{
 div.tool{
 	margin-top: 5px;
 	line-height: 24px;
+}
+.htCore th{
+	cursor:pointer;
 }

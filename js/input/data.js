@@ -753,6 +753,13 @@ socr.dataTable = function () {
     $('#worldbank-form').on('submit', worldbank.init);
     $('#input-modal').on('submit', '#input-titles', view.parseTitles);
     $('#input-modal').on('submit', '#remove-col', view.handleRemoveCol);
+
+    $('.handsontable').on('mousedown', 'th:has(.colHeader)', function () {
+        var colIndex = $('.handsontable').handsontable('getInstance').view.wt.wtTable.getCoords(this)[1];
+
+        $dataTable.handsontable('selectColumn', colIndex);
+
+    });
     
 
     spreadSheet.init();
