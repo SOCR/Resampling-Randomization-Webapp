@@ -28,9 +28,10 @@ socr.dataStore = (function(){
 					// $.each(data,function(key,value){
 					// 	_data[key]=value;
 					// });
-					data.forEach(function(val){
-						_data.push(val)
-					})
+					for (var i = 0; i < data.length; i++) {
+						if(data[i] !== undefined || data[i] !== NaN)
+							_data[i] = data[i]
+					};
 				}
 				else{
 					_data = data;

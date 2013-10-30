@@ -10,30 +10,16 @@ describe "dataSpec", ->
 
   it "should append data to existing data entry", ->
     dataStore.createObject "test",
-      0: [1, 2]
-      1: [3, 4]
+      [1,2,3,4]
 
     expect(dataStore.test).toBeDefined()
     dataStore.createObject "test",
-      2: [1, 2]
-      3: [4, 5]
+      [1,2,4,5,6]
 
     expect(dataStore.test).toBeDefined()
-    expect(dataStore.test.getData(0)).toEqual [1, 2]
-    expect(dataStore.test.getData(1)).toEqual [3, 4]
-    expect(dataStore.test.getData(2)).toEqual [1, 2]
-    expect(dataStore.test.getData(3)).toEqual [4, 5]
+    expect(dataStore.test.getData(1)).toEqual 2
+    expect(dataStore.test.getData(3)).toEqual 5
+    expect(dataStore.test.getData(4)).toEqual 6
+    expect(dataStore.test.getData().length).toEqual 5
 
-  it "should overwrite data to existing index", ->
-    dataStore.createObject "test",
-      0: [1, 2]
-      1: [3, 4]
-
-    expect(dataStore.test).toBeDefined()
-    dataStore.createObject "test",
-      1: [0, 0]
-
-    expect(dataStore.test).toBeDefined()
-    expect(dataStore.test.getData(0)).toEqual [1, 2]
-    expect(dataStore.test.getData(1)).toEqual [0, 0]
 
