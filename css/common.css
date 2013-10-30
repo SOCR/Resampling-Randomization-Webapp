@@ -228,11 +228,9 @@ div.welcome-container{
 	section.datadriven-wrap{
 		height: 400px;
 		overflow: hidden;
-		position: relative;
 		display : none;
 	}
 	section.datadriven-wrap .controls{
-		position: absolute;
 		top: 0px;
 		left: 0px;
 		height: 30px;
@@ -249,7 +247,7 @@ div.welcome-container{
 	}
 	section.datadriven-wrap .spreadsheet{
 		height: 350px;
-		margin-top: 50px;
+		margin-top: 10px;
 		overflow: auto;
 		max-height: 350px;
 

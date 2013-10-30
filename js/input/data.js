@@ -395,7 +395,8 @@ socr.dataTable = function () {
                 manualColumnResize : true,
                 width: 750,
                 height: 270,
-                outsideClickDeselects : false
+                outsideClickDeselects : false,
+                contextMenu:true
             });
 
             //Temporary solution to remove multiple table headers
