@@ -307,9 +307,7 @@ socr.dataTable = function () {
         editTitles: function () {
 
             var colHeader = $dataTable.handsontable('getColHeader');
-                console.log(colHeader);
-            // console.log(d)
-            // colHeader = d.blockedRows.headers;
+    
 
             var content = '<form class="form form-horizontal" id="input-titles"><fieldset><legend>Add titles to Spreadsheet</legend>';
             if (colHeader[0] !== '') {
@@ -509,11 +507,11 @@ socr.dataTable = function () {
             }
            // var ht = $dataTable.handsontable('getInstance');
            //      console.log(ht.getSelected());
-          
+                console.log(selectedCoords);
               if (selectedCoords) {
 
                 console.log(' Select Data request with  ' + selectedCoords)
-                var dataset = $dataTable.handsontable('getData');
+                var dataset = $dataTable.handsontable('getData', selectedCoords[0], selectedCoords[1], selectedCoords[2], selectedCoords[3]);
                 $("#accordion").accordion("activate", 0);
                 try {
                     socr.controller.loadController({
