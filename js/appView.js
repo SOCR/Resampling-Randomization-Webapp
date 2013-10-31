@@ -738,12 +738,14 @@ return{
                 rCount: model.getRSampleCount()
             };
             //adding results
-            if(socr.model.getPof("dataset") !== false){
-            	config.results.push({param:"P-Value",value:socr.model.getPof("dataset")});
-            }
+            if(config.k >1){
+              if(socr.model.getPof("dataset") !== false){
+              	config.results.push({param:"P-Value",value:socr.model.getPof("dataset")});
+              }
 
-            if(socr.model.getFof("dataset") !== false){
-            	config.results.push({param:"F-Value",value:socr.model.getFof("dataset").fValue});	
+              if(socr.model.getFof("dataset") !== false){
+              	config.results.push({param:"F-Value",value:socr.model.getFof("dataset").fValue});	
+              }
             }
             for(var i=1;i<=config.k;i++){
                 var obj={};
