@@ -12,7 +12,7 @@ socr.model=function(){
 	var _stopCount = 1000;			//Number of runs to be made when 'run' button is pressed 
 	var _count=0;					//keeps count of number of samples generated from start
 	var _n=["0 is taken"];			//Number of datapoints in a bootstrap sample or Sample Size
-	var _K=1;						//contains the number of datasets
+	var _K=null;						//contains the number of datasets
 	/*
 	Why there are keys and values? Its because in some form of data input (like coin toss), the "key" contains the symbolic meaningful reference whereas the "value" contains the mathematical equivalent value.
 	*/
@@ -100,10 +100,9 @@ socr.model=function(){
 			return null;
 		}
 		else{
-			var _k=0,_ymean=[],_total=0,_N= 0,_sst=0,_sse=0, _data=[];
-			_k=_this.getK();
+			var _ymean=[],_total=0,_N= 0,_sst=0,_sse=0, _data=[];
 			if (sampleNumber === "dataset"){
-				for (var i = 1; i <=_k; i++) {
+				for (var i = 1; i <=_K; i++) {
 					_data[i] = socr.dataStore.dataset[i].values.getData();
 				};
 			}
@@ -111,32 +110,32 @@ socr.model=function(){
 				_data=socr.dataStore.bootstrapGroup[sampleNumber].values.getData()
 			}
 
-            for(i=1;i<=_k;i++){
+            for(i=1;i<=_K;i++){
 				_ymean[i] = $.mean(_data[i]);
                 _N +=_data[i].length;       //calculate N = total number of observations
 				_total+=_ymean[i];
 			}
-			var _y = _total/_k; // grand mean
+			var _y = _total/_K; // grand mean
 //            console.log("dataset:");
 //            console.log(_data);
 //            console.log("means");
 //            console.log(_ymean);
 //            console.log("grand mean: "+ _y);
 //            console.log("N :"+ _N)
-            var _dofe=_k - 1;//calculate the dof between =  k - 1
-			var _dofw=_N - _k; //calculate the dof within = N - k
+            var _dofe=_K - 1;//calculate the dof between =  k - 1
+			var _dofw=_N - _K; //calculate the dof within = N - k
 //
 //            console.log("dofe:"+_dofe);
 //            console.log("dofw:"+_dofw);
 
 			//SST
-			for (i = 1; i <= _k; i++) {
+			for (i = 1; i <= _K; i++) {
 				_temp = (_ymean[i] - _y);
 				_sst+=_data[i].length*_temp*_temp;
 			}
 //			console.log("_sst:"+_sst);
 			//SSE
-			for (var i = 1,_temp=0; i <= _k; i++) {
+			for (var i = 1,_temp=0; i <= _K; i++) {
 				for(var j=0;j<_data[i].length;j++){
 					_temp = ( _data[i][j] - _ymean[i]);
 					_sse+=_temp*_temp;
@@ -729,12 +728,12 @@ return{
 		//purge _n array
 		_n.length=0;
 		_n.push("0 is taken");
-		var _k = socr.model.getK();
+		socr.model.setK();
 		var _ds = socr.dataStore.dataset;
 		if (typeof z === "undefined" || z === null){
 			//computing default values
 			if(typeof _ds !== "undefined"){
-				for (var i = 1; i <= _k; i++) {
+				for (var i = 1; i <= _K; i++) {
 					try{
 						_n.push(_ds[i]['values'].getData().length)
 					}
@@ -746,13 +745,13 @@ return{
 			}
 		} 
 		else if($.isArray(z)){
-			if((z.length-1 === _k )||(z.length === _k)){
+			if((z.length-1 === _K )||(z.length === _K)){
 				z.forEach(function(el,index,arr){
 					if(typeof el === "undefined" || el === null){
 						z[i] = _ds[i]['values'].getData().length
 					}
 				},z);
-				_n.push(z);
+				_n = _n.concat(z);
 			}
 			else{
 				//some values are missing
@@ -762,7 +761,7 @@ return{
 		else if(typeof z === "number" || typeof z === "string"){
 			console.log(typeof z + " is the type of Z")
 			z = parseInt(z);
-			for (var i = _k; i > 0; i--) {
+			for (var i = _K; i > 0; i--) {
 				_n.push(z)
 			}
 		}
@@ -796,25 +795,29 @@ return{
 		}
 	},
 
-    /**
-     * @method :getK
-     * @return : {number}
-     */
-	getK:function(){
-		var _count=0;
-		try{
-			_ds = socr.dataStore.dataset;
-		}
-		catch(e){
-			console.log(e.message)
-			return false;
-		}
-		for (var name in _ds) {
-    		if (_ds.hasOwnProperty(name)) {
-        		_count++;
-        	}
-  	  	}
-		return _count;
-	}
+  /**
+   * @method :setK
+   * @return : none
+   */
+  setK:function(){
+    var _count=0;
+      if((_ds=socr.dataStore.dataset) === undefined){
+        _K = null
+        return false
+      }
+    for (var name in _ds) {
+        if (_ds.hasOwnProperty(name)) {
+            _count++;
+          }
+        }
+    _K = _count;
+  },
+  /**
+   * @method :getK
+   * @return : {number}
+   */
+  getK:function(){
+    return _K
+  }
 }//return
 }

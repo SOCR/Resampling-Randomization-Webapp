@@ -157,27 +157,31 @@ socr.controller=function(model,view){
 	},
 
 	initController:function(){
+
+    // set the K - value in model.
+    model.setK()
 		
 		$('.tooltips').tooltip();
 
-        $('.controller-back').on('click',function(e){
-            e.preventDefault();
-            try{
-            	model.reset();
-            	view.reset();
-            	console.log("exp_"+socr.exp.current.name);
-                socr.dataTable.simulationDriven.init("exp_"+socr.exp.current.name);
-            	socr.exp.current.initialize();
+    $('.controller-back').on('click',function(e){
+        e.preventDefault();
+        try{
+        	model.reset();
+        	view.reset();
+        	console.log("exp_"+socr.exp.current.name);
+            socr.dataTable.simulationDriven.init("exp_"+socr.exp.current.name);
+        	socr.exp.current.initialize();
 
-            }
-            catch(err){
-                console.log(err.message);
-            }
-        });
-		$("#runButton").on('click',function(e){
-            e.preventDefault();
+        }
+        catch(err){
+            console.log(err.message);
+        }
+    });
+		
+    $("#runButton").on('click',function(e){
+      e.preventDefault();
 			console.log('Run Started');
-			socr.controller.run();
+			setTimeout(socr.controller.run,500);
 		});
 		
 		$("#stepButton").on('click',function(e){
@@ -211,33 +215,40 @@ socr.controller=function(model,view){
             }
 		});
 
-        $('#variable').on('change',function(){
-	        if($(this).val()=='Mean' || $(this).val()=='Count'){
-	            $("#index").attr("disabled",false);
-	        }
-    	    else{
-    	        $("#index").attr("disabled",true);
-    	    }
-    	});
+    $('#variable').on('change',function(){
+      if($(this).val()=='Mean' || $(this).val()=='Count'){
+          $("#index").attr("disabled",false);
+      }
+	    else{
+	        $("#index").attr("disabled",true);
+	    }
+    });
 
-        $('#analysis').on('change',function(){
-	        if(socr.analysis[$(this).val()] !== "undefined"){
-	        	var el="";
-	        	$.each(socr.analysis[$(this).val()]["variables"],function(key,value){
-	        		 el+='<option value="'+value+'">'+value.replace("-"," ")+'</option>';
-	        	});
-	        	$("#variable").html(el);
-	        }
-    	});
+    $('#analysis').on('change',function(){
+      if(socr.analysis[$(this).val()] !== "undefined"){
+      	var el="";
+      	$.each(socr.analysis[$(this).val()]["variables"],function(key,value){
+      		 el+='<option value="'+value+'">'+value.replace("-"," ")+'</option>';
+      	});
+      	$("#variable").html(el);
+      }
+    });
 
-        try{
-        	$('.controller-popups').popover({
-			html:true
-        	});
-        }
-        catch(e){
-        	console.log(e.message)
-        }
+    $('.update').on('click',function(){
+      var val = []
+      $.each($('.nValues'),function(k,v){
+        val.push($(v).val())
+      });
+      socr.model.setN(val)
+    });
+    try{
+    	$('.controller-popups').popover({
+        html:true
+    	});
+    }
+    catch(e){
+    	console.log(e.message)
+    }
 
 	},
 
@@ -277,8 +288,8 @@ socr.controller=function(model,view){
 	*@description:It generates X random sample with animation effect showing the generation.
 	*/
 	run:function(){
-        view.disableButtons();					//disabling buttons
-        view.updateStatus("started");
+    view.disableButtons();					//disabling buttons
+    view.updateStatus("started");
 		model.setStopCount($("#countSize").val());	//save the stopcount provided by user
 		//generate samples
 		var _temp=model.getStopCount()/1000;
@@ -356,7 +367,6 @@ socr.controller=function(model,view){
 			if(setting.from !== "undefined"){
 	            socr.controller.setCurrentMode(setting.from);
 	        }
-	       	console.log('DataSet: '+model.getDataset());
         	PubSub.publish("Datadriven controller loaded");
 			//checking for any dataset generated from experiment. If yes, they take priority and get loaded.
             if(!$.isEmptyObject(socr.exp.current)){
