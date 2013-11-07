@@ -36,9 +36,16 @@ describe "appModel", ->
       socr.dataStore.createObject "dataset.1.values", [1,2,3,4,5]
 
       socr.dataStore.createObject "dataset.2.values", [4,5,6,7]
-      window["test"] = model
 
       expect(model.getPof "dataset").toEqual 0.03745653509411884
+
+    #test for DOP
+    it "should generate accurate DOP", ->
+      socr.dataStore.createObject "dataset.1.values", [1,1,1,0,1]
+
+      socr.dataStore.createObject "dataset.2.values", [1,0,0,1,1,1,0,0,0]
+
+      expect(model.getDOPof("dataset").toFixed(3)).toEqual '0.099'
 
 
 # incase of no input given to generateTrail
