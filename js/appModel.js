@@ -100,58 +100,72 @@ socr.model=function(){
 			return null;
 		}
 		else{
-			var _ymean=[],_total=0,_N= 0,_sst=0,_sse=0, _data=[];
+			var _ymean=[],_total=0,_N= 0,_sst=0,_ssw=0, _ssb = 0, _data=[];
 			if (sampleNumber === "dataset"){
-				for (var i = 1; i <=_K; i++) {
+        
+        //Get the complete dataset from the dataStore.
+				
+        for (var i = 1; i <=_K; i++) {
 					_data[i] = socr.dataStore.dataset[i].values.getData();
 				};
 			}
 			else{
+        //Get the random sample with index @sampleNumber from each group. 
 				_data=socr.dataStore.bootstrapGroup[sampleNumber].values.getData()
 			}
 
-            for(i=1;i<=_K;i++){
+      for(i = 1 ;i <= _K; i++){
 				_ymean[i] = $.mean(_data[i]);
-                _N +=_data[i].length;       //calculate N = total number of observations
-				_total+=_ymean[i];
+        _N += _data[i].length;       //calculate N = total number of observations
+				_total+= _ymean[i];
 			}
 			var _y = _total/_K; // grand mean
-//            console.log("dataset:");
-//            console.log(_data);
-//            console.log("means");
-//            console.log(_ymean);
-//            console.log("grand mean: "+ _y);
-//            console.log("N :"+ _N)
-            var _dofe=_K - 1;//calculate the dof between =  k - 1
-			var _dofw=_N - _K; //calculate the dof within = N - k
-//
-//            console.log("dofe:"+_dofe);
-//            console.log("dofw:"+_dofw);
+      
+      //Degree of freedom between = _dofe = K - 1
+      var _dofe = _K - 1;
 
-			//SST
-			for (i = 1; i <= _K; i++) {
-				_temp = (_ymean[i] - _y);
-				_sst+=_data[i].length*_temp*_temp;
-			}
-//			console.log("_sst:"+_sst);
-			//SSE
-			for (var i = 1,_temp=0; i <= _K; i++) {
-				for(var j=0;j<_data[i].length;j++){
-					_temp = ( _data[i][j] - _ymean[i]);
-					_sse+=_temp*_temp;
-				}
-			}
-//			console.log("_sse:"+_sse);
-			//MST
-			var _mst = _sst/_dofe;
-			//MSE
-			var _mse = _sse/_dofw;
-//            console.log("mean sum of squares between "+_mst);
-//           console.log("mean sum of squares within  "+_mse);
+      //Degree of freedom within = _dofw = N - K
+			var _dofw = _N - _K; 
 
-//            console.log("F value: "+_mst/_mse);
+    //Sum of Squares Total (= Sum of squares between + Sum of squares within)
+      
+      //Creating the samplespace of all values.
+      var _sspace = [];
+      for(var i = _K; i >= 1; i--) {
+        _sspace = _sspace.concat(_data[i]);
+      }
+      //Mean
+      _m = $.mean(_sspace)
+      for (var i = _sspace.length - 1; i >= 0; i--) {
+        _sst=_sst + Math.pow(( _m - _sspace[i]),2);
+      }
+      //console.log("_sst:"+_sst);
+      
+    //SSW - Sum of squares within
+      for(var i = 1,_temp=0; i <= _K; i++) {
+        for(var j=0;j<_data[i].length;j++){
+          _temp = ( _data[i][j] - _ymean[i]);
+          _ssw+=_temp*_temp;
+        }
+      }
+      //console.log("_ssw:"+_ssw);
+
+    //SSB - Sum of squares between
+      // for (var i = _K; i >= 1; i--) {
+      //   if ((d = _data[i].length) !== undefined){
+      //     _ssb=ssb + d*Math.pow((_y - _ymean[i]),2)
+      //   }
+      // };
+      //console.log("_ssb:"+_ssb);
+      _ssb = _sst - _ssw ;
+      
+      //MST - Mean sum of squares
+      var _mst = _ssb/_dofe;
+      //MSE - Mean sum of between
+			var _msw = _ssw/_dofw;
+
 			return {
-                fValue:_mst/_mse,
+                fValue:_mst/_msw,
                 ndf:_dofe,
                 ddf:_dofw
             };
@@ -186,16 +200,27 @@ socr.model=function(){
 		    _data2 = socr.dataStore.dataset[2].values.getData();
 		}
 		else{
-			var _data1 = socr.dataStore.bootstrapGroup[sampleNumber].values.getData(1),
-		    	_data2 = socr.dataStore.bootstrapGroup[sampleNumber].values.getData(2);
+			var _data1 = socr.dataStore.bootstrapGroup[sampleNumber].values.getData();
+      var _data2 = _data1[2];
+      _data1 = _data1[1];
 		}
+    /*
+      p1 - Proportion of dataset 1
+      p2 - Proportion of dataset 2
+
+      Z = (p1 - p1)/(p*(1-p))*((1/n1) + (1/n2)))^1/2
+      Reference : 
+       - http://wiki.stat.ucla.edu/socr/index.php/AP_Statistics_Curriculum_2007_Infer_2Proportions#Hypothesis_Testing_the_Difference_of_Two_Proportions
+       - http://stattrek.com/hypothesis-test/difference-in-proportions.aspx
+    */
 		var n1 = _data1.length,
 		p1 = $.sum(_data1)/n1,
 		n2 = _data2.length,
 		p2 = $.sum(_data2)/n2;
-		//quickly generate the proportions
+		//Generate pooled sample proportions
 		var p = (p1 * n1 + p2 * n2) / (n1 + n2);
 
+    //Generate Standard Error
 		var SE = Math.sqrt(p * ( 1 - p ) * ((1/n1) + (1/n2)));
 
 		return {
@@ -211,41 +236,30 @@ socr.model=function(){
      * @returns {number}
      * @private
      */
-    function _generateDOP(sampleNumber,mu,sigma){
-        try{
-        	var x = _generateZ(sampleNumber),
-        	mu=mu ||0,
-        	sigma=sigma||1;
-        }
-        catch(e){
-        	console.log(e.message)
-        }
-        return socr.tools.zCal.computeP(x.zValue,mu,sigma);
+  function _generateDOP(sampleNumber,mu,sigma){
+    try{
+    	var x = _generateZ(sampleNumber),
+    	mu=mu ||0,
+    	sigma=sigma||1;
     }
+    catch(e){
+    	console.log(e.message)
+    }
+    return socr.tools.zCal.computeP(x.zValue,mu,sigma);
+  }
 
 return{
 	n:_n,
-	/* PUBLIC PROPERTIES   */
-	//bootstrapGroupKeys:_bootstrapGroupKeys,
-	//bootstrapGroupValues:_bootstrapGroupValues,
-
-	
-	/* PUBLIC METHODS   */
-	/*
-	addObserver:subject.addObserver(),
-	removeObserver:subject.removeObserver()
-	*/    
     
-    /**
-     *
-     * @method: [public] generateTrail()
-     * @param datasetIndex
-     * @desc:  Generating a random number between 0 and dataSet size {@ashwini: I think this should be a private function}
-     * @returns {object}
-     */
+  /**
+   * @method: [public] generateTrail()
+   * @param datasetIndex
+   * @desc:  Generating a random number between 0 and dataSet size {@ashwini: I think this should be a private function}
+   * @returns {object}
+   */
 	generateTrail:function(datasetIndex){
 		var _temp = socr.dataStore.sampleSpace;
-		if(_temp === undefined || this.getK() === false){
+		if(_temp === undefined || _K === false){
 			return null;
 		}
 		else{
@@ -257,13 +271,12 @@ return{
 		}
 	},
 
-    /**
-     *@method [public] generateSample()
-     *@desc  generating a random number between 0 and dataSet size
-     * @return {boolean}
-     */
-
-    generateSample:function(){
+  /**
+   *@method [public] generateSample()
+   *@desc  generating a random number between 0 and dataSet size
+   * @return {boolean}
+   */
+  generateSample:function(){
 		var k=socr.model.getK(),
 			keyEl=['0 is taken'],
 			valEl=['0 is taken'],
@@ -287,7 +300,7 @@ return{
 		//Object.defineProperty(_bootstrapGroupKeys,_count,{value:keyEl,writable:true,configurable : true});
 		//Object.defineProperty(_bootstrapGroupValues,_count,{value:valEl,writable:true,configurable : true});
 		_count++;		//incrementing the total count - number of samples generated from start of simulation
-        return true;
+    return true;
 	},
 
 	/**
@@ -310,29 +323,28 @@ return{
 			}
 			obj.setData(_mean)
 			return obj.getData()
-			}
-		},
+		}
+	},
 
-    /**
-     * @method getMeanOf()
-     * @desc  executed when the user presses "infer" button in the controller tile.
-     *        The click binding of the step button is done in the {experiment}.js
-     * @param sampleNumber
-     * @param groupNumber
-     * @returns {number}
-     */
+  /**
+   * @method getMeanOf()
+   * @desc  executed when the user presses "infer" button in the controller tile.
+   *        The click binding of the step button is done in the {experiment}.js
+   * @param sampleNumber
+   * @param groupNumber
+   * @returns {number}
+   */
 	getMeanOf:function(sampleNumber,groupNumber){
 		return _generateMean(sampleNumber,groupNumber);
 	},
-
 	
 	/** STANDARD DEVIATION METHODS STARTS **/
 
-    /**
-     * @method getStandardDev
-     * @param groupNumber
-     * @returns {*}
-     */
+  /**
+   * @method getStandardDev
+   * @param groupNumber
+   * @returns {*}
+   */
 	getStandardDev:function(groupNumber){
 		var	groupNumber = groupNumber || 1 ;    // 1 is default value - meaning the first dataset
 		//if the _sampleStandardDev already has the values
@@ -352,21 +364,21 @@ return{
 		}	
 	},
 
-    /**
-     * @method getStandardDevOf
-     * @param sampleNumber
-     * @param groupNumber
-     * @returns {number}
-     */
-    getStandardDevOf:function(sampleNumber,groupNumber){
+  /**
+   * @method getStandardDevOf
+   * @param sampleNumber
+   * @param groupNumber
+   * @returns {number}
+   */
+  getStandardDevOf:function(sampleNumber,groupNumber){
 		return _generateStandardDev(sampleNumber,groupNumber);
 	},
 
-    /**
-     *
-     * @param K
-     * @returns {number}
-     */
+  /**
+   *
+   * @param K
+   * @returns {number}
+   */
 	getStandardDevOfDataset:function(K){
 		var K=K || 1,
 			_ds = socr.dataStore.dataset,
@@ -482,7 +494,7 @@ return{
 	*@desc returns the F value computed from the supplied group
 	*@return {Object}
     */
-    getF:function(groupNumber){
+  getF:function(groupNumber){
 		var	groupNumber = groupNumber || 1 ;    // 1 is default value - meaning the first dataset
 		_this=this;
 		var obj = socr.dataStore.createObject("F-Value",[])["F-Value"];
@@ -500,27 +512,27 @@ return{
 		}
 	},
 
-    /**
-     * @method  getFof
-     * @desc returns the F value computed from the supplied group
-     * @param sampleNumber - Random sample Number at which the F value is to be calculated
-     * @returns {Object}
-     */
-    getFof:function(sampleNumber){
-    	//check if K > 1 and there are random samples to compute F.
-        if (socr.model.getK() <= 1 || socr.dataStore.bootstrapGroup === undefined) {
-        	return false
-        };
-        _this=this;
-        return _generateF(sampleNumber);
-    },
+  /**
+   * @method  getFof
+   * @desc returns the F value computed from the supplied group
+   * @param sampleNumber - Random sample Number at which the F value is to be calculated
+   * @returns {Object}
+   */
+  getFof:function(sampleNumber){
+  	//check if K > 1 and there are random samples to compute F.
+      if (socr.model.getK() <= 1 || socr.dataStore.bootstrapGroup === undefined) {
+      	return false
+      };
+      _this=this;
+      return _generateF(sampleNumber);
+  },
 
-    /**
-     * @method getP
-     * @return {Object}
-     */
+  /**
+   * @method getP
+   * @return {Object}
+   */
 
-    getP:function(groupNumber){
+  getP:function(groupNumber){
  		var	groupNumber = groupNumber || 1 ;    // 1 is default value - meaning the first dataset
 		_this=this;
 		var obj = socr.dataStore.createObject("P-Value",[])["P-Value"];
@@ -536,53 +548,52 @@ return{
 			obj.setData(_p)
 			return obj.getData()
 		}
-    },
+  },
 
-    /**
-     * @method getPof
-     * @param sampleNumber
-     * @returns {number}
-     */
-    getPof:function(sampleNumber){
-    	//check if K > 1 and there are random samples to compute P.
-        if (socr.model.getK() <= 1 && socr.dataStore.bootstrapGroup === undefined) {
-        	return false
-        };
-        _this=this;
-        return _generateP(sampleNumber);
-    },
+  /**
+   * @method getPof
+   * @param sampleNumber
+   * @returns {number}
+   */
+  getPof:function(sampleNumber){
+  	//check if K > 1 and there are random samples to compute P.
+      if (socr.model.getK() <= 1 && socr.dataStore.bootstrapGroup === undefined) {
+      	return false
+      };
+      _this=this;
+      return _generateP(sampleNumber);
+  },
 
-    /**
-     * @method getDOP
-     * @return {Object}
-     */
-
-    getDOP:function(){
-		_this=this;
-		var obj = socr.dataStore.createObject("DOPValue",[])["DOPValue"];
-		if(obj.getData().length=== _count){
+  /**
+   * @method getDOP
+   * @return {Object}
+   */
+  getDOP:function(){
+  	_this=this;
+  	var obj = socr.dataStore.createObject("DOPValue",[])["DOPValue"];
+  	if(obj.getData().length=== _count){
             console.log("already saved!");
-			return obj.getData()
-		}
-		else{
-			var _p=[];
-			for(var j=obj.getData().length;j<_count;j++){
-				_p[j]=_generateDOP(j);
-			}
-			obj.setData(_p)
-			return obj.getData()
-		}
+  		return obj.getData()
+  	}
+  	else{
+  		var _p=[];
+  		for(var j=obj.getData().length;j<_count;j++){
+  			_p[j]=_generateDOP(j);
+  		}
+  		obj.setData(_p)
+  		return obj.getData()
+  	}
 
-    },
-    /**
-     * @method getDOPof
-     * @param sampleNumber
-     * @returns {number}
-     */
-    getDOPof:function(sampleNumber){
-    	_this=this;
-        return _generateDOP(sampleNumber);
-    },
+  },
+  /**
+   * @method getDOPof
+   * @param sampleNumber
+   * @returns {number}
+   */
+  getDOPof:function(sampleNumber){
+  	_this=this;
+      return _generateDOP(sampleNumber);
+  },
 
     /**
      * @method getDataset
@@ -641,11 +652,9 @@ return{
 				var _cells=input.values[i].cells,
 					_id=input.values[i].id,
 					_temp=[];
-				console.log("_cells : "+_cells);
 				for (var j = 0; j < _cells.length; j++) {
 					if (_cells[j][0] !== ""){
 						_temp[j]=_cells[j][0];
-						console.log(_temp[j]);
 					}
 					else{
 						break;
@@ -765,7 +774,7 @@ return{
 				_n.push(z)
 			}
 		}
-		console.log(_n);
+		console.log("random sample sizes:"+_n);
 	},
 	getN:function(){
 		return _n;
