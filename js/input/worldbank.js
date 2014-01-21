@@ -17,33 +17,60 @@ socr.input.worldbank = function(){
 			// date : '2008:2011',
 			per_page  : '1'
 		}
-
+		
 		requestdata["date"] = (typeof req.year1 == 'undefined') ? '2008:2011' : req.year1 + ':' + req.year2;
 		requestdata["per_page"] = (typeof itemcount == 'undefined') ? 1 : itemcount ;
 		
 
 		$.ajax({
-			url : 'http://api.worldbank.org/countries/indicators/'+req.indicator+'/?prefix=?',
-			dataType : 'json',	
-			type : 'GET',
-			data : requestdata,
-			jsonp : true
-
-		}).done(
-			function(res){
-				console.log(res)
+			url : 'http://api.worldbank.org/countries/indicators/'+req.indicator+'?format=jsonP&date='+requestdata["date"]+'&per_page='+requestdata["per_page"],
+			dataType: 'jsonP',
+		    jsonp : "prefix",
+		    jsonpCallback: "jquery_"+(new Date).getTime(),
+			success : function(res){
 				var count = res[0].total;
 				if(requestdata['per_page'] == 1){
 
 					request(req, count);
 				}
 				else{
-					var grid = formatResponse(res);
+					var interval = parseInt(requestdata["date"].substr(5,9)) - parseInt(requestdata["date"].substr(0,4)) + 1;
+					var grid = formatResponse(res, interval);
 					socr.dataTable.worldbank.loadComplete();
 					socr.dataTable.spreadSheet.loadData(grid);
 				}
+			},
+			error : function(xhr, status, error){
+				console.log("Error");
+				console.log(xhr.statusText);
+		        console.log(xhr.responseText);
+		        console.log(xhr.status);
+		        console.log(error);
 			}
-		)
+		})
+
+		// $.ajax({
+		// 	url : 'http://api.worldbank.org/countries/indicators/'+req.indicator,
+		// 	dataType : 'json',	
+		// 	type : 'GET',
+		// 	data : requestdata,
+		// 	jsonp : 'callback'
+
+		// }).done(
+		// 	function(res){
+		// 		console.log(res)
+		// 		var count = res[0].total;
+		// 		if(requestdata['per_page'] == 1){
+
+		// 			request(req, count);
+		// 		}
+		// 		else{
+		// 			var grid = formatResponse(res);
+		// 			socr.dataTable.worldbank.loadComplete();
+		// 			socr.dataTable.spreadSheet.loadData(grid);
+		// 		}
+		// 	}
+		// )
 
 	}
 	/*
@@ -53,13 +80,14 @@ socr.input.worldbank = function(){
 	 * format - [country, value1, value2, ...]
 	 */
 
-	var formatResponse = function(response){
+	var formatResponse = function(response, interval){
 
-		var yearinterval = 4,
+		var yearinterval = interval,
 			i = 0,
-			table = [];
-		
-		while( i < response[0].total ){
+			table = [],
+			ceil = response[0].per_page - yearinterval;
+
+		while( i < ceil ){
 
 			var country = response[1][i].country.value,
 				row = [];
@@ -67,8 +95,11 @@ socr.input.worldbank = function(){
 			row.push(country);
 
 			for(var j = 0 ; j < yearinterval;  j++){
+			
 				row.push(response[1][i+j].value);
+
 			}
+
 			table.push(row);
 			
 			i += yearinterval;
