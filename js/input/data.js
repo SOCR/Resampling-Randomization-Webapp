@@ -731,6 +731,10 @@ socr.dataTable = function () {
                 visible: excelScreen
             });
 
+        },
+        errorLoading : function(){
+            $('#worldbank-form').find('input[type="submit"]').attr('disabled', false);
+            $('.worldbank-response').addClass('alert-error').html('There was an error requesting data');
         }
     }
 

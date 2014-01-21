@@ -37,15 +37,12 @@ socr.input.worldbank = function(){
 					var interval = parseInt(requestdata["date"].substr(5,9)) - parseInt(requestdata["date"].substr(0,4)) + 1;
 					var grid = formatResponse(res, interval);
 					socr.dataTable.worldbank.loadComplete();
-					socr.dataTable.spreadSheet.loadData(grid);
+					socr.dataTable.spreadSheet.loadData(grid[0]);
+					socr.dataTable.spreadSheet.addColHeaders(grid[1]);
 				}
 			},
 			error : function(xhr, status, error){
-				console.log("Error");
-				console.log(xhr.statusText);
-		        console.log(xhr.responseText);
-		        console.log(xhr.status);
-		        console.log(error);
+				socr.dataTable.worldbank.errorLoading();
 			}
 		})
 
@@ -85,7 +82,10 @@ socr.input.worldbank = function(){
 		var yearinterval = interval,
 			i = 0,
 			table = [],
-			ceil = response[0].per_page - yearinterval;
+			ceil = response[0].per_page - yearinterval,
+			colHeaders = [];
+
+		colHeaders.push("Countries");
 
 		while( i < ceil ){
 
@@ -105,7 +105,11 @@ socr.input.worldbank = function(){
 			i += yearinterval;
 		}
 
-		return table;
+		for(i=0; i<interval; i++){
+			colHeaders.push(response[1][i].date)
+		}
+
+		return [table,colHeaders];
 	}
 
 	return {
