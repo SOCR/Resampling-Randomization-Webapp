@@ -1,0 +1,28 @@
+<!doctype html>
+<head>
+	<title> Worldbank Test </title>
+	<script> 
+		var socr = {};
+		socr.input = {}; 
+		socr.dataTable = {};
+		socr.dataTable.worldbank = {
+			'loadComplete' : function(){
+				console.log("Load Complete")
+			}
+		};
+		socr.dataTable.spreadSheet ={
+			'loadData' : function(d){
+				console.log(d);
+			}
+		};
+	</script>
+	<script src = "../../js/lib/jquery.min.js"></script>
+	<script src = "../../js/input/worldbank.js"></script>
+</head>
+<body>
+<script>
+var req = {};
+req.indicator = "SP.DYN.CDRT.IN";
+socr.input.worldbank.request(req);
+</script>
+</body>
