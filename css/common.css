@@ -373,3 +373,14 @@ div.tool{
 .htCore th{
 	cursor:pointer;
 }
+
+
+/* Style support for SOCR footer */
+#footer{
+  background-color: #e5f0fc;
+  border: 1px solid #ccc;
+  border-bottom: 0;
+  clear: both;
+  padding:2px 0px;
+  text-align:center;
+  }
