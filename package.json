@@ -1,8 +1,5 @@
 {
-  "author": {
-    "name": "Selvam Palanimalai,Ashwini Khare",
-    "email": "selvam1991@gmail.com"
-  },
+  "author": "Selvam Palanimalai,Ashwini Khare <selvam1991@gmail.com>",
   "scripts": {
     "start": "node server.js"
   },
@@ -12,8 +9,6 @@
     "node": "0.8.x"
   },
   "analyze": false,
-  "readme": "A modern and portable SOCR web-app that demonstrates the concepts of statistical analysis such as resampling, randomization and probabilistic simulation.",
-  "readmeFilename": "ReadMe.md",
   "description": "[https://github.com/SOCRedu/Resampling-Randomization-WebApp](Socr randomization webapp)",
   "dist": {
     "shasum": "fceea3c0a1a766a6762e6bd8d7b0d57a85ecbb2f"
@@ -21,7 +16,27 @@
   "subdomain": "socr-randomization",
   "name": "socr-randomization",
   "devDependencies": {
-    "grunt": "~0.4.1",
-    "grunt-contrib-jasmine": "~0.5.1"
+    "grunt": "~0.4.2",
+    "grunt-contrib-jasmine": "~0.6.1",
+    "grunt-contrib-jshint": "~0.8.0",
+    "grunt-contrib-coffee": "~0.10.0"
+  },
+  "main": "server.js",
+  "directories": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/selvam1991/SOCR-Resampling-Randomization-Webapp.git"
+  },
+  "keywords": [
+    "socr",
+    "randomization",
+    "resampling",
+    "statistics"
+  ],
+  "license": "BSD",
+  "bugs": {
+    "url": "https://github.com/selvam1991/SOCR-Resampling-Randomization-Webapp/issues"
   }
 }
