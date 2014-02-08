@@ -8,13 +8,13 @@
 socr.controller = (model, view) ->
   
   # PRIVATE PROPERTIES   
-  
-  # view=view || new socr.view();   // Reference to the Global App view object.
-  # Stores the id for setInterval in run mode
-  # Keeps count of number of resamples generated
-  # contains reference to this object.
-  #App starts with dataDriven mode [default value]
-  
+
+  _id = 0 # Stores the id for setInterval in run mode
+  _runsElapsed = 0 # Keeps count of number of resamples generated
+  _this = this
+  _noOfSteps = 0
+  _currentMode = "Experiment" #App starts with dataDriven mode [default value]
+
   # PRIVATE METHODS   
   
   ###
@@ -37,13 +37,9 @@ socr.controller = (model, view) ->
       PubSub.publish "Random samples generated"
       _this.stop()
     return
-  _id = 0
-  _runsElapsed = 0
-  _this = this
-  _noOfSteps = 0
-  _currentMode = "Experiment"
-  
+
   # PUBLIC METHODS 
+  
   currentMode: _currentMode
   
   ###
@@ -55,8 +51,9 @@ socr.controller = (model, view) ->
     console.log "initialize() invoked "
     
     #ADDING EVENT LISTENERS STARTS
-    #   --------------------------------
+    #--------------------------------
     $(".controller-handle").on "click", view.toggleControllerHandle
+    
     $(".help").on "change click", (e) ->
       e.preventDefault()
       socr.tutorial.toggleStatus()
@@ -64,7 +61,6 @@ socr.controller = (model, view) ->
       return
 
     $("#showButton").on "click", ->
-      
       #a check to see if the sample count is 0 or not
       view.createList $(".show-list-start").val(), $(".show-list-end").val()
       return

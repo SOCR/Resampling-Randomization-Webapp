@@ -689,7 +689,7 @@ socr.model = ->
         j = 0
 
         while j < _cells.length
-          if _cells[j][0] isnt ""
+          if _cells[j][0] isnt null
             _temp[j] = _cells[j][0]
           else
             break
@@ -848,13 +848,13 @@ socr.model = ->
   @return : none
   ###
   setK: ->
-    _count = 0
+    _c = 0
     if (_ds = socr.dataStore.dataset) is `undefined`
       _K = null
       return false
     for name of _ds
-      _count++  if _ds.hasOwnProperty(name)
-    _K = _count
+      _c++  if _ds.hasOwnProperty(name)
+    _K = _c
     return
 
   
