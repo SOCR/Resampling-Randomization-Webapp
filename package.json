@@ -1,7 +1,8 @@
 {
   "author": "Selvam Palanimalai,Ashwini Khare <selvam1991@gmail.com>",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "test":"grunt test"
   },
   "version": "0.1.0-3",
   "dependencies": {},
@@ -19,7 +20,8 @@
     "grunt": "~0.4.2",
     "grunt-contrib-jasmine": "~0.6.1",
     "grunt-contrib-jshint": "~0.8.0",
-    "grunt-contrib-coffee": "~0.10.0"
+    "grunt-contrib-coffee": "~0.10.0",
+    "grunt-contrib-concat": "~0.3.0"
   },
   "main": "server.js",
   "directories": {
