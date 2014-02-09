@@ -22,10 +22,12 @@ socr.dataTable = function () {
     var datastage = $('section#datadriven-stage');
     var resetStage = $('.reset-stage');
     var stageList = $('table.stage-list tbody');
+    var lastColselected = false;
 
     splashScreen.find('ul li a').on('click', function () {
 
         switch ($(this).attr('data-rel')) {
+
         case 'spreadsheet':
             view.toggleScreens({
                 visible: excelScreen
@@ -243,7 +245,7 @@ socr.dataTable = function () {
                 matrix.push(row);
             });
 
-            /*
+        /*
         Check if the table has th elements instead
         @Todo
         */
@@ -279,8 +281,8 @@ socr.dataTable = function () {
 
     };
     /*
-  Ideally should serve as one-stop object for all visual element changes involving datasets
-*/
+    Ideally should serve as one-stop object for all visual element changes involving datasets
+    */
     var view = {
         displayResponse: function (content, type) {
             $response.html('').slideUp(300);
@@ -559,6 +561,45 @@ socr.dataTable = function () {
             
         },
 
+       sort : function(){
+            console.log(lastColselected);
+ 
+              var d = $dataTable.handsontable('getData');
+              /***
+                Matrix Form
+                row 1 
+                row 2
+               ***/
+
+            var sorted = d.sort(spreadSheet.compare);
+
+            $dataTable.handsontable('loadData', sorted);
+
+            //Empty The Spreadsheet
+
+            // setTimeout(function(){
+            //     $dataTable.handsontable('clear');
+            // }, 50);
+          
+            //Sort Data on basis of comparator
+
+            //Reload the Spreadsheet
+          
+        },
+
+        compare : function(a,b) {
+
+          if (b[lastColselected] == '')
+            return 1;
+          if (a[lastColselected] == '')
+            return -1;
+          if (a[lastColselected]< b[lastColselected])
+             return -1;
+          if (a[lastColselected]> b[lastColselected])
+            return 1;
+          return 0;
+        },
+
         reset: function () {
             $('<div></div>').appendTo('body')
                 .html('<div><h6>Are you sure you want to reset the data?</h6></div>')
@@ -754,16 +795,19 @@ socr.dataTable = function () {
     $controls.find('.edittitles').on('click', view.editTitles);
     $controls.find('.firstrowtitles').on('click', spreadSheet.firstRowTitles);
     $controls.find('.removecol').on('click', view.removeCol);
+    $controls.find('#spreadsheet_sort').on('click', spreadSheet.sort);
     $('#worldbank-form').on('submit', worldbank.init);
     $('#input-modal').on('submit', '#input-titles', view.parseTitles);
     $('#input-modal').on('submit', '#remove-col', view.handleRemoveCol);
 
     $('.handsontable').on('mousedown', 'th:has(.colHeader)', function () {
         var colIndex = $('.handsontable').handsontable('getInstance').view.wt.wtTable.getCoords(this)[1];
-
+        lastColselected = colIndex;
         $dataTable.handsontable('selectColumn', colIndex);
 
     });
+
+    // $('.handsontable').find('th').on('click', spreadSheet.setCol);
     
 
     spreadSheet.init();
@@ -773,6 +817,6 @@ socr.dataTable = function () {
         simulationDriven: simulationDriven,
         spreadSheet: spreadSheet,
         view: view,
-        worldbank : worldbank
+        worldbank : worldbank,
     }
 }();
