@@ -449,7 +449,7 @@ socr.dataTable = function () {
         },
 
         firstRowTitles: function () {
-            var firstrow = $dataTable.handsontable('getFirstRow')[0];
+            var firstrow = $dataTable.handsontable('getDataAtRow', 0);
             spreadSheet.addColHeaders(firstrow);
             $dataTable.handsontable('alter', 'remove_row', 0);
             view.displayResponse(' Title successfully adjusted ', 'success');
