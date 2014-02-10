@@ -654,7 +654,7 @@ socr.model = ->
   setDataset: (input) ->
     
     #check for input values...if its empty...then throw error
-    return false  if input is `undefined` or typeof input isnt "object"
+    return false if typeof input isnt "object"
     
     #input.processed is true in case of a simulation -> data mode switch
     if input.processed
@@ -669,17 +669,17 @@ socr.model = ->
         i++
       socr.dataStore.createObject("sampleSpace.values", ma1).createObject "sampleSpace.keys", ma2
       console.log "Simulation data is loaded now."
-      true
+      return true
     else if input.type is "url"
-      console.log "Simulation data is loaded now."
-      false
+      #console.log "Simulation data is loaded now."
+      return false
     else if input.type is "spreadsheet"
       ma1 = []
       ma2 = []
       
       #clear previous data.
       socr.dataStore.removeObject "dataset"
-      console.log input.values.length
+      #console.log input.values.length
       i = 0
 
       while i < input.values.length
@@ -689,10 +689,9 @@ socr.model = ->
         j = 0
 
         while j < _cells.length
-          if _cells[j][0] isnt null
-            _temp[j] = _cells[j][0]
-          else
-            break
+          if _cells[j]?
+            if (t = _cells[j][0]) isnt null and t isnt undefined and t isnt ""
+              _temp.push t
           j++
         socr.dataStore.createObject("dataset." + _id + ".values", _temp).createObject "dataset." + _id + ".keys", _temp
         ma1 = ma1.concat(_temp)
