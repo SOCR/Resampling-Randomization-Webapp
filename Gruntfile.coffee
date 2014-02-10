@@ -12,6 +12,9 @@ module.exports = (grunt) ->
           "js/appView.js": "js/appView.coffee"
           "js/appData.js": "js/appData.coffee"
 
+          "test/spec/modelSpec.js": "test/spec/modelSpec.coffee"
+          "test/spec/dataSpec.js": "test/spec/dataSpec.coffee"
+
     concat:
       css:
         src:[

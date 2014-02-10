@@ -6,13 +6,27 @@ describe "appModel", ->
   it "should have a generateTrail function", ->
     expect(model.generateTrail).toBeDefined()
 
-  it "should be able to set a data set", ->
-    input =
-      values: [[0, 1], [2, 3]]
-      keys: [["H", "T"], ["T", "H"]]
-      processed: true
 
-    expect(model.setDataset(input)).toEqual true
+  describe "getting and setting Datasets", ->
+    
+    it "should set a dataset from simulations", ->
+      input =
+        values: [[0, 1], [2, 3]]
+        keys: [["H", "T"], ["T", "H"]]
+        processed: true
+
+      expect(model.setDataset(input)).toEqual true
+
+    it "should set a dataset ignoring undefined,null values", ->
+      input =
+        values: [{cells:[[0],[1], [undefined],[null]],id:1}, {cells:[[2],[3], [null], [""] ],id:2}]
+        keys: [["H", "T","H","H"], ["T", "H","T","T"]]
+        type: 'spreadsheet'
+
+      expect(model.setDataset(input)).toEqual true
+      expect(model.getDataset(1)).toEqual [0,1]
+      expect(model.getDataset(2)).toEqual [2,3]
+
 
   describe "generating random samples", ->
     beforeEach ->
