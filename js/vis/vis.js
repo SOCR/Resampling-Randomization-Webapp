@@ -490,9 +490,13 @@ socr.vis = (function(){
 	    .on('mouseover', function(d){ 
 	      d3.select(this).classed('hover', true) 
 	      var left = $(this).position().left,
-	          top = $(this).position().top;
-
-	      var content = '<h3> '+ settings.variable +' : ' + settings.datum + '</h3>';
+	          top = $(this).position().top,
+              _datum = 0;
+          if(typeof settings.precision !== "undefined")
+            _datum = +parseFloat(settings.datum).toFixed(settings.precision)
+          else
+            _datum = settings.datum
+	      var content = '<h3> '+ settings.variable +' : ' + _datum + '</h3>';
 
 	      if(typeof viswrap != 'undefined')
 	     	 viswrap.tooltip.show([left, top], content, 's');
