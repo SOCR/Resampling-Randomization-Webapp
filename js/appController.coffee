@@ -339,15 +339,18 @@ socr.controller = (model, view) ->
 
     return
 
-  setDotplot: ->
+  setDotplot: (precision)->
     $("#dotplot").html ""
     index = parseInt($("#index").val())
-    
+    precision = $('#result-precision').attr('checked')
+    if precision is "checked"
+      precision = 3
     #create dotplot
     console.log "setdotplot started"
     console.log "variable:" + $("#variable").val()
     view.createDotplot
       variable: $("#variable").val()
+      precision: precision
       index: index
 
     return

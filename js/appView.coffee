@@ -669,6 +669,7 @@ socr.view = (model) ->
     
     #datum = Math.floor(datum*100) / 100;
     _currentValues = values
+    
     try
       dotplot = socr.vis.generate(
         parent: "#dotplot"
@@ -683,6 +684,7 @@ socr.view = (model) ->
         variable: setting.variable
         pl: lSide
         pr: rSide
+        precision:setting.precision
       )
     
     # nature: 'continuous'
