@@ -825,20 +825,23 @@ socr.model = ->
   getRSampleCount: ->
     _count
 
+  ###
+  # App goes back to pristine state.
+  ###
   reset: (option) ->
     if option isnt "undefined" and option is "samples"
       socr.dataStore.removeObject "bootstrapGroup"
       
-      #setting the global random sample count to 0
-      socr.model.setRSampleCount 0
     else
       
       #all values deleted
       socr.dataStore.removeObject "all"
+      #reset K
+      socr.model.setK()
       
-      #setting the global random sample count to 0
-      socr.model.setRSampleCount 0
-    return
+    #setting the global random sample count to 0
+    socr.model.setRSampleCount 0
+    return true
 
   
   ###
