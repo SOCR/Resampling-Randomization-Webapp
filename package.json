@@ -7,7 +7,7 @@
   "version": "0.1.0-3",
   "dependencies": {},
   "engines": {
-    "node": "0.8.x"
+    "node": "0.10.x"
   },
   "analyze": false,
   "description": "[https://github.com/SOCRedu/Resampling-Randomization-WebApp](Socr randomization webapp)",

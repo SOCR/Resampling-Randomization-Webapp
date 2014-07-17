@@ -314,9 +314,20 @@ socr.vis = (function(){
 			x = priv.x;
 
 		px1 = priv.meanbarX + priv.margin.left,
-		px2 = px1 + 10;	//barwidth
-
-		var line1 = svg.append('line')
+		px2 = px1 + 10,	//barwidth
+        textl='',
+        textr=''; 
+        
+        if(typeof priv.settings.precision !== "undefined"){
+            textl = +parseFloat(priv.settings.pl).toFixed(priv.settings.precision) 
+            textr = +parseFloat(priv.settings.pr).toFixed(priv.settings.precision) 
+        } else {
+            textl = priv.settings.pl 
+            textr = priv.settings.pr 
+        
+        }
+		
+        var line1 = svg.append('line')
 	    				.attr('x1', priv.margin.left)
 	    				.attr('y1', height)
 	    				.attr('x2', priv.margin.left)
@@ -326,7 +337,7 @@ socr.vis = (function(){
 	    				.transition()
 	    				 .delay(priv.settings.transitionDuration + 500)
 	    				.attr('x2', px1);
-
+        
 	    var label1 = svg.append('text')
 	    				.attr('x', (px1 + priv.margin.left) / 2)
 	    				.attr('y', height - 10)
@@ -334,7 +345,7 @@ socr.vis = (function(){
 		      			.style("text-anchor", "middle")
 		      			.style('font-weight','bold')
 		      			.style('font-size','15px')
-		      			.text(priv.settings.pl +' %')
+		      			.text(textl+' %')
 
 	    var line2 = svg.append('line')
 	    				.attr('x1', px2)
@@ -354,7 +365,7 @@ socr.vis = (function(){
 		      			.style("text-anchor", "middle")
 		      			.style('font-weight','bold')
 		      			.style('font-size','15px')
-		      			.text(priv.settings.pr +'%')
+		      			.text(textr + '%')
 
 
 	}
@@ -377,7 +388,7 @@ socr.vis = (function(){
 	      .attr("width", 18)
 	      .attr("height", 18)
 	      .style("fill", function(d){ return d.color });
-
+         
 		  legend.append("text")
 		      .attr("x", width-margin.left-margin.right - 24)
 		      .attr("y", 9)
@@ -405,10 +416,16 @@ socr.vis = (function(){
 			height = priv.settings.height,
 			width = priv.settings.width,
 			margin = priv.margin,
-			g = priv.g;
-
+			g = priv.g,
+            _datum = 0;
+        
+        if(typeof settings.precision !== "undefined"){
+             _datum = +parseFloat(settings.datum).toFixed(settings.precision) 
+        } else {
+            _datum  = settings.datum
+        }
 		priv.legendData.push({ 
-				text : settings.variable +' : ' + settings.datum ,
+				text : settings.variable +' : ' + _datum ,
 				color : '#ff7f0e'
 			});
 
@@ -473,9 +490,13 @@ socr.vis = (function(){
 	    .on('mouseover', function(d){ 
 	      d3.select(this).classed('hover', true) 
 	      var left = $(this).position().left,
-	          top = $(this).position().top;
-
-	      var content = '<h3> '+ settings.variable +' : ' + settings.datum + '</h3>';
+	          top = $(this).position().top,
+              _datum = 0;
+          if(typeof settings.precision !== "undefined")
+            _datum = +parseFloat(settings.datum).toFixed(settings.precision)
+          else
+            _datum = settings.datum
+	      var content = '<h3> '+ settings.variable +' : ' + _datum + '</h3>';
 
 	      if(typeof viswrap != 'undefined')
 	     	 viswrap.tooltip.show([left, top], content, 's');

@@ -35,7 +35,7 @@ socr.model = ->
   @return : {number}
   ###
   _generateMean = (sampleNumber, groupNumber) ->
-    groupNumber = groupNumber or 1
+    groupNumber = groupNumber or 0
     total = 0
     if sampleNumber is "dataset"
       _val = socr.dataStore.dataset[groupNumber].values.getData()
@@ -113,17 +113,17 @@ socr.model = ->
       if sampleNumber is "dataset"
         
         #Get the complete dataset from the dataStore.
-        i = 1
+        i = 0
 
-        while i <= _K
+        while i < _K
           _data[i] = socr.dataStore.dataset[i].values.getData()
           i++
       else
         
         #Get the random sample with index @sampleNumber from each group. 
         _data = socr.dataStore.bootstrapGroup[sampleNumber].values.getData()
-      i = 1
-      while i <= _K
+      i = 0
+      while i < _K
         _ymean[i] = $.mean(_data[i])
         _N += _data[i].length #calculate N = total number of observations
         _total += _ymean[i]
@@ -140,9 +140,9 @@ socr.model = ->
       
       #Creating the samplespace of all values.
       _sspace = []
-      i = _K
+      i = _K - 1
 
-      while i >= 1
+      while i >= 0
         _sspace = _sspace.concat(_data[i])
         i--
       
@@ -157,10 +157,10 @@ socr.model = ->
       #console.log("_sst:"+_sst);
       
       #SSW - Sum of squares within
-      i = 1
+      i = 0
       _temp = 0
 
-      while i <= _K
+      while i < _K
         j = 0
 
         while j < _data[i].length
@@ -257,7 +257,7 @@ socr.model = ->
     socr.tools.zCal.computeP x.zValue, mu, sigma
   _stopCount = 1000
   _count = 0
-  _n = ["0 is taken"]
+  _n = []
   _K = null
   _this = this
   n: _n
@@ -286,10 +286,10 @@ socr.model = ->
   ###
   generateSample: ->
     k = socr.model.getK()
-    keyEl = ["0 is taken"]
-    valEl = ["0 is taken"]
-    i = 1
-    while i <= k
+    keyEl = []
+    valEl = []
+    i = 0
+    while i < k
       
       #EDIT THIS TO MAKE N DYNAMIC
       
@@ -320,7 +320,7 @@ socr.model = ->
   @return {Array}
   ###
   getMean: (groupNumber) ->
-    groupNumber = groupNumber or 1 # 1 is default value - meaning the first dataset
+    groupNumber = groupNumber or 0 # 1 is default value - meaning the first dataset
     obj = socr.dataStore.createObject(groupNumber + ".mean", [])[groupNumber].mean
     if obj.getData().length is _count
       console.log "already saved!"
@@ -358,7 +358,7 @@ socr.model = ->
   @returns {*}
   ###
   getStandardDev: (groupNumber) ->
-    groupNumber = groupNumber or 1 # 1 is default value - meaning the first dataset
+    groupNumber = groupNumber or 0 # 1 is default value - meaning the first dataset
     #if the _sampleStandardDev already has the values
     _sample.StandardDev[groupNumber] = []  if _sample.StandardDev[groupNumber] is `undefined`
     _temp = _sample.StandardDev[groupNumber]
@@ -421,7 +421,7 @@ socr.model = ->
   @returns {Array}
   ###
   getCount: (groupNumber) ->
-    groupNumber = groupNumber or 1 # 1 is default value - meaning the first dataset
+    groupNumber = groupNumber or 0 # 1 is default value - meaning the first dataset
     obj = socr.dataStore.createObject(groupNumber + ".count", [])[groupNumber].count
     if obj.getData().length is _count
       console.log "already saved!"
@@ -444,7 +444,7 @@ socr.model = ->
   @returns {number}
   ###
   getCountOf: (sampleNumber, groupNumber) ->
-    K = groupNumber or 1
+    K = groupNumber or 0
     _ds = socr.dataStore.dataset
     if sampleNumber is "dataset"
       _val = _ds[K].values.getData()
@@ -530,7 +530,7 @@ socr.model = ->
   @return {Object}
   ###
   getF: (groupNumber) ->
-    groupNumber = groupNumber or 1 # 1 is default value - meaning the first dataset
+    groupNumber = groupNumber or 0 # 1 is default value - meaning the first dataset
     _this = this
     obj = socr.dataStore.createObject("F-Value", [])["F-Value"]
     if obj.getData().length is _count
@@ -566,7 +566,7 @@ socr.model = ->
   @return {Object}
   ###
   getP: (groupNumber) ->
-    groupNumber = groupNumber or 1 # 1 is default value - meaning the first dataset
+    groupNumber = groupNumber or 0 # 1 is default value - meaning the first dataset
     _this = this
     obj = socr.dataStore.createObject("P-Value", [])["P-Value"]
     if obj.getData().length is _count
@@ -663,7 +663,7 @@ socr.model = ->
       i = 0
 
       while i < input.keys.length
-        socr.dataStore.createObject("dataset." + (i + 1) + ".values", input.values[i]).createObject "dataset." + (i + 1) + ".keys", input.keys[i]
+        socr.dataStore.createObject("dataset." + (i) + ".values", input.values[i]).createObject "dataset." + (i) + ".keys", input.keys[i]
         ma1 = ma1.concat(input.values[i])
         ma2 = ma2.concat(input.keys[i])
         i++
@@ -713,7 +713,7 @@ socr.model = ->
   ###
   getSample: (index, type, K) ->
     P = 0
-    K = K or 1 #default set to 1
+    K = K or 0 #default set to 0
     type = type or "values" #default set to "values"
     return false  if @getRSampleCount() is 0
     _bg = socr.dataStore.bootstrapGroup[index]
@@ -774,16 +774,15 @@ socr.model = ->
     
     #purge _n array
     _n.length = 0
-    _n.push "0 is taken"
     socr.model.setK()
     _ds = socr.dataStore.dataset
     if typeof z is "undefined" or z is null
       
       #computing default values
       if typeof _ds isnt "undefined"
-        i = 1
+        i = 0
 
-        while i <= _K
+        while i < _K
           try
             _n.push _ds[i]["values"].getData().length
           catch e

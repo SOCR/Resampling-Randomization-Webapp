@@ -44,10 +44,10 @@ socr.view = (model) ->
           temp.class = "active"
         else
           temp.class = ""
-        temp.kIndex = j + 1
-        temp.id = i * (Math.pow(10, (Math.ceil(Math.log(i) / Math.log(10))))) + (j + 1)
-        temp.values = model.getSample(i, "values", j + 1)
-        temp.keys = model.getSample(i, "keys", j + 1)
+        temp.kIndex = j
+        temp.id = i * (Math.pow(10, (Math.ceil(Math.log(i) / Math.log(10))))) + (j)
+        temp.values = model.getSample(i, "values", j)
+        temp.keys = model.getSample(i, "keys", j)
         j++
       config.entries.push obj
       obj = {} #destroying the object
@@ -669,6 +669,7 @@ socr.view = (model) ->
     
     #datum = Math.floor(datum*100) / 100;
     _currentValues = values
+    
     try
       dotplot = socr.vis.generate(
         parent: "#dotplot"
@@ -683,6 +684,7 @@ socr.view = (model) ->
         variable: setting.variable
         pl: lSide
         pr: rSide
+        precision:setting.precision
       )
     
     # nature: 'continuous'
@@ -756,9 +758,9 @@ socr.view = (model) ->
           param: "F-Value"
           value: socr.model.getFof("dataset").fValue
 
-    i = 1
+    i = 0
 
-    while i <= config.k
+    while i < config.k
       obj = {}
       obj.mean = socr.model.getMeanOf("dataset", i)
       obj.size = socr.model.getDataset(i).length
