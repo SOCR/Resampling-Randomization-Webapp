@@ -395,8 +395,8 @@ socr.dataTable = function () {
                 colHeaders: true,
                 rowHeaders: true,
                 manualColumnResize : true,
-                width: 750,
-                height: 270,
+                width: 700,
+                height: 320,
                 outsideClickDeselects : false,
                 contextMenu:true
             });
