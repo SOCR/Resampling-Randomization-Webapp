@@ -838,6 +838,10 @@ socr.model = ->
 
       #setting the global random sample count to 0
       socr.model.setRSampleCount 0
+
+      #setting K and n to 0.
+      socr.model.setK()
+      socr.model.setN()
     return
 
 
