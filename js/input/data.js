@@ -153,7 +153,9 @@ socr.dataTable = function () {
             if (url.substr(0, 7) !== 'http://') {
                 url = 'http://' + url;
             }
-            if (tableparse.checkRefer(url) === true) {
+            //if (tableparse.checkRefer(url) === true) {
+              if(true){
+                url = "http://"+window.location.host+window.location.pathname+"/handler.php?url="+url;
                 tableparse.notify();
                 tableparse.request(url)
                 return true;
