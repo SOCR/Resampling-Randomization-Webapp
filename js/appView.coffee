@@ -769,10 +769,11 @@ socr.view = (model) ->
       i++
 
     #console.log(config);
-    $.get "partials/info.tmpl", (data) ->
+    $.get "partials/info.tmpl", ((data) ->
       temp = Mustache.render(data, config)
       $("#details").html temp
       return
+    ),"html"
 
     return
 
