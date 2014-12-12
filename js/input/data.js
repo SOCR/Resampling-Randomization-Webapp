@@ -22,10 +22,12 @@ socr.dataTable = function () {
     var datastage = $('section#datadriven-stage');
     var resetStage = $('.reset-stage');
     var stageList = $('table.stage-list tbody');
+    var lastColselected = false;
 
     splashScreen.find('ul li a').on('click', function () {
 
         switch ($(this).attr('data-rel')) {
+
         case 'spreadsheet':
             view.toggleScreens({
                 visible: excelScreen
@@ -151,7 +153,9 @@ socr.dataTable = function () {
             if (url.substr(0, 7) !== 'http://') {
                 url = 'http://' + url;
             }
-            if (tableparse.checkRefer(url) === true) {
+            //if (tableparse.checkRefer(url) === true) {
+              if(true){
+                url = "http://"+window.location.host+window.location.pathname+"/handler.php?url="+url;
                 tableparse.notify();
                 tableparse.request(url)
                 return true;
@@ -159,10 +163,7 @@ socr.dataTable = function () {
             return false;
         },
         notify: function () {
-            view.displayResponse('Dataset Request Initialized', 'success');
-            setTimeout(function () {
-                $response.slideToggle().html('');
-            }, 2000);
+            view.displayResponse('Dataset Request Initialized..give us few second.', 'success');
         },
         checkRefer: function (url) {
             var requestHost = document.createElement("a");
@@ -177,23 +178,33 @@ socr.dataTable = function () {
             }
         },
         request: function (uri) {
-            // Fix for FF 
-
-
+           console.log(uri); 
             $.get(uri, function (d) {
-
+                d = JSON.parse(d);
+                if(typeof d.status !== 'undefined' && d.status == 'failed'){
+                  view.displayResponse('There was no valid table in the input URL.', 'error');
+                  return false;
+                }
+                view.displayResponse('Done!', 'success');
+                setTimeout(function () {
+                  $response.slideToggle().html('');
+                }, 2000);
+                d = d.data;
                 var tableCount = $(d).is('table') ? $(d).length : $(d).find('table').length,
                     tables = $(d).is('table') ? $(d) : $(d).find('table'),
                     table = tableparse.filterBySize(tables),
                     titles = tableparse.parseHeadings(table);
+               
                 matrix = tableparse.htmlToArray(table);
-                $dataTable.inputtable({
-                    cols: 2,
+               
+                $dataTable.handsontable({
+                    startCols: 8,
                     minSpareCols: 0
                 })
 
-                var inputMethod = tableparse.mode() === 'sync' ? 'loadDataSwift' : 'loadData';
-                $dataTable.inputtable(inputMethod, matrix);
+                // var inputMethod = tableparse.mode() === 'sync' ? 'loadDataSwift' : 'loadData';
+                $dataTable.handsontable('loadData', matrix);
+
             }).fail(function () {
 
                 view.displayResponse('There was an error loadin the dataset', 'error')
@@ -242,7 +253,7 @@ socr.dataTable = function () {
                 matrix.push(row);
             });
 
-            /*
+        /*
         Check if the table has th elements instead
         @Todo
         */
@@ -278,8 +289,8 @@ socr.dataTable = function () {
 
     };
     /*
-  Ideally should serve as one-stop object for all visual element changes involving datasets
-*/
+    Ideally should serve as one-stop object for all visual element changes involving datasets
+    */
     var view = {
         displayResponse: function (content, type) {
             $response.html('').slideUp(300);
@@ -305,20 +316,19 @@ socr.dataTable = function () {
         },
         editTitles: function () {
 
-            var d = $dataTable.inputtable('getColHeaders');
-            console.log(d)
-            colHeader = d.blockedRows.headers;
+            var colHeader = $dataTable.handsontable('getColHeader');
+    
 
             var content = '<form class="form form-horizontal" id="input-titles"><fieldset><legend>Add titles to Spreadsheet</legend>';
-            if (typeof colHeader[0] !== 'undefined') {
-                for (var i = 0; i < d.colCount; i++) {
-                    var label = (typeof colHeader[0].labels[i] !== 'undefined') ? colHeader[0].labels[i] : '';
-                    content += '<div class="control-group"><label class="control-label">Column ' + i + ' :</label><div class="controls"><input type="text" placeholder="Input field" value="' + label + '"></div></div>';
+            if (colHeader[0] !== '') {
+                for (var i = 0; i < colHeader.length; i++) {
+                    // var label = (colHeader[i] !== '') ?  : '';
+                    content += '<div class="control-group"><label class="control-label">Column ' + i + ' :</label><div class="controls"><input type="text" placeholder="Input field" value="' + colHeader[i] + '"></div></div>';
                 }
             } else {
 
                 var k = 0;
-                while (k < d.colCount) {
+                while (k < colHeader.length) {
                     content += '<div class="control-group"><label class="control-label">Title ' + k + '</label><div class="controls"><input type="text" placeholder="Input field"></div></div>';
                     k++;
                 }
@@ -354,10 +364,20 @@ socr.dataTable = function () {
             $('#input-modal .modal-body').html(content);
         },
         toggleScreens: function (options) {
+
+            var splashScreen = $('section#datadriven-splash'),
+                excelScreen = $('section#datadriven-import'),
+                importScreen = $('section#fetchURL'),
+                datastage = $('section#datadriven-stage'),
+                simulationDetails = $('section#simulationdriven-details'),
+                worldbankContainer = $('section#worldbank'); 
+
             var dataScreens = [splashScreen, excelScreen, importScreen, worldbankContainer, simulationDetails, datastage];
+
             $.each(dataScreens, function (k, v) {
                 v.hide();
             });
+
             $.each(options.visible, function (k, v) {
                 $(v).show();
             });
@@ -367,26 +387,32 @@ socr.dataTable = function () {
     }
     /*
     Hookups for spreadsheet opterations
-  */
+    */
     var spreadSheet = {
 
         init: function () {
             /*
       Spreadsheet generation code, pretty much self explanatory
       */
-            $dataTable.inputtable({
-                cols: 8,
-                rows: 8,
+            $dataTable.handsontable({
+                minCols: 8,
+                minRows: 8,
                 minSpareCols: 1,
                 minSpareRows: 1,
                 fillHandle: true,
-                colHeaders: true
+                colHeaders: true,
+                rowHeaders: true,
+                manualColumnResize : true,
+                width: 700,
+                height: 320,
+                outsideClickDeselects : false,
+                contextMenu:true
             });
 
             //Temporary solution to remove multiple table headers
-            $dataTable.find('tr.htColHeader')[1].remove()
+            // $dataTable.find('tr.htColHeader')[1].remove()
 
-            //    $dataTable.inputtable({colHeaders : true})
+            //    $dataTable.handsontable({colHeaders : true})
         },
 
         validate: function (dataset) {
@@ -411,13 +437,13 @@ socr.dataTable = function () {
         },
 
         addColHeaders: function (arr) {
-            $dataTable.inputtable({
+            $dataTable.handsontable({
                 colHeaders: arr
             });
         },
 
         removeCol : function(index){
-             $dataTable.inputtable('alter', 'remove_col', index);
+             $dataTable.handsontable('alter', 'remove_col', index);
              spreadSheet.refresh();
         },
 
@@ -431,14 +457,14 @@ socr.dataTable = function () {
         },
 
         firstRowTitles: function () {
-            var firstrow = $dataTable.inputtable('getFirstRow')[0];
+            var firstrow = $dataTable.handsontable('getDataAtRow', 0);
             spreadSheet.addColHeaders(firstrow);
-            $dataTable.inputtable('alter', 'remove_row', 0);
+            $dataTable.handsontable('alter', 'remove_row', 0);
             view.displayResponse(' Title successfully adjusted ', 'success');
 
         },
         parseAll: function () {
-            var dataset = $dataTable.inputtable('getNonEmptyData');
+            var dataset = $dataTable.handsontable('getNonEmptyData');
             socr.model.reset();
 
             $("#accordion").accordion("activate", 0);
@@ -477,7 +503,7 @@ socr.dataTable = function () {
             // console.log(dataset);
         },
         refresh : function(){
-             $dataTable.inputtable({});
+             $dataTable.handsontable({});
              $dataTable.find('tr.htColHeader')[1].remove()
         },
 
@@ -485,15 +511,18 @@ socr.dataTable = function () {
 
             if (select.isSelected()) {
                 var selectedCoords = select.isSelected();
-                /*
-            Selected Cells:
-           [ startrow , startCol, endRow, endCol ]
-          */
+                
+           //  Selected Cells:
+           // [ startrow , startCol, endRow, endCol ]
+          
             }
-            if (selectedCoords) {
+           // var ht = $dataTable.handsontable('getInstance');
+           //      console.log(ht.getSelected());
+                console.log(selectedCoords);
+              if (selectedCoords) {
 
                 console.log(' Select Data request with  ' + selectedCoords)
-                var dataset = $dataTable.inputtable('getSelectedData');
+                var dataset = $dataTable.handsontable('getData', selectedCoords[0], selectedCoords[1], selectedCoords[2], selectedCoords[3]);
                 $("#accordion").accordion("activate", 0);
                 try {
                     socr.controller.loadController({
@@ -533,6 +562,52 @@ socr.dataTable = function () {
 
         },
 
+        loadData : function(grid){
+
+            $dataTable.handsontable('loadData',grid);
+            view.displayResponse('Data loaded','success');
+            
+        },
+
+       sort : function(){
+            console.log(lastColselected);
+ 
+              var d = $dataTable.handsontable('getData');
+              /***
+                Matrix Form
+                row 1 
+                row 2
+               ***/
+
+            var sorted = d.sort(spreadSheet.compare);
+
+            $dataTable.handsontable('loadData', sorted);
+
+            //Empty The Spreadsheet
+
+            // setTimeout(function(){
+            //     $dataTable.handsontable('clear');
+            // }, 50);
+          
+            //Sort Data on basis of comparator
+
+            //Reload the Spreadsheet
+          
+        },
+
+        compare : function(a,b) {
+
+          if (b[lastColselected] == '')
+            return 1;
+          if (a[lastColselected] == '')
+            return -1;
+          if (a[lastColselected]< b[lastColselected])
+             return -1;
+          if (a[lastColselected]> b[lastColselected])
+            return 1;
+          return 0;
+        },
+
         reset: function () {
             $('<div></div>').appendTo('body')
                 .html('<div><h6>Are you sure you want to reset the data?</h6></div>')
@@ -546,13 +621,13 @@ socr.dataTable = function () {
                     buttons: {
                         Yes: function () {
                             //clear the input sheet 
-                            $dataTable.inputtable('clear');
-                            $dataTable.inputtable({
+                            $dataTable.handsontable('clear');
+                            $dataTable.handsontable({
                                 colHeaders: []
                             })
                             $response.html('<div class="alert"><a class="close" data-dismiss="alert" href="#">x</a>Clear! Enter some value to get started!</div>'); //display the message in the status div below the done and reset buttons
                             $(this).dialog("close"); //close the confirmation window
-                            // $dataTable.inputtable({'colHeaders' : false});
+                            // $dataTable.handsontable({'colHeaders' : false});
 
                         },
                         No: function () {
@@ -573,10 +648,10 @@ socr.dataTable = function () {
     var select = {
 
         selectCells: function (coords) {
-            $dataTable.inputtable('selectCell', coords[0], coords[1], coords[2], coords[3]);
+            $dataTable.handsontable('selectCell', coords[0], coords[1], coords[2], coords[3]);
         },
         isSelected: function () {
-            var coords = $dataTable.inputtable('getSelected');
+            var coords = $dataTable.handsontable('getSelected');
             if (coords) {
                 /*
           Simple check for deselected members as the getSelected method returns the coordinates of last cell worked on
@@ -596,7 +671,7 @@ socr.dataTable = function () {
         },
         selectAll: function () {
             console.log('SelectAll member function');
-            $dataTable.inputtable('selectEntiregrid');
+            $dataTable.handsontable('selectEntiregrid');
         }
 
     };
@@ -679,6 +754,39 @@ socr.dataTable = function () {
         stage.reset();
     })
 
+    var worldbank = {
+        
+        init : function (){
+
+            var req = {
+                indicator : $('#indicator').val(),
+                year1 : $('#year1').val(),
+                year2 : $('#year2').val()
+            }
+
+            $('#worldbank-form').find('input[type="submit"]').attr('disabled', true);
+            $('.worldbank-response').html('<div class="alert alert success">Loading...</div>');
+
+            socr.input.worldbank.request(req);
+
+            return false;
+
+        },
+        loadComplete : function() {
+
+            $('#worldbank-form').find('input[type="submit"]').attr('disabled', false);
+            $('.worldbank-response').html('');
+             view.toggleScreens({
+                visible: excelScreen
+            });
+
+        },
+        errorLoading : function(){
+            $('#worldbank-form').find('input[type="submit"]').attr('disabled', false);
+            $('.worldbank-response').addClass('alert-error').html('There was an error requesting data');
+        }
+    }
+
     $controls.find('input[value="Use Entire Dataset"]').on('click', spreadSheet.parseAll);
     $controls.find('.reset-spreadsheet').on('click', spreadSheet.reset);
     $controls.find('input[value="Proceed"]').on('click', stage.init);
@@ -695,8 +803,19 @@ socr.dataTable = function () {
     $controls.find('.edittitles').on('click', view.editTitles);
     $controls.find('.firstrowtitles').on('click', spreadSheet.firstRowTitles);
     $controls.find('.removecol').on('click', view.removeCol);
+    $controls.find('#spreadsheet_sort').on('click', spreadSheet.sort);
+    $('#worldbank-form').on('submit', worldbank.init);
     $('#input-modal').on('submit', '#input-titles', view.parseTitles);
     $('#input-modal').on('submit', '#remove-col', view.handleRemoveCol);
+
+    $('.handsontable').on('mousedown', 'th:has(.colHeader)', function () {
+        var colIndex = $('.handsontable').handsontable('getInstance').view.wt.wtTable.getCoords(this)[1];
+        lastColselected = colIndex;
+        $dataTable.handsontable('selectColumn', colIndex);
+
+    });
+
+    // $('.handsontable').find('th').on('click', spreadSheet.setCol);
     
 
     spreadSheet.init();
@@ -705,6 +824,7 @@ socr.dataTable = function () {
     return {
         simulationDriven: simulationDriven,
         spreadSheet: spreadSheet,
-        view: view
+        view: view,
+        worldbank : worldbank,
     }
 }();

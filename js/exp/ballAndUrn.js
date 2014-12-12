@@ -36,6 +36,8 @@ var _values=[];
 var _datasetValues=[];
 var _datasetKeys=[];
 
+var clickFlag = false;
+
 //::::::PRIVATE METHODS:::::::::::::
 
 
@@ -68,10 +70,10 @@ function _selectBall(){
 		console.log("temp values "+_datasetValues);
 		console.log("temp keys "+ _datasetKeys);
 		PubSub.publish("Initial dataset generated");
-		//view.loadInputSheet(_values);
-		//process the _dataset and convert it into a human readable sample space (example instead of 0 and 1 show tail and head)
-		
+		socr.view.updateCtrlMessage("dataset generated successfully.","success");
 		$("#grsbutton").removeClass("disabled");
+		$("#sdbutton").removeClass("disabled"); 
+		clickFlag = false;
 		socr.exp.ballAndUrn.reset();
 	}
 }
@@ -93,6 +95,17 @@ return{
 		socr.exp.ballAndUrn.reset();
 		
 		$("#sdbutton").on('click',function(){
+			//clicking this button only generates the dataset
+			//doesnt load it into the appModel. Clicking the grsbutton does that.
+			if( clickFlag === false){
+				clickFlag = true;
+			}
+			else {
+				console.log(clickFlag);
+				return false;
+			}
+			$("#sdbutton").addClass("disabled"); 
+			$("#grsbutton").addClass("disabled");	
 			socr.exp.current.generate();
 			$("#accordion").accordion( "activate" , 1);
 		});

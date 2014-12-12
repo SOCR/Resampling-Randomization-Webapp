@@ -228,13 +228,11 @@ div.welcome-container{
 	section.datadriven-wrap{
 		height: 400px;
 		overflow: hidden;
-		position: relative;
+		position: static;
 		display : none;
 	}
 	section.datadriven-wrap .controls{
-		position: absolute;
-		top: 0px;
-		left: 0px;
+	
 		height: 30px;
 		border-bottom: 1px solid #e3e3e3;
 		width:100%;
@@ -248,7 +246,8 @@ div.welcome-container{
 		margin:0px;
 	}
 	section.datadriven-wrap .spreadsheet{
-		margin-top: 50px;
+		height: 350px;
+		margin-top: 10px;
 		overflow: auto;
 		max-height: 350px;
 
@@ -371,3 +370,17 @@ div.tool{
 	margin-top: 5px;
 	line-height: 24px;
 }
+.htCore th{
+	cursor:pointer;
+}
+
+
+/* Style support for SOCR footer */
+#footer{
+  background-color: #e5f0fc;
+  border: 1px solid #ccc;
+  border-bottom: 0;
+  clear: both;
+  padding:2px 0px;
+  text-align:center;
+  }

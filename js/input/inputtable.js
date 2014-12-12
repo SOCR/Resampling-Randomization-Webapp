@@ -2471,6 +2471,11 @@
         }
       }, 10);
 
+      setTimeout(function(){
+        $dataTable.inputtable({});
+        var offeset = $($('tr.htColHeader')[0]).offset();
+        $($('tr.htColHeader')[0]).offset(offeset);
+      },10)
       return td;
 
     }

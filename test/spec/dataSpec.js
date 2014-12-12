@@ -1,34 +1,25 @@
-describe("dataSpec",function(){
-	var dataStore=null;
-	beforeEach(function(){
-		dataStore = new socr.dataStore();
-	});
-	it("should create a dataObject",function(){
-		dataStore.createObject("name","socr");
-		expect(dataStore.name).toBeDefined();
-		expect(typeof(dataStore.name.util)).toEqual("object");
-	})
+(function() {
+  describe("dataSpec", function() {
+    var dataStore;
+    dataStore = null;
+    beforeEach(function() {
+      return dataStore = socr.dataStore;
+    });
+    it("should create a dataObject", function() {
+      dataStore.createObject("name", "socr");
+      expect(dataStore.name).toBeDefined();
+      return expect(typeof dataStore.name).toEqual("object");
+    });
+    return it("should append data to existing data entry", function() {
+      dataStore.createObject("test", [1, 2, 3, 4]);
+      expect(dataStore.test).toBeDefined();
+      dataStore.createObject("test", [1, 2, 4, 5, 6]);
+      expect(dataStore.test).toBeDefined();
+      expect(dataStore.test.getData(1)).toEqual(2);
+      expect(dataStore.test.getData(3)).toEqual(5);
+      expect(dataStore.test.getData(4)).toEqual(6);
+      return expect(dataStore.test.getData().length).toEqual(5);
+    });
+  });
 
-	it("should append data to existing data entry",function(){
-		dataStore.createObject("dataset",{0:[1,2],1:[3,4]});
-		expect(dataStore.dataset).toBeDefined();
-		dataStore.createObject("dataset",{2:[1,2],3:[4,5]});
-		expect(dataStore.dataset).toBeDefined();
-
-		expect(dataStore.dataset.util.getData(0)).toEqual([1,2]);
-		expect(dataStore.dataset.util.getData(1)).toEqual([3,4]);
-		expect(dataStore.dataset.util.getData(2)).toEqual([1,2]);
-		expect(dataStore.dataset.util.getData(3)).toEqual([4,5]);
-	})
-
-	it("should overwrite data to existing index",function(){
-		dataStore.createObject("dataset",{0:[1,2],1:[3,4]});
-		expect(dataStore.dataset).toBeDefined();
-		dataStore.createObject("dataset",{1:[0,0]});
-		expect(dataStore.dataset).toBeDefined();
-
-		expect(dataStore.dataset.util.getData(0)).toEqual([1,2]);
-		expect(dataStore.dataset.util.getData(1)).toEqual([0,0]);
-	})
-
-});
+}).call(this);

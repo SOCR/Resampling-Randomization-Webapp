@@ -35,7 +35,7 @@ socr.vis = (function(){
 	// 	console.log('Initial Entry' + config.data[0]);
 
 	//     var defaults = {
-	//       'range' : d3.extent(config.data),
+	//       'range' : d3.extent(config.data)
 	//       'height' : $(config.parent).height(),
 	//       'width' : $(config.parent).innerWidth(), // inner width of parent div
 	//       'type' : 'histogram' ,//Keeping histogram as the default rendering mode
@@ -289,7 +289,7 @@ socr.vis = (function(){
 	    g.select(".y.axis")
 	        .call(yAxis);
 
-	   if(settings.datum){
+	   if(typeof settings.datum != undefined){
 
 		     	addBar();
 
@@ -314,9 +314,20 @@ socr.vis = (function(){
 			x = priv.x;
 
 		px1 = priv.meanbarX + priv.margin.left,
-		px2 = px1 + 10;	//barwidth
-
-		var line1 = svg.append('line')
+		px2 = px1 + 10,	//barwidth
+        textl='',
+        textr=''; 
+        
+        if(typeof priv.settings.precision !== "undefined"){
+            textl = +parseFloat(priv.settings.pl).toFixed(priv.settings.precision) 
+            textr = +parseFloat(priv.settings.pr).toFixed(priv.settings.precision) 
+        } else {
+            textl = priv.settings.pl 
+            textr = priv.settings.pr 
+        
+        }
+		
+        var line1 = svg.append('line')
 	    				.attr('x1', priv.margin.left)
 	    				.attr('y1', height)
 	    				.attr('x2', priv.margin.left)
@@ -326,7 +337,7 @@ socr.vis = (function(){
 	    				.transition()
 	    				 .delay(priv.settings.transitionDuration + 500)
 	    				.attr('x2', px1);
-
+        
 	    var label1 = svg.append('text')
 	    				.attr('x', (px1 + priv.margin.left) / 2)
 	    				.attr('y', height - 10)
@@ -334,7 +345,7 @@ socr.vis = (function(){
 		      			.style("text-anchor", "middle")
 		      			.style('font-weight','bold')
 		      			.style('font-size','15px')
-		      			.text(priv.settings.pl +' %')
+		      			.text(textl+' %')
 
 	    var line2 = svg.append('line')
 	    				.attr('x1', px2)
@@ -354,7 +365,7 @@ socr.vis = (function(){
 		      			.style("text-anchor", "middle")
 		      			.style('font-weight','bold')
 		      			.style('font-size','15px')
-		      			.text(priv.settings.pr +'%')
+		      			.text(textr + '%')
 
 
 	}
@@ -377,7 +388,7 @@ socr.vis = (function(){
 	      .attr("width", 18)
 	      .attr("height", 18)
 	      .style("fill", function(d){ return d.color });
-
+         
 		  legend.append("text")
 		      .attr("x", width-margin.left-margin.right - 24)
 		      .attr("y", 9)
@@ -389,6 +400,7 @@ socr.vis = (function(){
 
 	var addBar = function(args){
 		
+
 		if(arguments.length > 0){
 
 			priv = args.el;
@@ -404,74 +416,102 @@ socr.vis = (function(){
 			height = priv.settings.height,
 			width = priv.settings.width,
 			margin = priv.margin,
-			g = priv.g;
-
+			g = priv.g,
+            _datum = 0;
+        
+        if(typeof settings.precision !== "undefined"){
+             _datum = +parseFloat(settings.datum).toFixed(settings.precision) 
+        } else {
+            _datum  = settings.datum
+        }
 		priv.legendData.push({ 
-				text : settings.variable +' : ' + settings.datum ,
+				text : settings.variable +' : ' + _datum ,
 				color : '#ff7f0e'
 			});
 
 		showLegend();
-
+		
 		var meanClass = function(datum){
 
-	  	 		for(i in classes){
-	  	 			if(classes[i] > datum){
-	  	 				return [classes[i-1],classes[i]];
-	  	 				break;
-	  	 			}
+			if(datum > classes[classes.length -1]){
 
-	  	 		}
-	  	 	}
+				return[classes[classes.length -1],classes[classes.length -1]];
 
+			}
 
-	  	 	var interval = meanClass(settings.datum);
-	  	 	if(typeof interval == 'undefined'){
-	  	 		//displayError("Error plotting the datum on plot");
-	  	 		return;
-	  	 	}
-	  	 	var interpolateWidth =((settings.datum - interval[0])/ (interval[1] - interval[0]))*x.rangeBand();
-	
-    			 
-			    var meanbar = g.append('rect')		    
-			    .attr('y',function(){ return height - margin.top - margin.bottom ;});
+			if(datum < classes[0]){
 
-			    var meanbarX; 
-			    if(settings.method == 'decimal'){
-			    	meanbarX = (x.rangeBand()/2)+x(settings.datum) - (10/2);
-			  
-			    } else{
-			    	meanbarX = x(interval[0]) +x.rangeBand()/2+ interpolateWidth - 5;
-			    	
-			    }
+				return[0,1];
+			}
+
+	 		for(i in classes){
+	 			if(classes[i] > datum){
+	 				return [classes[i-1],classes[i]];
+	 				break;
+	 			}
+
+	 		}
+ 		}
 
 
-			    meanbar.attr('x',function(){ return meanbarX });
-			    meanbar.attr('width', function(){ return 10;})	   
-			    .attr('class','meanBar')
-			   
-			    .on('mouseover', function(d){ 
-			      d3.select(this).classed('hover', true) 
-			      var left = $(this).position().left,
-			          top = $(this).position().top;
+	 	var interval = meanClass(settings.datum);
 
-			      var content = '<h3> '+ settings.variable +' : ' + settings.datum + '</h3>';
+	 	if(typeof interval == 'undefined')
+	 		return;
 
-			      if(typeof viswrap != 'undefined')
-			     	 viswrap.tooltip.show([left, top], content, 's');
-			    })
-			    .on('mouseout', function(){ 
-			        d3.select(this).classed('hover', false);
-			        if(typeof viswrap != 'undefined') 
-			        	viswrap.tooltip.cleanup();
-			   }).transition()
-		         .delay( function(d,i){ return settings.transitionDuration + 100; } )
-		         .attr("y", function(d) { return 0; })
-		          .attr('height',function(){ return height - margin.top - margin.bottom ;});
+	 	if(interval[0] == 0){
 
-		        priv.meanbarX = meanbarX;
-		        if(settings.variable.toLowerCase() == 'p-value')
-		        addPercentline();
+	 		meanbarX = 5;
+	 	} else {
+		
+	 	var interpolateWidth =((settings.datum - interval[0])/ (interval[1] - interval[0]))*x.rangeBand();
+
+	 		if(settings.method == 'decimal'){
+	    		meanbarX = (x.rangeBand()/2)+x(settings.datum) - (10/2);
+	  
+		    } else{
+		    	meanbarX = x(interval[0]) + x.rangeBand()/2+ interpolateWidth - 5;
+		    	
+		    }
+
+		 }
+		
+		if(meanbarX > width){
+			meanbarX = x(classes[classes.length -1]) + x.rangeBand() -5;
+
+		}
+	    var meanbar = g.append('rect')		    
+	    .attr('y',function(){ return height - margin.top - margin.bottom ;});
+	    meanbar.attr('x',function(){ return meanbarX });
+	    meanbar.attr('width', function(){ return 10;})	   
+	    .attr('class','meanBar')
+	   
+	    .on('mouseover', function(d){ 
+	      d3.select(this).classed('hover', true) 
+	      var left = $(this).position().left,
+	          top = $(this).position().top,
+              _datum = 0;
+          if(typeof settings.precision !== "undefined")
+            _datum = +parseFloat(settings.datum).toFixed(settings.precision)
+          else
+            _datum = settings.datum
+	      var content = '<h3> '+ settings.variable +' : ' + _datum + '</h3>';
+
+	      if(typeof viswrap != 'undefined')
+	     	 viswrap.tooltip.show([left, top], content, 's');
+	    })
+	    .on('mouseout', function(){ 
+	        d3.select(this).classed('hover', false);
+	        if(typeof viswrap != 'undefined') 
+	        	viswrap.tooltip.cleanup();
+	   }).transition()
+         .delay( function(d,i){ return settings.transitionDuration + 100; } )
+         .attr("y", function(d) { return 0; })
+          .attr('height',function(){ return height - margin.top - margin.bottom ;});
+
+        priv.meanbarX = meanbarX;
+        if(settings.variable.toLowerCase() == 'p-value' ||( (settings.pr * settings.pl) > 0 ))
+        addPercentline();
 		/*
 		if(typeof obj[0].elem.GElement=='undefined')
 			return;

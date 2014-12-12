@@ -35,6 +35,7 @@ var _height='30';
 
 var _coin = [];
 var _arrCount=0;
+var clickFlag = false;
 
 //::::::PRIVATE METHODS:::::::::::::
 
@@ -64,7 +65,9 @@ function _tossCoin(){
 		//console.log(_datasetValues);
         socr.view.updateCtrlMessage("dataset generated successfully.","success");
         PubSub.publish("Initial dataset generated");
-		$("#grsbutton").removeClass("disabled"); 
+		$("#grsbutton").removeClass("disabled");
+		$("#sdbutton").removeClass("disabled"); 
+		clickFlag = false;
 		socr.exp.binomialCoin.reset();
 	}
 }
@@ -84,8 +87,17 @@ return{
 		socr.exp.binomialCoin.reset();
 		// BINDING BUTTONS OF THE CONTROLLER
 		$("#sdbutton").on('click',function(){
-			//***clicking this button only generates the dataset...doesnt load it into the appModel. Clicking the grsbutton does that.
-			$("#grsbutton").addClass("disabled");	
+			//clicking this button only generates the dataset
+			//doesnt load it into the appModel. Clicking the grsbutton does that.
+			if( clickFlag === false){
+				clickFlag = true;
+			}
+			else {
+				console.log(clickFlag);
+				return false;
+			}	
+			$("#grsbutton").addClass("disabled");
+			$("#sdbutton").addClass("disabled");	
 			socr.exp.binomialCoin.generate();		
 			$("#accordion").accordion( "activate" , 1);
 		});

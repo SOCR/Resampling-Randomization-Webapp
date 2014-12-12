@@ -1,2 +1,7 @@
-/assets
-/playfield
+node_modules
+test/npm-debug.log
+dist/
+js/appController.js
+js/appData.js
+js/appModel.js
+js/appView.js
