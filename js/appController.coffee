@@ -6,8 +6,8 @@
   SOCR - Statistical Online Computational Resource
 ###
 socr.controller = (model, view) ->
-  
-  # PRIVATE PROPERTIES   
+
+  # PRIVATE PROPERTIES
 
   _id = 0 # Stores the id for setInterval in run mode
   _runsElapsed = 0 # Keeps count of number of resamples generated
@@ -15,8 +15,8 @@ socr.controller = (model, view) ->
   _noOfSteps = 0
   _currentMode = "Experiment" #App starts with dataDriven mode [default value]
 
-  # PRIVATE METHODS   
-  
+  # PRIVATE METHODS
+
   ###
   @method: [private] _generate()
   @description:   This function generates 1000 resamples by calling the generateSample() of model.
@@ -31,17 +31,14 @@ socr.controller = (model, view) ->
       percent = Math.ceil((_runsElapsed / _noOfSteps) * 100)
       view.updateStatus "update", percent
     else
-      view.updateCtrlMessage "samples generated sucessfully.", "success", 2000
-      view.updateStatus "finished"
-      view.updateSimulationInfo()
-      PubSub.publish "Random samples generated"
+      PubSub.publish "random samples generated", {'sampleCount':model.getRSampleCount()}
       _this.stop()
     return
 
-  # PUBLIC METHODS 
-  
+  # PUBLIC METHODS
+
   currentMode: _currentMode
-  
+
   ###
   @method: [private] initialize()
   @description:Initializes the app..binds all the buttons...create the show slider
@@ -49,11 +46,11 @@ socr.controller = (model, view) ->
   initialize: ->
     _this = this
     console.log "initialize() invoked "
-    
+
     #ADDING EVENT LISTENERS STARTS
     #--------------------------------
     $(".controller-handle").on "click", view.toggleControllerHandle
-    
+
     $(".help").on "change click", (e) ->
       e.preventDefault()
       socr.tutorial.toggleStatus()
@@ -65,14 +62,6 @@ socr.controller = (model, view) ->
       view.createList $(".show-list-start").val(), $(".show-list-end").val()
       return
 
-    PubSub.subscribe "Random samples generated", ->
-      start = Math.floor(model.getRSampleCount() * 0.5)
-      end = model.getRSampleCount()
-      $("#showCount").html start + " - " + end
-      $(".show-list-start").val start
-      $(".show-list-end").val end
-      $("#showButton").trigger "click"
-      return
 
     $("#startApp").on "click", ->
       console.log "Launch button clicked"
@@ -107,14 +96,14 @@ socr.controller = (model, view) ->
       table.startEdit $(this)
       return
 
-    
+
     #console.log('Logging function called')
     $(".input-controls").delegate "input#generateMatrix", "click", ->
       console.log "Table Generated"
       console.log table.getMatrix()
       return
 
-    
+
     #console.log(table.getMatrix)
     $(".input-controls").delegate "input#submatrix", "click", ->
       start = $(".input-controls").find("input[name=\"start\"]").val()
@@ -122,9 +111,9 @@ socr.controller = (model, view) ->
       table.generateSub start, end
       return
 
-    
+
     #ADDING EVENT LISTENERS ENDS
-    
+
     # Twitter Feed
     # $('#tweetFeed').jTweetsAnywhere({
     #     searchParams: 'q=%23socrWebapp',
@@ -141,7 +130,7 @@ socr.controller = (model, view) ->
     #       refreshInterval: 30
     #       }
     #     }
-    #   }); 
+    #   });
     $("#accordion").accordion()
     $(".dropdown-toggle").dropdown()
     $(".popups").popover
@@ -154,7 +143,7 @@ socr.controller = (model, view) ->
     return
 
   initController: ->
-    
+
     # set the K - value in model.
     model.setK()
     $(".tooltips").tooltip()
@@ -196,7 +185,7 @@ socr.controller = (model, view) ->
 
     $("#infer").on "click", (e) ->
       e.preventDefault()
-      
+
       #^^^^^create loading gif ^^^^^^^^
       if model.getSample(1) is false
         view.handleResponse "<h4 class=\"alert-heading\">No Random samples to infer From!</h4>Please generate some random samples. Click \"back\" button on the controller to go to the \"Generate Random Samples!\" button.", "error", "controller-content"
@@ -241,7 +230,7 @@ socr.controller = (model, view) ->
       console.log e.message
     return
 
-  
+
   ###
   @method: step()
   @description: It generates 1 random sample with animation effect showing the generation.
@@ -249,31 +238,27 @@ socr.controller = (model, view) ->
   ###
   step: ->
     $("#accordion").accordion "activate", 1
-    
+
     #socr.view.toggleControllerHandle("hide");
     view.disableButtons() #disabling buttons
     try
       model.generateSample() #generate one sample
       $(".removable").remove() #remove the previously generated canvas during animation
-      view.updateSlider() #update slider count
-      view.updateCtrlMessage "samples generated sucessfully.", "success", 2000
-      view.updateSimulationInfo()
-      PubSub.publish "Random samples generated"
-      view.updateSimulationInfo()
+      PubSub.publish "random samples generated"
     catch e
       console.log e
     view.enableButtons()
     return
 
-  
+
   #view.animate({
   #     stopCount:$('#nSize').val(),
   #     speed:$('#speed').val(),
   #     indexes:keys.indexes,
   #     datasetIndexes:keys.datasetIndexes
-  #   }); 
+  #   });
   #show sample generation animation
-  
+
   ###
   @method: run()
   @description:It generates X random sample with animation effect showing the generation.
@@ -291,7 +276,7 @@ socr.controller = (model, view) ->
     _id = setInterval(_generate, 0)
     return
 
-  
+
   ###
   @method: stop()
   @description:It resets the setInterval for _generate() ans halts the random sample generation immediately.
@@ -305,7 +290,7 @@ socr.controller = (model, view) ->
     view.enableButtons() #enable buttons
     return
 
-  
+
   ###
   @method: reset()
   @description:It resets the application by clearing the appModel and appView.
@@ -355,31 +340,40 @@ socr.controller = (model, view) ->
 
     return
 
+  ###
+	@method: loadController()
+	@description: Single point of contact to load the controller tab and set the dataset
+	###
+
   loadController: (setting) ->
+    result = undefined
     return false  if typeof setting isnt "object"
     if setting.to is "dataDriven"
       socr.controller.setCurrentMode setting.from  if setting.from isnt "undefined"
       PubSub.publish "Datadriven controller loaded"
-      
-      #checking for any dataset generated from experiment. If yes, they take priority and get loaded.
-      unless $.isEmptyObject(socr.exp.current)
-        unless socr.exp.current.getDataset() is ""
-          console.log "simulation drive has some data"
-          result = model.setDataset(
-            keys: socr.exp.current.getDatasetKeys()
-            values: socr.exp.current.getDatasetValues()
-            processed: true
-          )
-          if result is true
-            view.toggleControllerHandle "show"
-            view.updateSimulationInfo()
+
+      #If experiment , then check for data
+      _name = ""
+      if setting.from is "Experiment" and not $.isEmptyObject(socr.exp.current) and socr.exp.current.getDataset() isnt ""
+        console.log "simulation drive has some data"
+        result = model.setDataset(
+          keys: socr.exp.current.getDatasetKeys()
+          values: socr.exp.current.getDatasetValues()
+          processed: true
+        )
+      else if setting.from is "spreadSheet"
+        _name = "Data Driven Experiment"
+        view.reset()
+        result = model.setDataset(setting.data)
       else
-        console.log "Experiment object not defined!"
-      
-      #set N to default values  
-      model.setN()
-      view.createControllerView()
-    return
+        return
+      if result is true
+        view.updateSimulationInfo _name
+        view.toggleControllerHandle "show"
+        model.setN()
+        view.createControllerView()
+      return
+
 
   setCurrentMode: (mode) ->
     _currentMode = mode  unless mode is `undefined`

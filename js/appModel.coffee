@@ -669,6 +669,7 @@ socr.model = ->
         i++
       socr.dataStore.createObject("sampleSpace.values", ma1).createObject "sampleSpace.keys", ma2
       console.log "Simulation data is loaded now."
+      socr.model.reset "samples"
       return true
     else if input.type is "url"
       #console.log "Simulation data is loaded now."
@@ -701,6 +702,7 @@ socr.model = ->
       unless socr.dataStore.dataset
         false
       else
+        socr.model.reset "samples"
         true
 
 

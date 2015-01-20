@@ -719,21 +719,18 @@ socr.dataTable = function () {
         export: function () {
             console.log('Export the following datasets');
             console.log(stage.content);
-            var result = socr.model.setDataset({
-                type: "spreadsheet",
-                values: stage.content,
-                range: stage.content.length,
-                processed: false
-            });
-            if (result == true) {
-                socr.controller.loadController({
-                    to: 'dataDriven',
-                    from: "spreadSheet"
-                });
-                socr.view.toggleControllerHandle("show");
-                socr.view.updateSimulationInfo("Data Driven Experiment");
-            }
-        },
+			result = socr.controller.loadController({
+				to: 'dataDriven',
+				from: "spreadSheet",
+				data:{
+					type: "spreadsheet",
+					values: stage.content,
+					range: stage.content.length,
+					processed: false
+					}
+			});
+        	return result;
+		},
         reset: function () {
             stage.index = 1;
             stage.content = [];
