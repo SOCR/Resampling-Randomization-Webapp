@@ -307,7 +307,6 @@ socr.controller = (model, view) ->
         Yes: ->
           _this.stop()
           model.reset()
-          view.reset() #clearing all the canvas
           socr.exp.current = {} #deleting the current experiment instance
           view.toggleControllerHandle "hide"
           socr.dataTable.simulationDriven.resetScreen()
@@ -363,7 +362,6 @@ socr.controller = (model, view) ->
         )
       else if setting.from is "spreadSheet"
         _name = "Data Driven Experiment"
-        view.reset()
         result = model.setDataset(setting.data)
       else
         return

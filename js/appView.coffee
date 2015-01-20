@@ -219,13 +219,17 @@ socr.view = (model) ->
   @description - Method to toggle the controller slider
   ###
   initialize: ->
+
+    PubSub.subscribe "application reset",->
+      socr.view.reset()
+
     PubSub.subscribe "random samples generated", (msg,data)->
       #updating controller view slider
       socr.view.updateCtrlMessage "samples generated sucessfully.", "success", 2000
       socr.view.updateStatus "finished"
       socr.view.updateSimulationInfo()
       #updating samplelist view
-      socr.view.updateSlider() 
+      socr.view.updateSlider()
       start = Math.floor(data['sampleCount']* 0.5)
       end = data['sampleCount']
       $("#showCount").html start + " - " + end

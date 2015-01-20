@@ -661,6 +661,7 @@ socr.model = ->
       ma2 = []
       i = 0
 
+      socr.model.reset "dataset"
       while i < input.keys.length
         socr.dataStore.createObject("dataset." + (i) + ".values", input.values[i]).createObject "dataset." + (i) + ".keys", input.keys[i]
         ma1 = ma1.concat(input.values[i])
@@ -668,7 +669,6 @@ socr.model = ->
         i++
       socr.dataStore.createObject("sampleSpace.values", ma1).createObject "sampleSpace.keys", ma2
       console.log "Simulation data is loaded now."
-      socr.model.reset "samples"
       return true
     else if input.type is "url"
       #console.log "Simulation data is loaded now."
@@ -678,7 +678,7 @@ socr.model = ->
       ma2 = []
 
       #clear previous data.
-      socr.dataStore.removeObject "dataset"
+      socr.model.reset "all"
       #console.log input.values.length
       i = 0
 
@@ -698,10 +698,10 @@ socr.model = ->
         ma2 = ma2.concat(_temp)
         i++
       socr.dataStore.createObject("sampleSpace.values", ma1).createObject "sampleSpace.keys", ma2
+
       unless socr.dataStore.dataset
         false
       else
-        socr.model.reset "samples"
         true
 
 
@@ -826,23 +826,34 @@ socr.model = ->
   getRSampleCount: ->
     _count
 
-  reset: (option) ->
-    if option isnt "undefined" and option is "samples"
-      socr.dataStore.removeObject "bootstrapGroup"
+  reset: (type) ->
+    type = if(typeof type isnt "undefined") then type else "all"
+    switch type
+      when "samples"
+        socr.dataStore.removeObject "bootstrapGroup"
 
-      #setting the global random sample count to 0
-      socr.model.setRSampleCount 0
-    else
+        #setting the global random sample count to 0
+        socr.model.setRSampleCount 0
+        PubSub.publish "samples reset"
 
-      #all values deleted
-      socr.dataStore.removeObject "all"
+      when "dataset"
+        socr.dataStore.removeObject "dataset"
+        #setting K and n to 0.
+        socr.model.setK()
+        socr.model.setN()
+        PubSub.publish "dataset reset"
 
-      #setting the global random sample count to 0
-      socr.model.setRSampleCount 0
+      when "all"
+        #all values deleted
+        socr.dataStore.removeObject "all"
 
-      #setting K and n to 0.
-      socr.model.setK()
-      socr.model.setN()
+        #setting the global random sample count to 0
+        socr.model.setRSampleCount 0
+
+        #setting K and n to 0.
+        socr.model.setK()
+        socr.model.setN()
+        PubSub.publish "application reset"
     return
 
 
