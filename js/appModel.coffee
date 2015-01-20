@@ -205,18 +205,17 @@ socr.model = ->
 
   ###
   @method  : _generateZ
-  @desc   :Generates p value for the "k" data groups using difference of proportion test.
   @param  :sampleNumber
   @return : {number}
   ###
   _generateZ = (sampleNumber) ->
     if sampleNumber is "dataset"
-      _data1 = socr.dataStore.dataset[1].values.getData()
-      _data2 = socr.dataStore.dataset[2].values.getData()
+      _data1 = socr.dataStore.dataset[0].values.getData()
+      _data2 = socr.dataStore.dataset[1].values.getData()
     else
       _data1 = socr.dataStore.bootstrapGroup[sampleNumber].values.getData()
-      _data2 = _data1[2]
-      _data1 = _data1[1]
+      _data2 = _data1[1]
+      _data1 = _data1[0]
 
     #
     #      p1 - Proportion of dataset 1
@@ -253,7 +252,7 @@ socr.model = ->
       mu = mu or 0
       sigma = sigma or 1
     catch e
-      console.log e.message
+      console.log e.stack
     socr.tools.zCal.computeP x.zValue, mu, sigma
   _stopCount = 1000
   _count = 0

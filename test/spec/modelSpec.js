@@ -33,8 +33,8 @@
           type: 'spreadsheet'
         };
         expect(model.setDataset(input)).toEqual(true);
-        expect(model.getDataset(1)).toEqual([0, 1]);
-        return expect(model.getDataset(2)).toEqual([2, 3]);
+        expect(model.getDataset(0)).toEqual([0, 1]);
+        return expect(model.getDataset(1)).toEqual([2, 3]);
       });
     });
     describe("generating random samples", function() {
@@ -61,14 +61,14 @@
         return socr.dataStore.removeObject("all");
       });
       it("should generate accurate P-value", function() {
-        socr.dataStore.createObject("dataset.1.values", [1, 2, 3, 4, 5]);
-        socr.dataStore.createObject("dataset.2.values", [4, 5, 6, 7]);
+        socr.dataStore.createObject("dataset.0.values", [1, 2, 3, 4, 5]);
+        socr.dataStore.createObject("dataset.1.values", [4, 5, 6, 7]);
         socr.model.setK();
-        return expect(model.getPof("dataset")).toEqual(0.03833372853473627);
+        return expect(model.getPof("dataset").toFixed(5)).toEqual('0.03833');
       });
       it("should generate accurate DOP", function() {
-        socr.dataStore.createObject("dataset.1.values", [1, 1, 1, 0, 1]);
-        socr.dataStore.createObject("dataset.2.values", [1, 0, 0, 1, 1, 1, 0, 0, 0]);
+        socr.dataStore.createObject("dataset.0.values", [1, 1, 1, 0, 1]);
+        socr.dataStore.createObject("dataset.1.values", [1, 0, 0, 1, 1, 1, 0, 0, 0]);
         socr.model.setK();
         return expect(model.getDOPof("dataset").toFixed(3)).toEqual('0.099');
       });

@@ -8,7 +8,7 @@ describe "appModel", ->
 
 
   describe "getting and setting Datasets", ->
-    
+
     it "should set a dataset from simulations", ->
       input =
         values: [[0, 1], [2, 3]]
@@ -24,8 +24,8 @@ describe "appModel", ->
         type: 'spreadsheet'
 
       expect(model.setDataset(input)).toEqual true
-      expect(model.getDataset(1)).toEqual [0,1]
-      expect(model.getDataset(2)).toEqual [2,3]
+      expect(model.getDataset(0)).toEqual [0,1]
+      expect(model.getDataset(1)).toEqual [2,3]
 
 
   describe "generating random samples", ->
@@ -52,20 +52,20 @@ describe "appModel", ->
 
     #test for P-Value
     it "should generate accurate P-value", ->
-      socr.dataStore.createObject "dataset.1.values", [1,2,3,4,5]
+      socr.dataStore.createObject "dataset.0.values", [1,2,3,4,5]
 
-      socr.dataStore.createObject "dataset.2.values", [4,5,6,7]
+      socr.dataStore.createObject "dataset.1.values", [4,5,6,7]
       socr.model.setK()
 
-      expect(model.getPof "dataset").toEqual 0.03833372853473627
+      expect(model.getPof("dataset").toFixed(5)).toEqual '0.03833'
 
     #test for DOP
     it "should generate accurate DOP", ->
-      socr.dataStore.createObject "dataset.1.values", [1,1,1,0,1]
+      socr.dataStore.createObject "dataset.0.values", [1,1,1,0,1]
 
-      socr.dataStore.createObject "dataset.2.values", [1,0,0,1,1,1,0,0,0]
+      socr.dataStore.createObject "dataset.1.values", [1,0,0,1,1,1,0,0,0]
       socr.model.setK()
-      
+
       expect(model.getDOPof("dataset").toFixed(3)).toEqual '0.099'
 
     #test for Standard deviation
@@ -79,8 +79,8 @@ describe "appModel", ->
       expect(model.getStandardDevOfDataset(1).toFixed(5)).toEqual '1.04812'
       expect(model.getStandardDevOfDataset(2).toFixed(5)).toEqual '2.69046'
       expect(model.getStandardDevOfDataset(3).toFixed(5)).toEqual '2.80058'
-      
-    
+
+
 
 
 # incase of no input given to generateTrail
