@@ -296,7 +296,7 @@ socr.controller = (model, view) ->
   @description:It resets the application by clearing the appModel and appView.
   ###
   reset: ->
-    $("<div></div>").appendTo("body").html("<div><h6>Are you sure you want to reset? Data will be lost!</h6></div>").dialog
+    $("<div></div>").appendTo("body").html("<div><h6>Are you sure you want to reset everything? Data will be lost!</h6></div>").dialog
       modal: true
       title: "Reset Data?"
       zIndex: 10000

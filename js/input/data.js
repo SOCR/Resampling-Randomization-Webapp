@@ -163,7 +163,7 @@ socr.dataTable = function () {
             return false;
         },
         notify: function () {
-            view.displayResponse('Dataset Request Initialized..give us few second.', 'success');
+            view.displayResponse('Dataset request initialized, give us few seconds...', 'success');
         },
         checkRefer: function (url) {
             var requestHost = document.createElement("a");
