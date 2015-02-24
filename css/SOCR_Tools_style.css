@@ -2,7 +2,7 @@
 
 
 
-body {
+/*body {
 	font-family: trebuchet ms, verdana, arial, tahoma;
 	font-size: 90%;
 	color: #888;
@@ -11,7 +11,7 @@ body {
 	margin: 0;
 	padding: 0;
 	text-align: center;
-}
+}*/
 
 /* Set the page width */
 #wrapper-menu-top, #header, #wrapper-content, #wrapper-footer {
@@ -149,5 +149,5 @@ body {
 h2 { font-size: 110%; }
 h3 { font-size: 100%; }
 
-a:link, a:visited { color: #5b8fbe; text-decoration: none; }
+/*a:link, a:visited { color: #5b8fbe; text-decoration: none; }*/
 a:hover{ color: #666; text-decoration: none; }

@@ -52,25 +52,26 @@
 						<span class="icon-bar"></span>
 						<span class="icon-bar"></span>
 					</a>
-					<a data-toggle="modal" href="#aboutDesc" class=" brand" >SOCR - Resampling Webapp</a>
+					<a class=" brand" >SOCR - Resampling App</a>
 					<div class="nav-collapse">
 						<ul class="nav">
-							<li><a  href="http://wiki.stat.ucla.edu/socr/index.php/SOCR_ResamplingSimulation_Activity" target='_blank'>About</a></li>
-							<li><a data-toggle="modal" href="#simulationDesc">Simulations</a></li>
+              <li><a data-toggle="modal" href="#aboutDesc">ABOUT</a></li>
+							<li><a data-toggle="modal" href="#simulationDesc">SIMULATIONS</a></li>
 							<!--<a data-toggle="modal" href="#help"><button class='btn btn-danger' >Need Help!</button></a>-->
-							<li class="help"><a href="#">Help!</a></li>
+							<li class="help"><a href="#">HELP!</a></li>
 							<li><a data-toggle="modal" href="#faq">FAQ</a></li>
 							<li class="dropdown">
-								<a id="more" href="#" role="button" class="dropdown-toggle" data-toggle="dropdown">More <b class="caret"></b></a>
+								<a id="more" href="#" role="button" class="dropdown-toggle" data-toggle="dropdown">MORE<b class="caret"></b></a>
 								<ul class="dropdown-menu" role="menu" aria-labelledby="more">
 									<li><a tabindex="-1" href="http://goo.gl/MNEi7" target="_blank">Screencasts</a></li>
+									<li><a tabindex="-1" href="https://github.com/SOCRedu/Resampling-Randomization-WebApp" target="_blank">Source Code</a></li>
 									<!--<li><a tabindex="-1" href="#share" data-toggle="modal">Buzz</a></li>
                   <li><a tabindex="-1" href="#generate-url" data-toggle="modal" id='share-instance-button'>Share Instance</a></li> -->
 								</ul>
 						</li>
 						</ul>
 		  			</div><!--/.nav-collapse -->
-		  			<button class="btn btn-medium" id="reset-button"><i class="icon-refresh"></i>Reset</button>
+		  			<button class="btn btn-medium right" id="reset-button"><i class="icon-refresh"></i> Reset App</button>
 
 				</div>
 			</div>
@@ -394,13 +395,17 @@
 			<div id="aboutDesc" class="modal hide fade">  
 				<div class="modal-header">
 					<a class="close" data-dismiss="modal">X</a>
-					<h3>SOCR</h3>
+					<h3>ABOUT</h3>
 				</div>
 				<div class="modal-body">
-					<p>The goal of this project is to design a modern and portable SOCR web-app that demonstrates the concepts of statistical analysis such as resampling, randomization and probabilistic simulation and runs seamlessly across varied devices. The application will be based on HTML5, CSS3 and JavaScript framework</p>
+          <p>The goal of this project is to design a modern and portable SOCR web-app that demonstrates the concepts of statistical analysis such as resampling, randomization and probabilistic simulation and runs seamlessly across varied devices.</p>
+          <p> Current Version: <strong>1.0</strong> </p>
+          <p > Created by SOCR @ UMich . Code available under MIT Licence at <a href='https://github.com/SOCRedu/Resampling-Randomization-WebApp' target='_blank'>Github</a></p>
+          <br/>
+          <p class='fine-print'> Please send an email to selvam1991@gmail.com to report bugs.</p>
 				</div>
 				<div class="modal-footer">
-					<a href="http://socr.ucla.edu" class="btn btn-primary">HomePage</a>
+          <a href="http://socr.ucla.edu" class="btn btn-primary"><i class='icon-home'></i> SOCR Home</a>
 				</div>
 			</div>
 			<div id='simulationDesc' class="modal hide fade">
@@ -409,11 +414,13 @@
 					<h3>Simulations</h3>
 				</div>
 				<div class="modal-body">
-					<p>There are a list of simulation experiments you can choose from to create the dataset for further analysis. Currently we have 4 experiments installed into the App. More are soon to come!</p>
+					<p>There are a list of simulation experiments you can choose from to create the dataset for further analysis. Currently we have 5 experiments installed into the App. More are soon to come!</p>
 					<ul>
 						<li>Binomial Coin Toss </li>
 						<li>Ball and Urn</li>
-                        <li>Card</li>
+            <li>Card</li>
+            <li>Beta Binomial</li>
+            <li>Beta Distribution</li>
 					</ul>
 				</div>
 			</div>

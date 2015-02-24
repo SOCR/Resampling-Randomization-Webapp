@@ -374,6 +374,17 @@ div.tool{
 	cursor:pointer;
 }
 
+.right{
+float:right;
+}
+
+.left{
+float:left;
+}
+
+.fine-print{
+  font-size:12px;
+}
 
 /* Style support for SOCR footer */
 #footer{
