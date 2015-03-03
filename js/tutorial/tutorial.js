@@ -26,7 +26,6 @@ socr.tutorial=(function(){
 	);
 	function _getIds(step){
 		if(step != undefined && (Object.keys(_steps).indexOf(step) != -1)){
-			console.log("it works");
 			return _steps[step];
 		}
 		else
@@ -93,28 +92,27 @@ socr.tutorial=(function(){
 			return this;
 		},
 		start:function(msg,data){
-            if(typeof msg === "string"){
-                var step = msg;
-                console.log(step);
+        if(typeof msg === "string"){
+            var step = msg;
 				var ids=_getIds(step);
 				//break the ids
 				//ids=ids.split("/");
 				for(var i=0;i<=ids.length-1;i++){
 					//infuse the data
 					try{
-						console.log(ids[i]);
+						//console.log(ids[i]);
 						$(ids[i]).addClass("tutorial").attr("data-intro",_data[ids[i]]["data-intro"]);
 						$(ids[i]).attr("data-position",_data[ids[i]]["data-position"]);
 						
 					}catch(e){
-						console.log(e.message);
+						console.log('ERROR:'+e.message);
 					}
 				}
-				$("body").chardinJs("start");
+        /* 0.5s timeout so that DOM animations can complete first.*/
+				setTimeout(function(){($("body").chardinJs("start")},500);
 				$("body").on("chardinJs:stop",function(){
-					console.log("removing...");
-					$(".tutorial").removeAttr("data-intro data-position");
-			});
+				  $(".tutorial").removeAttr("data-intro data-position");
+			  });
 			}
 			return this;
 		}

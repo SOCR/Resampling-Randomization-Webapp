@@ -468,7 +468,9 @@ socr.dataTable = function () {
             socr.model.reset();
 
             $("#accordion").accordion("activate", 0);
-            try {
+            
+            //LoadController called once when 'proceed' is clicked.
+            /*try {
                 $(this).update({
                     to: 'dataDriven'
                 });
@@ -480,7 +482,7 @@ socr.dataTable = function () {
                     to: 'dataDriven',
                     from: "spreadSheet"
                 });
-            }
+            }*/
 
             if (spreadSheet.validate(dataset)) {
                 // model.setDataset({
@@ -524,14 +526,16 @@ socr.dataTable = function () {
                 console.log(' Select Data request with  ' + selectedCoords)
                 var dataset = $dataTable.handsontable('getData', selectedCoords[0], selectedCoords[1], selectedCoords[2], selectedCoords[3]);
                 $("#accordion").accordion("activate", 0);
-                try {
+
+                //LoadController called once when 'proceed' is clicked.
+                /*try {
                     socr.controller.loadController({
                         to: 'dataDriven',
                         from: "spreadSheet"
                     });
                 } catch (e) {
                     console.log(e.message)
-                }
+                }*/
                 socr.view.toggleControllerHandle("hide");
                 if (spreadSheet.validate(dataset)) {
                     //  model.setDataset({
@@ -719,15 +723,15 @@ socr.dataTable = function () {
         export: function () {
             console.log('Export the following datasets');
             console.log(stage.content);
-			result = socr.controller.loadController({
-				to: 'dataDriven',
-				from: "spreadSheet",
-				data:{
-					type: "spreadsheet",
-					values: stage.content,
-					range: stage.content.length,
-					processed: false
-					}
+            result = socr.controller.loadController({
+              to: 'dataDriven',
+                   from: "spreadSheet",
+                   data:{
+                    type: "spreadsheet",
+                    values: stage.content,
+                    range: stage.content.length,
+                    processed: false
+                   }
 			});
         	return result;
 		},
