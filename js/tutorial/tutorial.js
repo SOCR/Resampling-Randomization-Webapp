@@ -109,7 +109,9 @@ socr.tutorial=(function(){
 					}
 				}
         /* 0.5s timeout so that DOM animations can complete first.*/
-				setTimeout(function(){($("body").chardinJs("start")},500);
+				setTimeout( function() { 
+                    $("body").chardinJs("start") }, 
+                    500 ) ;
 				$("body").on("chardinJs:stop",function(){
 				  $(".tutorial").removeAttr("data-intro data-position");
 			  });
