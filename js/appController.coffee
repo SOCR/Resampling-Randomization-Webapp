@@ -31,7 +31,7 @@ socr.controller = (model, view) ->
       percent = Math.ceil((_runsElapsed / _noOfSteps) * 100)
       view.updateStatus "update", percent
     else
-      PubSub.publish "random samples generated", {'sampleCount':model.getRSampleCount()}
+      PubSub.publish "randomSampleGenerationComplete", {'sampleCount':model.getRSampleCount()}
       _this.stop()
     return
 
@@ -147,6 +147,7 @@ socr.controller = (model, view) ->
     # set the K - value in model.
     model.setK()
     $(".tooltips").tooltip()
+
     $(".controller-back").on "click", (e) ->
       e.preventDefault()
       try
@@ -161,7 +162,7 @@ socr.controller = (model, view) ->
 
     $("#runButton").on "click", (e) ->
       e.preventDefault()
-      console.log "Run Started"
+      console.log "Run Started"      
       setTimeout socr.controller.run, 500
       return
 
@@ -244,7 +245,7 @@ socr.controller = (model, view) ->
     try
       model.generateSample() #generate one sample
       $(".removable").remove() #remove the previously generated canvas during animation
-      PubSub.publish "random samples generated"
+      PubSub.publish "randomSampleGenerationComplete"
     catch e
       console.log e
     view.enableButtons()
@@ -264,18 +265,46 @@ socr.controller = (model, view) ->
   @description:It generates X random sample with animation effect showing the generation.
   ###
   run: ->
-    view.disableButtons() #disabling buttons
-    view.updateStatus "started"
-    model.setStopCount $("#countSize").val() #save the stopcount provided by user
-    #generate samples
-    _temp = model.getStopCount() / 1000
-    _noOfSteps = Math.ceil(_temp)
-    d = Date()
-    console.log "start" + _runsElapsed + d
-    _generate()
-    _id = setInterval(_generate, 0)
-    return
+    #this should go through model event.
+    model.set "stopCount" , $("#countSize").val() #save the stopcount provided by user
 
+    compute = ->
+        PubSub.publish "randomSampleGenerationStarted"
+        #generate samples
+        _temp = (model.get "stopCount" )/ 1000
+        _noOfSteps = Math.ceil(_temp)
+        d = Date()
+        console.log "start" + _runsElapsed + d
+        _generate()
+        _id = setInterval(_generate, 0)
+        return
+    #throw warning if datapoints cross threshold.
+    All the computation happens in the within the browser in this app. 
+    if model.aboveThreshold() 
+      $("<div></div>").appendTo("body").html("<div><h6>Caution: Your dataset and sample count selection may consume too much memory causing the tab to become unresponsive. Do you wish to continue?</h6></div>").dialog
+        modal: true
+        title: "Warning!"
+        zIndex: 10000
+        autoOpen: true
+        width: "auto"
+        resizable: false
+        buttons:
+          Yes: ->
+            compute()
+            $(this).dialog "close" #close the confirmation window
+            return
+
+          No: ->
+            $(this).dialog "close"
+            return
+
+        close: (event, ui) ->
+          $(this).remove()
+          return
+
+    else
+      compute()
+        
 
   ###
   @method: stop()
@@ -284,10 +313,11 @@ socr.controller = (model, view) ->
   stop: ->
     d = Date()
     console.log "end" + _runsElapsed + d
-    view.updateSlider()
+
+    PubSub.publish "randomSampleGenerationStopped"
+
     clearInterval _id #stop the setinterval function
     _runsElapsed = 0 #reset the runelapsed count
-    view.enableButtons() #enable buttons
     return
 
 

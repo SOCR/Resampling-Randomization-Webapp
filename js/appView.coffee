@@ -220,10 +220,25 @@ socr.view = (model) ->
   ###
   initialize: ->
 
-    PubSub.subscribe "application reset",->
+    PubSub.subscribe "appReset",->
       socr.view.reset()
 
-    PubSub.subscribe "random samples generated", (msg,data)->
+    PubSub.subscribe "randomSampleGenerationStopped", (msg,data) ->
+      socr.view.enableButtons() #enable buttons
+      socr.view.updateSlider()
+
+    PubSub.subscribe "randomSampleGenerationInterrupted", (msg,data) ->
+      socr.view.enableButtons() #enable buttons
+      socr.view.updateSlider()
+      socr.view.updateStatus "interrupted"
+      socr.view.updateCtrlMessage "Generation interrupted.", "error", 1000
+
+    PubSub.subscribe "randomSampleGenerationStarted", (msg,data) ->
+      socr.view.disableButtons() #disabling buttons
+      socr.view.updateStatus "started"
+
+
+    PubSub.subscribe "randomSampleGenerationComplete", (msg,data)->
       #updating controller view slider
       socr.view.updateCtrlMessage "samples generated sucessfully.", "success", 2000
       socr.view.updateStatus "finished"
@@ -868,11 +883,13 @@ socr.view = (model) ->
     console.log "updateStatus"
     return false  if action is `undefined`
     switch action
+
       when "started"
         console.log "started"
         html = "<div class=\"progress progress-info progress-striped active\"><div class=\"bar\" style=\"width:0%\"></div></div>"
         el = $("#progressBar")
         el.html("").removeClass().addClass("span8").css("display", "").html html
+
       when "update"
         return false  if percent is `undefined`
         el = $("div#progressBar > div > div")
@@ -882,9 +899,13 @@ socr.view = (model) ->
           console.log "change"
           el.css "width", percent + "%"
           el.style
+
       when "finished"
-        console.log "finished"
-        el = $("#progressBar").html("").css("display", "none")
+        $("#progressBar").html("").css("display", "none")
+
+      when "interrupted"
+        $("#progressBar").html("").css("display", "none")
+
     return
 
 #

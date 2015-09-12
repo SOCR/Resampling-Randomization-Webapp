@@ -15,7 +15,17 @@ socr.model = ->
   #contains the number of datasets
   #
   # Why there are keys and values? Its because in some form of data input (like coin toss), the "key" contains the symbolic meaningful reference whereas the "value" contains the mathematical equivalent value.
-  #
+  
+  _kvStore = {}
+
+  _stopCount = 1000
+  _count = 0
+  _n = []
+  _K = null
+  _this = this
+
+  MEM_THRESHOLD = 40000000
+  
 
   #::::::: PRIVATE METHODS :::::::::::::::
   ###
@@ -254,11 +264,7 @@ socr.model = ->
     catch e
       console.log e.stack
     socr.tools.zCal.computeP x.zValue, mu, sigma
-  _stopCount = 1000
-  _count = 0
-  _n = []
-  _K = null
-  _this = this
+  
   n: _n
 
   ###
@@ -754,6 +760,7 @@ socr.model = ->
   ###
   getter and setter for variable '_stopCount'
   ###
+  ###
   setStopCount: (y) ->
 
     #alert(y);
@@ -762,7 +769,7 @@ socr.model = ->
 
   getStopCount: ->
     _stopCount
-
+  ###
 
   ###
   getter and setter for variable '_n'
@@ -820,11 +827,26 @@ socr.model = ->
   getter and setter for variable '_count'
   ###
   setRSampleCount: (v) ->
+    socr.model.set "randomSampleCount", _count
     _count = v
     true
 
-  getRSampleCount: ->
+  getRSampleCount: ->    
     _count
+
+  get : (key) ->
+    if (_kvStore[key] isnt undefined)
+      _kvStore[key]
+    else
+      throw new Error key+" doesnt exist in key-value store."
+
+  set : (key,value, dontForce)->
+    if dontForce is true and _kvStore[key] isnt undefined
+      throw new Error "value for key : "+ key + " is already set"
+    else
+      _kvStore[key]  = value
+      true
+
 
   reset: (type) ->
     type = if(typeof type isnt "undefined") then type else "all"
@@ -853,7 +875,7 @@ socr.model = ->
         #setting K and n to 0.
         socr.model.setK()
         socr.model.setN()
-        PubSub.publish "application reset"
+        PubSub.publish "appReset"
     return
 
 
@@ -878,4 +900,24 @@ socr.model = ->
   ###
   getK: ->
     _K
+
+  ###
+  @method :aboveThreshold
+  @return : {boolean}
+  ###
+  aboveThreshold: ->
+    _k = 0
+    _sum = 0
+
+    _sampleSize = _count #socr.model.get "randomSampleCount"
+    _stopCount = socr.model.get "stopCount"
+
+    while _k < socr.model.getK()
+      _dataset = socr.model.getDataset(_k)
+      _sum += _dataset.length* ( _sampleSize + _stopCount )
+      _k++
+
+    console.log "aboveThreshold : "+_sum
+    return (_sum > MEM_THRESHOLD)
+
 #return
