@@ -910,7 +910,7 @@ socr.model = ->
     _sum = 0
 
     _sampleSize = _count #socr.model.get "randomSampleCount"
-    _stopCount = socr.model.get "stopCount"
+    _stopCount = parseInt socr.model.get "stopCount"
 
     while _k < socr.model.getK()
       _dataset = socr.model.getDataset(_k)

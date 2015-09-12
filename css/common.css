@@ -159,11 +159,12 @@
 
 /* Welcome splash screen
 -------------------------------------------------*/
-#welcome{
+.loading-spinner{
 	width: 100%;
 	height: 100%;
 	z-index: 9999;
-	position: absolute;
+  opacity: 0.7;
+	position: fixed;
 	background-color: black;
 	top:0px;
 	left: 0px;
@@ -177,25 +178,14 @@
 }
 
 div.welcome-container{
-    width:600px;
-    margin:120px auto;
-}
-      
-.welcome-title{
-	color:#1DC4F9;
-	font-size: 150px;
-	line-height: 150px;
+    margin-top:120px;
+    margin-bottom: 20px;
 }
       
 .welcome-container div{
-	float:left;
 	width: 100%;
 }
 	  
-#startApp{
-	margin: 10px auto;
-}
-
 
 
 /* Styling for the input module
@@ -391,6 +381,22 @@ float:left;
   padding:2px 0px;
   text-align:center;
   }
-.orange-bg{
-  background-color: #f46d3b;
+.blue-bg{
+  background-color: #1f77b4;
+}
+
+.white-bg{
+  background-color: #fff;
+}
+
+.black-bg{
+  background-color: #000; 
+}
+
+.blue-text{
+  color: #1f77b4;
+}
+
+.white-text{
+  color : white;
 }

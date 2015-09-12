@@ -235,6 +235,7 @@ socr.view = (model) ->
 
     PubSub.subscribe "randomSampleGenerationStarted", (msg,data) ->
       socr.view.disableButtons() #disabling buttons
+      socr.view.showSampleListLoader()
       socr.view.updateStatus "started"
 
 
@@ -252,6 +253,8 @@ socr.view = (model) ->
       $(".show-list-end").val end
       $("#showButton").trigger "click"
 
+    PubSub.subscribe "toggleLoadingSpinner" ,(msg,data)->
+      socr.view.toggleLoadingSpinner(data)
 
   toggleControllerHandle: (action) ->
     console.log action
@@ -908,8 +911,18 @@ socr.view = (model) ->
 
     return
 
-  toggleLoader : (action)->
-    if action is "show"
+  showSampleListLoader : ()->
+    $("#sampleList").html '<div class="spinner" style="width:40px">
+        <div class="double-bounce1 black-bg"></div>
+        <div class="double-bounce2 black-bg"></div>
+      </div>'
+  
+  toggleLoadingSpinner : (data)->
+    console.log('toggleLoadingSpinner action : ',data);
+    if data.action is "show"
+      $('.loading-spinner').show()
+    else
+      $('.loading-spinner').hide()
 
 #
 # setPercentile:function(x){

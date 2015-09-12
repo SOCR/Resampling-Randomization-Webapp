@@ -26,29 +26,20 @@
 <body>
 
 	<!-- The Welcome Splash Screen -->
-	<!--<div id='welcome'>
+	<div class='loading-spinner' style="display:none">
 		<div class="welcome-container">
-		<div>
-			<span><h2 class="font welcome-title">SOCR</h2></span>
-		</div>
-		<div>
-			<span class="font" >Statistical Online Computational Resource - Resampling WebApp &nbsp;</span> 
-			<div><button id="startApp" class="btn btn-primary btn-large" disabled> Initialising ... </button></div>
-			<div>
-				<span class="font">Help (recommended for first timer!) :</span>
-				<span class="switch switch-mini" data-on="danger" data-off="primary">  
-	    			<input class="help" type="checkbox" >
-	    		</span>
+			<h2 class="font">Processing...</h2>
+			<div class="spinner" style="width:40px">
+			  <div class="double-bounce1 white-bg"></div>
+			  <div class="double-bounce2 white-bg"></div>
 			</div>
-		</div>
-		</div>
-	</div>-->
+			</div>
+	</div>
 	
  	<div id='header'>
-		<div class="navbar navbar-fixed-top navbar-inverse orange-bg
-		">
+		<div class="navbar navbar-fixed-top navbar-inverse">
 			<div class="navbar-inner">
-				<div class="container-fluid orange-bg">
+				<div class="container-fluid blue-bg">
 					<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
 						<span class="icon-bar"></span>
 						<span class="icon-bar"></span>
@@ -73,7 +64,7 @@
 						</li>
 						</ul>
 		  			</div><!--/.nav-collapse -->
-		  			<button class="white-bg-btn right" id="reset-button"><i class="icon-refresh"></i> Reset App</button>
+		  			<button class="white-bg-btn blue-text right" id="reset-button"><i class="icon-refresh"></i> Reset App</button>
 
 				</div>
 			</div>
@@ -481,8 +472,8 @@
 
 			window.loading_screen = window.pleaseWait({
         logo: "http://pathgather.github.io/please-wait/assets/images/pathgather.png",
-        backgroundColor: '#f46d3b',
-        loadingHtml: '<p class="loading-message">Statistical Online Computational Resource - Resampling WebApp</p><div class="spinner"><div class="double-bounce1"></div><div class="double-bounce2"></div></div>'
+        backgroundColor: '#1f77b4',
+        loadingHtml: '<p class="white-text">Statistical Online Computational Resource - Resampling WebApp</p><div class="spinner"><div class="double-bounce1 white-bg"></div><div class="double-bounce2 white-bg"></div></div>'
       });
     
 	//Fix for browsers that don't support console logging
