@@ -200,9 +200,6 @@ div.welcome-container{
 
 /* Styling for the input module
 -------------------------------*/
-	#main{
-		visibility: hidden;
-	}
 	#drop{
 	  	padding: 10px;
 	  	border: 2px dashed #e8e8e8;
@@ -248,7 +245,6 @@ div.welcome-container{
 	section.datadriven-wrap .spreadsheet{
 		height: 350px;
 		margin-top: 10px;
-		overflow: auto;
 		max-height: 350px;
 
 	}
@@ -395,3 +391,6 @@ float:left;
   padding:2px 0px;
   text-align:center;
   }
+.orange-bg{
+  background-color: #f46d3b;
+}

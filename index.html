@@ -4,13 +4,14 @@
     <!-- Meta data For SEO -->
     <meta charset="utf-8">
     <title>SOCR Randomization and Resampling Web-App</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="description" content="Simulation App,Randomization and Resampling App">
     <meta name="author" content="selvam,ashwini,ivo">
     <meta http-equiv="X-UA-Compatible" content="IE=9; IE=8;" />
 
     <!-- head.js ... its a javascript loader tool -->
     <script src="js/lib/head.min.js"></script>
+    <script type="text/javascript" src="bower_components/please-wait/build/please-wait.min.js"></script>
 
     <!-- Le styles -->
     <!--<link rel="stylesheet" href='http://fonts.googleapis.com/css?family=Lato:400,900'  type='text/css'>-->
@@ -25,7 +26,7 @@
 <body>
 
 	<!-- The Welcome Splash Screen -->
-	<div id='welcome'>
+	<!--<div id='welcome'>
 		<div class="welcome-container">
 		<div>
 			<span><h2 class="font welcome-title">SOCR</h2></span>
@@ -41,12 +42,13 @@
 			</div>
 		</div>
 		</div>
-	</div>
+	</div>-->
 	
  	<div id='header'>
-		<div class="navbar navbar-fixed-top navbar-inverse">
+		<div class="navbar navbar-fixed-top navbar-inverse orange-bg
+		">
 			<div class="navbar-inner">
-				<div class="container-fluid">
+				<div class="container-fluid orange-bg">
 					<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
 						<span class="icon-bar"></span>
 						<span class="icon-bar"></span>
@@ -71,7 +73,7 @@
 						</li>
 						</ul>
 		  			</div><!--/.nav-collapse -->
-		  			<button class="btn btn-medium right" id="reset-button"><i class="icon-refresh"></i> Reset App</button>
+		  			<button class="white-bg-btn right" id="reset-button"><i class="icon-refresh"></i> Reset App</button>
 
 				</div>
 			</div>
@@ -476,6 +478,12 @@
     <!-- Placed at the end of the document so the pages load faster -->
     <!--<script type='text/javascript' src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>-->
 <script type='text/javascript'>
+
+			window.loading_screen = window.pleaseWait({
+        logo: "http://pathgather.github.io/please-wait/assets/images/pathgather.png",
+        backgroundColor: '#f46d3b',
+        loadingHtml: '<p class="loading-message">Statistical Online Computational Resource - Resampling WebApp</p><div class="spinner"><div class="double-bounce1"></div><div class="double-bounce2"></div></div>'
+      });
     
 	//Fix for browsers that don't support console logging
 	if(!window.console) console = {};
@@ -546,27 +554,15 @@
 		/*
 		*  CoverPage rendering
 		*/
-
-		socr.view.CoverPage();
-
+		
 		document.onreadystatechange = function(){
 			 if (document.readyState == 'complete'){
-			 	/* All resources are loaded */
-			 	$('#startApp').removeAttr('disabled')
-			 					.html('Launch')
-				};
+				setTimeout(function(){window.loading_screen.finish()},1000);
+			}
 		}
 		
-		
-		/*
-		 * Resize event adjusts the cover page accordingly
-		 */
-		$(window).resize(function(){
-			console.log('Coverpage function')
-			socr.view.CoverPage();
-		});
-		
 		$(document).ready(function(){
+
 		/*
 		* Initialize the controller 
 		*/

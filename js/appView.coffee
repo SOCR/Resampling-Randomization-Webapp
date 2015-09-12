@@ -204,7 +204,7 @@ socr.view = (model) ->
 
     $(".pagination li").on "click", ->
       start = $(this).text() * 500 - 500
-      console.log start
+      #console.log start
       _create start, 500
       return
 
@@ -907,6 +907,9 @@ socr.view = (model) ->
         $("#progressBar").html("").css("display", "none")
 
     return
+
+  toggleLoader : (action)->
+    if action is "show"
 
 #
 # setPercentile:function(x){

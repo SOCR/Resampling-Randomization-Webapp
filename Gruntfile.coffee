@@ -1,5 +1,5 @@
 module.exports = (grunt) ->
-  
+
   # Project configuration.
   grunt.initConfig
     pkg: grunt.file.readJSON("package.json")
@@ -31,6 +31,8 @@ module.exports = (grunt) ->
           "css/input/jquery.handsontable.full.css"
           "css/chardinjs/chardinjs.css"
           "css/SOCR_Tools_style.css"
+          "css/loading.css"
+          "bower_components/please-wait/build/please-wait.css"
         ]
         dest:"dist/app.css"
 

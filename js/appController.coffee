@@ -63,14 +63,6 @@ socr.controller = (model, view) ->
       return
 
 
-    $("#startApp").on "click", ->
-      console.log "Launch button clicked"
-      $("#welcome").animate
-        left: -2999
-      , 1000, "easeInCubic"
-      $("#main").css "visibility", "visible"
-      return
-
     $("#share-instance-button").on "click", ->
       $(".generate-response").html ""
       html = "<p>Dataset:<strong>" + model.getDataset() + "</strong></p>"
@@ -187,16 +179,13 @@ socr.controller = (model, view) ->
     $("#infer").on "click", (e) ->
       e.preventDefault()
 
-      #^^^^^create loading gif ^^^^^^^^
       if model.getSample(1) is false
         view.handleResponse "<h4 class=\"alert-heading\">No Random samples to infer From!</h4>Please generate some random samples. Click \"back\" button on the controller to go to the \"Generate Random Samples!\" button.", "error", "controller-content"
       else
-        setTimeout socr.controller.setDotplot, 50
+        PubSub.publish "showLoaderGif" 
         view.toggleControllerHandle "hide"
-        setTimeout (->
-          PubSub.publish "Dotplot generated"
-          return
-        ), 500
+        setTimeout socr.controller.setDotplot, 200
+                
       return
 
     $("#variable").on "change", ->
@@ -279,7 +268,6 @@ socr.controller = (model, view) ->
         _id = setInterval(_generate, 0)
         return
     #throw warning if datapoints cross threshold.
-    All the computation happens in the within the browser in this app. 
     if model.aboveThreshold() 
       $("<div></div>").appendTo("body").html("<div><h6>Caution: Your dataset and sample count selection may consume too much memory causing the tab to become unresponsive. Do you wish to continue?</h6></div>").dialog
         modal: true
@@ -366,6 +354,11 @@ socr.controller = (model, view) ->
       variable: $("#variable").val()
       precision: precision
       index: index
+    #setTimeout (->
+    #  PubSub.publish "Dotplot generated"
+    #  return
+    #), 500
+    PubSub.publish "removeLoaderGif" 
 
     return
 
