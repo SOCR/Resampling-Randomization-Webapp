@@ -12,9 +12,10 @@ To start off, we need to get data into the webapp.Currently data can be imported
 The goal of this project is to design a new, modern and portable SOCR web-app that demonstrates the concepts of statistical resampling, randomization and probabilistic simulation, which is purely based on HTML5, CSS3 and JavaScript framework. The implementation of this project demands platform portability, computational efficiency, usability (complete functionality via user-friendly modern interface), extensibility and ease of documentation, support and servicing to the entire community.
 
 - For more information regarding this project see [SOCR Wiki](http://wiki.stat.ucla.edu/socr/index.php/SOCR_Resampling_HTML5_Project)
-- The application is currently hosted [Here](http://socr.ucla.edu/htmls/HTML5/SOCR_Resampling_Webapp/) . Go ahead and give it a try. The application is optimized for mobile view. Please forword your feedbacks to @selvam1991
+- The application is currently hosted [at SOCR UCLA](http://socr.ucla.edu/htmls/HTML5/SOCR_Resampling_Webapp/) and [at SOCR UMich](http://socr.umich.edu/HTML5/Resampling_Webapp/). 
+- View the documentaiton and give the webapp a try. The application is optimized for mobile view. Please forword your feedbacks to @selvam1991
 
-##Installation##
+## Installation ##
 ### Local
 The application needs to be hosted in a server. 
 If you want to run it locally in your machine, just extract the source code from git and place it in the www folder of wamp OR you can use any other apache server.
