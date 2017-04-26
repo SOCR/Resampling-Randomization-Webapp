@@ -5,12 +5,12 @@ var http = require("http"),
 
 http.createServer(function(req,res){
 	temp = url.parse(req.url,true);
-	//console.log(temp.query);
+	console.log(temp);
 	req.url = req.url.split("/");
 	try{
-		if(temp.path !== "/"){
-			file=fs.readFileSync(temp.path.slice(1));
-			type=temp.path.split(".")[1];
+		if(temp.pathname !== "/"){
+			file=fs.readFileSync(temp.pathname.slice(1));
+			type=temp.pathname.split(".")[1];
 		}
 		else{
 			file=fs.readFileSync("index.html");
