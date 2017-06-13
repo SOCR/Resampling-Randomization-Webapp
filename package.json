@@ -4,13 +4,13 @@
     "start": "grunt;node server.js",
     "test": "grunt test"
   },
-  "version": "0.1.0-3",
+  "version": "0.1.1",
   "dependencies": {
     "es5-shim": "^4.5.9",
     "nodemon": "^1.11.0"
   },
   "engines": {
-    "node": "0.10.x"
+    "node": "0.12.18"
   },
   "analyze": false,
   "description": "A modern and portable SOCR web-app that demonstrates the concepts of statistical analysis such as resampling, randomization and probabilistic simulation",
@@ -32,7 +32,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/selvam1991/SOCR-Resampling-Randomization-Webapp.git"
+    "url": "https://github.com/SOCR/Resampling-Randomization-Webapp.git"
   },
   "keywords": [
     "socr",
@@ -42,6 +42,6 @@
   ],
   "license": "BSD",
   "bugs": {
-    "url": "https://github.com/selvam1991/SOCR-Resampling-Randomization-Webapp/issues"
+    "url": "https://github.com/SOCR/Resampling-Randomization-Webapp/issues"
   }
 }
