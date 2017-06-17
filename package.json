@@ -1,8 +1,8 @@
 {
   "author": "Selvam Palanimalai <selvam.palanimalai@gmail.com>, Ashwini Khare",
   "scripts": {
-    "start": "node_modules/grunt-cli/bin/grunt; node handler.js",
-    "test": "node_modules/grunt-cli/bin/grunt test"
+    "start": "./node_modules/grunt-cli/bin/grunt; node handler.js",
+    "test": "./node_modules/grunt-cli/bin/grunt test"
   },
   "version": "0.1.2",
   "dependencies": {
