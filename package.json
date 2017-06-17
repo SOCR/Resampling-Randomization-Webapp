@@ -4,7 +4,7 @@
     "start": "node_modules/grunt-cli/bin/grunt; node handler.js",
     "test": "node_modules/grunt-cli/bin/grunt test"
   },
-  "version": "0.1.1",
+  "version": "0.1.2",
   "dependencies": {
     "es5-shim": "^4.5.9",
     "express": "^4.15.3",
