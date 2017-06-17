@@ -25,5 +25,5 @@ app.get('/socr-dataset',function(req,res,next){
 		})
 	}
 });
-
+console.log("Server running at port 8000....");
 app.listen(8000)
