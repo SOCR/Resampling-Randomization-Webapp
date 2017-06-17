@@ -1,8 +1,8 @@
 {
   "author": "Selvam Palanimalai <selvam.palanimalai@gmail.com>, Ashwini Khare",
   "scripts": {
-    "start": "grunt;node server.js",
-    "test": "grunt test"
+    "start": "node_modules/grunt-cli/bin/grunt; node handler.js",
+    "test": "node_modules/grunt-cli/bin/grunt test"
   },
   "version": "0.1.1",
   "dependencies": {
@@ -12,7 +12,7 @@
     "request": "^2.81.0"
   },
   "engines": {
-    "node": "0.12.18"
+    "node": "4.0.0"
   },
   "analyze": false,
   "description": "A modern and portable SOCR web-app that demonstrates the concepts of statistical analysis such as resampling, randomization and probabilistic simulation",
@@ -23,10 +23,11 @@
   "name": "socr-randomization",
   "devDependencies": {
     "grunt": "~0.4.2",
-    "grunt-contrib-jasmine": "~0.6.1",
-    "grunt-contrib-jshint": "~0.8.0",
+    "grunt-cli": "^1.2.0",
     "grunt-contrib-coffee": "~0.10.0",
-    "grunt-contrib-concat": "~0.3.0"
+    "grunt-contrib-concat": "~0.3.0",
+    "grunt-contrib-jasmine": "1.1.0",
+    "grunt-contrib-jshint": "~0.8.0"
   },
   "main": "server.js",
   "directories": {
