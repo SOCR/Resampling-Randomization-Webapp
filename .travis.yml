@@ -2,4 +2,4 @@ language: node_js
 node_js:
       -  4.0.0
 install: npm install
-before_script: grunt build
+before_script: ./node_modules/grunt-cli/bin/grunt build
