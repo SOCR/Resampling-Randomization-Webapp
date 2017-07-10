@@ -11,9 +11,13 @@ socr.controller = (model, view) ->
 
   _id = 0 # Stores the id for setInterval in run mode
   _runsElapsed = 0 # Keeps count of number of resamples generated
+  _runCount = 0
   _this = this
   _noOfSteps = 0
   _currentMode = "Experiment" #App starts with dataDriven mode [default value]
+  
+  MIN_SAMPLE_GENERATION_STEP_COUNT = 100
+  MIN_SAMPLE_GENERATION_STEP_TIME = 10 # (in ms)
 
   # PRIVATE METHODS
 
@@ -22,13 +26,23 @@ socr.controller = (model, view) ->
   @description:   This function generates 1000 resamples by calling the generateSample() of model.
   @dependencies: generateSample()
   ###
-  _generate = ->
-    unless _runsElapsed is _noOfSteps
-      i = 1000
+  _generate = (count)->
+    # _temp = (model.get "stopCount")/ MIN_SAMPLE_GENERATION_STEP_COUNT
+    # _noOfSteps = Math.ceil(_temp)
+    console.log _runCount
+    if _runCount < model.get "stopCount"
+      _leftCount = model.get("stopCount") - _runCount
+      if _leftCount > MIN_SAMPLE_GENERATION_STEP_COUNT
+        i = MIN_SAMPLE_GENERATION_STEP_COUNT
+      else
+        i = _leftCount
+      _runCount += i
       model.generateSample()  while i--
+      # percent = Math.ceil((_runsElapsed / _noOfSteps) * 100)
       view.updateSlider()
-      _runsElapsed++
-      percent = Math.ceil((_runsElapsed / _noOfSteps) * 100)
+      # _runsElapsed++
+      console.log "runCount:" + _runCount
+      percent = Math.ceil(100 * _runCount / (model.get "stopCount") )
       view.updateStatus "update", percent
     else
       PubSub.publish "randomSampleGenerationComplete", {'sampleCount':model.getRSampleCount()}
@@ -256,16 +270,13 @@ socr.controller = (model, view) ->
   run: ->
     #this should go through model event.
     model.set "stopCount" , $("#countSize").val() #save the stopcount provided by user
-
     compute = ->
-        PubSub.publish "randomSampleGenerationStarted"
-        #generate samples
-        _temp = (model.get "stopCount" )/ 1000
-        _noOfSteps = Math.ceil(_temp)
-        d = Date()
-        console.log "start" + _runsElapsed + d
+        PubSub.publish "randomSampleGenerationStarted"        
+        # d = Date()
+        #console.log "start" + _runsElapsed + d
+        console.log "stop count: " + model.get "stopCount"
         _generate()
-        _id = setInterval(_generate, 0)
+        _id = setInterval(_generate, MIN_SAMPLE_GENERATION_STEP_TIME)
         return
     #throw warning if datapoints cross threshold.
     if model.aboveThreshold() 
@@ -305,6 +316,7 @@ socr.controller = (model, view) ->
     PubSub.publish "randomSampleGenerationStopped"
 
     clearInterval _id #stop the setinterval function
+    _runCount = 0
     _runsElapsed = 0 #reset the runelapsed count
     return
 
