@@ -206,10 +206,8 @@ socr.dataTable = function () {
                 $dataTable.handsontable('loadData', matrix);
 
             }).fail(function () {
-
-                view.displayResponse('There was an error loadin the dataset', 'error')
-
-            })
+                view.displayResponse('There was an error loading the dataset', 'error');
+            });
 
 
         },
@@ -217,8 +215,8 @@ socr.dataTable = function () {
         filterBySize: function (arrayOfTables) {
             var sizes = [];
             $(arrayOfTables).each(function (i) {
-                sizes.push([$(this).find('tr:last').index(), i])
-            })
+                sizes.push([$(this).find('tr:last').index(), i]);
+            });
             var maxIndex = 0;
             for (k = 0; k < sizes.length - 2; k++) {
                 if (sizes[k][0] < sizes[k + 1][0])
@@ -268,8 +266,8 @@ socr.dataTable = function () {
             return matrix;
         },
         /*
-      Setter-Getter for mode toggling
-      */
+        Setter-Getter for mode toggling
+        */
         mode: function (option) {
             if (arguments.length) {
                 method = option;
@@ -280,10 +278,10 @@ socr.dataTable = function () {
         switchMode: function () {
             $('#fetchinstant').click(function () {
                 tableparse.mode('sync');
-            })
+            });
             $('#fetchasync').click(function () {
                 tableparse.mode('async');
-            })
+            });
         }
 
 
@@ -381,10 +379,8 @@ socr.dataTable = function () {
             $.each(options.visible, function (k, v) {
                 $(v).show();
             });
-
         }
-
-    }
+    };
     /*
     Hookups for spreadsheet opterations
     */
@@ -786,7 +782,7 @@ socr.dataTable = function () {
             $('#worldbank-form').find('input[type="submit"]').attr('disabled', false);
             $('.worldbank-response').addClass('alert-error').html('There was an error requesting data');
         }
-    }
+    };
 
     $controls.find('input[value="Use Entire Dataset"]').on('click', spreadSheet.parseAll);
     $controls.find('.reset-spreadsheet').on('click', spreadSheet.reset);
@@ -799,7 +795,7 @@ socr.dataTable = function () {
     $dataTable.parent().on('mouseup', select.checkSelected);
     $('a.dragdrop').on('click', function () {
         $('#fetchURL').slideToggle();
-    })
+    });
 
     $controls.find('.edittitles').on('click', view.editTitles);
     $controls.find('.firstrowtitles').on('click', spreadSheet.firstRowTitles);
@@ -816,8 +812,7 @@ socr.dataTable = function () {
 
     });
 
-    // $('.handsontable').find('th').on('click', spreadSheet.setCol);
-    
+    // $('.handsontable').find('th').on('click', spreadSheet.setCol); 
 
     spreadSheet.init();
     dragdrop.init();
@@ -827,5 +822,5 @@ socr.dataTable = function () {
         spreadSheet: spreadSheet,
         view: view,
         worldbank : worldbank,
-    }
+    };
 }();
