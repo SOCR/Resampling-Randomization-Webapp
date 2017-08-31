@@ -155,7 +155,7 @@ socr.dataTable = function () {
             }
             //if (tableparse.checkRefer(url) === true) {
               if(true){
-                url = "http://"+window.location.host+window.location.pathname+"/handler.php?url="+url;
+                url = "http://"+window.location.host+window.location.pathname+"socr-dataset?url="+url;
                 tableparse.notify();
                 tableparse.request(url)
                 return true;
@@ -180,8 +180,7 @@ socr.dataTable = function () {
         request: function (uri) {
            console.log(uri); 
             $.get(uri, function (d) {
-                d = JSON.parse(d);
-                if(typeof d.status !== 'undefined' && d.status == 'failed'){
+                if(typeof d.status == 'undefined' || d.status == 'failed' || d.data == null){
                   view.displayResponse('There was no valid table in the input URL.', 'error');
                   return false;
                 }
@@ -191,9 +190,10 @@ socr.dataTable = function () {
                 }, 2000);
                 d = d.data;
                 var tableCount = $(d).is('table') ? $(d).length : $(d).find('table').length,
-                    tables = $(d).is('table') ? $(d) : $(d).find('table'),
-                    table = tableparse.filterBySize(tables),
-                    titles = tableparse.parseHeadings(table);
+                    tables = $(d).is('table') ? $(d) : $(d).find('table');
+                    
+                var table = tableparse.filterBySize(tables);
+                var titles = tableparse.parseHeadings(table);
                
                 matrix = tableparse.htmlToArray(table);
                
@@ -513,18 +513,28 @@ socr.dataTable = function () {
 
             if (select.isSelected()) {
                 var selectedCoords = select.isSelected();
-                
            //  Selected Cells:
            // [ startrow , startCol, endRow, endCol ]
           
             }
            // var ht = $dataTable.handsontable('getInstance');
            //      console.log(ht.getSelected());
-                console.log(selectedCoords);
-              if (selectedCoords) {
+            console.log("selected Coordinates:" + selectedCoords);
 
+            // selection exists
+            if (selectedCoords) {
                 console.log(' Select Data request with  ' + selectedCoords)
+
                 var dataset = $dataTable.handsontable('getData', selectedCoords[0], selectedCoords[1], selectedCoords[2], selectedCoords[3]);
+                var title = '';
+                // only 1 column selected
+                if(selectedCoords[1] == selectedCoords[3]){
+                    title = $dataTable.handsontable('getColHeader', selectedCoords[1])
+                } else {
+                // multiple columns selected
+                    title = $dataTable.handsontable('getColHeader', selectedCoords[1]) + "++"
+                }
+
                 $("#accordion").accordion("activate", 0);
 
                 //LoadController called once when 'proceed' is clicked.
@@ -545,14 +555,11 @@ socr.dataTable = function () {
                     //   type: 'getSelected',
                     //   processed: false
 
-                    //   });
-
-                    var title = '';
-                    if ($dataTable.find('th')) {
-                        title = $dataTable.find('th.active').text();
-                    }
-                    stage.addRow(dataset, title)
-                    console.log(title)
+                    //   });                    
+                    // if ($dataTable.find('th')) {
+                    //     title = $dataTable.find('th.active').text();
+                    // }
+                    stage.addRow(dataset, title)                    
                     view.displayResponse('Data added to staging, continue adding more data or select <strong>Proceed</strong>', 'success');
                     // if(controllerSliderState!=0)
                     // $(".controller-handle").trigger("click");

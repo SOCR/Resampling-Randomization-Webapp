@@ -57,7 +57,7 @@
 								<a id="more" href="#" role="button" class="dropdown-toggle" data-toggle="dropdown">MORE<b class="caret"></b></a>
 								<ul class="dropdown-menu" role="menu" aria-labelledby="more">
 									<li><a tabindex="-1" href="http://goo.gl/MNEi7" target="_blank">Screencasts</a></li>
-									<li><a tabindex="-1" href="https://github.com/SOCRedu/Resampling-Randomization-WebApp" target="_blank">Source Code</a></li>
+									<li><a tabindex="-1" href="https://github.com/SOCR/Resampling-Randomization-WebApp" target="_blank">Source Code</a></li>
 									<!--<li><a tabindex="-1" href="#share" data-toggle="modal">Buzz</a></li>
                   <li><a tabindex="-1" href="#generate-url" data-toggle="modal" id='share-instance-button'>Share Instance</a></li> -->
 								</ul>
@@ -122,16 +122,15 @@
 										</div>
 										<!--<input class="btn" type='button' value='Use Entire Dataset'>-->
 										
-										<a class="btn" id="submatrix_spreadsheet">Use Selected <i class="icon-question-sign popups" rel="popover" data-content="Select One Group at a time" data-original-title="Selected Groups"></i></a>
+										<a class="btn" id="submatrix_spreadsheet"> <i class="icon-plus"></i> Add as dataset (selection) </a>
+										<i class="icon-question-sign popups" rel="popover" data-content="Select One Group at a time" data-original-title="Selected Groups"></i>
 										<!--<input class="btn btn-danger" type='button' value='Reset'>-->
-										<a class="btn" id="spreadsheet_sort">Sort</a>
+										<a class="btn" id="spreadsheet_sort">Sort (column)</a>
 										<a class = "reset-spreadsheet btn btn-danger" ><i class="icon-refresh"></i></a>
 										<span class="response"></span>
 										<!--
 										Range : <input type="text" name="start" class="input-mini" placeholder="start"> - <input type="text" name="end" class="input-mini" placeholder="end">  
 										-->
-										 
-										<a class = "dragdrop btn btn-info" > Fetch from URL </a>
 										<input class="btn btn-inverse" type='button' value='Proceed'>
 										
 									</section>
@@ -141,7 +140,7 @@
 										<section id="fetchURL">
 											<form class="form-inline">	
 											<input type="url" name="urlbox" class="input-xlarge" placeholder="Enter URL">
-											<input type="submit" value="Submit" name="submit">
+											<input class="btn" type="submit" value="Submit" name="submit">
 											<!--<div class="btn-group" style="float:left;">
 												<a class="btn dropdown-toggle" data-toggle="dropdown" href="#" >Method<span class="caret"></span></a>
 												<ul class="dropdown-menu">
@@ -167,7 +166,7 @@
 								<section id="fetchURL">
 									<form class="form-inline">	
 									<input type="url" name="urlbox" class="input-xlarge" placeholder="Enter URL">
-									<input type="submit" value="Submit" name="submit">
+									<input class="btn" type="submit" value="Submit" name="submit">
 									<div class="btn-group">
 										<a class="btn dropdown-toggle" data-toggle="dropdown" href="#" >Choose <span class="caret"></span></a>
 										<ul class="dropdown-menu">
@@ -232,11 +231,11 @@
 							</section>
 							<section id="datadriven-stage">
 								<a class="btn splash-datadriven" href="#"><i class =" icon-circle-arrow-left"></i></a>
-								<input class="btn btn-inverse" value="Spreadsheet" type="Button">
+								<input class="btn" value="Spreadsheet" type="Button">
 								<a class="btn btn-danger reset-stage"><i class =" icon-refresh"></i></a>
 								<input class="btn btn-success staging-complete" value="Done" type="Button">
 								<div class ="page-header">
-									<h3> Staging<small> Selected dataset</small> </h3>
+									<h3> Dataset<small> Selected columns</small> </h3>
 								</div>
 								<div>
 									<table class="table table-bordered stage-list">
@@ -392,13 +391,13 @@
 				</div>
 				<div class="modal-body">
           <p>The goal of this project is to design a modern and portable SOCR web-app that demonstrates the concepts of statistical analysis such as resampling, randomization and probabilistic simulation and runs seamlessly across varied devices.</p>
-          <p> Current Version: <strong>1.0</strong> </p>
-          <p > Created by SOCR @ UMich . Code available under MIT Licence at <a href='https://github.com/SOCRedu/Resampling-Randomization-WebApp' target='_blank'>Github</a></p>
+          <p> Current Version: <strong>0.1.1</strong> </p>
+          <p > Created by SOCR @ UMich . Code available under MIT Licence at <a href='https://github.com/SOCR/Resampling-Randomization-WebApp' target='_blank'>Github</a></p>
           <br/>
-          <p class='fine-print'> Please send an email to selvam1991@gmail.com to report bugs.</p>
+          <p class='fine-print'> Please send an email to selvam.palanimalai@gmail.com to report bugs.</p>
 				</div>
 				<div class="modal-footer">
-          <a href="http://socr.ucla.edu" class="btn btn-primary"><i class='icon-home'></i> SOCR Home</a>
+          <a href="http://socr.umich.edu" class="btn btn-primary"><i class='icon-home'></i> SOCR Home</a>
 				</div>
 			</div>
 			<div id='simulationDesc' class="modal hide fade">

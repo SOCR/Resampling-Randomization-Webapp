@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/SOCR/Resampling-Randomization-Webapp.svg?branch=master)](https://travis-ci.org/SOCR/Resampling-Randomization-Webapp)
 
 A modern and portable SOCR web-app that demonstrates the concepts of statistical analysis such as resampling, randomization and probabilistic simulation.
 
@@ -13,34 +14,39 @@ The goal of this project is to design a new, modern and portable SOCR web-app th
 
 - For more information regarding this project see [SOCR Wiki](http://wiki.stat.ucla.edu/socr/index.php/SOCR_Resampling_HTML5_Project)
 - The application is currently hosted [at SOCR UCLA](http://socr.ucla.edu/htmls/HTML5/SOCR_Resampling_Webapp/) and [at SOCR UMich](http://socr.umich.edu/HTML5/Resampling_Webapp/). 
-- View the documentaiton and give the webapp a try. The application is optimized for mobile view. Please forward your feedbacks to @chartotu19
+
 
 ## Installation ##
-### Local
-The application needs to be hosted on a server. 
-If you want to run it locally in your machine, just extract the source code from git and place it in the www folder of wamp OR you can use any other apache server.
-Incase of deploying it to a hosted server, just pull all the code into the server and run the index.html. For example, If I need to host the application at www.mydomain.com/app , then place the code in the app/ folder in the server and you are good to go!
 
-### Cloud (using nodejitsu)
+- clone source code 
+```
+git clone git@github.com:SOCR/Resampling-Randomization-Webapp.git
+```
+- install node and npm ( if you have it already, skip this step).
+```
+curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.2/install.sh | bash
+nvm install 0.12.18
+```
+The above commands will install node v0.12.18 and use the corresponding npm v2.15.11	
 
-Create an account in [nodejitsu](nodejitsu.com). There is a 30 day trial version available.
-Clone the repo to your machine and edit the package.json file(optional) according to your own preferences.
-From your terminal, run:
+- install grunt-cli and forever.
+```
+npm install grunt-cli -g
+npm install forever -g
+```
 
-	jitsu login
+- Start the server.
+```
+forever start server.js
+```
+- Visit http://localhost:8000/
 
-You will be prompted to enter your nodejitsu login credentials.
-Navigate to the folder where you have cloned the repo. And run :
-
-	jitsu deploy
-
-Nodejitsu will deploy the application to the cloud using the package.json configuration file. The application needs a start script. In our case, its server.js which creates the node server. This detail is already present in the package.json.
-You will find the deployed url printed on the console itself and also in your nodejitsu account page.
-
-## Development 
-We decided to use the most widely used software design pattern; MVC. Model-View-Controller categorizes the code into logical sections. The business logic resides in the model, in our case the calculation, manipulation, generation happens inside the model.
+## Development and Contiribution 
+We use MVCk Model-View-Controller, to categorize the code into logical sections. The business logic resides in the model, in our case the calculation, manipulation, generation happens inside the model.
 View prepares the look and feel of the UI components. Controller acts as the glue between view and controller.
 - [App Structure](https://github.com/selvam1991/SOCR-Resampling-Randomization-Webapp/wiki)
+
+Please contact any member of the SOCR team for any further questions or file an issue on github and tag members.
 
 ## Technologies 
 

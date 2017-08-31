@@ -605,7 +605,7 @@ socr.view = (model) ->
     Array.min = (array) ->
       Math.min.apply Math, array
 
-
+    setting.index--;
     #setting.variable;
     switch setting.variable
       when "Mean"
