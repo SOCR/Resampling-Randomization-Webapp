@@ -29,15 +29,14 @@ nvm install 0.12.18
 ```
 The above commands will install node v0.12.18 and use the corresponding npm v2.15.11	
 
-- install grunt-cli and forever.
+- install grunt-cli  
 ```
 npm install grunt-cli -g
-npm install forever -g
 ```
 
 - Start the server.
 ```
-forever start server.js
+npm start
 ```
 - Visit http://localhost:8000/
 
