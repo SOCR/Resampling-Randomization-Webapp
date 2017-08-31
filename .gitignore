@@ -1,4 +1,5 @@
 node_modules
+npm-debug.log
 test/npm-debug.log
 js/appController.js
 js/appData.js
