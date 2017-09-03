@@ -9,8 +9,7 @@
     <meta name="author" content="selvam,ashwini,ivo">
     <meta http-equiv="X-UA-Compatible" content="IE=9; IE=8;" />
 
-    <!-- head.js ... its a javascript loader tool -->
-    <script src="js/lib/head.min.js"></script>
+    <script src="dist/bundle.js"></script>
     <script type="text/javascript" src="bower_components/please-wait/build/please-wait.min.js"></script>
 
     <!-- Le styles -->
@@ -482,45 +481,7 @@
 		console.error = console.error || function(){};
 		console.info = console.info || function(){};
 
-    head.js("js/init.js",
-    		"js/lib/jquery.min.js",
-    		"js/lib/async.js",
-            "js/bootstrap/bootstrap.min.js",
-			{coreFunctions:"js/exp/core.js"},
-			{binomialCoin:"js/exp/binomialCoin.js"},
-			{ballAndUrn:"js/exp/ballAndUrn.js"},
-			{cardExp:"js/exp/cardExp.js"},
-			{betaBinomial:"js/exp/betaBinomial.js"},
-            {inputTile:"js/input/inputtable.js"},
-			{Model:"js/appModel.js"},
-			{View:"js/appView.js"},
-			{Controller:"js/appController.js"},
-			"js/lib/jquery-ui.min.js",
-			{D3:"js/vis/d3.v2.min.js"},
-			"js/vis/vis.js",
-			"js/jquery.paginate.js",
-			"js/update.js",
-			"js/lib/jtweet/jquery.jtweetsanywhere-1.3.1.min.js",
-			"js/lib/jquery.transit.min.js",
-			"js/lib/jquery.easing.1.3.js",
-            "js/lib/jquery.pubsub.js",
-            "js/lib/jquery.handsontable.full.js",
-			"js/input/data.js",
-			"js/input/worldbank.js",
-			"js/vis/tooltip.js",
-			"js/tools/FCal.js",
-			"js/tools/ZCal.js",
-            "js/lib/mustache/mustache.js",
-            "js/lib/chardinjs/chardinjs.min.js",
-            "js/tutorial/tutorial.js",
-            "js/utils.js",
-            "js/appData.js",
-            "js/bootstrap/bootstrapSwitch.js",
-            "js/config.js",
-            "js/bootstrap/bootstrap.min.js"
-	    	);
-    
-	head.ready(function () {
+	$(document).ready(function () {
 
 		var url = window.location.href;
 		var baseUrl = url.substring(0, url.indexOf('index.html'));

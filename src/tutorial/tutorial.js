@@ -19,7 +19,7 @@ socr.tutorial=(function(){
         "Dotplot generated":["#dotplot"]
 	};
 	var _data ;
-	$.getJSON("js/tutorial/tutorial-data.json").success(
+	$.getJSON("dist/tutorial/tutorial-data.json").success(
 		function(data){
 			socr.tutorial.setData(data)
 		}

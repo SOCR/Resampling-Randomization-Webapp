@@ -7,13 +7,15 @@ module.exports = (grunt) ->
     coffee:
       compile:
         files:
-          "js/appController.js": "js/appController.coffee"
-          "js/appModel.js": "js/appModel.coffee"
-          "js/appView.js": "js/appView.coffee"
-          "js/appData.js": "js/appData.coffee"
-
           "test/spec/modelSpec.js": "test/spec/modelSpec.coffee"
           "test/spec/dataSpec.js": "test/spec/dataSpec.coffee"
+      glob_to_multipe:
+        # options:
+          # sourceMap: true
+        expand: true
+        src: ['src/*.coffee']
+        dest: 'build/'
+        ext: '.js'
 
     concat:
       css:
@@ -35,7 +37,64 @@ module.exports = (grunt) ->
           "bower_components/please-wait/build/please-wait.css"
         ]
         dest:"dist/app.css"
-
+      js:
+        src:[
+          "src/init.js"
+          "src/lib/jquery.min.js"
+          "src/lib/async.js"
+          "src/bootstrap/bootstrap.min.js"
+          "src/exp/core.js"
+          "src/exp/binomialCoin.js"
+          "src/exp/ballAndUrn.js"
+          "src/exp/cardExp.js"
+          "src/exp/betaBinomial.js"
+          "src/input/inputtable.js"
+          "build/src/appModel.js"
+          "build/src/appView.js"
+          "build/src/appController.js"
+          "build/src/appData.js"
+          "src/lib/jquery-ui.min.js"
+          "src/vis/d3.v2.min.js"
+          "src/vis/vis.js"
+          "src/jquery.paginate.js"
+          "src/update.js"
+          "src/lib/jtweet/jquery.jtweetsanywhere-1.3.1.min.js"
+          "src/lib/jquery.transit.min.js"
+          "src/lib/jquery.easing.1.3.js"
+          "src/lib/jquery.pubsub.js"
+          "src/lib/jquery.handsontable.full.js"
+          "src/input/data.js"
+          "src/input/worldbank.js"
+          "src/vis/tooltip.js"
+          "src/tools/FCal.js"
+          "src/tools/ZCal.js"
+          "src/lib/mustache/mustache.js"
+          "src/lib/chardinjs/chardinjs.min.js"
+          "src/tutorial/tutorial.js"
+          "src/utils.js"          
+          "src/bootstrap/bootstrapSwitch.js"
+          "src/config.js"
+          "src/bootstrap/bootstrap.min.js"
+        ]
+        dest:"dist/bundle.js"
+    copy:
+      main:
+        files:[
+          { 
+            expand: true
+            cwd: 'src'
+            src: ['exp/*']
+            dest: 'dist/'
+            filter: 'isFile'
+          }
+          {
+            expand: true
+            cwd: 'src'
+            src:'tutorial/tutorial-data.json'
+            dest:'dist/'
+            filter: 'isFile'
+          }
+        ]
 
     jasmine:
       #ideally the src should concatenated files.
@@ -52,10 +111,11 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks "grunt-contrib-jshint"
   grunt.loadNpmTasks "grunt-contrib-coffee"
   grunt.loadNpmTasks "grunt-contrib-concat"
+  grunt.loadNpmTasks "grunt-contrib-copy"
 
   # Default task(s).
-  grunt.registerTask "build" , ["coffee","concat"]
+  grunt.registerTask "build", ["coffee","concat"]
   grunt.registerTask "compile", ["coffee"]
   grunt.registerTask "test", ["coffee","jasmine"]
-  grunt.registerTask "default", ["coffee","concat"]
+  grunt.registerTask "default", ["coffee","concat","copy"]
 
