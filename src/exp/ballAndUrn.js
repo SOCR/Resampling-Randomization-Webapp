@@ -189,7 +189,7 @@ return{
 
 	createControllerView:function(){
 		console.log("createControllerView for Ball and Urn executed!");
-		$.get("partials/exp/ballAndUrn.tmpl",function(data){
+		$.get("dist/partials/exp/ballAndUrn.tmpl",function(data){
 			var config = {};
 			var html = Mustache.render(data,config);
 			$('#controller-content').delay(1000).html(html);

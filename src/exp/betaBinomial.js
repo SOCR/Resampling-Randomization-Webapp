@@ -129,7 +129,7 @@ socr.exp.betaBinomial = function(){
 		createControllerView:function(){
 			config={};
 			console.log("createControllerView for betaBinomial executed!");
-			$.get("partials/exp/betaBinomial.tmpl",function(data){
+			$.get("dist/partials/exp/betaBinomial.tmpl",function(data){
             	var temp = Mustache.render(data,config);
             	$("#controller-content").delay(1000).html(temp);
 				$('.popups').popover();

@@ -17,7 +17,12 @@ socr.model = ->
   # Why there are keys and values? Its because in some form of data input (like coin toss), the "key" contains the symbolic meaningful reference whereas the "value" contains the mathematical equivalent value.
   
   _kvStore = {}
-
+  _inferenceSettings =
+    analysis: null
+    variable: null
+    precision: null
+    index: null
+  
   _stopCount = 1000
   _count = 0
   _n = []
@@ -920,4 +925,17 @@ socr.model = ->
     console.log "aboveThreshold : "+_sum
     return (_sum > MEM_THRESHOLD)
 
+  setInferenceSettings: (setting)->
+    if setting.variable? or setting.precision? or ( setting.index? and !isNaN(setting.index))
+      _inferenceSettings = 
+          analysis: setting.analysis
+          variable: setting.variable
+          precision: setting.precision
+          index: setting.index
+      PubSub.publish "setInferenceSettingComplete", _inferenceSettings
+      return true
+    else
+      throw new Error("Incorrect arguments")
+  getInferenceSettings: ->
+    _inferenceSettings
 #return

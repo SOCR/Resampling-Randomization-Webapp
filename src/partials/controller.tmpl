@@ -1,42 +1,45 @@
-<h5>STEP 1 -> Choose an Analysis:</h5>
-<select id="analysis">
-    {{#analysis}}
-    <option value="{{.}}">{{.}}</option>
-    {{/analysis}}
-</select>
-<h5>STEP 2 -> Generate Random Samples :</h5>
-<div id="buttonPanel">
-    <a href="#" class="tooltips" rel="tooltip" title="Step">
-        <button class="btn" type="button" id="stepButton" tabindex="1" title="Step">
-            <i class="icon-step-forward"></i>
-        </button>
-    </a>
-    <a href="#" class="tooltips" rel="tooltip" title="Run">
-        <button class="btn btn-success" type="button" id="runButton" tabindex="2" title="Run" >
-            <i class="icon-fast-forward"></i>
-        </button>
-    </a>
-    <a href="#" class="tooltips" rel="tooltip" title="Stop">
-        <button class="btn btn-danger" type="button" id="stopButton" tabindex="3" title="Stop" >
-            <i class="icon-stop" ></i>
-        </button>
-    </a>
-    <a href="#" class="tooltips" rel="tooltip" title="Reset">
-        <button class="btn" type="button" id="resetButton" tabindex="4" title="Reset" >
-            <i class="icon-refresh" ></i>
-        </button>
-    </a>
-    <span>
-        <i class="icon-question-sign controller-popups" rel="popover" data-content="<ul><li>Step Button : generates 1 sample</li><li>Run Button : generates X sample..X can be set from the option below</li><li>Stop Button :Stops the sample generation</li><li>Reset Button : Resets all values</li></ul>" data-original-title="Controls"></i>
-    </span>
-    &nbsp;&nbsp;
-    {{#showBack}}
+{{#showBack}}
     <a href="#">
         <button class="btn controller-back">
             Back <i class="icon-arrow-left" ></i>
         </button>
     </a>
     {{/showBack}}
+<h5>STEP 1 : Choose an analysis to perform.</h5>
+<select id="analysis">
+    {{#analysis}}
+    <option value="{{.}}">{{.}}</option>
+    {{/analysis}}
+</select>
+<h5>STEP 2 : Generate random samples from selected datasets.</h5>
+<div id="buttonPanel">
+    <a href="#" class="tooltips" rel="tooltip" title="Step">
+        <button class="btn" type="button" id="stepButton" tabindex="1" title="Step">
+            <!-- <i class="icon-step-forward"></i> -->
+            1 Sample
+        </button>
+    </a>
+    <a href="#" class="tooltips" rel="tooltip" title="Run">
+        <button class="btn btn-success" type="button" id="runButton" tabindex="2" title="Run" >
+            <!-- <i class="icon-fast-forward"></i> -->
+            ... Samples
+        </button>
+    </a>
+    <a href="#" class="tooltips" rel="tooltip" title="Stop">
+        <button class="btn btn-danger" type="button" id="stopButton" tabindex="3" title="Stop" >
+            <!-- <i class="icon-stop" ></i> -->
+            Stop
+        </button>
+    </a>
+    <a href="#" class="tooltips" rel="tooltip" title="Reset">
+        <button class="btn" type="button" id="resetButton" tabindex="4" title="Reset" >
+            <i class="icon-refresh" ></i> Reset
+        </button>
+    </a>
+    <span>
+        <i class="icon-question-sign controller-popups" rel="popover" data-content="<ul><li>Step Button : generates 1 sample</li><li>Run Button : generates X sample..X can be set from the option below</li><li>Stop Button :Stops the sample generation</li><li>Reset Button : Resets all values</li></ul>" data-original-title="Controls"></i>
+    </span>
+    &nbsp;&nbsp;    
 </div>
 
 {{#animationSpeed}}
@@ -58,7 +61,7 @@
     <span>Datapoint per sample.</span>
     <br>
 </div>
-<h5>STEP 3 -> Choose an Inference :</h5>
+<h5>STEP 3: Choose an inference </h5>
 <div class="inference-variable">
     <form class="form form-inline">
         <select id="variable" style="width:30%">

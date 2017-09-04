@@ -52,7 +52,7 @@ socr.view = (model) ->
       config.entries.push obj
       obj = {} #destroying the object
       i++
-    $.get "partials/sampleList.tmpl", (data) ->
+    $.get "dist/partials/sampleList.tmpl", (data) ->
       temp = Mustache.render(data, config)
       $("#sampleList").html temp
 
@@ -238,7 +238,6 @@ socr.view = (model) ->
       socr.view.showSampleListLoader()
       socr.view.updateStatus "started"
 
-
     PubSub.subscribe "randomSampleGenerationComplete", (msg,data)->
       #updating controller view slider
       socr.view.updateCtrlMessage "samples generated sucessfully.", "success", 2000
@@ -256,6 +255,10 @@ socr.view = (model) ->
     PubSub.subscribe "toggleLoadingSpinner" ,(msg,data)->
       socr.view.toggleLoadingSpinner(data)
 
+    PubSub.subscribe "setInferenceSettingComplete", (msg, data)=>
+      socr.view.createDotplot data
+      socr.view.updateSimulationInfo()
+    return true
   toggleControllerHandle: (action) ->
     console.log action
     $target = $("#slide-out-controller")
@@ -326,29 +329,40 @@ socr.view = (model) ->
   ###
   @method - reset()
   @description: Clears all canvas and div. Resetting the view of the whole App
-  @dependencies : none
+  @parameter scope - Array
   ###
-  reset: (option) ->
-
-    #reset only the samples in the view.
-    if option isnt "undefined" and option is "samples"
-      $("#sampleList").html ""
-    else
-
-      #$('#displayCount').html('0');  //resetting the count to 0
+  reset: (scope=["app"]) ->
+    _resetSampleScope = ->
       $("#sampleList").html "" #clear the sample List dive
       $("#showCount").html ""
       socr.view.updateSlider()
+      $(".pagination").html ""
+
+    _resetDataScope = ->
       $("#dataPlot").html "" #clear dataPlot div
       $("#dotplot").empty() #clear dotPlot div
+    _resetAccordion = ->
       $("#accordion").accordion "activate", 0
-      $(".pagination").html ""
       $("#details").html ""
-      $("#dataset").html ""
-
-      # $("#input").inputtable('clear');
-      _currentValues = []
-      $("#controller-content").html "<div class=\"alert alert-error\">From the \"data driven\" tab select an experiment  or enter data the spreadsheet first!</div>"
+    
+    scope.forEach (s)->
+      switch
+        when s is "sampleslistview" 
+          $("#sampleList").html ""
+        when s is "randomsamples"
+          _resetSampleScope()
+          _resetDataScope()
+          _resetAccordion()
+        when s is "app"
+          _resetSampleScope()
+          _resetDataScope()
+          _resetAccordion()
+          _currentValues = []
+          $("#controller-content").html "<div class=\"alert alert-error\">From the \"Input\" tab, select an experiment  or enter sample data!</div>"
+        else
+          echo "."
+      #$('#displayCount').html('0');  //resetting the count to 0
+      # $("#input").inputtable('clear');      
     return
 
 
@@ -477,7 +491,7 @@ socr.view = (model) ->
       index: _indexes
       showBack: showBack
 
-    $.get "partials/controller.tmpl", (data) ->
+    $.get "dist/partials/controller.tmpl", (data) ->
       _output = Mustache.render(data, config)
       $("#controller-content").html _output
       socr.controller.initController()
@@ -592,7 +606,7 @@ socr.view = (model) ->
   @return : {boolean}
   ###
   createDotplot: (setting) ->
-    return false  unless setting.variable?
+    throw new Error("invalid arguments: settings")  unless setting.variable?
     _currentVariable = setting.variable
     $("#accordion").accordion "activate", 2
 
@@ -759,7 +773,7 @@ socr.view = (model) ->
     #        }
     @updateCtrlMessage "Infer plot created.", "success"
     true
-
+    PubSub.publish "toggleLoadingSpinner" ,{action:'hide'}
 
   ###
   @method updateSimulationInfo
@@ -775,12 +789,13 @@ socr.view = (model) ->
       catch e
         name = "Data Driven Experiment"
     config =
+      variable: socr.model.getInferenceSettings()['variable']
+      analysis: socr.model.getInferenceSettings()['analysis']
       name: name
       k: socr.model.getK()
       groups: []
       results: []
       rCount: model.getRSampleCount()
-
 
     #adding results
     if config.k > 1
@@ -805,9 +820,9 @@ socr.view = (model) ->
       i++
 
     #console.log(config);
-    $.get "partials/info.tmpl", ((data) ->
-      temp = Mustache.render(data, config)
-      $("#details").html temp
+    $.get "dist/partials/info.tmpl", ((data) ->
+      htmlContent = Mustache.render(data, config)
+      $("#details").html htmlContent
       return
     ),"html"
 

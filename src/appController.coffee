@@ -194,7 +194,7 @@ socr.controller = (model, view) ->
       e.preventDefault()
 
       if model.getSample(1) is false
-        view.handleResponse "<h4 class=\"alert-heading\">No Random samples to infer From!</h4>Please generate some random samples. Click \"back\" button on the controller to go to the \"Generate Random Samples!\" button.", "error", "controller-content"
+        view.handleResponse "<h4 class=\"alert-heading\">No Random samples to infer From!</h4>Please generate some random samples in Step 2. ", "error", "controller-content"
       else
         view.toggleControllerHandle "hide"
         PubSub.publish "toggleLoadingSpinner" ,{action:'show'}
@@ -248,7 +248,7 @@ socr.controller = (model, view) ->
     try
       model.generateSample() #generate one sample
       $(".removable").remove() #remove the previously generated canvas during animation
-      PubSub.publish "randomSampleGenerationComplete"
+      PubSub.publish "randomSampleGenerationComplete", {'sampleCount':model.getRSampleCount()}
     catch e
       console.log e
     view.enableButtons()
@@ -313,7 +313,7 @@ socr.controller = (model, view) ->
     d = Date()
     console.log "end" + _runsElapsed + d
 
-    PubSub.publish "randomSampleGenerationStopped"
+    PubSub.publish "randomSampleGenerationStopped", {}
 
     clearInterval _id #stop the setinterval function
     _runCount = 0
@@ -359,20 +359,12 @@ socr.controller = (model, view) ->
     precision = $('#result-precision').attr('checked')
     if precision is "checked"
       precision = 3
-    #create dotplot
-    console.log "setdotplot started"
-    console.log "variable:" + $("#variable").val()
-    view.createDotplot
+    console.log "setdotplot started", "variable:" + $("#variable").val()
+    model.setInferenceSettings
+      analysis: $("#analysis").val()
       variable: $("#variable").val()
       precision: precision
       index: index
-    #setTimeout (->
-    #  PubSub.publish "Dotplot generated"
-    #  return
-    #), 500
-    PubSub.publish "toggleLoadingSpinner" ,{action:'hide'}
-
-
     return
 
   ###
