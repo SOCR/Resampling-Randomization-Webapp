@@ -94,6 +94,13 @@ module.exports = (grunt) ->
             dest:'dist/'
             filter: 'isFile'
           }
+          {
+            expand: true
+            cwd: 'src'
+            src:'partials/**/*'
+            dest:'dist/'
+            filter: 'isFile'
+          }
         ]
 
     jasmine:
