@@ -142,7 +142,7 @@ return{
  	},
 	createControllerView:function(){
 		//console.log("createControllerView for binomialCoin executed!");
-		$.get("partials/exp/binomialCoin.tmpl",function(data){
+		$.get("dist/partials/exp/binomialCoin.tmpl",function(data){
             var config = {};
             var html = Mustache.render(data,config);
 			$('#controller-content').delay(1000).html(html);

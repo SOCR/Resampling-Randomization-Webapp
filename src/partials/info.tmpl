@@ -1,0 +1,35 @@
+<div id="details">
+    <table class="table table-striped">
+        <tbody>
+        <tr>
+            <td>Experiment Name</td>
+            <td><strong>{{name}}</strong></td>
+        </tr>
+        {{#results}}
+        <tr>
+            <td>{{param}}</td>
+            <td>{{value}}</td>
+        </tr>
+        {{/results}}
+        <tr>
+            <td>K</td>
+            <td><strong>{{k}}</strong></td>
+        </tr>
+        {{#groups}}
+        <tr>
+            <td>DataSet Size of K = {{number}}</td>
+            <td><strong>{{size}}</strong></td>
+        </tr>
+        <tr>
+            <td>DataSet Mean of K = {{number}} </td>
+            <td><strong>{{mean}}</strong></td>
+        </tr>
+        {{/groups}}
+        <tr>
+            <td>Number of Random Samples : </td>
+            <td><strong>{{rCount}}</strong></td>
+        </tr>
+
+        </tbody>
+    </table>
+</div>

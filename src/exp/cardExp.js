@@ -135,7 +135,7 @@ return{
 	createControllerView:function(){
 		console.log("createControllerView for socr.exp.cardExp executed!");
 		config={};
-		$.get("partials/exp/cardExp.tmpl",function(data){
+		$.get("dist/partials/exp/cardExp.tmpl",function(data){
 			var config = {};
             var html = Mustache.render(data,config);
 			$('#controller-content').delay(1000).html(html);
