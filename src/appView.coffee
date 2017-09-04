@@ -790,6 +790,7 @@ socr.view = (model) ->
         name = "Data Driven Experiment"
     config =
       variable: socr.model.getInferenceSettings()['variable']
+      analysis: socr.model.getInferenceSettings()['analysis']
       name: name
       k: socr.model.getK()
       groups: []

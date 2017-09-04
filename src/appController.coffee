@@ -361,6 +361,7 @@ socr.controller = (model, view) ->
       precision = 3
     console.log "setdotplot started", "variable:" + $("#variable").val()
     model.setInferenceSettings
+      analysis: $("#analysis").val()
       variable: $("#variable").val()
       precision: precision
       index: index

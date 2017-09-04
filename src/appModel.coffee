@@ -18,6 +18,7 @@ socr.model = ->
   
   _kvStore = {}
   _inferenceSettings =
+    analysis: null
     variable: null
     precision: null
     index: null
@@ -927,6 +928,7 @@ socr.model = ->
   setInferenceSettings: (setting)->
     if setting.variable? or setting.precision? or ( setting.index? and !isNaN(setting.index))
       _inferenceSettings = 
+          analysis: setting.analysis
           variable: setting.variable
           precision: setting.precision
           index: setting.index
