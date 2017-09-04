@@ -1,4 +1,6 @@
 [![Build Status](https://travis-ci.org/SOCR/Resampling-Randomization-Webapp.svg?branch=master)](https://travis-ci.org/SOCR/Resampling-Randomization-Webapp)
+[![GitHub issues](https://img.shields.io/github/issues/SOCR/Resampling-Randomization-Webapp.svg)](https://github.com/SOCR/Resampling-Randomization-Webapp/issues)
+[![Twitter](https://img.shields.io/twitter/url/https/github.com/SOCR/Resampling-Randomization-Webapp/.svg?style=social)](https://twitter.com/intent/tweet?text=Checkout%20UMich%20SOCR%20Resampling-Randomization-Webapp%20http://socr.umich.edu/HTML5/Resampling_Webapp/&url=%5Bobject%20Object%5D)
 
 A modern and portable SOCR web-app that demonstrates the concepts of statistical analysis such as resampling, randomization and probabilistic simulation.
 
@@ -25,9 +27,9 @@ git clone git@github.com:SOCR/Resampling-Randomization-Webapp.git
 - install node and npm ( if you have it already, skip this step).
 ```
 curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.2/install.sh | bash
-nvm install 0.12.18
+nvm install 7.1.0
 ```
-The above commands will install node v0.12.18 and use the corresponding npm v2.15.11	
+The above commands will install node v7.1.0 and use the corresponding npm v4.2.0	
 
 - install grunt-cli  
 ```
@@ -40,19 +42,17 @@ npm start
 ```
 - Visit http://localhost:8000/
 
+- To run test cases.
+```
+npm test
+```
+
 ## Development and Contiribution 
-We use MVCk Model-View-Controller, to categorize the code into logical sections. The business logic resides in the model, in our case the calculation, manipulation, generation happens inside the model.
+We use MVC Model-View-Controller, to categorize the code into logical sections. The business logic resides in the model, in our case the calculation, manipulation, generation happens inside the model.
 View prepares the look and feel of the UI components. Controller acts as the glue between view and controller.
 - [App Structure](https://github.com/selvam1991/SOCR-Resampling-Randomization-Webapp/wiki)
 
 Please contact any member of the SOCR team for any further questions or file an issue on github and tag members.
-
-## Technologies 
-
-The frontend of application has heavy usage of Twitter Bootstap v2.2. The backend JS code is primarily vanilla with certain specific libraries to augument the functionality of the app.
-* [head.js](http://headjs.com/)
-* [JQuery](http://jquery.com)
-* [D3.js](http://d3js.org)
 	
 ### Copyright and License 
 
