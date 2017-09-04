@@ -12,6 +12,14 @@
     {{/analysis}}
 </select>
 <h5>STEP 2 : Generate random samples from selected datasets.</h5>
+<div class="tool number-rs">
+    <span>Generate</span>
+    <input type="text" id="countSize" class="input-mini" value="1000">
+    <span>Samples with </span>
+    <a data-toggle="modal" href="#setN"><button class="controller-popups btn">Set</button></a></li>
+    <span>Datapoint per sample.</span>
+    <br>
+</div>
 <div id="buttonPanel">
     <a href="#" class="tooltips" rel="tooltip" title="Step">
         <button class="btn" type="button" id="stepButton" tabindex="1" title="Step">
@@ -22,7 +30,7 @@
     <a href="#" class="tooltips" rel="tooltip" title="Run">
         <button class="btn btn-success" type="button" id="runButton" tabindex="2" title="Run" >
             <!-- <i class="icon-fast-forward"></i> -->
-            ... Samples
+            Generate
         </button>
     </a>
     <a href="#" class="tooltips" rel="tooltip" title="Stop">
@@ -37,7 +45,7 @@
         </button>
     </a>
     <span>
-        <i class="icon-question-sign controller-popups" rel="popover" data-content="<ul><li>Step Button : generates 1 sample</li><li>Run Button : generates X sample..X can be set from the option below</li><li>Stop Button :Stops the sample generation</li><li>Reset Button : Resets all values</li></ul>" data-original-title="Controls"></i>
+        <i class="icon-question-sign controller-popups" rel="popover" data-content="<ul><li>1 Sample : generates 1 randome sample</li><li>Generate : generates the number of samples set in the field above.</li><li>Stop :Stops the sample generation</li><li>Reset : Resets ALL data values</li></ul>" data-original-title="Controls"></i>
     </span>
     &nbsp;&nbsp;    
 </div>
@@ -52,15 +60,6 @@
     <div id="speed-selector"></div>
 </div>
 {{/animationSpeed}}
-
-<div class="tool number-rs">
-    <span>Generate</span>
-    <input type="text" id="countSize" class="input-mini" value="1000">
-    <span>Samples with </span>
-    <a data-toggle="modal" href="#setN"><button class="controller-popups btn">Set</button></a></li>
-    <span>Datapoint per sample.</span>
-    <br>
-</div>
 <h5>STEP 3: Choose an inference </h5>
 <div class="inference-variable">
     <form class="form form-inline">
