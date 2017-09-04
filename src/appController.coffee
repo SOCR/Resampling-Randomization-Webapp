@@ -182,6 +182,7 @@ socr.controller = (model, view) ->
       e.preventDefault()
       console.log "Stop Pressed "
       socr.controller.stop()
+      PubSub.publish "randomSampleGenerationInterrupted", {}
       return
 
     $("#resetButton").on "click", (e) ->

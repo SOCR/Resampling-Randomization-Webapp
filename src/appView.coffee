@@ -226,10 +226,13 @@ socr.view = (model) ->
     PubSub.subscribe "randomSampleGenerationStopped", (msg,data) ->
       socr.view.enableButtons() #enable buttons
       socr.view.updateSlider()
+      # socr.view.updateCtrlMessage "Generation stopped.", "error", 1000
+      # socr.view.updateStatus "interrupted"
+      # socr.view.updateSimulationInfo()
 
     PubSub.subscribe "randomSampleGenerationInterrupted", (msg,data) ->
       socr.view.enableButtons() #enable buttons
-      socr.view.updateSlider()
+      socr.view.updateSlider(true)
       socr.view.updateStatus "interrupted"
       socr.view.updateCtrlMessage "Generation interrupted.", "error", 1000
 
@@ -244,13 +247,7 @@ socr.view = (model) ->
       socr.view.updateStatus "finished"
       socr.view.updateSimulationInfo()
       #updating samplelist view
-      socr.view.updateSlider()
-      start = Math.floor(data['sampleCount']* 0.5)
-      end = data['sampleCount']
-      $("#showCount").html start + " - " + end
-      $(".show-list-start").val start
-      $(".show-list-end").val end
-      $("#showButton").trigger "click"
+      socr.view.updateSlider(true, Math.floor(data['sampleCount']* 0.5), data['sampleCount'])
 
     PubSub.subscribe "toggleLoadingSpinner" ,(msg,data)->
       socr.view.toggleLoadingSpinner(data)
@@ -415,12 +412,18 @@ socr.view = (model) ->
   @description:update the slider value
   @dependencies : none
   ###
-  updateSlider: ->
+  updateSlider:(forceUpdate=false,start,end) ->
 
     #get the count and set it as the maximum value
     $("#displayCount").text model.getRSampleCount()
     $("#range").slider "option", "max", model.getRSampleCount()
     $("#range").slider "option", "min", 0
+    if start? and end?
+      $("#showCount").html start + " - " + end
+      $(".show-list-start").val start
+      $(".show-list-end").val end
+    if forceUpdate is true
+      $("#showButton").trigger "click"
     return
 
 
