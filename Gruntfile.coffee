@@ -105,12 +105,12 @@ module.exports = (grunt) ->
 
     jasmine:
       #ideally the src should concatenated files.
-      src: ["js/init.js","js/lib/jquery.min.js","js/utils.js","js/lib/jquery.pubsub.js","js/tools/Fcal.js","js/tools/Zcal.js","js/exp/core.js","js/appModel.js","js/appData.js"]
+      src: ["src/init.js","src/lib/jquery.min.js","src/utils.js","src/lib/jquery.pubsub.js","src/tools/Fcal.js","src/tools/Zcal.js","src/exp/core.js","dist/bundle.js"]
       options:
         specs: "test/spec/*Spec.js"
 
     jshint:
-      files:"js/appController.js"
+      files:"dist/bundle.js"
 
 
   # Load the plugin that provides the "uglify" task.
@@ -123,6 +123,6 @@ module.exports = (grunt) ->
   # Default task(s).
   grunt.registerTask "build", ["coffee","concat"]
   grunt.registerTask "compile", ["coffee"]
-  grunt.registerTask "test", ["coffee","jasmine"]
+  grunt.registerTask "test", ["coffee","concat","copy","jasmine"]
   grunt.registerTask "default", ["coffee","concat","copy"]
 
