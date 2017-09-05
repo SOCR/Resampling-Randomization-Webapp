@@ -1,0 +1,23 @@
+<h5>Set Experiment Parameters: </h5>
+<p class="toolbar">
+	<p class="tool">
+		<span id="nLabel" class="badge badge-warning" for="nInput">n = </span>
+		<span id="nvalue"></span>
+		<input id="nInput" type="range" tabindex="7" class="parameter"/>
+		<i class="icon-question-sign popups" rel="popover" data-content=" n = number of random samples in 1 initial dataset!" data-original-title="n"></i>
+	</p>
+	<p class="tool">
+		<span id="kLabel" class="badge badge-warning" for="kInput">k = </span>
+		<span id="kvalue"></span>
+		<input id="kInput" type="range" tabindex="8" class="parameter"/>
+		<i class="icon-question-sign popups" rel="popover" data-content=" k is the index of the orders-statistics" data-original-title="k"></i>
+	</p>
+	<h5>Set K (= Number of groups)  </h5>
+	<div>
+		<span class="badge badge-warning"> K=<span id="kValue">1</span></span>
+		<div id="kValue-slider" style="display:inline-block;width:50%;margin-left:5%"></div>
+	</div>
+</p>
+	<button class="btn popups btn-success" id="sdbutton"  rel="popover" data-content="To generate random samples, first you need a dataset to start with. Once you generate it, go ahead and generate random samples!" data-original-title="Dataset">Generate DataSet!</button>&nbsp;
+	<button class="btn " id="grsbutton" >Generate Random Samples!</button>
+	<div class="controller-warning"></div>

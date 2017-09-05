@@ -1,0 +1,28 @@
+<h5>Set Experiment Parameters: </h5>
+<p class="toolbar">
+	<p class="tool">
+		<span id="nLabel" class="badge badge-warning" for="nInput">Draw N Balls = </span>
+		<span id="nvalue"></span>
+		<input id="nInput" type="range" tabindex="7" class="parameter"/>
+	</p>
+	<p class="tool">
+		<span id="mLabel" class="badge badge-warning" for="pInput">Total M Balls = </span>
+		<span id="mvalue"></span>
+		<input id="mInput" type="range" tabindex="8" class="parameter"/>
+	</p>
+	<p class="tool">
+		<span id="rLabel" class="badge badge-warning" for="rInput">Red Balls = </span>
+		<span id="rvalue"></span>
+		<input id="rInput" type="range" tabindex="8" class="parameter"/>
+	</p>
+	<p class="tool">
+		<input type="checkbox" tabindex="7" id="type">
+		<span for="replaceCheck">With replacement</span>
+	</p>
+	<h5>Set K (= Number of groups)  </h5>
+		<span class="badge badge-warning"> K=<span id="kValue">1</span></span>
+		<div id="kValue-slider" style="display:inline-block;width:50%;margin-left:5%"></div>
+</p>
+	<button class="btn popups btn-success" id="sdbutton"  rel="popover" data-content="To generate random samples, first you need a dataset to start with. Once you generate it, go ahead and generate random samples!" data-original-title="Dataset">Generate DataSet!</button>&nbsp;
+	<button class="btn " id="grsbutton" >Generate Random Samples!</button>
+	<div class="controller-warning"></div>

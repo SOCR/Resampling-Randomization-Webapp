@@ -1,0 +1,100 @@
+{{#showBack}}
+    <a href="#">
+        <button class="btn controller-back">
+            Back <i class="icon-arrow-left" ></i>
+        </button>
+    </a>
+    {{/showBack}}
+<h5>STEP 1 : Choose an analysis to perform.</h5>
+<select id="analysis">
+    {{#analysis}}
+    <option value="{{.}}">{{.}}</option>
+    {{/analysis}}
+</select>
+<h5>STEP 2 : Generate random samples from selected datasets.</h5>
+<div class="tool number-rs">
+    <span>Generate</span>
+    <input type="text" id="countSize" class="input-mini" value="1000">
+    <span>Samples with </span>
+    <a data-toggle="modal" href="#setN"><button class="controller-popups btn">Set</button></a></li>
+    <span>Datapoint per sample.</span>
+    <br>
+</div>
+<div id="buttonPanel">
+    <a href="#" class="tooltips" rel="tooltip" title="Step">
+        <button class="btn" type="button" id="stepButton" tabindex="1" title="Step">
+            <!-- <i class="icon-step-forward"></i> -->
+            1 Sample
+        </button>
+    </a>
+    <a href="#" class="tooltips" rel="tooltip" title="Run">
+        <button class="btn btn-success" type="button" id="runButton" tabindex="2" title="Run" >
+            <!-- <i class="icon-fast-forward"></i> -->
+            Generate
+        </button>
+    </a>
+    <a href="#" class="tooltips" rel="tooltip" title="Stop">
+        <button class="btn btn-danger" type="button" id="stopButton" tabindex="3" title="Stop" >
+            <!-- <i class="icon-stop" ></i> -->
+            Stop
+        </button>
+    </a>
+    <a href="#" class="tooltips" rel="tooltip" title="Reset">
+        <button class="btn" type="button" id="resetButton" tabindex="4" title="Reset" >
+            <i class="icon-refresh" ></i> Reset
+        </button>
+    </a>
+    <span>
+        <i class="icon-question-sign controller-popups" rel="popover" data-content="<ul><li>1 Sample : generates 1 randome sample</li><li>Generate : generates the number of samples set in the field above.</li><li>Stop :Stops the sample generation</li><li>Reset : Resets ALL data values</li></ul>" data-original-title="Controls"></i>
+    </span>
+    &nbsp;&nbsp;    
+</div>
+
+{{#animationSpeed}}
+<div id="speed-controller">
+    <div>
+        <span class="badge badge-warning" style="float:left;">
+            Animation Time: <span id="speed-value">200</span>ms
+        </span>
+    </div>
+    <div id="speed-selector"></div>
+</div>
+{{/animationSpeed}}
+<h5>STEP 3: Choose an inference </h5>
+<div class="inference-variable">
+    <form class="form form-inline">
+        <select id="variable" style="width:30%">
+            {{#variables}}
+            <option value="{{.}}">{{.}}</option>
+            {{/variables}}
+        </select>
+        {{#showIndex}}
+        &nbsp; of &nbsp;
+        <select id="index" disabled style="width:15%">
+            {{#index}}
+            <option value="{{.}}">{{.}}</option>
+            {{/index}}
+        </select>
+        {{/showIndex}}
+        <span>
+            <button class="btn btn-info popups" rel="popover" data-content="This will create a plot of the variable for each generated sample. Click this once you have generated some samples!" data-original-title="Inference" id="infer">Go</button>
+        </span>
+        <p>Precision to 3 decimal places.<input type='checkbox' checked id='result-precision'/></p>
+    </form>
+</div>
+<div id='setN' class="modal hide fade">
+    <div class="modal-header">
+        <a class="close" data-dismiss="modal">X</a>
+        <h3>Set the Sample Length</h3>
+    </div>
+    <div class="modal-body">
+        <ul>
+            {{#RSampleLength}}
+            <li><input type="text" class='nValues' value="{{.}}"/></li>
+            {{/RSampleLength}}
+        </ul>
+    </div>
+    <div class="modal-footer">
+        <button class="update btn btn-info">Update</button>
+    </div>
+</div>

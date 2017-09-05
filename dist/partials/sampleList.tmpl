@@ -1,0 +1,36 @@
+{{#entries}}
+<div class="entry">
+    <div class="header">
+        Sample
+        <span class="values"> {{sampleNo}}</span>
+        &nbsp;&nbsp;
+        Datapoints:
+        <span class="values">{{datapoints}}</span>
+        &nbsp;&nbsp;
+        <a data-toggle="modal" href="#plot" class="tooltips" rel="tooltip" data-original-title="plot">
+            <i class="icon-fullscreen plot" id="plot-{{sampleNo}}" sample-number="{{sampleNo}}" k-index="1"></i>
+        </a>
+        &nbsp;
+        {{#showContribution}}
+        <a href="#" class="tooltips" rel="tooltip" data-original-title="contribution">
+            <i class="icon-filter contribution" id="contribution-{{sampleNo}}" ></i></a>
+        &nbsp;
+        {{/showContribution}}
+        <a href="#" class="tooltips" rel="tooltip" data-original-title="toggle">
+            <i class="icon-retweet toggle-sample" data-type="keys" id="toggle-{{sampleNo}}" sample-number="{{sampleNo}}" k-index="1"></i>
+        </a>
+        <ul class="nav nav-tabs" id="sample-tabs{{sampleNo}}">
+            {{#sample}}
+                <li class="{{class}}"><a href="#sample-{{id}}">{{kIndex}}</a></li>
+            {{/sample}}
+        </ul>
+        <div class="tab-content">
+            {{#sample}}
+                <div class="tab-pane {{class}}" id="sample-{{id}}" sample-div="{{id}}">
+                    <pre>{{keys}}</pre>
+                </div>
+            {{/sample}}
+        </div>
+    </div>
+</div>
+{{/entries}}

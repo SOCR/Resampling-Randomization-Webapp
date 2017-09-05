@@ -1,0 +1,28 @@
+<p class="toolbar">
+	<p class="tool">
+		<span id="nLabel" class="badge badge-warning" for="nInput">N = </span>
+		<span id="nvalue"></span>
+		<input id="nInput" type="range" tabindex="7" class="parameter"/>
+		<i class="icon-question-sign popups" rel="popover" data-content=" n = number of coins to be tossed!" data-original-title="n"></i>
+	</p>
+		<p class="tool">
+		<span id="aLabel" class="badge badge-warning" for="aInput">&alpha;= </span>
+		<span id="avalue"></span>
+		<input id="aInput" type="range" tabindex="8" class="parameter"/>
+		<i class="icon-question-sign popups" rel="popover" data-content=" &alpha;= left Beta shape parameter" data-original-title="&alpha;"></i>
+	</p>
+	</p>
+		<p class="tool">
+		<span id="bLabel" class="badge badge-warning" for="bInput">&beta;= </span>
+		<span id="bvalue"></span>
+		<input id="bInput" type="range" tabindex="8" class="parameter"/>
+		<i class="icon-question-sign popups" rel="popover" data-content=" &beta; = right Beta shape parameter" data-original-title="&beta;"></i>
+	</p>
+	<div>
+		<span class="badge badge-warning"> K=<span id="kValue">1</span></span>
+		<div id="kValue-slider" style="display:inline-block;width:50%;margin-left:5%"></div>
+	</div>
+</p>
+<button class="btn popups btn-success" id="sdbutton"  rel="popover" data-content="To generate random samples, first you need a dataset to start with. Once you generate it, go ahead and generate random samples!" data-original-title="Dataset">Generate DataSet!</button>&nbsp;
+	<button class="btn " id="grsbutton" >Generate Random Samples!</button>
+	<div class="controller-warning"></div>

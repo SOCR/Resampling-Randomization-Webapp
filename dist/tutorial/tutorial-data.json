@@ -1,0 +1,59 @@
+{
+	".controller-handle":{
+		"data-intro":"control panel - Run, Plot, Generate.",
+		"data-position":"right"
+	},
+	"#showListSlider":{
+		"data-intro":"Selector to show specific random samples",
+		"data-position":"bottom"
+	},
+	".dataset-header":{
+		"data-intro":"All generated initial K initial dataset group ",
+		"data-position":"bottom"
+	},
+    "#grsbutton":{
+    "data-intro":"Click this button once you want to carry on with the generated intial dataset.",
+    "data-position":"right"
+    },
+	"#datadriven-splash":{
+		"data-intro":"This is your first step. Choose a method to get data into the app.",
+		"data-position":"right"
+	},
+	".menu-simulationdriven":{
+		"data-intro":"If you dont have your own data, then choose a experiment.",
+		"data-position":"bottom"
+	},
+	".menu-datadriven":{
+		"data-intro":"If you want to load your data, choose one of these options.",
+		"data-position":"bottom"
+	},
+	"#controller-content":{
+		"data-intro":"This is your remote. This is control room. Controls to generate initial samples and then random samples from it ",
+		"data-position":"right"
+	},
+	"#simulationdriven-details":{
+		"data-intro":"Description about the experiment loaded into the web-app.",
+		"data-position":"right"
+	},
+	"#buttonPanel":{
+		"data-intro":"These are the controls for running, pausing, stopping the generation of random samples.",
+		"data-position":"right"
+	},
+	".inference-variable":{
+		"data-intro":"Variables you want to plot. Press 'Infer' or generate some more random samples before pressing.",
+		"data-position":"right"
+	},
+    "#dotplot":{
+        "data-intro":"Plot of the variable you chose. Go back to the controller to choose a different one.",
+        "data-position":"right"
+    },
+    "#sampleList":{
+        "data-intro":"Each entry contains a random sample group. Kth tab represents the random sample from that Kth initial sample. ",
+        "data-position":"left"
+    },
+    "#footer":{
+        "data-intro":"NOTE: CLICK IN THE DARKENED SPACE ONCE BEFORE YOU PROCEED",
+        "data-position":"top"
+    }
+
+}
