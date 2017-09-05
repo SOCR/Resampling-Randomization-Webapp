@@ -1,6 +1,5 @@
-socr.dataTable = function () {
-
-    $(document).ready(function(){
+$(document).ready(function(){
+    socr.dataTable = (function () {
         $dataTable = $('#input');
         var $controls = $('section.controls');
         $parent = $('div.spreadsheet');
@@ -831,5 +830,5 @@ socr.dataTable = function () {
             view: view,
             worldbank : worldbank,
         };
-    })    
-}(jQuery);
+    })();
+})
